@@ -18,7 +18,7 @@ fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = "Gondi",
-        icon = painterResource(Resources.Images.LOGO)
+        icon = painterResource(Resources.Images.LOGO),
     ) {
         App()
     }
