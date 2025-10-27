@@ -1,7 +1,7 @@
 plugins {
     `kotlin-dsl`
 }
-val moduleName = "com.example.app" //your module name
+val moduleName = "ke.don.gondi" //your module name
 group = "$moduleName.buildlogic" //your module name
 gradlePlugin {
     plugins {
