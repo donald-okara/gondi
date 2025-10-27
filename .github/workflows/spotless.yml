@@ -1,0 +1,27 @@
+name: 🧹 Spotless Check
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  spotless:
+    name: 🧹 Run Spotless Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Grant execute permission to Gradle wrapper
+        run: chmod +x ./gradlew
+
+      - name: Run spotlessCheck
+        run: ./gradlew spotlessCheck

@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatformApplication)
@@ -27,11 +26,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "com.example.app.MainKt"
+        mainClass = "ke.don.gondi.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.example.app"
+            packageName = "ke.don.gondi"
             packageVersion = "1.0.0"
         }
     }
