@@ -13,15 +13,11 @@ val Project.libs
 internal val Project.moduleName: String
     get() = path.split(":").drop(1).joinToString(".")
 
-fun Project.configureProjectDependencies(vararg moduleLists: List<Any>) {
+fun Project.configureProjectDependencies(vararg moduleLists: List<Project>) {
     extensions.configure<KotlinMultiplatformExtension> {
         sourceSets.apply {
             commonMain.dependencies {
-                moduleLists.forEach { modules ->
-                    modules.forEach {
-                        implementation(it)
-                    }
-                }
+                moduleLists.flatMap { it }.forEach { implementation(it) }
             }
         }
     }
