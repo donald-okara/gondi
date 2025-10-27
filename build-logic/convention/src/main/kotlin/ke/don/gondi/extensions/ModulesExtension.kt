@@ -3,13 +3,29 @@ package ke.don.gondi.extensions
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 val Project.libs
     get(): VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
 internal val Project.moduleName: String
     get() = path.split(":").drop(1).joinToString(".")
+
+fun Project.configureProjectDependencies(vararg moduleLists: List<Any>) {
+    extensions.configure<KotlinMultiplatformExtension> {
+        sourceSets.apply {
+            commonMain.dependencies {
+                moduleLists.forEach { modules ->
+                    modules.forEach {
+                        implementation(it)
+                    }
+                }
+            }
+        }
+    }
+}
 
 val Project.coreModules: CoreModules
     get() = CoreModules(this)

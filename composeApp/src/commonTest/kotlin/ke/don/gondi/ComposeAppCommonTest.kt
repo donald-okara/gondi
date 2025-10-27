@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package com.example.app
+package ke.don.gondi
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

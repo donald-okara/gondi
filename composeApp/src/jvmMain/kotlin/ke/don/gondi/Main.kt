@@ -11,11 +11,14 @@ package ke.don.gondi
 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.painterResource
 
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        title = "KleanBoy",
+        title = "Gondi",
+        icon = painterResource(Resources.Images.LOGO)
     ) {
         App()
     }

@@ -1,6 +1,7 @@
 package ke.don.gondi
 
 import appIdentity
+import ke.don.gondi.extensions.configureProjectDependencies
 import ke.don.gondi.extensions.coreModules
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -12,14 +13,6 @@ class DatasourceConvention : Plugin<Project>{
     override fun apply(target: Project) = with(target) {
         pluginManager.apply("${appIdentity.packageName}.kotlinMultiplatformLibrary")
 
-        extensions.configure<KotlinMultiplatformExtension> {
-            sourceSets.apply {
-                commonMain.dependencies {
-                    coreModules.all.forEach {
-                        implementation(it)
-                    }
-                }
-            }
-        }
+        configureProjectDependencies(coreModules.all)
     }
 }

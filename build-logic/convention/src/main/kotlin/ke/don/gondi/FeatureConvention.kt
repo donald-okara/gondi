@@ -1,6 +1,7 @@
 package ke.don.gondi
 
 import appIdentity
+import ke.don.gondi.extensions.configureProjectDependencies
 import ke.don.gondi.extensions.coreModules
 import ke.don.gondi.extensions.datasourceModules
 import ke.don.gondi.extensions.sharedModules
@@ -21,20 +22,7 @@ class FeatureConvention : Plugin<Project> {
             }
         }
 
-        extensions.configure<KotlinMultiplatformExtension> {
-            sourceSets.apply {
-                commonMain.dependencies {
-                    coreModules.all.forEach {
-                        implementation(it)
-                    }
-                    datasourceModules.all.forEach {
-                        implementation(it)
-                    }
-                    sharedModules.all.forEach {
-                        implementation(it)
-                    }
-                }
-            }
-        }
+        configureProjectDependencies(coreModules.all, datasourceModules.all, sharedModules.all)
+
     }
 }

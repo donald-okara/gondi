@@ -30,7 +30,7 @@ subprojects {
 
         kotlinGradle {
             target("*.gradle.kts")
-            ktlint("0.50.0")
+            ktlint("1.7.0")
         }
     }
 }

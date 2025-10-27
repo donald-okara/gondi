@@ -1,6 +1,6 @@
 # Gondi
 
-Gondi is a rendition of the group game "Mafia" where there are 2 Gondis (Mafia members), one police officer, one accomplise, one detective, a doctor and the villagers
+Gondi is a rendition of the group game "Mafia" where there are 2 Gondis (Mafia members), one police officer, one accomplice, one detective, a doctor and the villagers
 
 ## Roles
 **Gondi (x2)** - In the beginning of every round (the villagers asleep), they kill a villager each
@@ -9,7 +9,7 @@ Gondi is a rendition of the group game "Mafia" where there are 2 Gondis (Mafia m
 
 **Detective**- In each sleep, they can inquire on the identity of one player. They can share the identity if they feel like (Can only be in the game if there is an accomplise)
 
-**Accomplise** - Runs interference. They throw everyone off the real Gondi's trail (they don't know who the gondis are either) (Can only be in the game if there is a detective). They win if at least one gondi is left standing
+**Accomplice** - Runs interference. They throw everyone off the real Gondi's trail (they don't know who the gondis are either) (Can only be in the game if there is a detective). They win if at least one gondi is left standing
 
 **Villager**-  Votes on who the Gondis are after every sleep round
 
@@ -26,6 +26,6 @@ Here Gondi's, Doctors and Detectives do their work
 The villagers discuss who the Gondis are. If **anyone** accuses a Gondi and **anyone** else seconds, we move to court
 
 ### 3. Court
-The Accusee states their case and then everyone votes on eviction. Then on eviction, They get eliminated and their identity is revealed
+The Accused states their case and then everyone votes on eviction. Then on eviction, They get eliminated and their identity is revealed
 
 Back to sleep
