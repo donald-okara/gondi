@@ -1,10 +1,10 @@
 <p align="center">
-<img src="shared/resources/src/commonMain/composeResources/drawable/app_icon.png" 
-     alt="Gondi Banner" 
-     width="200" />
+  <img src="shared/resources/src/commonMain/composeResources/drawable/app_icon.png" 
+       alt="Gondi Banner" 
+       width="180" />
 </p>
 
-# Gondi
+<h1 align="center">Gondi</h1>
 
 Gondi is a rendition of the group game "Mafia" where there are 2 Gondis (Mafia members), one police officer, one accomplice, one detective, a doctor and the villagers
 
