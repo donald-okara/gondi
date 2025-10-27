@@ -39,7 +39,6 @@ class KotlinMultiplatformApplication: Plugin<Project> {
 
             }
         }
-
         extensions.configure<KotlinMultiplatformExtension>(::configureKotlinMultiplatform)
         extensions.configure<ApplicationExtension>(::configureKotlinAndroid)
     }
