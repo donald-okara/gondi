@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import ke.don.design.theme.AppTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 
@@ -15,7 +16,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     val greeting = Greeting().greet()
-    MaterialTheme {
+    AppTheme {
         Surface(
             modifier = Modifier.fillMaxSize()
         ){

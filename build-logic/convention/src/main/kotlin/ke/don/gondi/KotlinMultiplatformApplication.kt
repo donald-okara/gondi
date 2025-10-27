@@ -6,6 +6,7 @@ import ke.don.gondi.extensions.configureKotlinAndroid
 import ke.don.gondi.extensions.configureKotlinMultiplatform
 import ke.don.gondi.extensions.featureModules
 import ke.don.gondi.extensions.libs
+import ke.don.gondi.extensions.sharedModules
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -25,11 +26,20 @@ class KotlinMultiplatformApplication: Plugin<Project> {
             apply("${appIdentity.packageName}.composeMultiplatformPlugin")
         }
 
-        dependencies {
-            featureModules.all.forEach {
-                add("implementation", it)
+        extensions.configure<KotlinMultiplatformExtension> {
+            sourceSets.apply {
+                commonMain.dependencies {
+                    featureModules.all.forEach {
+                        implementation(it)
+                    }
+                    sharedModules.all.forEach{
+                        implementation(it)
+                    }
+                }
+
             }
         }
+
         extensions.configure<KotlinMultiplatformExtension>(::configureKotlinMultiplatform)
         extensions.configure<ApplicationExtension>(::configureKotlinAndroid)
     }
