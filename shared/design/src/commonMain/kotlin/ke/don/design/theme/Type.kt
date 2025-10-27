@@ -1,27 +1,34 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.design.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import gondi.shared.design.generated.resources.Res
 import ke.don.resources.Resources
 import org.jetbrains.compose.resources.Font
-
 
 val bodyFontFamily: FontFamily
     @Composable
     get() = FontFamily(
         Font(Resources.Font.REGULAR, FontWeight.Normal),
 
-        )
+    )
 
 val displayFontFamily: FontFamily
     @Composable
     get() = FontFamily(
         Font(Resources.Font.SEMIBOLD, FontWeight.Bold),
 
-        )
+    )
 
 // Default Material 3 typography values
 val baseline = Typography()

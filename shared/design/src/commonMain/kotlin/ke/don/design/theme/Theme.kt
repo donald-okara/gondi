@@ -1,7 +1,16 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.design.theme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -92,54 +101,53 @@ private val darkScheme = darkColorScheme(
 )
 
 val extendedLight = ExtendedColorScheme(
-  warning = ColorFamily(
-      warningLight,
-      onWarningLight,
-      warningContainerLight,
-      onWarningContainerLight,
-  ),
-  info = ColorFamily(
-      infoLight,
-      onInfoLight,
-      infoContainerLight,
-      onInfoContainerLight,
-  ),
-  success = ColorFamily(
-      successLight,
-      onSuccessLight,
-      successContainerLight,
-      onSuccessContainerLight,
-  ),
+    warning = ColorFamily(
+        warningLight,
+        onWarningLight,
+        warningContainerLight,
+        onWarningContainerLight,
+    ),
+    info = ColorFamily(
+        infoLight,
+        onInfoLight,
+        infoContainerLight,
+        onInfoContainerLight,
+    ),
+    success = ColorFamily(
+        successLight,
+        onSuccessLight,
+        successContainerLight,
+        onSuccessContainerLight,
+    ),
 )
 
 val extendedDark = ExtendedColorScheme(
-  warning = ColorFamily(
-      warningDark,
-      onWarningDark,
-      warningContainerDark,
-      onWarningContainerDark,
-  ),
-  info = ColorFamily(
-      infoDark,
-      onInfoDark,
-      infoContainerDark,
-      onInfoContainerDark,
-  ),
-  success = ColorFamily(
-      successDark,
-      onSuccessDark,
-      successContainerDark,
-      onSuccessContainerDark,
-  ),
+    warning = ColorFamily(
+        warningDark,
+        onWarningDark,
+        warningContainerDark,
+        onWarningContainerDark,
+    ),
+    info = ColorFamily(
+        infoDark,
+        onInfoDark,
+        infoContainerDark,
+        onInfoContainerDark,
+    ),
+    success = ColorFamily(
+        successDark,
+        onSuccessDark,
+        successContainerDark,
+        onSuccessContainerDark,
+    ),
 )
-
 
 @Immutable
 data class ColorFamily(
     val color: Color,
     val onColor: Color,
     val colorContainer: Color,
-    val onColorContainer: Color
+    val onColorContainer: Color,
 )
 
 val LocalExtendedColorScheme = staticCompositionLocalOf<ExtendedColorScheme> {
@@ -150,7 +158,9 @@ val LocalExtendedColorScheme = staticCompositionLocalOf<ExtendedColorScheme> {
 fun AppTheme(
     darkTheme: Boolean = true,
     // Dynamic color is available on Android 12+
-    content: @Composable() () -> Unit
+    content:
+    @Composable()
+    () -> Unit,
 ) {
     val colorScheme = when {
         darkTheme -> darkScheme
@@ -163,13 +173,12 @@ fun AppTheme(
     }
 
     CompositionLocalProvider(
-        LocalExtendedColorScheme provides extendedColors
+        LocalExtendedColorScheme provides extendedColors,
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
             typography = AppTypography,
-            content = content
+            content = content,
         )
     }
 }
-

@@ -7,10 +7,3 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.gondi
-
-class JVMPlatform : Platform {
-    override val name: String = "Java ${System.getProperty("java.version")}"
-}
-
-actual fun getPlatform(): Platform = JVMPlatform()

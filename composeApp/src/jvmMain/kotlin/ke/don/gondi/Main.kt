@@ -9,8 +9,14 @@
  */
 package ke.don.gondi
 
-class JVMPlatform : Platform {
-    override val name: String = "Java ${System.getProperty("java.version")}"
-}
+import androidx.compose.ui.window.Window
+import androidx.compose.ui.window.application
 
-actual fun getPlatform(): Platform = JVMPlatform()
+fun main() = application {
+    Window(
+        onCloseRequest = ::exitApplication,
+        title = "KleanBoy",
+    ) {
+        App()
+    }
+}

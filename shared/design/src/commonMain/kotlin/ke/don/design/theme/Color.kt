@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.design.theme
 import androidx.compose.ui.graphics.Color
 
@@ -98,4 +107,3 @@ val successDark = Color(0xFF89D6B9)
 val onSuccessDark = Color(0xFF00382A)
 val successContainerDark = Color(0xFF00513E)
 val onSuccessContainerDark = Color(0xFFA4F2D4)
-
