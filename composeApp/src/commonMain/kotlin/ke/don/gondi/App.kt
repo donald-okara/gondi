@@ -51,13 +51,13 @@ fun App() {
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Column{
+                    Column {
                         Text(greeting)
 
                         ButtonToken(
                             buttonType = ComponentType.Primary,
-                            onClick = { Matcha.success("Hello. It's me") }
-                        ){
+                            onClick = { Matcha.success("Hello. It's me") },
+                        ) {
                             Text("Click Me")
                         }
                     }
