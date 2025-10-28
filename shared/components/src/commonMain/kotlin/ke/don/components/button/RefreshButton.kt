@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.design_system.components.button
+package ke.don.components.button
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -19,8 +19,9 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Repeat
 import androidx.compose.runtime.Composable
-import ke.don.design_system.assets.isCompact
-import ke.don.design_system.components.icon.IconToken
+import ke.don.components.icon.IconToken
+import ke.don.resources.isCompact
+import kotlin.invoke
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable

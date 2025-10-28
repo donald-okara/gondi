@@ -19,6 +19,7 @@ kotlinStdlib = "2.2.20"
 runner = "1.7.0"
 core = "1.7.0"
 jetbrainsKotlinJvm = "2.2.20"
+koffee = "0.2.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -39,6 +40,14 @@ kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", versio
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 
+koffee = { module = "io.github.donald-okara:koffee", version.ref = "koffee" }
+
+[bundles]
+compose = [
+    "androidx-lifecycle-runtimeCompose",
+    "androidx-lifecycle-viewmodelCompose",
+    "koffee"
+]
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

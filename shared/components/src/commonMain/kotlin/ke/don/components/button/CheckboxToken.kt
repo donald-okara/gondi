@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.design_system.components.button
+package ke.don.components.button
 
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxColors

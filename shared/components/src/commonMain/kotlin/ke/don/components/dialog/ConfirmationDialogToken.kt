@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.design_system.components.dialog
+package ke.don.components.dialog
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,9 +31,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import ke.don.design_system.components.button.ButtonToken
-import ke.don.design_system.components.button.CheckBoxToken
-import ke.don.design_system.components.button.ComponentType
+import ke.don.components.button.ButtonToken
+import ke.don.components.button.CheckBoxToken
+import ke.don.components.button.ComponentType
 
 @Composable
 fun ConfirmationDialogToken(

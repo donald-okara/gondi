@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.design_system.components.button
+package ke.don.components.button
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.material3.ButtonColors
@@ -19,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
+import ke.don.design.theme.AppTheme
 
 private const val disabledAlpha = 0.38f
 
@@ -31,6 +32,9 @@ private val ComponentType.targetContainerColor @Composable get() = when (this) {
     ComponentType.Inverse -> MaterialTheme.colorScheme.onSurface
     ComponentType.Outlined -> MaterialTheme.colorScheme.surface
     ComponentType.Neutral -> MaterialTheme.colorScheme.inverseOnSurface
+    ComponentType.Warning -> AppTheme.extendedColors.warning.color
+    ComponentType.Info -> AppTheme.extendedColors.info.color
+    ComponentType.Success -> AppTheme.extendedColors.success.color
 }
 
 private val ComponentType.targetContentColor @Composable get() = when (this) {
@@ -41,6 +45,9 @@ private val ComponentType.targetContentColor @Composable get() = when (this) {
     ComponentType.Inverse -> MaterialTheme.colorScheme.surface
     ComponentType.Outlined -> MaterialTheme.colorScheme.primary
     ComponentType.Neutral -> MaterialTheme.colorScheme.inverseSurface
+    ComponentType.Warning -> AppTheme.extendedColors.warning.onColor
+    ComponentType.Info -> AppTheme.extendedColors.info.onColor
+    ComponentType.Success -> AppTheme.extendedColors.success.onColor
 }
 
 private val ComponentType.disabledContainerColor @Composable get() = if (this == ComponentType.Outlined) targetContainerColor else targetContainerColor.copy(alpha = disabledAlpha)
@@ -90,6 +97,24 @@ val ComponentType.buttonTypeColor: @Composable () -> ButtonColors
                 containerColor = MaterialTheme.colorScheme.inverseOnSurface,
                 disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = disabledAlpha),
                 disabledContainerColor = MaterialTheme.colorScheme.inverseSurface.copy(alpha = disabledAlpha),
+            )
+            ComponentType.Info -> ButtonDefaults.buttonColors(
+                containerColor = AppTheme.extendedColors.info.colorContainer,
+                contentColor = AppTheme.extendedColors.info.onColorContainer,
+                disabledContainerColor = AppTheme.extendedColors.info.colorContainer.copy(alpha = disabledAlpha),
+                disabledContentColor = AppTheme.extendedColors.info.onColorContainer.copy(alpha = disabledAlpha),
+            )
+            ComponentType.Warning -> ButtonDefaults.buttonColors(
+                containerColor = AppTheme.extendedColors.warning.colorContainer,
+                contentColor = AppTheme.extendedColors.warning.onColorContainer,
+                disabledContainerColor = AppTheme.extendedColors.warning.colorContainer.copy(alpha = disabledAlpha),
+                disabledContentColor = AppTheme.extendedColors.warning.onColorContainer.copy(alpha = disabledAlpha),
+            )
+            ComponentType.Success -> ButtonDefaults.buttonColors(
+                containerColor = AppTheme.extendedColors.success.colorContainer,
+                contentColor = AppTheme.extendedColors.success.onColorContainer,
+                disabledContainerColor = AppTheme.extendedColors.success.colorContainer.copy(alpha = disabledAlpha),
+                disabledContentColor = AppTheme.extendedColors.success.onColorContainer.copy(alpha = disabledAlpha),
             )
         }
     }
@@ -155,6 +180,24 @@ val ComponentType.iconTypeColor: @Composable () -> IconButtonColors
                 disabledContentColor = MaterialTheme.colorScheme.inverseSurface.copy(alpha = disabledAlpha),
                 containerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
+            )
+            ComponentType.Success -> IconButtonDefaults.iconButtonColors(
+                contentColor = AppTheme.extendedColors.success.onColorContainer,
+                disabledContentColor = AppTheme.extendedColors.success.onColorContainer.copy(alpha = disabledAlpha),
+                containerColor = AppTheme.extendedColors.success.colorContainer,
+                disabledContainerColor = AppTheme.extendedColors.success.colorContainer.copy(alpha = disabledAlpha),
+            )
+            ComponentType.Warning -> IconButtonDefaults.iconButtonColors(
+                contentColor = AppTheme.extendedColors.warning.onColorContainer,
+                disabledContentColor = AppTheme.extendedColors.warning.onColorContainer.copy(alpha = disabledAlpha),
+                containerColor = AppTheme.extendedColors.warning.colorContainer,
+                disabledContainerColor = AppTheme.extendedColors.warning.colorContainer.copy(alpha = disabledAlpha),
+            )
+            ComponentType.Info -> IconButtonDefaults.iconButtonColors(
+                contentColor = AppTheme.extendedColors.info.onColorContainer,
+                disabledContentColor = AppTheme.extendedColors.info.onColorContainer.copy(alpha = disabledAlpha),
+                containerColor = AppTheme.extendedColors.info.colorContainer,
+                disabledContainerColor = AppTheme.extendedColors.info.colorContainer.copy(alpha = disabledAlpha),
             )
         }
     }

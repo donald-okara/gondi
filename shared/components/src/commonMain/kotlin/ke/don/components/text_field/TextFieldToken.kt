@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.design_system.components.text_field
+package ke.don.components.text_field
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

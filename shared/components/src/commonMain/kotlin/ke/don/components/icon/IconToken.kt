@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.design_system.components.icon
+package ke.don.components.icon
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
@@ -20,10 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import ke.don.design_system.assets.Values
-import ke.don.design_system.components.button.ButtonToken
-import ke.don.design_system.components.button.ComponentType
-import ke.don.design_system.components.button.animatedIconColors
+import ke.don.components.button.ButtonToken
+import ke.don.components.button.ComponentType
+import ke.don.components.button.animatedIconColors
+import ke.don.resources.Values
 
 @Composable
 fun IconToken(

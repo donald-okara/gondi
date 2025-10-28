@@ -182,3 +182,10 @@ fun AppTheme(
         )
     }
 }
+
+object AppTheme {
+    val extendedColors: ExtendedColorScheme
+        @Composable
+        get() = LocalExtendedColorScheme.current
+}
+

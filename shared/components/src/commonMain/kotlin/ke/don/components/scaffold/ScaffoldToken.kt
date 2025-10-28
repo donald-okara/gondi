@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.design_system.components.scaffold
+package ke.don.components.scaffold
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
@@ -37,8 +37,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import ke.don.design_system.assets.Values
-import ke.don.design_system.assets.isCompact
+import ke.don.resources.Values
+import ke.don.resources.isCompact
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

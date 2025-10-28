@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.design_system.components.card
+package ke.don.components.card
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -30,10 +30,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import ke.don.design_system.components.button.ButtonToken
-import ke.don.design_system.components.button.ComponentType
-import ke.don.design_system.components.button.iconTypeColor
-import ke.don.design_system.components.icon.IconToken
+import ke.don.components.button.ButtonToken
+import ke.don.components.button.ComponentType
+import ke.don.components.button.iconTypeColor
+import ke.don.components.icon.IconToken
 import ke.don.koffee.domain.style
 import ke.don.koffee.helpers.COMPACT_BREAK_POINT
 import ke.don.koffee.helpers.MAX_NON_COMPACT_WIDTH
@@ -72,10 +72,10 @@ fun ToastComponent(
     icon: ImageVector,
 ) {
     val typeMap = when (data.type) {
-        ToastType.Success -> ComponentType.Secondary
+        ToastType.Success -> ComponentType.Success
         ToastType.Error -> ComponentType.Error
-        ToastType.Info -> ComponentType.Primary
-        ToastType.Warning -> ComponentType.Tertiary
+        ToastType.Info -> ComponentType.Info
+        ToastType.Warning -> ComponentType.Warning
         ToastType.Neutral -> ComponentType.Inverse
     }
 

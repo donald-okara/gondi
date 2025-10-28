@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.design_system.components.button
+package ke.don.components.button
 
 enum class ComponentType {
     Primary,
@@ -17,6 +17,9 @@ enum class ComponentType {
     Inverse,
     Outlined,
     Neutral,
+    Warning,
+    Info,
+    Success
 }
 
 fun randomButtonType(): ComponentType {

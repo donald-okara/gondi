@@ -7,8 +7,9 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.design_system.components.scaffold
+package ke.don.components.scaffold
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
@@ -32,8 +34,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import ke.don.design_system.assets.Values
-import ke.don.design_system.assets.isCompact
+import ke.don.resources.Resources
+import ke.don.resources.Values
+import ke.don.resources.isCompact
+import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -67,7 +71,13 @@ fun TopBarToken(
                 },
                 navigationIcon = {
                     when (navigationIcon) {
-                        NavigationIcon.None -> {}
+                        NavigationIcon.None -> {
+                            Image(
+                                painter = painterResource(Resources.Images.LOGO),
+                                contentDescription = "App Icon",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                         is NavigationIcon.Back -> IconButton(onClick = navigationIcon.navigateBack) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }

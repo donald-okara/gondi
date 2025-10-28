@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.design_system.components.scaffold
+package ke.don.components.scaffold
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween

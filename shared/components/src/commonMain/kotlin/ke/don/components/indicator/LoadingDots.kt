@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.design_system.components.indicator
+package ke.don.components.indicator
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
