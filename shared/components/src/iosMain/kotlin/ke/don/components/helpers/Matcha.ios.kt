@@ -10,9 +10,9 @@
 package ke.don.components.helpers
 
 import kotlinx.cinterop.BetaInteropApi
+import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSClassFromString
 import platform.Foundation.NSProcessInfo
-import kotlinx.cinterop.ExperimentalForeignApi
 
 @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 actual fun isRunningUnitTest(): Boolean {

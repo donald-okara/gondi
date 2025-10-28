@@ -8,10 +8,14 @@
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
 @file:Suppress("SwallowedException")
+
 package ke.don.components.helpers
 
 private val isJUnitPresent: Boolean by lazy {
-    runCatching { Class.forName("org.junit.Assert"); true }.getOrDefault(false)
+    runCatching {
+        Class.forName("org.junit.Assert")
+        true
+    }.getOrDefault(false)
 }
 
 actual fun isRunningUnitTest(): Boolean = isJUnitPresent

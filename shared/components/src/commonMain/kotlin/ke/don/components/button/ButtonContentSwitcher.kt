@@ -45,7 +45,7 @@ fun ButtonContentSwitcher(
         if (isLoading) {
             LoadingDots(
                 color = LocalContentColor.current,
-                dotSize = contentHeight ?: 20.dp
+                dotSize = contentHeight ?: 20.dp,
             )
         } else {
             Row(verticalAlignment = Alignment.CenterVertically) {
