@@ -2,9 +2,11 @@ package ke.don.gondi
 
 import appIdentity
 import com.android.build.api.dsl.ApplicationExtension
+import ke.don.gondi.extensions.configureKoin
 import ke.don.gondi.extensions.configureKotlinAndroid
 import ke.don.gondi.extensions.configureKotlinMultiplatform
 import ke.don.gondi.extensions.configureProjectDependencies
+import ke.don.gondi.extensions.configureVoyager
 import ke.don.gondi.extensions.featureModules
 import ke.don.gondi.extensions.libs
 import ke.don.gondi.extensions.sharedModules
@@ -28,6 +30,8 @@ class KotlinMultiplatformApplication: Plugin<Project> {
         }
 
         configureProjectDependencies(featureModules.all, sharedModules.all)
+        configureKoin()
+        configureVoyager()
         extensions.configure<KotlinMultiplatformExtension>(::configureKotlinMultiplatform)
         extensions.configure<ApplicationExtension>(::configureKotlinAndroid)
     }

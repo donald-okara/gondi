@@ -1,7 +1,9 @@
 package ke.don.gondi
 
 import appIdentity
+import ke.don.gondi.extensions.configureKoin
 import ke.don.gondi.extensions.configureProjectDependencies
+import ke.don.gondi.extensions.configureVoyager
 import ke.don.gondi.extensions.coreModules
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -14,5 +16,6 @@ class DatasourceConvention : Plugin<Project>{
         pluginManager.apply("${appIdentity.packageName}.kotlinMultiplatformLibrary")
 
         configureProjectDependencies(coreModules.all)
+        configureKoin()
     }
 }

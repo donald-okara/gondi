@@ -20,6 +20,10 @@ runner = "1.7.0"
 core = "1.7.0"
 jetbrainsKotlinJvm = "2.2.21"
 koffee = "0.2.1"
+koin = "4.1.1"
+voyager = "1.0.1"
+ktor = "3.3.1"
+supabase = "3.2.5"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -42,11 +46,37 @@ androidx-core = { group = "androidx.test", name = "core", version.ref = "core" }
 
 koffee = { module = "io.github.donald-okara:koffee", version.ref = "koffee" }
 
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" } #Used for Koil
+
+supabase-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "supabase" }
+supabase-postgrest = { module = "io.github.jan-tennert.supabase:postgrest-kt", version.ref = "supabase" }
+supabase-auth = { module = "io.github.jan-tennert.supabase:auth-kt", version.ref = "supabase" }
+supabase-realtime = { module = "io.github.jan-tennert.supabase:realtime-kt", version.ref = "supabase" }
+
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
+voyager-screen-model = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
+
+
 [bundles]
 compose = [
     "androidx-lifecycle-runtimeCompose",
     "androidx-lifecycle-viewmodelCompose",
     "koffee"
+]
+
+voyager = [
+    "voyager-navigator",
+    "voyager-transitions",
+    "voyager-screen-model"
 ]
 
 [plugins]
@@ -65,3 +95,4 @@ kotlinMultiplatformLibrary = { id = "ke.don.gondi.kotlinMultiplatformLibrary", v
 kotlinMultiplatformApplication = { id = "ke.don.gondi.kotlinMultiplatformApplication", version = "unspecified" }
 featureConvention = { id = "ke.don.gondi.featureConvention", version = "unspecified" }
 datasourceConvention = { id = "ke.don.gondi.datasourceConvention", version = "unspecified" }
+ktorSupabasePlugin = { id = "ke.don.gondi.ktorSupabasePlugin", version = "unspecified" }

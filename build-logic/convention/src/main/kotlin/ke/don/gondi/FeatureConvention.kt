@@ -1,7 +1,9 @@
 package ke.don.gondi
 
 import appIdentity
+import ke.don.gondi.extensions.configureKoin
 import ke.don.gondi.extensions.configureProjectDependencies
+import ke.don.gondi.extensions.configureVoyager
 import ke.don.gondi.extensions.coreModules
 import ke.don.gondi.extensions.datasourceModules
 import ke.don.gondi.extensions.sharedModules
@@ -23,6 +25,7 @@ class FeatureConvention : Plugin<Project> {
         }
 
         configureProjectDependencies(coreModules.all, datasourceModules.all, sharedModules.all)
-
+        configureKoin()
+        configureVoyager()
     }
 }
