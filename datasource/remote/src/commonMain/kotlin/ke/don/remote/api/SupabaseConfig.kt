@@ -5,12 +5,13 @@ import io.github.jan.supabase.annotations.SupabaseInternal
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.ktor.client.plugins.HttpTimeout
+import ke.don.remote.BuildConfig
 
 object SupabaseConfig {
     @OptIn(SupabaseInternal::class)
     val supabase = createSupabaseClient(
-        supabaseUrl = BuildKonfig.SUPABASE_URL,
-        supabaseKey = BuildKonfig.SUPABASE_KEY,
+        supabaseUrl = BuildConfig.SUPABASE_URL,
+        supabaseKey = BuildConfig.SUPABASE_KEY,
     ) {
         install(Postgrest)
         installPlatformAuth()

@@ -12,6 +12,7 @@ class KtorSupabasePlugin: Plugin<Project> {
             sourceSets.apply {
                 jvmMain.dependencies {
                     implementation(libs.findLibrary("ktor-client-cio").get())
+                    implementation(libs.findLibrary("ktor-server-netty").get())
                 }
                 androidMain.dependencies {
                     implementation(libs.findLibrary("ktor-client-cio").get())

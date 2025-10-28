@@ -1,10 +1,9 @@
-import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.datasourceConvention)
     alias(libs.plugins.ktorSupabasePlugin)
-    id("com.codingfeline.buildkonfig") version "0.17.1"
+    id("com.github.gmazzo.buildconfig") version "5.7.0"
 }
 
 val keysFile = rootProject.file("local.properties")
@@ -13,11 +12,9 @@ if (keysFile.exists()) {
     keys.load(keysFile.inputStream())
 }
 
-buildkonfig {
-    packageName = "ke.don.remote"
+buildConfig {
+    packageName.set("ke.don.remote")
 
-    defaultConfigs {
-        buildConfigField(STRING, "SUPABASE_URL", "${keys["SUPABASE_URL"]}")
-        buildConfigField(STRING, "SUPABASE_KEY", "${keys["SUPABASE_KEY"]}")
-    }
+    buildConfigField("SUPABASE_URL", "${keys["SUPABASE_URL"]}")
+    buildConfigField("SUPABASE_KEY", "${keys["SUPABASE_KEY"]}")
 }
