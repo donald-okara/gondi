@@ -52,21 +52,23 @@ fun TopBarToken(
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
         val maxWidth = maxWidth
 
-        val showTitle = title != null && maxWidth > 360.dp
-        val useFlowRow = maxWidth < 360.dp
+        val wideEnough = maxWidth > 360.dp
+        val useFlowRow = !wideEnough
 
         Column(
             modifier = modifier.padding(horizontal = if (isCompact) Values.compactScreenPadding else Values.expandedScreenPadding),
         ) {
             TopAppBar(
                 title = {
-                    if (showTitle) {
-                        Text(
-                            text = title,
-                            maxLines = 1,
-                            style = MaterialTheme.typography.bodyMedium,
-                            overflow = TextOverflow.Ellipsis,
-                        )
+                    if (wideEnough) {
+                        title?.let {
+                            Text(
+                                text = it,
+                                maxLines = 1,
+                                style = MaterialTheme.typography.bodyMedium,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
                     }
                 },
                 navigationIcon = {

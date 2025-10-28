@@ -7,12 +7,11 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
+@file:Suppress("SwallowedException")
 package ke.don.components.helpers
 
-actual fun isRunningUnitTest(): Boolean {
-    return try {
-        Class.forName("org.junit.Assert") != null
-    } catch (e: ClassNotFoundException) {
-        false
-    }
+private val isJUnitPresent: Boolean by lazy {
+    runCatching { Class.forName("org.junit.Assert"); true }.getOrDefault(false)
 }
+
+actual fun isRunningUnitTest(): Boolean = isJUnitPresent

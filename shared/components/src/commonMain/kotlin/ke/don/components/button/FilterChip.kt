@@ -59,16 +59,16 @@ fun FilterDropdownChip(
 
         ThemedDropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = !expanded },
+            onDismissRequest = { expanded = false },
             showDefault = showDefault,
             items = options.map { it.second },
             onClear = {
                 onClear()
-                expanded = !expanded
+                expanded = false
             },
             onItemClick = {
                 onSelect(it)
-                expanded = !expanded
+                expanded = false
             },
             modifier = Modifier
                 .width(with(LocalDensity.current) { buttonSize.width.toDp() }), // match button width

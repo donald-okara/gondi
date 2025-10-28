@@ -16,6 +16,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,8 +44,8 @@ fun ButtonContentSwitcher(
     ) { isLoading ->
         if (isLoading) {
             LoadingDots(
-                color = buttonType.animatedButtonColors().contentColor,
-                dotSize = contentHeight ?: 20.dp,
+                color = LocalContentColor.current,
+                dotSize = contentHeight ?: 20.dp
             )
         } else {
             Row(verticalAlignment = Alignment.CenterVertically) {

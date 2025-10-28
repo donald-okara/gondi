@@ -23,8 +23,9 @@ fun Float.toWindowSizeClass() = getWindowSizeClass(this.dp)
 fun isCompact() = getScreenWidth().toWindowSizeClass() == WindowSizeClass.Compact
 
 /**
- * Returns the height of the screen in pixels.
+ * Returns the height of the screen in density-independent pixels (dp).
  *
- * @return The screen height as a [Float].
- */
+ * @return The screen height in dp as a [Float].
+ * */
+
 expect fun getScreenHeight(): Float

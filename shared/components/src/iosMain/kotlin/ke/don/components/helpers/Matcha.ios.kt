@@ -9,4 +9,15 @@
  */
 package ke.don.components.helpers
 
-actual fun isRunningUnitTest(): Boolean = false
+import kotlinx.cinterop.BetaInteropApi
+import platform.Foundation.NSClassFromString
+import platform.Foundation.NSProcessInfo
+import kotlinx.cinterop.ExperimentalForeignApi
+
+@OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
+actual fun isRunningUnitTest(): Boolean {
+    val hasXCTest = NSClassFromString("XCTest") != null
+    val env = NSProcessInfo.processInfo.environment
+    val hasEnv = (env["XCTestConfigurationFilePath"] != null)
+    return hasXCTest || hasEnv
+}
