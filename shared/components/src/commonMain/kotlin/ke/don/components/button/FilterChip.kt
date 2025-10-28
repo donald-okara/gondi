@@ -116,7 +116,7 @@ fun ThemedDropdownMenu(
                     Text(
                         text = item,
                         style = MaterialTheme.typography.labelMedium,
-                        minLines = 1,
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
                 },
