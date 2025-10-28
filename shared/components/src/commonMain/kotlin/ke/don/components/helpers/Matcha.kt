@@ -32,7 +32,7 @@ object Matcha {
 
     fun info(
         title: String,
-        description: String,
+        description: String = "",
         duration: ToastDuration = ToastDuration.Short,
         primaryAction: ToastAction? = null,
         secondaryAction: ToastAction? = defaultDismiss,
@@ -70,7 +70,7 @@ object Matcha {
 
     fun warning(
         title: String,
-        description: String,
+        description: String = "",
         duration: ToastDuration = ToastDuration.Long,
         primaryAction: ToastAction? = null,
         secondaryAction: ToastAction? = defaultDismiss,

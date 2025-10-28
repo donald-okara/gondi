@@ -10,28 +10,58 @@
 package ke.don.gondi
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import ke.don.components.button.ButtonToken
+import ke.don.components.button.ComponentType
+import ke.don.components.card.Toast
+import ke.don.components.helpers.Matcha
 import ke.don.design.theme.AppTheme
+import ke.don.koffee.annotations.ExperimentalKoffeeApi
+import ke.don.koffee.model.KoffeeDefaults
+import ke.don.koffee.model.ToastAnimation
+import ke.don.koffee.model.ToastPosition
+import ke.don.koffee.ui.KoffeeBar
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+@OptIn(ExperimentalKoffeeApi::class)
 @Composable
 @Preview
 fun App() {
     val greeting = Greeting().greet()
     AppTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
+        val koffeeConfig = KoffeeDefaults.config.copy(
+            layout = { Toast(data = it) },
+            position = ToastPosition.BottomEnd,
+            maxVisibleToasts = 3,
+            animationStyle = ToastAnimation.SlideUp,
+        )
+        KoffeeBar(
+            config = koffeeConfig,
         ) {
-            Box(
+            Surface(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
             ) {
-                Text(greeting)
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Column{
+                        Text(greeting)
+
+                        ButtonToken(
+                            buttonType = ComponentType.Primary,
+                            onClick = { Matcha.success("Hello. It's me") }
+                        ){
+                            Text("Click Me")
+                        }
+                    }
+                }
             }
         }
     }
