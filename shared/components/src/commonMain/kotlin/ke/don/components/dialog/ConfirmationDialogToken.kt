@@ -35,6 +35,20 @@ import ke.don.components.button.ButtonToken
 import ke.don.components.button.CheckBoxToken
 import ke.don.components.button.ComponentType
 
+/**
+ * Shows a confirmation dialog with an optional leading icon, title, message, and an optional checklist that must be completed before confirming.
+ *
+ * When a `checklist` is provided, the Confirm action is enabled only after every checklist item is checked. The dialog calls `onConfirm` when the Confirm button is pressed and `onDismiss` when the Cancel button or outside dismiss is triggered.
+ *
+ * @param modifier Modifier to apply to the dialog container.
+ * @param icon Optional leading icon displayed in the header.
+ * @param title Dialog title shown prominently at the top.
+ * @param message Informational message displayed under the title.
+ * @param checklist Optional list of checklist item labels; if non-null, each item is rendered with a checkbox and must be checked to enable Confirm.
+ * @param dialogType Visual style/type applied to the Confirm button and checklist checkboxes.
+ * @param onConfirm Callback invoked when the Confirm action is taken.
+ * @param onDismiss Callback invoked when the dialog is dismissed or Cancel is pressed.
+ */
 @Composable
 fun ConfirmationDialogToken(
     modifier: Modifier = Modifier,

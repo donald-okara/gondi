@@ -20,6 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 
+/**
+ * Displays an integer that animates from its current value to the provided target value.
+ *
+ * @param targetValue The destination integer value to animate toward.
+ * @param modifier Modifier applied to the Text composable.
+ * @param style TextStyle used to render the number.
+ * @param fontWeight FontWeight applied to the text.
+ * @param durationMillis Duration of the animation in milliseconds.
+ */
 @Composable
 fun AnimatedCount(
     targetValue: Int,

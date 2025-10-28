@@ -18,6 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
+/**
+ * Displays composable content inside a themed dialog surface with medium shape and standard padding.
+ *
+ * @param onDismissRequest Called when the dialog is requested to be dismissed.
+ * @param modifier Optional [Modifier] applied to the inner Surface.
+ * @param content The composable content to show inside the dialog's surface.
+ */
 @Composable
 fun DialogToken(
     onDismissRequest: () -> Unit,

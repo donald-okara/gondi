@@ -14,12 +14,22 @@ import platform.CoreGraphics.CGRectGetHeight
 import platform.CoreGraphics.CGRectGetWidth
 import platform.UIKit.UIScreen
 
+/**
+ * Retrieve the main device screen's width in points.
+ *
+ * @return The main screen width in points as a `Float`.
+ */
 @OptIn(ExperimentalForeignApi::class)
 actual fun getScreenWidth(): Float {
     val bounds = UIScreen.mainScreen.bounds
     return CGRectGetWidth(bounds).toFloat()
 }
 
+/**
+ * Retrieves the main device screen height in points.
+ *
+ * @return The height of the main screen in points as a Float.
+ */
 @OptIn(ExperimentalForeignApi::class)
 actual fun getScreenHeight(): Float {
     val bounds = UIScreen.mainScreen.bounds

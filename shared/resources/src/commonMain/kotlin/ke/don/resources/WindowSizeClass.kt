@@ -41,17 +41,35 @@ fun getWindowSizeClass(windowDpWidth: Dp): WindowSizeClass {
     }
 }
 
+/**
+ * Provides the valid content width range for this window size class.
+ *
+ * @return The content width range in Dp for this size class:
+ * - Compact: 0.dp..600.dp
+ * - Medium: 600.dp..840.dp
+ * - Expanded: 840.dp..2400.dp
+ */
 fun WindowSizeClass.contentWidthRange(): ClosedRange<Dp> = when (this) {
     WindowSizeClass.Compact -> 0.dp..600.dp // phones
     WindowSizeClass.Medium -> 600.dp..840.dp // tablets / half desktop
     WindowSizeClass.Expanded -> 840.dp..2400.dp // large desktop / ultrawide
 }
+/**
+ * Provides the recommended icon size for this window size class.
+ *
+ * @return The icon size in Dp: 32.dp for Compact and Medium, 48.dp for Expanded.
+ */
 fun WindowSizeClass.iconSize(): Dp = when (this) {
     WindowSizeClass.Compact -> 32.dp // phones
     WindowSizeClass.Medium -> 32.dp // tablets / half desktop
     WindowSizeClass.Expanded -> 48.dp // desktop / large
 }
 
+/**
+ * Selects the number of grid columns appropriate for the window size class.
+ *
+ * @return The number of grid columns: `1` for Compact, `2` for Medium, `3` for Expanded.
+ */
 fun WindowSizeClass.getGridColumns(): Int = when (this) {
     WindowSizeClass.Compact -> 1
     WindowSizeClass.Medium -> 2

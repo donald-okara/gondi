@@ -40,6 +40,15 @@ import androidx.compose.ui.graphics.Shape
  * @param shimmerWidth The width of the shimmering gradient in pixels. Defaults to `500f`.
  * @return A [Modifier] that applies the shimmer background effect.
  */
+/**
+ * Apply a horizontal animated shimmer gradient as the background of a Modifier.
+ *
+ * @param shape The shape used for the background clipping. Defaults to a rectangle.
+ * @param shimmerColors Colors used in the horizontal gradient from leading to trailing edge.
+ * @param durationMillis Duration in milliseconds of a single shimmer cycle.
+ * @param shimmerWidth Width in pixels of the moving shimmer highlight.
+ * @return A Modifier with the animated shimmer background applied.
+ */
 @Composable
 fun Modifier.shimmerBackground(
     shape: Shape = RectangleShape,

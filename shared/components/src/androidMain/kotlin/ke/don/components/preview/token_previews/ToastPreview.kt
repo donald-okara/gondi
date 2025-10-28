@@ -15,6 +15,11 @@ import ke.don.components.card.ToastShowcase
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 
+/**
+ * Renders the toast showcase inside a device-and-theme preview container.
+ *
+ * @param isDarkTheme `true` to render the preview in dark theme, `false` for light theme.
+ */
 @DevicePreviews
 @Composable
 fun ToastPreview(

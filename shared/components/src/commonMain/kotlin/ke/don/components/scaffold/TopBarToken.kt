@@ -39,6 +39,19 @@ import ke.don.resources.Values
 import ke.don.resources.isCompact
 import org.jetbrains.compose.resources.painterResource
 
+/**
+ * Renders a responsive top app bar with an optional title, adaptive navigation icon, and actions.
+ *
+ * The title is displayed only when there is sufficient horizontal space. Navigation icon can be
+ * the app logo, a back button (invokes `navigateBack`), or a burger/menu button (invokes `toggleDrawer`).
+ * Action content is shown inline on wide layouts and arranged in a FlowRow beneath the app bar on narrow layouts.
+ *
+ * @param title Optional title text; displayed only when layout width is wide enough.
+ * @param navigationIcon Controls the navigation area; supports `NavigationIcon.None`, `NavigationIcon.Back`, and `NavigationIcon.Burger`.
+ * @param actions Composable slot for action content. Rendered inline in the app bar on wide screens or in a FlowRow on narrow screens.
+ * @param isCompact When true, uses compact horizontal padding; otherwise uses expanded padding.
+ * @param scrollBehavior Optional TopAppBarScrollBehavior to control app bar scrolling interactions.
+ */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun TopBarToken(

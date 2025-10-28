@@ -22,6 +22,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * Displays a horizontal row of circular dots that pulse their opacity in a staggered, wave-like pattern.
+ *
+ * @param modifier Modifier applied to the Row container.
+ * @param dotCount Number of dots to display.
+ * @param dotSize Diameter of each dot.
+ * @param dotSpacing Horizontal space between adjacent dots.
+ * @param color Fill color of the dots.
+ * @param minAlpha Minimum alpha value for each dot.
+ * @param maxAlpha Maximum alpha value for each dot.
+ * @param pulseDuration Duration in milliseconds of one half-cycle (from `minAlpha` to `maxAlpha`).
+ * @param delayBetweenDots Milliseconds to offset each dot's animation start to create the staggered wave.
+ */
 @Composable
 fun LoadingDots(
     modifier: Modifier = Modifier,

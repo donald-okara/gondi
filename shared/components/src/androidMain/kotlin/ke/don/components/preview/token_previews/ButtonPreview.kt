@@ -20,6 +20,13 @@ class DarkModeProvider : PreviewParameterProvider<Boolean> {
     override val values = sequenceOf(true, false)
 }
 
+/**
+ * Preview composable that renders ButtonShowcase in both light and dark theme variants.
+ *
+ * Renders ButtonShowcase inside DevicePreviewContainer using the provided `isDarkTheme` flag.
+ *
+ * @param isDarkTheme When `true`, the preview uses a dark theme; when `false`, it uses a light theme.
+ */
 @DevicePreviews
 @Composable
 fun ButtonPreview(

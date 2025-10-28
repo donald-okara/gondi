@@ -21,6 +21,12 @@ import ke.don.koffee.model.ToastAction
 import ke.don.koffee.model.ToastData
 import ke.don.koffee.model.ToastType
 
+/**
+ * Shows a centered column of toast components demonstrating every available ToastType.
+ *
+ * Renders one Toast per ToastType entry using the entry's name as the title, a fixed description ("Some Message"),
+ * and two actions labeled "Action" with no-op click handlers.
+ */
 @Composable
 fun ToastShowcase() {
     Column(

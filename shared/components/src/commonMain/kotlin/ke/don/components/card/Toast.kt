@@ -41,6 +41,14 @@ import ke.don.koffee.model.ToastAction
 import ke.don.koffee.model.ToastData
 import ke.don.koffee.model.ToastType
 
+/**
+ * Renders a responsive toast card that displays an icon, title, optional description, and optional actions.
+ *
+ * The toast adapts its width and padding to the available space (compact vs non-compact) and presents its content inside a rounded, elevated card.
+ *
+ * @param modifier Modifier applied to the toast container.
+ * @param data ToastData containing the type, text, and optional actions to display.
+ */
 @Composable
 fun Toast(
     modifier: Modifier = Modifier,
@@ -65,6 +73,15 @@ fun Toast(
     }
 }
 
+/**
+ * Renders the toast's content: a leading icon, title, optional description, and optional action row.
+ *
+ * The visual styling of the icon and actions follows the toast's `data.type`. If `data.primaryAction`
+ * or `data.secondaryAction` is present, an action row is shown aligned to the end.
+ *
+ * @param data The toast payload containing `title`, `description`, `type`, and optional `primaryAction`/`secondaryAction`.
+ * @param icon The leading icon to display for the toast.
+ */
 @Composable
 fun ToastComponent(
     modifier: Modifier = Modifier,
@@ -132,6 +149,15 @@ fun ToastComponent(
     }
 }
 
+/**
+ * Renders up to two action buttons for a toast: an optional neutral secondary action and an optional primary action styled by `type`.
+ *
+ * When `secondaryAction` is provided, a neutral secondary button is shown; when `primaryAction` is provided, a primary button using `type` styling is shown. If either action is `null`, that button is omitted.
+ *
+ * @param secondaryAction Optional action rendered as a neutral secondary button; its label and click handler are used.
+ * @param primaryAction Optional action rendered as the primary button; its label and click handler are used.
+ * @param type ComponentType applied to the primary button's visual style.
+ */
 @Composable
 fun ToastActionRow(
     modifier: Modifier = Modifier,
@@ -170,6 +196,13 @@ fun ToastActionRow(
     }
 }
 
+/**
+ * Adjusts width and padding for compact or non-compact toast layouts.
+ *
+ * @param isCompact If `true`, the modifier fills the available width and applies horizontal and vertical padding.
+ *                  If `false`, the modifier wraps content width, applies the same padding, and constrains the maximum width to `MAX_NON_COMPACT_WIDTH`.
+ * @return A `Modifier` that applies the appropriate width behavior, padding, and optional max-width constraint.
+ */
 fun sizeMod(isCompact: Boolean): Modifier {
     return if (isCompact) {
         Modifier

@@ -19,6 +19,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 
+/**
+ * Render a Material3 Card styled as a token with configurable appearance and optional click handling.
+ *
+ * The card uses provided shape, colors, elevation and border. If `onClick` is `null` the card is non-clickable;
+ * if `onClick` is provided the card becomes clickable and invokes the handler when tapped. By default `colors`
+ * and `border` are derived from `cardType`.
+ *
+ * @param onClick Optional click callback; when non-null enables click interaction for the card.
+ * @param shape Card geometry used to clip and draw the card's corners.
+ * @param cardType Style selector that determines default colors and whether a border is applied.
+ * @param colors Card color scheme; defaults to a value derived from `cardType`.
+ * @param elevation Visual elevation for the card's shadow.
+ * @param border Optional border stroke; by default applied only when `cardType` is `CardType.Outlined`.
+ * @param content Composable content placed inside the card's ColumnScope.
+ */
 @Composable
 fun CardToken(
     modifier: Modifier = Modifier,

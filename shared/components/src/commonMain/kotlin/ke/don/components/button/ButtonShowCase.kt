@@ -21,6 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+/**
+ * Displays a centered showcase of button variations for each entry in `ComponentType.entries`.
+ *
+ * For each entry this composable emits a row with two equal-width `ButtonToken` examples:
+ * an enabled default button and a disabled loading button; both display the entry's name
+ * and use no-op `onClick` handlers.
+ */
 @Composable
 fun ButtonShowcase() {
     Column(

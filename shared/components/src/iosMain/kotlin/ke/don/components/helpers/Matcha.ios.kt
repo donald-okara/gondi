@@ -14,6 +14,11 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSClassFromString
 import platform.Foundation.NSProcessInfo
 
+/**
+ * Detects whether the current process appears to be running unit tests on Apple platforms by checking for XCTest presence or the `XCTestConfigurationFilePath` environment variable.
+ *
+ * @return `true` if XCTest is present or `XCTestConfigurationFilePath` is set in the environment, `false` otherwise.
+ */
 @OptIn(ExperimentalForeignApi::class, BetaInteropApi::class)
 actual fun isRunningUnitTest(): Boolean {
     val hasXCTest = NSClassFromString("XCTest") != null

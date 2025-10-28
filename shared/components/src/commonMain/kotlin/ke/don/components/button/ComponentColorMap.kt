@@ -119,6 +119,12 @@ val ComponentType.buttonTypeColor: @Composable () -> ButtonColors
         }
     }
 
+/**
+ * Provides ButtonColors that animate container and content colors when this ComponentType or the enabled state changes.
+ *
+ * @param enabled Whether the button is enabled; when `false` the returned colors reflect the disabled variants.
+ * @return A `ButtonColors` instance whose container and content colors are animated between the type's target and disabled colors, and which exposes the static disabled colors for disabled states.
+ */
 @Composable
 fun ComponentType.animatedButtonColors(
     enabled: Boolean = true,
@@ -202,6 +208,12 @@ val ComponentType.iconTypeColor: @Composable () -> IconButtonColors
         }
     }
 
+/**
+ * Provides IconButtonColors whose container and content colors animate when the component type or enabled state changes.
+ *
+ * @param enabled When `true`, the returned colors use the type's target container and content colors; when `false`, they use the corresponding disabled colors.
+ * @return An IconButtonColors instance with animated container and content colors and static disabled color values.
+ */
 @Composable
 fun ComponentType.animatedIconColors(
     enabled: Boolean = true,
@@ -218,6 +230,14 @@ fun ComponentType.animatedIconColors(
     )
 }
 
+/**
+ * Provides CheckboxColors that animate the component type's container, content, and border colors
+ * between their target and disabled variants based on `enabled`.
+ *
+ * @param enabled Whether the checkbox should use the enabled (target) colors; when `false` the
+ * disabled color variants are used.
+ * @return A CheckboxColors instance with animated checked/unchecked box, checkmark, and border colors;
+ * disabled variants use the file-local `disabledAlpha` to derive transparency.
 @Composable
 fun ComponentType.animatedCheckboxColors(
     enabled: Boolean = true,

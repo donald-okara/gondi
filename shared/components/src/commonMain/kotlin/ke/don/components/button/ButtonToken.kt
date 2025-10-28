@@ -22,6 +22,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import ke.don.resources.Values
 
+/**
+ * Renders a configurable Material Button whose appearance is driven by the provided ComponentType and that delegates inner content rendering to ButtonContentSwitcher.
+ *
+ * @param modifier Layout modifier applied to the button.
+ * @param onClick Lambda invoked when the button is clicked.
+ * @param buttonType Determines the button's visual variant and color animation.
+ * @param enabled Whether the button is interactive.
+ * @param loading When `true`, ButtonContentSwitcher will render the loading state instead of the provided content.
+ * @param shape The shape used to clip the button.
+ * @param elevation Elevation configuration for the button.
+ * @param border Optional border stroke; typically provided when `buttonType` is an outlined variant.
+ * @param contentPadding Padding inside the button around its content.
+ * @param interactionSource Optional interaction source for gesture and interaction tracking.
+ * @param content Composable content displayed inside the button when not loading.
+ */
 @Composable
 fun ButtonToken(
     modifier: Modifier = Modifier,

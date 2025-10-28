@@ -9,6 +9,11 @@
  */
 package ke.don.components.helpers
 
+/**
+ * Detects whether JUnit-based unit tests are running on the JVM.
+ *
+ * @return `true` if the JUnit `org.junit.Assert` class is available on the classpath, `false` otherwise.
+ */
 actual fun isRunningUnitTest(): Boolean {
     return try {
         Class.forName("org.junit.Assert") != null

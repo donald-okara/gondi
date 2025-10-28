@@ -18,4 +18,9 @@ private val isJUnitPresent: Boolean by lazy {
     }.getOrDefault(false)
 }
 
+/**
+ * Reports whether execution is running inside a JUnit-based unit test environment.
+ *
+ * @return `true` if JUnit is present on the runtime classpath (indicating a JUnit-based unit test), `false` otherwise.
+ */
 actual fun isRunningUnitTest(): Boolean = isJUnitPresent
