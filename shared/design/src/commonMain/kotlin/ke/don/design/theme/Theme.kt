@@ -189,4 +189,3 @@ object AppTheme {
         @Composable
         get() = LocalExtendedColorScheme.current
 }
-

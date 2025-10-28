@@ -75,7 +75,7 @@ fun TopBarToken(
                             Image(
                                 painter = painterResource(Resources.Images.LOGO),
                                 contentDescription = "App Icon",
-                                modifier = Modifier.size(24.dp)
+                                modifier = Modifier.size(24.dp),
                             )
                         }
                         is NavigationIcon.Back -> IconButton(onClick = navigationIcon.navigateBack) {

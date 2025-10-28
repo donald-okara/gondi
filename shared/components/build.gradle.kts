@@ -4,7 +4,7 @@ plugins {
 }
 
 kotlin {
-    sourceSets{
+    sourceSets {
         commonMain.dependencies {
             api(libs.bundles.compose)
             implementation(project(":shared:resources"))

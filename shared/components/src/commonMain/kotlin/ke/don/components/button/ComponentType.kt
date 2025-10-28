@@ -19,7 +19,7 @@ enum class ComponentType {
     Neutral,
     Warning,
     Info,
-    Success
+    Success,
 }
 
 fun randomButtonType(): ComponentType {
