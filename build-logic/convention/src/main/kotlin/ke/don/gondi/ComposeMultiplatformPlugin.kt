@@ -36,6 +36,9 @@ class ComposeMultiplatformPlugin : Plugin<Project> {
                         implementation(composeDeps.components.uiToolingPreview)
                     }
                 }
+                androidMain.dependencies {
+                    implementation(composeDeps.preview)
+                }
                 jvmMain.dependencies {
                     implementation(composeDeps.desktop.currentOs)
                 }
