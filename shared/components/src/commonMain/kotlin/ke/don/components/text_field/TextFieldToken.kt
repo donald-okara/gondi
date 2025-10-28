@@ -31,6 +31,33 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
+/**
+ * Renders a labeled OutlinedTextField with optional placeholder, icons, error/comment supporting text, and an optional character counter.
+ *
+ * Displays the label (with an optional required marker), binds to `text`/`onValueChange`, and conditionally shows a trailing action icon when `onClick` and `trailingIcon` are provided. When `isError` and `errorMessage` are present the error message is shown instead of `comment`. If `showLength` is true and `maxLength` > 0, a right-aligned counter of `nameLength / maxLength` is displayed. The trailing action is only invoked when the field is enabled and not in an error state.
+ *
+ * @param modifier Modifier applied to the root column.
+ * @param label Visible label for the text field.
+ * @param text Current text value.
+ * @param onValueChange Callback invoked when the text changes.
+ * @param enabled Whether the text field is enabled for interaction.
+ * @param placeholder Optional placeholder text shown when the field is empty.
+ * @param isError Whether the field is in an error state.
+ * @param comment Optional helper or descriptive text shown when not displaying an error.
+ * @param errorMessage Optional error text shown when `isError` is true.
+ * @param readOnly If true, the field is not editable.
+ * @param singleLine If true, the field limits input to a single line.
+ * @param keyboardOptions Keyboard input configuration.
+ * @param keyboardActions Keyboard action callbacks.
+ * @param showLength Whether to show the character counter.
+ * @param nameLength Current character count used by the counter (defaults to `text.length`).
+ * @param maxLength Maximum character count used by the counter; ignored when <= 0.
+ * @param onClick Optional callback for the trailing icon action.
+ * @param trailingIcon Optional image vector displayed as the trailing icon (requires `onClick` to be actionable).
+ * @param leadingIcon Optional image vector displayed as the leading icon.
+ * @param isRequired Whether to append a required-field marker to the label.
+ * @param minLines Minimum number of visible lines for the text field.
+ */
 @Composable
 fun TextFieldToken(
     modifier: Modifier = Modifier,
@@ -149,6 +176,12 @@ fun TextFieldToken(
     }
 }
 
+/**
+ * Render a label with an optional red asterisk to indicate a required field.
+ *
+ * @param label The label text to display.
+ * @param isRequired If `true`, appends a red "*" using `bodySmall` typography to indicate the field is required.
+ */
 @Composable
 private fun LabelWithRequiredMarker(
     label: String,

@@ -23,6 +23,17 @@ import ke.don.components.icon.IconToken
 import ke.don.resources.isCompact
 import kotlin.invoke
 
+/**
+ * Displays a refresh control that animates between a compact icon and a full labeled button.
+ *
+ * When `isCompact` is true an icon-only button is shown; when false a labeled button with optional
+ * loading state is shown. Transitions between states use a horizontal slide with cross-fade.
+ *
+ * @param isCompact If true shows the compact icon variant; if false shows the expanded labeled variant.
+ * @param enabled Whether the button is interactive.
+ * @param loading When true and the expanded variant is shown, the button displays a loading state.
+ * @param onClick Callback invoked when the button is pressed.
+ */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun RefreshButton(

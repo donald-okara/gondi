@@ -30,6 +30,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
+/**
+ * Displays a centered empty-state screen with an optional icon, title, description, and action slot.
+ *
+ * The content is centered inside a full-size container with padding and uses Material theming for
+ * typography and color. If `icon`, `description`, or `action` are `null`, their sections are omitted.
+ *
+ * @param modifier Modifier applied to the root container.
+ * @param title The primary title text shown prominently.
+ * @param description Optional secondary text shown beneath the title.
+ * @param icon Optional leading icon shown above the title. Defaults to `Icons.Default.Info`.
+ * @param action Optional composable slot rendered beneath the description for actions (e.g., a button).
+ */
 @Composable
 fun EmptyScreen(
     modifier: Modifier = Modifier,

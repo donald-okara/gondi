@@ -29,6 +29,13 @@ import ke.don.koffee.model.ToastPosition
 import ke.don.koffee.ui.KoffeeBar
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * Root composable that applies the app theme and hosts the UI with a configured KoffeeBar for toasts.
+ *
+ * Uses Greeting().greet() for the displayed greeting, configures Koffee to render Toasts at the bottom-end
+ * with a slide-up animation and a maximum of 3 visible toasts, and composes a centered Surface containing the
+ * greeting text and a primary ButtonToken that triggers a success toast via Matcha.success when clicked.
+ */
 @OptIn(ExperimentalKoffeeApi::class)
 @Composable
 @Preview

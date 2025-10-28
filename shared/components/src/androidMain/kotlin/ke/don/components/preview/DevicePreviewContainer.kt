@@ -15,6 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ke.don.design.theme.AppTheme
 
+/**
+ * Provides a themed full-screen container for previewing composables.
+ *
+ * Wraps the given content in the app's theme using the specified dark-mode setting and places it inside a Surface that fills the available space.
+ *
+ * @param isDarkTheme If `true`, applies the dark theme; otherwise applies the light theme.
+ * @param content The composable content to render inside the themed full-size Surface.
+ */
 @Composable
 fun DevicePreviewContainer(
     isDarkTheme: Boolean = false,

@@ -26,10 +26,23 @@ object Matcha {
         dismissAfter = true,
     )
 
+    /**
+     * Executes the provided [block] only when the code is not running unit tests.
+     *
+     * @param block The action to run if the current process is not a unit test.
+     */
     inline fun runIfNotUnitTest(block: () -> Unit) {
         if (!isRunningUnitTest()) block()
     }
 
+    /**
+     * Display an informational toast with optional primary and secondary actions.
+     *
+     * @param description Optional descriptive text shown below the title.
+     * @param primaryAction Optional action presented on the toast (e.g., a button).
+     * @param secondaryAction Optional secondary action presented on the toast (e.g., dismiss or alternate button).
+     * @param isAppVisible When `true`, the toast is intended to be shown only while the app is visible; when `false`, it may be shown regardless of app visibility.
+     */
     fun info(
         title: String,
         description: String = "",
@@ -49,6 +62,16 @@ object Matcha {
         )
     }
 
+    /**
+     * Displays a success toast with an optional description and action buttons.
+     *
+     * @param title The main title shown on the toast.
+     * @param description Optional additional text shown below the title.
+     * @param duration How long the toast is displayed.
+     * @param primaryAction Optional primary action shown on the toast.
+     * @param secondaryAction Optional secondary action shown on the toast.
+     * @param isAppVisible Whether the toast should be shown only when the app is visible.
+     */
     fun success(
         title: String,
         description: String = "",
@@ -68,6 +91,16 @@ object Matcha {
         )
     }
 
+    /**
+     * Displays a warning toast with an optional description and action buttons.
+     *
+     * @param title The toast title.
+     * @param description The optional detailed message shown under the title.
+     * @param duration How long the toast is displayed.
+     * @param primaryAction Optional primary action for the toast.
+     * @param secondaryAction Optional secondary action for the toast (defaults to a dismiss action).
+     * @param isAppVisible If `true`, show the toast only when the app is visible; if `false`, show regardless of visibility.
+     */
     fun warning(
         title: String,
         description: String = "",
@@ -87,6 +120,16 @@ object Matcha {
         )
     }
 
+    /**
+     * Displays an error toast with an optional description and actions.
+     *
+     * @param title The title text shown on the toast.
+     * @param description Optional descriptive text shown below the title.
+     * @param duration How long the toast should be shown.
+     * @param primaryAction Optional primary action displayed on the toast.
+     * @param secondaryAction Optional secondary action displayed on the toast; defaults to a dismiss action.
+     * @param isAppVisible When true, show the toast only if the app is visible.
+     */
     fun error(
         title: String,
         description: String = "",
@@ -106,6 +149,18 @@ object Matcha {
         )
     }
 
+    /**
+     * Displays a neutral toast with the given title and description.
+     *
+     * Does nothing when running inside a unit test.
+     *
+     * @param title The toast title.
+     * @param description The toast description/body.
+     * @param duration How long the toast is shown.
+     * @param primaryAction Optional primary action shown on the toast (invoked when the action is tapped).
+     * @param secondaryAction Optional secondary action shown on the toast.
+     * @param isAppVisible Whether the app is currently visible (used to decide toast presentation).
+     */
     fun neutral(
         title: String,
         description: String,
@@ -125,6 +180,17 @@ object Matcha {
         )
     }
 
+    /**
+     * Shows a generic error toast with an optional retry action.
+     *
+     * If `title` or `message` are null, they default to "Something went wrong". If `retryAction` is provided,
+     * the toast includes a "Retry" action that invokes `retryAction` and dismisses the toast. No toast is shown while running unit tests.
+     *
+     * @param title Optional title to display; defaults to "Something went wrong" when null.
+     * @param message Optional description to display; defaults to "Something went wrong" when null.
+     * @param retryAction Optional callback invoked when the user taps the "Retry" action.
+     * @param duration Toast display duration; defaults to `ToastDuration.Long`.
+     */
     fun showErrorToast(
         title: String? = null,
         message: String?,
@@ -140,4 +206,9 @@ object Matcha {
     }
 }
 
+/**
+ * Determines whether the current execution is running under unit tests.
+ *
+ * @return `true` if the runtime environment is executing unit tests, `false` otherwise.
+ */
 expect fun isRunningUnitTest(): Boolean

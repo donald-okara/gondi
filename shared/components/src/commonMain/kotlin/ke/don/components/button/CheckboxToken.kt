@@ -14,6 +14,16 @@ import androidx.compose.material3.CheckboxColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
+/**
+ * Renders a Material 3 Checkbox with configurable checked state, enablement, modifier, and colors.
+ *
+ * @param checked Current checked state of the Checkbox.
+ * @param onCheckedChange Callback invoked with the new checked state when the user toggles the Checkbox; pass `null` to make the Checkbox read-only.
+ * @param modifier Modifier to apply to the Checkbox.
+ * @param enabled Whether the Checkbox is interactive.
+ * @param checkboxType Determines the visual styling source used for default colors.
+ * @param colors Colors to use for the Checkbox; by default derived from `checkboxType` for the given `enabled` state.
+ */
 @Composable
 fun CheckBoxToken(
     checked: Boolean,

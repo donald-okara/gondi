@@ -22,6 +22,11 @@ enum class ComponentType {
     Success,
 }
 
+/**
+ * Selects a random ComponentType excluding Error, Inverse, Neutral, and Outlined.
+ *
+ * @return A randomly chosen ComponentType — one of Primary, Secondary, Tertiary, Warning, Info, or Success.
+ */
 fun randomButtonType(): ComponentType {
     return (ComponentType.entries - ComponentType.Error - ComponentType.Inverse - ComponentType.Neutral - ComponentType.Outlined).random()
 }

@@ -18,6 +18,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+/**
+ * Displays a centered preview screen that greets the provided name and shows a call-to-action button.
+ *
+ * Renders a vertically spaced Column with padding containing a headline greeting, a descriptive subtitle,
+ * and a "Continue" button (no-op in preview).
+ *
+ * @param name The name used in the greeting text.
+ */
 @Composable
 fun SampleScreen(name: String) {
     Column(

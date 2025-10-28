@@ -18,6 +18,14 @@ import ke.don.components.button.ButtonShowcase
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 
+/**
+ * Displays a device-themed preview showing a full-size gradient background with a button showcase.
+ *
+ * Uses DevicePreviewContainer to apply the provided dark/light theme and renders GradientBackground
+ * (filling the available space) with ButtonShowcase as its content.
+ *
+ * @param isDarkTheme When `true`, the preview is rendered in dark mode; when `false`, in light mode.
+ */
 @DevicePreviews
 @Composable
 fun BackgroundPreview(

@@ -25,6 +25,24 @@ import ke.don.components.button.ComponentType
 import ke.don.components.button.animatedIconColors
 import ke.don.resources.Values
 
+/**
+ * Renders an icon that can be optionally interactive and animates between icons using a crossfade.
+ *
+ * If `onClick` is provided the icon is wrapped in a ButtonToken using `buttonType`, `contentPaddingValues`
+ * and `enabled`; otherwise the icon is placed in a Box with the given `modifier`. When `content` is supplied
+ * it replaces the default animated icon rendering.
+ *
+ * @param onClick Optional click handler; when non-null the icon is rendered inside a ButtonToken.
+ * @param modifier Modifier applied to the outer container when not using a ButtonToken.
+ * @param imageVector The vector graphic to display as the icon.
+ * @param buttonType Visual style to apply when the icon is rendered as a button.
+ * @param contentDescription Accessibility description for the icon.
+ * @param contentPaddingValues Padding to apply when the icon is placed inside a ButtonToken.
+ * @param enabled Whether the surrounding button is enabled when `onClick` is provided.
+ * @param size Size of the displayed icon.
+ * @param colors Colors used for the icon content (tint).
+ * @param content Optional custom composable content that replaces the default animated icon.
+ */
 @Composable
 fun IconToken(
     onClick: (() -> Unit)? = null,

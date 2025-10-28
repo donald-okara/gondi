@@ -29,6 +29,22 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 
+/**
+ * Displays a clickable chip with an icon and label that opens a themed dropdown of options.
+ *
+ * When an option is chosen the provided selection callback is invoked and the menu closes; when
+ * the default "All" entry is shown and activated the clear callback is invoked and the menu closes.
+ *
+ * @param icon The icon shown inside the chip.
+ * @param enabled Whether the chip is interactive.
+ * @param label The text label displayed on the chip.
+ * @param selected Whether the chip is visually selected.
+ * @param selectedComponentType The component styling to apply when `selected` is true.
+ * @param showDefault Whether to include the initial default item (e.g., "All") in the dropdown.
+ * @param options List of option pairs where the first element is the option value and the second is the display text.
+ * @param onSelect Callback invoked with the selected option value.
+ * @param onClear Callback invoked when the default/clear item is selected.
+ */
 @Composable
 fun FilterDropdownChip(
     icon: ImageVector,
@@ -76,6 +92,19 @@ fun FilterDropdownChip(
     }
 }
 
+/**
+ * Renders a themed dropdown menu that optionally includes an "All" default item and a list of selectable string items.
+ *
+ * The menu uses the current MaterialTheme color scheme for item text and icons.
+ *
+ * @param modifier Modifier applied to the DropdownMenu.
+ * @param expanded Controls whether the menu is visible.
+ * @param onDismissRequest Callback invoked to request the menu be dismissed.
+ * @param items List of strings to display as menu items.
+ * @param showDefault If true, an initial "All" menu item is shown that invokes [onClear] when selected.
+ * @param onItemClick Callback invoked with the string of the selected item.
+ * @param onClear Callback invoked when the "All" default item is selected (no-op by default).
+ */
 @Composable
 fun ThemedDropdownMenu(
     modifier: Modifier = Modifier,

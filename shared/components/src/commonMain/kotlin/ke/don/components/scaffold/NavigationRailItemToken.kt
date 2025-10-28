@@ -29,6 +29,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
+/**
+ * Renders a navigation rail item with a leading icon and an optional label.
+ *
+ * The item's background color animates between surface and surfaceVariant based on `selected`.
+ *
+ * @param selected Whether the item is in a selected state.
+ * @param onClick Lambda invoked when the item is clicked.
+ * @param icon The icon to display at the start of the item.
+ * @param modifier Modifier applied to the item's surface.
+ * @param enabled Whether the item is interactive.
+ * @param label Text used for the item's content description and shown as the label when expanded.
+ * @param expanded When `true`, the label is displayed and the item expands to fill available width; when `false`, only the icon is shown.
+ */
 @Composable
 fun NavigationRailItemToken(
     selected: Boolean,

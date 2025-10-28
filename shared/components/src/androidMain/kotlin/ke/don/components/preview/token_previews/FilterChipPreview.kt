@@ -30,6 +30,14 @@ import ke.don.components.button.FilterDropdownChip
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 
+/**
+ * Displays a preview of the FilterDropdownChip demonstrating selection, label display, and clearing behavior.
+ *
+ * Renders the chip inside a device preview container with a Surface and Column layout; the chip shows "Select Type" when nothing is selected
+ * and offers the options "Bug", "Feature", and "Task".
+ *
+ * @param isDarkTheme Whether the preview should render using a dark theme. 
+ */
 @DevicePreviews
 @Composable
 fun FilterDropdownChipPreview(

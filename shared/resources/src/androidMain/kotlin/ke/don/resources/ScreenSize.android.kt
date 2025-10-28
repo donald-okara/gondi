@@ -12,6 +12,13 @@ package ke.don.resources
 import android.content.res.Configuration
 import android.content.res.Resources
 
+/**
+ * Obtains the device screen width in density-independent pixels (dp).
+ *
+ * Attempts to use the system configuration's `screenWidthDp`; if that value is undefined, falls back to calculating width from display metrics (`widthPixels / density`).
+ *
+ * @return The screen width in dp as a `Float`.
+ */
 actual fun getScreenWidth(): Float {
     val configuration = android.content.res.Resources.getSystem().configuration
     val sw = configuration.screenWidthDp
@@ -23,6 +30,14 @@ actual fun getScreenWidth(): Float {
     }
 }
 
+/**
+ * Obtain the device screen height in density-independent pixels (dp).
+ *
+ * When the system configuration provides `screenHeightDp`, that value is returned.
+ * Otherwise the height is computed from display metrics as `heightPixels / density`.
+ *
+ * @return The screen height in density-independent pixels (dp) as a Float.
+ */
 actual fun getScreenHeight(): Float {
     val configuration = android.content.res.Resources.getSystem().configuration
     val sh = configuration.screenHeightDp

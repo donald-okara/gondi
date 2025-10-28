@@ -25,6 +25,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
+/**
+ * Renders a Box with a vertical background gradient and a continuously pulsing accent glow.
+ *
+ * The accent color fades vertically into the background color while its alpha pulses to create a subtle glow.
+ *
+ * @param modifier Modifier applied to the Box.
+ * @param accentColor The color used at the start of the gradient; its alpha pulses to produce the glow.
+ * @param backgroundColor The color used at the end of the gradient.
+ * @param content Slot for the composable content placed centered inside the Box.
+ */
 @Composable
 fun GradientBackground(
     modifier: Modifier = Modifier,

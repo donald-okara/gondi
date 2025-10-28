@@ -16,16 +16,34 @@ import androidx.compose.ui.unit.dp
  *
  * @return The width of the screen in pixels.
  */
+/**
+ * Obtain the current screen width for the running platform.
+ *
+ * Platform-specific implementations must provide the measured width.
+ *
+ * @return The screen width in pixels.
+ */
 expect fun getScreenWidth(): Float
 
+/**
+ * Convert a width in pixels to its corresponding WindowSizeClass.
+ *
+ * @receiver Width in pixels.
+ * @return The `WindowSizeClass` that corresponds to the receiver width.
+ */
 fun Float.toWindowSizeClass() = getWindowSizeClass(this.dp)
 
+/**
+ * Determine whether the current screen width maps to the Compact window size class.
+ *
+ * @return `true` if the current screen width corresponds to `WindowSizeClass.Compact`, `false` otherwise.
+ */
 fun isCompact() = getScreenWidth().toWindowSizeClass() == WindowSizeClass.Compact
 
 /**
- * Returns the height of the screen in density-independent pixels (dp).
+ * Obtains the screen height in density-independent pixels (dp).
  *
- * @return The screen height in dp as a [Float].
- * */
+ * @return The screen height in dp as a Float.
+ */
 
 expect fun getScreenHeight(): Float

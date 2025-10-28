@@ -24,6 +24,13 @@ class DemoDataProvider : PreviewParameterProvider<DemoData> {
     )
 }
 
+/**
+ * Preview of SampleScreen using provided DemoData inside a DevicePreviewContainer.
+ *
+ * Renders SampleScreen with demoData.title and sets the container's dark theme according to demoData.isDark.
+ *
+ * @param demoData DemoData supplying the screen title and whether the preview uses a dark theme.
+ */
 @DevicePreviews
 @Composable
 fun MyScreenPreview(

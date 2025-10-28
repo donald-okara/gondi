@@ -19,6 +19,13 @@ import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 import ke.don.components.text_field.TextFieldToken
 
+/**
+ * Shows a device preview of a TextFieldToken configured to display an error state and length guidance.
+ *
+ * Renders a DevicePreviewContainer (light and dark via preview parameter) containing a Column with a TextFieldToken set up with a label, comment, long error message, and length indicators.
+ *
+ * @param isDarkTheme If true, renders the preview in dark mode; otherwise renders in light mode.
+ */
 @DevicePreviews
 @Composable
 fun FormTextFieldPreview(

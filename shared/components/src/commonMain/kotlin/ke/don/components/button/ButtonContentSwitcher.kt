@@ -27,6 +27,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ke.don.components.indicator.LoadingDots
 
+/**
+ * Displays either a loading indicator or the provided button content and animates transitions between them.
+ *
+ * When `loading` is true, a LoadingDots indicator is shown; when false, `content` is rendered inside a horizontally
+ * centered Row. Transitions use a short cross-fade animation. The loading indicator's dot size uses the measured
+ * content height when available, otherwise falls back to 20.dp.
+ *
+ * @param loading Whether to show the loading indicator instead of the content.
+ * @param buttonType The button's component type (accepted for API compatibility; not used by this switcher).
+ * @param content Composable slot that provides the button's normal content when not loading.
+ */
 @Composable
 fun ButtonContentSwitcher(
     loading: Boolean,
