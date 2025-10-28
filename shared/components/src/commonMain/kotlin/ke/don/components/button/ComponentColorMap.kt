@@ -238,6 +238,8 @@ fun ComponentType.animatedIconColors(
  * disabled color variants are used.
  * @return A CheckboxColors instance with animated checked/unchecked box, checkmark, and border colors;
  * disabled variants use the file-local `disabledAlpha` to derive transparency.
+ */
+
 @Composable
 fun ComponentType.animatedCheckboxColors(
     enabled: Boolean = true,

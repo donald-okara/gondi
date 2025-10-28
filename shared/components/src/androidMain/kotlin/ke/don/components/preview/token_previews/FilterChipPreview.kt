@@ -36,7 +36,7 @@ import ke.don.components.preview.DevicePreviews
  * Renders the chip inside a device preview container with a Surface and Column layout; the chip shows "Select Type" when nothing is selected
  * and offers the options "Bug", "Feature", and "Task".
  *
- * @param isDarkTheme Whether the preview should render using a dark theme. 
+ * @param isDarkTheme Whether the preview should render using a dark theme.
  */
 @DevicePreviews
 @Composable

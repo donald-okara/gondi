@@ -54,6 +54,7 @@ fun WindowSizeClass.contentWidthRange(): ClosedRange<Dp> = when (this) {
     WindowSizeClass.Medium -> 600.dp..840.dp // tablets / half desktop
     WindowSizeClass.Expanded -> 840.dp..2400.dp // large desktop / ultrawide
 }
+
 /**
  * Provides the recommended icon size for this window size class.
  *
