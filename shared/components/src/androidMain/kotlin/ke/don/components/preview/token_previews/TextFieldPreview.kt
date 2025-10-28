@@ -33,7 +33,7 @@ fun FormTextFieldPreview(
                 comment = "20% discount",
                 enabled = true,
                 isError = true,
-                errorMessage = "Name is too shortName is too shortName is too shortName is too shortName is too short",
+                errorMessage = "Name is too short",
                 showLength = true,
                 nameLength = 100,
                 maxLength = 200,
