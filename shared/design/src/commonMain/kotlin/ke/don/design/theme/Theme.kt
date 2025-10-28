@@ -154,6 +154,12 @@ val LocalExtendedColorScheme = staticCompositionLocalOf<ExtendedColorScheme> {
     error("No ExtendedColorScheme provided")
 }
 
+/**
+ * Sets up the app's Material3 theme and provides the extended color scheme to the composition.
+ *
+ * @param darkTheme When `true`, applies the dark color scheme and corresponding extended colors; when `false`, applies the light equivalents.
+ * @param content The composable content that will be wrapped by the theme.
+ */
 @Composable
 fun AppTheme(
     darkTheme: Boolean = true,
@@ -178,7 +184,14 @@ fun AppTheme(
         MaterialTheme(
             colorScheme = colorScheme,
             typography = AppTypography,
+            shapes = shapes,
             content = content,
         )
     }
+}
+
+object AppTheme {
+    val extendedColors: ExtendedColorScheme
+        @Composable
+        get() = LocalExtendedColorScheme.current
 }

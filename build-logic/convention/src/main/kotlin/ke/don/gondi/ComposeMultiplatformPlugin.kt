@@ -9,6 +9,17 @@ import org.jetbrains.compose.ComposeExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class ComposeMultiplatformPlugin : Plugin<Project> {
+    /**
+     * Configures the Gradle project for Compose Multiplatform by applying required Compose-related plugins
+     * and adding Compose dependencies to the Kotlin Multiplatform source sets.
+     *
+     * Applies the Compose plugins and then configures the Kotlin Multiplatform extension so that:
+     * - commonMain receives core Compose libraries (runtime, foundation, material3, ui, icons, components, tooling preview),
+     * - androidMain receives the Compose preview dependency,
+     * - jvmMain receives the platform-specific desktop dependency for the current OS.
+     *
+     * @param target The Gradle project to configure.
+     */
     override fun apply(target: Project) = with(target) {
         with(pluginManager){
             listOf(
@@ -35,6 +46,9 @@ class ComposeMultiplatformPlugin : Plugin<Project> {
                         implementation(composeDeps.material)
                         implementation(composeDeps.components.uiToolingPreview)
                     }
+                }
+                androidMain.dependencies {
+                    implementation(composeDeps.preview)
                 }
                 jvmMain.dependencies {
                     implementation(composeDeps.desktop.currentOs)

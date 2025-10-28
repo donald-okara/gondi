@@ -1,0 +1,23 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
+package ke.don.components.helpers
+
+/**
+ * Detects whether JUnit-based unit tests are running on the JVM.
+ *
+ * @return `true` if the JUnit `org.junit.Assert` class is available on the classpath, `false` otherwise.
+ */
+actual fun isRunningUnitTest(): Boolean {
+    return try {
+        Class.forName("org.junit.Assert") != null
+    } catch (e: ClassNotFoundException) {
+        false
+    }
+}
