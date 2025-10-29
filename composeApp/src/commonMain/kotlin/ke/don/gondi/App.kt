@@ -9,6 +9,12 @@
  */
 package ke.don.gondi
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +25,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.stack.StackEvent
+import cafe.adriel.voyager.navigator.Navigator
+import ke.don.authentication.screens.AuthenticationScreen
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.card.Toast
@@ -56,23 +65,23 @@ fun App() {
             Surface(
                 modifier = Modifier.fillMaxSize(),
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
-                    ) {
-                        Text(greeting)
-
-                        ButtonToken(
-                            buttonType = ComponentType.Primary,
-                            onClick = { Matcha.success("Hello. It's me") },
-                        ) {
-                            Text("Click Me")
-                        }
+                val startDestination = AuthenticationScreen()
+                Navigator(startDestination) { navigator ->
+                    AnimatedContent(
+                        targetState = navigator.lastItem,
+                        transitionSpec = {
+                            if (navigator.lastEvent == StackEvent.Pop) {
+                                (scaleIn(initialScale = 1.2f) + fadeIn()) togetherWith
+                                        (scaleOut(targetScale = 0.8f) + fadeOut())
+                            } else {
+                                (scaleIn(initialScale = 0.8f) + fadeIn()) togetherWith
+                                        (scaleOut(targetScale = 1.2f) + fadeOut())
+                            }
+                        },
+                    ) { screen ->
+                        screen.Content()
                     }
+
                 }
             }
         }

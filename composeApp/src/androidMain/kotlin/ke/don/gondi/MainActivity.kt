@@ -9,26 +9,44 @@
  */
 package ke.don.gondi
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import io.github.jan.supabase.auth.handleDeeplinks
+import ke.don.remote.api.SupabaseConfig.supabase
+import ke.don.utils.Logger
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-
         setContent {
             App()
         }
+        // Handle initial deeplink (cold start)
+        intent?.let {
+            debugDeeplink(it)
+            supabase.handleDeeplinks(it)
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent) // ✅ ensures Activity’s intent updates
+        debugDeeplink(intent)
+        supabase.handleDeeplinks(intent)
     }
 }
 
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
+fun debugDeeplink(intent: Intent) {
+    val logger = Logger("DeepLink")
+    val data = intent.data ?: return
+    logger.info("🔗 Full deeplink URI = $data")
+    logger.info("scheme=${data.scheme}, host=${data.host}, path=${data.path}, query=${data.query}, fragment=${data.fragment}")
 }
+
+

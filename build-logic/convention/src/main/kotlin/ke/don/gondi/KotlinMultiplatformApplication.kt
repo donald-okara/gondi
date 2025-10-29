@@ -7,6 +7,8 @@ import ke.don.gondi.extensions.configureKotlinAndroid
 import ke.don.gondi.extensions.configureKotlinMultiplatform
 import ke.don.gondi.extensions.configureProjectDependencies
 import ke.don.gondi.extensions.configureVoyager
+import ke.don.gondi.extensions.coreModules
+import ke.don.gondi.extensions.datasourceModules
 import ke.don.gondi.extensions.featureModules
 import ke.don.gondi.extensions.libs
 import ke.don.gondi.extensions.sharedModules
@@ -29,7 +31,7 @@ class KotlinMultiplatformApplication: Plugin<Project> {
             apply("${appIdentity.packageName}.composeMultiplatformPlugin")
         }
 
-        configureProjectDependencies(featureModules.all, sharedModules.all)
+        configureProjectDependencies(featureModules.all, sharedModules.all, datasourceModules.all, coreModules.all)
         configureKoin()
         configureVoyager()
         extensions.configure<KotlinMultiplatformExtension>(::configureKotlinMultiplatform)

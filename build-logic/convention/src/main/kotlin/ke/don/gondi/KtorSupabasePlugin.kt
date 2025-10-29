@@ -21,10 +21,10 @@ class KtorSupabasePlugin: Plugin<Project> {
                     implementation(libs.findLibrary("ktor-client-darwin").get())
                 }
                 commonMain.dependencies {
-                    implementation(project.dependencies.platform(libs.findLibrary("supabase-bom").get()))
+                    api(project.dependencies.platform(libs.findLibrary("supabase-bom").get()))
+                    api(libs.findLibrary("supabase-auth").get())
+                    api(libs.findLibrary("supabase-realtime").get())
                     implementation(libs.findLibrary("supabase-postgrest").get())
-                    implementation(libs.findLibrary("supabase-auth").get())
-                    implementation(libs.findLibrary("supabase-realtime").get())
                 }
             }
         }
