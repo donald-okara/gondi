@@ -90,14 +90,25 @@ fun SignInScreen(
                     )
                 )
 
-                Text(
-                    text = "Sleep tight… someone won’t wake up.",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontStyle = FontStyle.Italic,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                    textAlign = TextAlign.Center
-                )
+                with(sharedScope) {
+                    with(visibilityScope) {
+                        Text(
+                            text = "Sleep tight… someone won’t wake up.",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontStyle = FontStyle.Italic,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            ),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .sharedElement(
+                                    sharedContentState = rememberSharedContentState(key = "tag_line"),
+                                    animatedVisibilityScope = visibilityScope,
+                                )
+                        )
+                    }
+                }
+
+
 
                 Text(
                     text = "A game of trust, deceit, and late-night drama.",
