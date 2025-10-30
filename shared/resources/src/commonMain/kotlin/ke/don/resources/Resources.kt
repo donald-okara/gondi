@@ -11,6 +11,7 @@ package ke.don.resources
 
 import gondi.shared.resources.generated.resources.Res
 import gondi.shared.resources.generated.resources.app_icon
+import gondi.shared.resources.generated.resources.google_logo
 import gondi.shared.resources.generated.resources.roboto_regular
 import gondi.shared.resources.generated.resources.roboto_semibold
 
@@ -22,5 +23,6 @@ object Resources {
 
     object Images {
         val LOGO = Res.drawable.app_icon
+        val GOOGLE_LOGO = Res.drawable.google_logo
     }
 }

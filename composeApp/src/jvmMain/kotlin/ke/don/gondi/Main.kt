@@ -14,6 +14,7 @@ import androidx.compose.ui.window.application
 import ke.don.remote.repo.startAuthServer
 import ke.don.resources.Resources
 import org.jetbrains.compose.resources.painterResource
+import java.awt.Dimension
 
 fun main() = application {
     startAuthServer()
@@ -23,6 +24,8 @@ fun main() = application {
         title = "Gondi",
         icon = painterResource(Resources.Images.LOGO),
     ) {
+        window.minimumSize = Dimension(500, 0)
+
         App()
     }
 }
