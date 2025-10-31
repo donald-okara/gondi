@@ -34,32 +34,39 @@ fun ProfilePreview(
 ) {
     //<template>
     DevicePreviewContainer(isDarkTheme = isDarkTheme) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            profiles.forEach {
-                ProfileImageToken(
-                    profile = it,
-                    isHero = false
-                )
-                ProfileImageToken(
-                    profile = it,
-                    isHero = true
-                )
+
+        Column {
+            FlowRow(
+                modifier = Modifier.width(500.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                AvatarBackground.entries.forEach {
+                    ProfileImageToken(
+                        profile = Profile(
+                            name = it.name,
+                            background = it
+                        ),
+                        isHero = true
+                    )
+                }
+            }
+            FlowRow(
+                modifier = Modifier.width(500.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                AvatarBackground.entries.forEach {
+                    ProfileImageToken(
+                        profile = Profile(
+                            name = it.name,
+                            background = it
+                        ),
+                        isHero = false
+                    )
+                }
             }
         }
-    }
-}
-
-@DevicePreviews
-@Composable
-fun ColorsFlowRowPreview(
-    @PreviewParameter(DarkModeProvider::class) isDarkTheme: Boolean,
-) {
-    //<template>
-    DevicePreviewContainer(isDarkTheme = isDarkTheme) {
 
         FlowRow(
             modifier = Modifier.width(500.dp),
@@ -69,6 +76,7 @@ fun ColorsFlowRowPreview(
             AvatarBackground.entries.forEach {
                 ProfileImageToken(
                     profile = Profile(
+                        avatar = Avatar.Leo,
                         name = it.name,
                         background = it
                     ),
@@ -76,6 +84,24 @@ fun ColorsFlowRowPreview(
                 )
             }
         }
+        FlowRow(
+            modifier = Modifier.width(500.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            AvatarBackground.entries.forEach {
+                ProfileImageToken(
+                    profile = Profile(
+                        avatar = Avatar.Leo,
+                        name = it.name,
+                        background = it
+                    ),
+                    isHero = false
+                )
+            }
+        }
     }
 }
+
+
 
