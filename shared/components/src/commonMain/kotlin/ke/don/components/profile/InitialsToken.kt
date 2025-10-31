@@ -26,12 +26,6 @@ fun InitialsToken(
     isHero: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
-    // Animate size
-    val animatedSize by animateDpAsState(
-        targetValue = if (isHero) 96.dp else 32.dp,
-        label = "size",
-    )
-
     // Animate font scaling (we’ll use this to interpolate text size)
     val animatedFontScale by animateFloatAsState(
         targetValue = if (isHero) 1.8f else 1f,
@@ -44,25 +38,19 @@ fun InitialsToken(
         MaterialTheme.typography.labelMedium
     }
 
-    Surface(
-        color = Color.Transparent,
-        shape = if (isHero) MaterialTheme.shapes.large else MaterialTheme.shapes.medium,
-        tonalElevation = if (isHero) 3.dp else 1.dp,
-        modifier = modifier.size(animatedSize),
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier.fillMaxSize(),
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            Text(
-                text = profile.name.getInitials(),
-                style = baseTextStyle.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = profile.background.color().onColorWithOverlay(),
-                    fontSize = baseTextStyle.fontSize * animatedFontScale,
-                ),
-                maxLines = 1,
-            )
-        }
+        Text(
+            text = profile.name.getInitials(),
+            style = baseTextStyle.copy(
+                fontWeight = FontWeight.Bold,
+                color = profile.background.color().onColorWithOverlay(),
+                fontSize = baseTextStyle.fontSize * animatedFontScale,
+            ),
+            maxLines = 1,
+        )
     }
+
 }

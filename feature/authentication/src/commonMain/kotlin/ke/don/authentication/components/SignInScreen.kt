@@ -29,6 +29,9 @@ import ke.don.components.button.ComponentType
 import ke.don.components.card.CardToken
 import ke.don.components.card.CardType
 import ke.don.components.helpers.Matcha
+import ke.don.components.profile.ProfileImageToken
+import ke.don.domain.model.Avatar
+import ke.don.domain.model.Profile
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
 import ke.don.resources.Resources
