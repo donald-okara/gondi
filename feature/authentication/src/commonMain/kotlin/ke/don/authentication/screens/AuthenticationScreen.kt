@@ -19,41 +19,65 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.stack.StackEvent
 import io.github.jan.supabase.auth.status.SessionStatus
 import ke.don.authentication.components.SignInScreen
 import ke.don.authentication.components.SplashScreen
+import ke.don.authentication.model.AuthEvent
+import ke.don.authentication.model.AuthModel
 import ke.don.authentication.model.StartupPhase
 import ke.don.components.background.GradientBackground
 import ke.don.components.empty_state.EmptyScreen
+import ke.don.components.helpers.ObserveAsEvent
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
 import kotlinx.coroutines.delay
+import org.koin.compose.getKoin
 
 class AuthenticationScreen: Screen {
     @OptIn(ExperimentalSharedTransitionApi::class)
     @Composable
     override fun Content() {
-        var startupPhase by remember {
+        var startupPhase by rememberSaveable {
             mutableStateOf(StartupPhase.Splash)
         }
-        LaunchedEffect(startupPhase) { //TODO: Move to view model channel
+        val koin = getKoin()
+        val screenModel = rememberScreenModel {
+            koin.get<AuthModel>()
+        }
+        val state by screenModel.uiState.collectAsState()
+
+        ObserveAsEvent(screenModel.events){ event ->
+            when(event){
+                is AuthEvent.SwitchSignIn -> startupPhase = StartupPhase.OnBoarding
+                is AuthEvent.SwitchMain -> startupPhase = StartupPhase.Main //Replace with actual navigation
+                is AuthEvent.SwitchProfile -> startupPhase = StartupPhase.Profile //Replace with actual navigation
+                else -> Unit
+            }
+        }
+
+        LaunchedEffect(startupPhase) {
             when (startupPhase) {
                 StartupPhase.Splash -> {
-                    delay(2000)
-                    startupPhase = StartupPhase.OnBoarding
                 }
                 StartupPhase.OnBoarding -> {
                     Unit
                     // Do nothing
                 }
                 StartupPhase.Main -> {
+                    Unit
+                }
+
+                StartupPhase.Profile -> {
                     Unit
                 }
             }
@@ -67,7 +91,6 @@ class AuthenticationScreen: Screen {
                 AnimatedContent(
                     targetState = startupPhase,
                     transitionSpec = {
-                        // Direction changes depending on navigation
                         val next = targetState.ordinal > initialState.ordinal
                         if (next) {
                             (scaleIn(initialScale = 1.2f) + fadeIn()) togetherWith
@@ -85,12 +108,17 @@ class AuthenticationScreen: Screen {
                     ) {
                         when (phase) {
                             StartupPhase.Splash -> SplashScreen()
-                            StartupPhase.OnBoarding -> SignInScreen()
+                            StartupPhase.OnBoarding -> SignInScreen(
+                                state = state,
+                                onEvent = screenModel::handleAction
+                            )
                             StartupPhase.Main -> EmptyScreen(
                                 icon = Icons.Outlined.Lock,
                                 title = "Authentication",
                                 description = "Screen is in development"
                             )
+
+                            StartupPhase.Profile -> {}
                         }
                     }
 

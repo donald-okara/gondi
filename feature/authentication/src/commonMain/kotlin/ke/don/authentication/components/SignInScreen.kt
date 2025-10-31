@@ -24,6 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ke.don.authentication.model.AuthAction
+import ke.don.authentication.model.AuthState
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.card.CardToken
@@ -32,6 +34,7 @@ import ke.don.components.helpers.Matcha
 import ke.don.components.profile.ProfileImageToken
 import ke.don.domain.model.Avatar
 import ke.don.domain.model.Profile
+import ke.don.domain.result.isLoading
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
 import ke.don.resources.Resources
@@ -45,7 +48,9 @@ import org.jetbrains.compose.resources.painterResource
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SignInScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    state: AuthState,
+    onEvent: (AuthAction) -> Unit
 ) {
     val sharedScope = LocalSharedScope.current
     val visibilityScope = LocalVisibilityScope.current
@@ -132,8 +137,10 @@ fun SignInScreen(
             // Sign-in Button
             ButtonToken(
                 buttonType = ComponentType.Inverse,
+                loading = state.authStatus.isLoading,
+                enabled = !state.authStatus.isLoading,
                 onClick = {
-                    Matcha.info(title = "Sign in")
+                    onEvent(AuthAction.SignIn)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

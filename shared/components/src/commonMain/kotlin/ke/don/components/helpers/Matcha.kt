@@ -135,7 +135,7 @@ object Matcha {
         description: String = "",
         duration: ToastDuration = ToastDuration.Long,
         primaryAction: ToastAction? = null,
-        secondaryAction: ToastAction? = defaultDismiss,
+        secondaryAction: ToastAction? = null,
         isAppVisible: Boolean = true,
     ) = runIfNotUnitTest {
         Koffee.show(
