@@ -57,24 +57,6 @@ class AuthModel(
         }
     }
 
-    fun checkStatus(){
-        screenModelScope.launch {
-            val status = supabase.auth.sessionStatus
-                .filter { it is SessionStatus.Authenticated || it is SessionStatus.NotAuthenticated }
-                .first()
-
-            if(status is SessionStatus.Authenticated){
-                if (uiState.value.initiallyAuthenticated) eventChannel.send(AuthEvent.SwitchMain) else eventChannel.send(AuthEvent.SwitchProfile)
-            } else {
-                updateState {
-                    it.copy(
-                        initiallyAuthenticated = false,
-                    )
-                }
-            }
-        }
-    }
-
     fun updateState(transform: (AuthState) -> AuthState) {
         _uiState.update { state ->
             transform(state)

@@ -65,24 +65,6 @@ class AuthenticationScreen: Screen {
             }
         }
 
-        LaunchedEffect(startupPhase) {
-            when (startupPhase) {
-                StartupPhase.Splash -> {
-                }
-                StartupPhase.OnBoarding -> {
-                    Unit
-                    // Do nothing
-                }
-                StartupPhase.Main -> {
-                    Unit
-                }
-
-                StartupPhase.Profile -> {
-                    Unit
-                }
-            }
-        }
-
         GradientBackground(
             modifier = Modifier.fillMaxSize(),
             accentColor = MaterialTheme.colorScheme.primaryContainer,
