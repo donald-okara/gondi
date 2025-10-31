@@ -8,3 +8,13 @@ compose {
         publicResClass = true // generates Res.*
     }
 }
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(project(path = ":core:domain"))
+            implementation(project(path = ":core:utils"))
+        }
+    }
+
+}
