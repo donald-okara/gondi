@@ -108,3 +108,4 @@ kotlinMultiplatformApplication = { id = "ke.don.gondi.kotlinMultiplatformApplica
 featureConvention = { id = "ke.don.gondi.featureConvention", version = "unspecified" }
 datasourceConvention = { id = "ke.don.gondi.datasourceConvention", version = "unspecified" }
 ktorSupabasePlugin = { id = "ke.don.gondi.ktorSupabasePlugin", version = "unspecified" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

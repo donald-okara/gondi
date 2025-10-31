@@ -18,7 +18,7 @@ import java.awt.Dimension
 
 fun main() = application {
     startAuthServer()
-
+    initKoin()
     Window(
         onCloseRequest = ::exitApplication,
         title = "Gondi",
