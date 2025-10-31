@@ -69,10 +69,10 @@ fun ColorsFlowRowPreview(
             AvatarBackground.entries.forEach {
                 ProfileImageToken(
                     profile = Profile(
-                        name = "Johnny Test",
+                        name = it.name,
                         background = it
                     ),
-                    isHero = false
+                    isHero = true
                 )
             }
         }
