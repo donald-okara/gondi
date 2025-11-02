@@ -13,13 +13,17 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import ke.don.resources.Resources
 import org.jetbrains.compose.resources.painterResource
+import java.awt.Dimension
 
 fun main() = application {
+    initKoin()
     Window(
         onCloseRequest = ::exitApplication,
         title = "Gondi",
         icon = painterResource(Resources.Images.LOGO),
     ) {
+        window.minimumSize = Dimension(500, 0)
+
         App()
     }
 }

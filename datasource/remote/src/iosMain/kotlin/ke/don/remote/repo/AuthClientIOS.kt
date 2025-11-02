@@ -7,12 +7,10 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.gondi
+package ke.don.remote.repo
 
-import platform.UIKit.UIDevice
+import ke.don.domain.repo.AuthClient
 
-class IOSPlatform : Platform {
-    override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
+class AuthClientIOS : AuthClient {
+    override suspend fun signInWithGoogle() = TODO()
 }
-
-actual fun getPlatform(): Platform = IOSPlatform()

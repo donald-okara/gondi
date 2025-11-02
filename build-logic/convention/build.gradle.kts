@@ -25,6 +25,10 @@ gradlePlugin {
             id = "$moduleName.datasourceConvention"
             implementationClass = "$moduleName.DatasourceConvention"
         }
+        register("ktorSupabasePlugin"){
+            id = "$moduleName.ktorSupabasePlugin"
+            implementationClass = "$moduleName.KtorSupabasePlugin"
+        }
     }
 }
 

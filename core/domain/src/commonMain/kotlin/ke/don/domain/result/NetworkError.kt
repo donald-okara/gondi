@@ -7,10 +7,11 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.gondi
+package ke.don.domain.result
 
-interface Platform {
-    val name: String
-}
-
-expect fun getPlatform(): Platform
+data class NetworkError(
+    val category: ErrorCategory = ErrorCategory.UNKNOWN,
+    val message: String? = null,
+    val code: Int? = null,
+    val debugMessage: String? = null, // optional, only for logs
+) : Error

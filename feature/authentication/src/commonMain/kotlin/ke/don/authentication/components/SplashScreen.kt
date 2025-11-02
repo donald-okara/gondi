@@ -1,0 +1,51 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
+package ke.don.authentication.components
+
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import ke.don.resources.LocalSharedScope
+import ke.don.resources.LocalVisibilityScope
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.painterResource
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+fun SplashScreen(
+    modifier: Modifier = Modifier,
+) {
+    val sharedScope = LocalSharedScope.current
+    val visibilityScope = LocalVisibilityScope.current
+
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        with(sharedScope) {
+            with(visibilityScope) {
+                Image(
+                    painter = painterResource(Resources.Images.LOGO),
+                    contentDescription = "Logo",
+                    modifier = Modifier
+                        .fillMaxSize(0.5f)
+                        .sharedElement(
+                            sharedContentState = rememberSharedContentState(key = "app_logo"),
+                            animatedVisibilityScope = visibilityScope,
+                        ),
+                )
+            }
+        }
+    }
+}

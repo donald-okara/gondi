@@ -21,5 +21,10 @@ jobs:
       - name: Cache Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      # 🧩 Recreate local.properties from your GitHub secret
+      - name: Create local.properties
+        run: |
+          echo "${{ secrets.LOCAL_PROPERTIES }}" > local.properties
+
       - name: Run common tests
         run: ./gradlew jvmTest

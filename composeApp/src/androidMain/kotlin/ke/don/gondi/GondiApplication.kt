@@ -9,8 +9,14 @@
  */
 package ke.don.gondi
 
-class JVMPlatform : Platform {
-    override val name: String = "Java ${System.getProperty("java.version")}"
-}
+import android.app.Application
+import org.koin.android.ext.koin.androidContext
 
-actual fun getPlatform(): Platform = JVMPlatform()
+class GondiApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        initKoin {
+            androidContext(this@GondiApplication)
+        }
+    }
+}

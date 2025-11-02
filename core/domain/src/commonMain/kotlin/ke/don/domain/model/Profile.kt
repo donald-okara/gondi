@@ -7,12 +7,14 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.gondi
+package ke.don.domain.model
 
-import android.os.Build
+import kotlinx.serialization.Serializable
 
-class AndroidPlatform : Platform {
-    override val name: String = "Android ${Build.VERSION.SDK_INT}"
-}
-
-actual fun getPlatform(): Platform = AndroidPlatform()
+@Serializable
+data class Profile(
+    val name: String = "",
+    val avatar: Avatar? = null,
+    val email: String = "",
+    val background: AvatarBackground = AvatarBackground.entries.first(),
+)

@@ -49,6 +49,7 @@ class ComposeMultiplatformPlugin : Plugin<Project> {
                 }
                 androidMain.dependencies {
                     implementation(composeDeps.preview)
+                    implementation(libs.findBundle("preview").get())
                 }
                 jvmMain.dependencies {
                     implementation(composeDeps.desktop.currentOs)

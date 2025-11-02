@@ -9,6 +9,8 @@ kotlin {
             api(libs.bundles.compose)
             implementation(project(":shared:resources"))
             implementation(project(":shared:design"))
+            implementation(project(":core:domain"))
+            implementation(project(":core:utils"))
         }
     }
 }

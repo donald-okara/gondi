@@ -7,12 +7,11 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.gondi
+package ke.don.domain.repo
 
-class Greeting {
-    private val platform = getPlatform()
+import ke.don.domain.result.NetworkError
+import ke.don.domain.result.Result
 
-    fun greet(): String {
-        return "Hello, ${platform.name}!"
-    }
+interface AuthClient {
+    suspend fun signInWithGoogle(): Result<Unit, NetworkError>
 }

@@ -37,10 +37,9 @@ val Project.featureModules: FeatureModules
     get() = FeatureModules(this)
 
 class FeatureModules(private val project: Project) {
-    // Your feature module references
-    // e.g
-    // val auth get() = project.project(":feature:auth"))
-    val all: List<Project> = emptyList()
+
+    val auth get() = project.project(":feature:authentication")
+    val all get() = listOf(auth)
 }
 
 val Project.sharedModules: SharedModules
