@@ -32,6 +32,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import ke.don.authentication.components.SignInScreen
 import ke.don.authentication.components.SplashScreen
 import ke.don.authentication.model.AuthEvent
@@ -40,6 +42,7 @@ import ke.don.authentication.model.StartupPhase
 import ke.don.components.background.GradientBackground
 import ke.don.components.empty_state.EmptyScreen
 import ke.don.components.helpers.ObserveAsEvent
+import ke.don.home.screens.HomeScreen
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
 import org.koin.compose.getKoin
@@ -48,6 +51,7 @@ class AuthenticationScreen : Screen {
     @OptIn(ExperimentalSharedTransitionApi::class)
     @Composable
     override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
         var startupPhase by rememberSaveable {
             mutableStateOf(StartupPhase.Splash)
         }
@@ -60,7 +64,7 @@ class AuthenticationScreen : Screen {
         ObserveAsEvent(screenModel.events) { event ->
             when (event) {
                 is AuthEvent.SwitchSignIn -> startupPhase = StartupPhase.OnBoarding
-                is AuthEvent.SwitchMain -> startupPhase = StartupPhase.Main // Replace with actual navigation
+                is AuthEvent.SwitchMain -> navigator.push(HomeScreen())// Replace with actual navigation
                 is AuthEvent.SwitchProfile -> startupPhase = StartupPhase.Profile // Replace with actual navigation
                 else -> Unit
             }

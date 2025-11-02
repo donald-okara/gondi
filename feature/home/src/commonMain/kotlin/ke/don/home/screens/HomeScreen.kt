@@ -37,7 +37,6 @@ class HomeScreen : Screen {
                         name = "Donald Isoe",
                         avatar = Avatar.Leo,
                     ),
-                    on,
                 )
             },
         ) {
