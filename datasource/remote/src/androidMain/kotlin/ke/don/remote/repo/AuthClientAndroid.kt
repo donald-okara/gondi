@@ -9,15 +9,10 @@
  */
 package ke.don.remote.repo
 
-import io.github.jan.supabase.auth.auth
-import io.github.jan.supabase.auth.providers.Google
 import ke.don.domain.repo.AuthClient
 import ke.don.domain.result.NetworkError
 import ke.don.domain.result.Result
-import ke.don.remote.api.SupabaseConfig.supabase
 import ke.don.utils.Logger
-import java.net.URI
-
 
 class AuthClientAndroid : AuthClient {
     val logger = Logger("AuthClient")
@@ -30,11 +25,13 @@ class AuthClientAndroid : AuthClient {
         } catch (e: Exception) {
             logger.error("❌ Error during sign-in: $e", e)
             e.printStackTrace()
-            Result.error(NetworkError(
-                message = "Failed to sign in with Google",
-                debugMessage = e.message,
-                code = 500,
-            ))
+            Result.error(
+                NetworkError(
+                    message = "Failed to sign in with Google",
+                    debugMessage = e.message,
+                    code = 500,
+                ),
+            )
         }
     }
 }

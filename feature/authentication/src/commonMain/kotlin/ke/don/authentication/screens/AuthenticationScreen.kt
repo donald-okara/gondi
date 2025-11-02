@@ -105,7 +105,7 @@ class AuthenticationScreen : Screen {
                                 description = "Screen is in development",
                             )
 
-                            StartupPhase.Profile ->  EmptyScreen(
+                            StartupPhase.Profile -> EmptyScreen(
                                 icon = Icons.Outlined.Lock,
                                 title = "Profile",
                                 description = "Screen is in development",

@@ -44,19 +44,23 @@ class AuthClientJvm : AuthClient {
                 Result.success(Unit)
             } else {
                 logger.warn("❌ signUpWith(Google) returned null")
-                Result.error(NetworkError(
-                    message = "Failed to sign in with Google",
-                    debugMessage = "signUpWith(Google) returned null",
-                ))
+                Result.error(
+                    NetworkError(
+                        message = "Failed to sign in with Google",
+                        debugMessage = "signUpWith(Google) returned null",
+                    ),
+                )
             }
         } catch (e: Exception) {
             logger.error("❌ Error during sign-in: $e", e)
             e.printStackTrace()
-            Result.error(NetworkError(
-                message = "Failed to sign in with Google",
-                debugMessage = e.message,
-                code = 500,
-            ))
+            Result.error(
+                NetworkError(
+                    message = "Failed to sign in with Google",
+                    debugMessage = e.message,
+                    code = 500,
+                ),
+            )
         }
     }
 }

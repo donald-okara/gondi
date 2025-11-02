@@ -13,7 +13,6 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.status.SessionStatus
-import ke.don.components.helpers.Matcha
 import ke.don.domain.repo.AuthClient
 import ke.don.domain.result.ResultStatus
 import ke.don.domain.result.onFailure
