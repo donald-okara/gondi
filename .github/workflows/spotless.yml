@@ -23,5 +23,10 @@ jobs:
       - name: Grant execute permission to Gradle wrapper
         run: chmod +x ./gradlew
 
+      # 🧩 Recreate local.properties from the single secret
+      - name: Create local.properties
+        run: |
+          echo "${{ secrets.LOCAL_PROPERTIES }}" > local.properties
+
       - name: Run spotlessCheck
         run: ./gradlew spotlessCheck
