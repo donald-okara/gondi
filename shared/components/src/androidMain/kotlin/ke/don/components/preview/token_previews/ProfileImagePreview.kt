@@ -81,7 +81,6 @@ fun ProfilePreview(
             AvatarBackground.entries.forEach {
                 ProfileImageToken(
                     profile = Profile(
-                        avatar = Avatar.Leo,
                         name = it.name,
                         background = it,
                     ),
@@ -97,7 +96,6 @@ fun ProfilePreview(
             AvatarBackground.entries.forEach {
                 ProfileImageToken(
                     profile = Profile(
-                        avatar = Avatar.Leo,
                         name = it.name,
                         background = it,
                     ),

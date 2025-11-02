@@ -30,12 +30,6 @@ fun InitialsToken(
     isHero: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
-    // Animate font scaling (we’ll use this to interpolate text size)
-    val animatedFontScale by animateFloatAsState(
-        targetValue = if (isHero) 1.8f else 1f,
-        label = "fontScale",
-    )
-
     val baseTextStyle = if (isHero) {
         MaterialTheme.typography.headlineMedium
     } else {
@@ -51,7 +45,6 @@ fun InitialsToken(
             style = baseTextStyle.copy(
                 fontWeight = FontWeight.Bold,
                 color = profile.background.color().onColorWithOverlay(),
-                fontSize = baseTextStyle.fontSize * animatedFontScale,
             ),
             maxLines = 1,
         )

@@ -41,14 +41,25 @@ fun ProfileBackground(
         label = "size",
     )
 
-    Surface(
-        color = color,
-        shape = MaterialTheme.shapes.medium,
-        onClick = onClick ?: {},
-        tonalElevation = if (isHero) 3.dp else 1.dp,
-        modifier = modifier.size(animatedSize),
-    ) {
-        content.invoke()
+    if (onClick != null) {
+        Surface(
+            color = color,
+            shape = MaterialTheme.shapes.medium,
+            onClick = onClick,
+            tonalElevation = if (isHero) 3.dp else 1.dp,
+            modifier = modifier.size(animatedSize),
+        ) {
+            content.invoke()
+        }
+    } else {
+        Surface(
+            color = color,
+            shape = MaterialTheme.shapes.medium,
+            tonalElevation = if (isHero) 3.dp else 1.dp,
+            modifier = modifier.size(animatedSize),
+        ) {
+            content.invoke()
+        }
     }
 }
 
@@ -61,6 +72,7 @@ fun ProfileImageToken(
 ) {
     ProfileBackground(
         isHero = isHero,
+        onClick = onClick,
         color = profile.background.color(),
     ) {
         profile.avatar?.let {

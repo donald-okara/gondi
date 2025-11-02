@@ -16,5 +16,5 @@ data class Profile(
     val name: String = "",
     val avatar: Avatar? = null,
     val email: String = "",
-    val background: AvatarBackground = AvatarBackground.entries.random(),
+    val background: AvatarBackground = AvatarBackground.entries.first(),
 )
