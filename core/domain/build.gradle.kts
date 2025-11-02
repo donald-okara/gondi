@@ -4,7 +4,7 @@ plugins {
 }
 
 kotlin {
-    sourceSets{
+    sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.core)
         }

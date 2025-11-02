@@ -16,5 +16,4 @@ kotlin {
             implementation(project(path = ":core:utils"))
         }
     }
-
 }

@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.resources
 
 import androidx.compose.ui.graphics.Color
@@ -47,7 +56,7 @@ fun AvatarBackground.color(): Color {
 
 fun Avatar.painter(): DrawableResource {
     val drawableRoute = Res.drawable
-    return when(this){
+    return when (this) {
         Avatar.Aidan -> drawableRoute.aidan
         Avatar.Adrian -> drawableRoute.adrian
         Avatar.Amaya -> drawableRoute.amaya
@@ -63,7 +72,7 @@ fun Avatar.painter(): DrawableResource {
 }
 
 fun Avatar.url(): String {
-    return when(this){
+    return when (this) {
         Avatar.Aidan -> "https://api.dicebear.com/9.x/adventurer/svg?seed=Aidan&hair=long02,long03,long05,long07,long09,long10,long13,long14,long15,long21,long22,long23,long24,long25,long26,short01,short02,short03,short04,short05,short06,short07,short08,short09,short10,short11,short12,short13,short14,short15,short16,short17,short18,short19,long16&hairColor=0e0e0e,562306,796a45,85c2c6,ab2a18,b9a05f,cb6820,dba3be,e5d7a3,592454"
         Avatar.Adrian -> "https://api.dicebear.com/9.x/adventurer/svg?seed=Adrian&hair=long02,long03,long05,long07,long09,long10,long13,long14,long15,long21,long22,long23,long24,long25,long26,short01,short02,short03,short04,short05,short06,short07,short08,short09,short10,short11,short12,short13,short14,short15,short16,short17,short18,short19,long16&hairColor=0e0e0e,562306,796a45,85c2c6,ab2a18,b9a05f,cb6820,dba3be,e5d7a3,592454"
         Avatar.Amaya -> "https://api.dicebear.com/9.x/adventurer/svg?seed=Amaya&hair=long02,long03,long05,long07,long09,long10,long13,long14,long15,long21,long22,long23,long24,long25,long26,short01,short02,short03,short04,short05,short06,short07,short08,short09,short10,short11,short12,short13,short14,short15,short16,short17,short18,short19,long16&hairColor=0e0e0e,562306,796a45,85c2c6,ab2a18,b9a05f,cb6820,dba3be,e5d7a3,592454"
@@ -83,8 +92,9 @@ fun Color.onColor(): Color {
 }
 
 fun Color.onColorWithOverlay(): Color {
-    return if (this.luminance() > 0.5f)
+    return if (this.luminance() > 0.5f) {
         Color.Black.copy(alpha = 0.75f)
-    else
+    } else {
         Color.White.copy(alpha = 0.85f)
+    }
 }

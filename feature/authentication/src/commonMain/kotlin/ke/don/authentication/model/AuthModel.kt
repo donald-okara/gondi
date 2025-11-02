@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.authentication.model
 
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -11,15 +20,13 @@ import ke.don.remote.api.SupabaseConfig.supabase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AuthModel(
-    private val authClient: AuthClient
-): ScreenModel {
+    private val authClient: AuthClient,
+) : ScreenModel {
     private val _uiState = MutableStateFlow(AuthState())
     val uiState: StateFlow<AuthState> = _uiState
 
@@ -31,10 +38,11 @@ class AuthModel(
             supabase.auth.sessionStatus.collect { status ->
                 when (status) {
                     is SessionStatus.Authenticated -> {
-                        val event = if (uiState.value.initiallyAuthenticated)
+                        val event = if (uiState.value.initiallyAuthenticated) {
                             AuthEvent.SwitchMain
-                        else
+                        } else {
                             AuthEvent.SwitchProfile
+                        }
                         eventChannel.send(event)
                     }
                     is SessionStatus.NotAuthenticated -> {
@@ -51,8 +59,8 @@ class AuthModel(
         }
     }
 
-    fun handleAction(action: AuthAction){
-        when(action){
+    fun handleAction(action: AuthAction) {
+        when (action) {
             is AuthAction.SignIn -> signInWithGoogle()
         }
     }
@@ -76,10 +84,9 @@ class AuthModel(
                 }
                 Matcha.error(
                     title = "Sign in failed",
-                    description = e.message ?: "Unknown error"
+                    description = e.message ?: "Unknown error",
                 )
             }
         }
     }
-
 }

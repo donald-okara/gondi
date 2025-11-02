@@ -14,8 +14,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import io.github.jan.supabase.auth.handleDeeplinks
 import ke.don.remote.api.SupabaseConfig.supabase
 import ke.don.utils.Logger
@@ -48,5 +46,3 @@ fun debugDeeplink(intent: Intent) {
     logger.info("🔗 Full deeplink URI = $data")
     logger.info("scheme=${data.scheme}, host=${data.host}, path=${data.path}, query=${data.query}, fragment=${data.fragment}")
 }
-
-

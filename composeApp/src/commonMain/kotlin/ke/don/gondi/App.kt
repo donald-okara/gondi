@@ -17,24 +17,15 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.stack.StackEvent
 import cafe.adriel.voyager.navigator.Navigator
 import ke.don.authentication.screens.AuthenticationScreen
-import ke.don.components.button.ButtonToken
-import ke.don.components.button.ComponentType
 import ke.don.components.card.Toast
-import ke.don.components.helpers.Matcha
 import ke.don.design.theme.AppTheme
 import ke.don.koffee.annotations.ExperimentalKoffeeApi
 import ke.don.koffee.model.KoffeeDefaults
@@ -76,10 +67,10 @@ fun App() {
                             transitionSpec = {
                                 if (navigator.lastEvent == StackEvent.Pop) {
                                     (scaleIn(initialScale = 1.2f) + fadeIn()) togetherWith
-                                            (scaleOut(targetScale = 0.8f) + fadeOut())
+                                        (scaleOut(targetScale = 0.8f) + fadeOut())
                                 } else {
                                     (scaleIn(initialScale = 0.8f) + fadeIn()) togetherWith
-                                            (scaleOut(targetScale = 1.2f) + fadeOut())
+                                        (scaleOut(targetScale = 1.2f) + fadeOut())
                                 }
                             },
                         ) { screen ->

@@ -1,7 +1,15 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.profile
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -49,30 +57,29 @@ fun ProfileImageToken(
     modifier: Modifier = Modifier,
     profile: Profile,
     onClick: (() -> Unit)? = null,
-    isHero: Boolean
+    isHero: Boolean,
 ) {
     ProfileBackground(
         isHero = isHero,
-        color = profile.background.color()
-    ){
+        color = profile.background.color(),
+    ) {
         profile.avatar?.let {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ){
+                contentAlignment = Alignment.Center,
+            ) {
                 Image(
                     painter = painterResource(it.painter()),
                     contentDescription = "Profile Image",
                     modifier = modifier
                         .padding(if (isHero) 8.dp else 2.dp)
-                        .fillMaxSize()
+                        .fillMaxSize(),
                 )
             }
-
         } ?: InitialsToken(
             profile = profile,
             isHero = isHero,
-            modifier = modifier
+            modifier = modifier,
         )
     }
 }

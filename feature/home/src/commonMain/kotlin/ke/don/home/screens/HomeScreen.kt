@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.home.screens
 
 import androidx.compose.material.icons.Icons
@@ -15,7 +24,7 @@ import ke.don.components.scaffold.ScaffoldToken
 import ke.don.domain.model.Avatar
 import ke.don.domain.model.Profile
 
-class HomeScreen: Screen {
+class HomeScreen : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
@@ -23,28 +32,28 @@ class HomeScreen: Screen {
             title = "Gondi",
             actions = {
                 ProfileImageToken( // TODO: Temporary until profile is implemented
-                    isHero= false,
+                    isHero = false,
                     profile = Profile(
                         name = "Donald Isoe",
-                        avatar = Avatar.Leo
+                        avatar = Avatar.Leo,
                     ),
-                    on
+                    on,
                 )
-            }
+            },
         ) {
             EmptyScreen(
                 title = "Home",
                 description = "Screen is in development",
                 icon = Icons.Outlined.Home,
-            ){
+            ) {
                 ButtonToken(
                     buttonType = ComponentType.Inverse,
                     onClick = {
                         Matcha.info(
-                            "Sign out"
+                            "Sign out",
                         )
-                    }
-                ){
+                    },
+                ) {
                     Text("Sign out")
                 }
             }

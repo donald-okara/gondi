@@ -1,30 +1,36 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.preview.token_previews
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 import ke.don.components.profile.ProfileImageToken
-import ke.don.components.text_field.TextFieldToken
 import ke.don.domain.model.Avatar
 import ke.don.domain.model.AvatarBackground
 import ke.don.domain.model.Profile
 
 val profiles = listOf(
     Profile(
-        name = "Christian"
+        name = "Christian",
     ),
     Profile(
-        name = "Jason"
-    )
+        name = "Jason",
+    ),
 )
 
 @DevicePreviews
@@ -32,9 +38,8 @@ val profiles = listOf(
 fun ProfilePreview(
     @PreviewParameter(DarkModeProvider::class) isDarkTheme: Boolean,
 ) {
-    //<template>
+    // <template>
     DevicePreviewContainer(isDarkTheme = isDarkTheme) {
-
         Column {
             FlowRow(
                 modifier = Modifier.width(500.dp),
@@ -45,9 +50,9 @@ fun ProfilePreview(
                     ProfileImageToken(
                         profile = Profile(
                             name = it.name,
-                            background = it
+                            background = it,
                         ),
-                        isHero = true
+                        isHero = true,
                     )
                 }
             }
@@ -60,9 +65,9 @@ fun ProfilePreview(
                     ProfileImageToken(
                         profile = Profile(
                             name = it.name,
-                            background = it
+                            background = it,
                         ),
-                        isHero = false
+                        isHero = false,
                     )
                 }
             }
@@ -78,9 +83,9 @@ fun ProfilePreview(
                     profile = Profile(
                         avatar = Avatar.Leo,
                         name = it.name,
-                        background = it
+                        background = it,
                     ),
-                    isHero = true
+                    isHero = true,
                 )
             }
         }
@@ -94,14 +99,11 @@ fun ProfilePreview(
                     profile = Profile(
                         avatar = Avatar.Leo,
                         name = it.name,
-                        background = it
+                        background = it,
                     ),
-                    isHero = false
+                    isHero = false,
                 )
             }
         }
     }
 }
-
-
-
