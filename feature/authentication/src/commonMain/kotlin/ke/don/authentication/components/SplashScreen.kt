@@ -34,43 +34,18 @@ fun SplashScreen(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = 24.dp, vertical = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(24.dp)
-        ) {
-            with(sharedScope) {
-                with(visibilityScope) {
-                    Image(
-                        painter = painterResource(Resources.Images.LOGO),
-                        contentDescription = "Logo",
-                        modifier = Modifier
-                            .fillMaxSize(0.5f)
-                            .sharedElement(
-                                sharedContentState = rememberSharedContentState(key = "app_logo"),
-                                animatedVisibilityScope = visibilityScope,
-                            )
-                    )
-                }
-            }
-
-            with(sharedScope) {
-                with(visibilityScope) {
-                    Text(
-                        text = "Sleep tight… someone won’t wake up.",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontStyle = FontStyle.Italic,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        ),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .sharedElement(
-                                sharedContentState = rememberSharedContentState(key = "tag_line"),
-                                animatedVisibilityScope = visibilityScope,
-                            )
-                    )
-                }
+        with(sharedScope) {
+            with(visibilityScope) {
+                Image(
+                    painter = painterResource(Resources.Images.LOGO),
+                    contentDescription = "Logo",
+                    modifier = Modifier
+                        .fillMaxSize(0.5f)
+                        .sharedElement(
+                            sharedContentState = rememberSharedContentState(key = "app_logo"),
+                            animatedVisibilityScope = visibilityScope,
+                        )
+                )
             }
         }
     }

@@ -103,13 +103,8 @@ class AuthenticationScreen: Screen {
                             StartupPhase.Profile -> {}
                         }
                     }
-
                 }
-
             }
-
-
         }
-
     }
 }
