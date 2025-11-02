@@ -18,6 +18,8 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import ke.don.domain.repo.AuthClient
+import ke.don.domain.result.NetworkError
+import ke.don.domain.result.Result
 import ke.don.remote.api.SupabaseConfig.supabase
 import ke.don.utils.Logger
 import kotlinx.coroutines.launch
@@ -28,8 +30,9 @@ import java.net.URI
 class AuthClientJvm : AuthClient {
     val logger = Logger("AuthClient")
 
-    override suspend fun signInWithGoogle() {
-        try {
+    override suspend fun signInWithGoogle(): Result<Unit, NetworkError> {
+        return try {
+            startAuthServer()
             logger.info("🟢 Starting Google sign-in flow...")
             val result = supabase.auth.signUpWith(Google, redirectUrl = "http://localhost:3000/auth-callback")
 
@@ -38,12 +41,22 @@ class AuthClientJvm : AuthClient {
                 val authUrl = result.toString()
                 logger.info("🌍 Auth URL = $authUrl")
                 Desktop.getDesktop().browse(URI(authUrl))
+                Result.success(Unit)
             } else {
                 logger.warn("❌ signUpWith(Google) returned null")
+                Result.error(NetworkError(
+                    message = "Failed to sign in with Google",
+                    debugMessage = "signUpWith(Google) returned null",
+                ))
             }
         } catch (e: Exception) {
             logger.error("❌ Error during sign-in: $e", e)
             e.printStackTrace()
+            Result.error(NetworkError(
+                message = "Failed to sign in with Google",
+                debugMessage = e.message,
+                code = 500,
+            ))
         }
     }
 }

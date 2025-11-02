@@ -9,6 +9,9 @@
  */
 package ke.don.domain.repo
 
+import ke.don.domain.result.NetworkError
+import ke.don.domain.result.Result
+
 interface AuthClient {
-    suspend fun signInWithGoogle()
+    suspend fun signInWithGoogle(): Result<Unit, NetworkError>
 }

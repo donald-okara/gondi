@@ -16,6 +16,8 @@ import io.github.jan.supabase.auth.status.SessionStatus
 import ke.don.components.helpers.Matcha
 import ke.don.domain.repo.AuthClient
 import ke.don.domain.result.ResultStatus
+import ke.don.domain.result.onFailure
+import ke.don.domain.result.onSuccess
 import ke.don.remote.api.SupabaseConfig.supabase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -76,17 +78,16 @@ class AuthModel(
             updateState {
                 it.copy(authStatus = ResultStatus.Loading)
             }
-            try {
-                authClient.signInWithGoogle()
-            } catch (e: Exception) {
-                updateState {
-                    it.copy(authStatus = ResultStatus.Error(e.message ?: "Unknown error"))
+            authClient.signInWithGoogle()
+                .onSuccess { result ->
+                    updateState {
+                        it.copy(authStatus = ResultStatus.Success(data = result))
+                    }
+                }.onFailure { result ->
+                    updateState {
+                        it.copy(authStatus = ResultStatus.Error(message = result.message ?: "Unknown error"))
+                    }
                 }
-                Matcha.error(
-                    title = "Sign in failed",
-                    description = e.message ?: "Unknown error",
-                )
-            }
         }
     }
 }

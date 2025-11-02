@@ -15,5 +15,5 @@ import ke.don.domain.repo.AuthClient
 import ke.don.remote.api.SupabaseConfig.supabase
 
 class AuthClientIOS : AuthClient {
-    override suspend fun signInWithGoogle() = supabase.auth.signInWith(Google)
+    override suspend fun signInWithGoogle() = TODO()
 }

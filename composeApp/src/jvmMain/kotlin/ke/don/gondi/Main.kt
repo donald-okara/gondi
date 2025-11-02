@@ -17,7 +17,6 @@ import org.jetbrains.compose.resources.painterResource
 import java.awt.Dimension
 
 fun main() = application {
-    startAuthServer()
     initKoin()
     Window(
         onCloseRequest = ::exitApplication,
