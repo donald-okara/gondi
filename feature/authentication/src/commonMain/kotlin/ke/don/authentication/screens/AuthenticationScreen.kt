@@ -64,7 +64,7 @@ class AuthenticationScreen : Screen {
         ObserveAsEvent(screenModel.events) { event ->
             when (event) {
                 is AuthEvent.SwitchSignIn -> startupPhase = StartupPhase.OnBoarding
-                is AuthEvent.SwitchMain -> navigator.push(HomeScreen())// Replace with actual navigation
+                is AuthEvent.SwitchMain -> navigator.push(HomeScreen()) // Replace with actual navigation
                 is AuthEvent.SwitchProfile -> startupPhase = StartupPhase.Profile // Replace with actual navigation
                 else -> Unit
             }

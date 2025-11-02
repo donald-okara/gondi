@@ -3,7 +3,7 @@ plugins {
 }
 
 kotlin {
-    sourceSets{
+    sourceSets {
         commonMain.dependencies {
             implementation(project(":feature:home"))
         }
