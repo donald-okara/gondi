@@ -41,15 +41,11 @@ fun validateIntent(player: Player, intent: PlayerIntent, currentPhase: GamePhase
                 player.role == Role.DETECTIVE &&
                 player.role.canActInSleep
 
-        is PlayerIntent.Accuse ->
+        is PlayerIntent.Accuse, is PlayerIntent.Second ->
             player.isAlive &&
-                player.role?.canAccuse == true &&
-                currentPhase == GamePhase.TOWN_HALL
-
-        is PlayerIntent.Second ->
-            player.isAlive &&
-                player.role?.canAccuse == true &&
-                currentPhase == GamePhase.TOWN_HALL
+                    player.role?.canAccuse == true &&
+                    player.role.canVote &&
+                    currentPhase == GamePhase.TOWN_HALL
 
         is PlayerIntent.Vote ->
             player.isAlive &&
