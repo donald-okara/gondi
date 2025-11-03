@@ -39,11 +39,14 @@ enum class Faction {
                 // If no Gondi remain, villagers win
                 gondiAlive.isEmpty() -> VILLAGER
 
-                // If no Villagers remain, Gondi win
-                villageAlive.isEmpty() || gondiAlive.size > villageAlive.size -> GONDI
-
                 // If only the accomplice is left in Gondi faction, villagers win
                 gondiAlive.size == 1 && gondiAlive.first().role == Role.ACCOMPLICE -> VILLAGER
+
+                // If no Villagers remain and at least one non-Accomplice Gondi survives, Gondis win
+                villageAlive.isEmpty() && gondiAlive.any { it.role != Role.ACCOMPLICE } -> GONDI
+
+                // If Gondis strictly outnumber Villagers, Gondis win
+                gondiAlive.size > villageAlive.size -> GONDI
 
                 else -> null // Game continues
             }

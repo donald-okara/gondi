@@ -217,6 +217,28 @@ class LocalDatabaseTest {
     }
 
     @Test
+    fun testPlayerBoundary_knownIdentities() = runTest {
+        val db = createDb()
+        val player = Player(
+            id = "p2",
+            name = "Bob",
+            role = Role.VILLAGER,
+            avatar = Avatar.Christian,
+            background = AvatarBackground.GREEN_EMERALD,
+            isAlive = false,
+            lastAction = null,
+            knownIdentities = mapOf(
+                "p1" to Role.VILLAGER,
+                "p3" to Role.DETECTIVE,
+            ),
+        )
+        db.insertOrReplacePlayer(player)
+        val fetched = db.getPlayerById("p2").first()
+        assertTrue(fetched?.knownIdentities?.isEmpty() == false)
+        assertFalse(fetched.isAlive)
+    }
+
+    @Test
     fun testUpdateAliveStatus_changesIsAliveFlag() = runTest {
         val db = createDb()
         val player = Player(
