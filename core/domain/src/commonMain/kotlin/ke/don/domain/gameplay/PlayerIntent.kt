@@ -23,11 +23,37 @@ sealed class PlayerIntent {
 
 fun validateIntent(player: Player, intent: PlayerIntent, currentPhase: GamePhase): Boolean {
     return when (intent) {
-        is PlayerIntent.Kill -> player.role == Role.GONDI && currentPhase == GamePhase.SLEEP && player.isAlive
-        is PlayerIntent.Save -> player.role == Role.DOCTOR && currentPhase == GamePhase.SLEEP && player.isAlive
-        is PlayerIntent.Investigate -> player.role == Role.DETECTIVE && currentPhase == GamePhase.SLEEP && player.isAlive
-        is PlayerIntent.Accuse -> player.isAlive && currentPhase == GamePhase.TOWN_HALL
-        is PlayerIntent.Second -> player.isAlive && currentPhase == GamePhase.TOWN_HALL
-        is PlayerIntent.Vote -> player.isAlive && currentPhase == GamePhase.COURT
+        is PlayerIntent.Kill ->
+            player.isAlive &&
+                    currentPhase == GamePhase.SLEEP &&
+                    player.role?.faction == Faction.GONDI &&
+                    player.role.canActInSleep
+
+        is PlayerIntent.Save ->
+            player.isAlive &&
+                    currentPhase == GamePhase.SLEEP &&
+                    player.role == Role.DOCTOR &&
+                    player.role.canActInSleep
+
+        is PlayerIntent.Investigate ->
+            player.isAlive &&
+                    currentPhase == GamePhase.SLEEP &&
+                    player.role == Role.DETECTIVE &&
+                    player.role.canActInSleep
+
+        is PlayerIntent.Accuse ->
+            player.isAlive &&
+                    player.role?.canAccuse == true &&
+                    currentPhase == GamePhase.TOWN_HALL
+
+        is PlayerIntent.Second ->
+            player.isAlive &&
+                    player.role?.canAccuse == true &&
+                    currentPhase == GamePhase.TOWN_HALL
+
+        is PlayerIntent.Vote ->
+            player.isAlive &&
+                    player.role?.canVote == true &&
+                    currentPhase == GamePhase.COURT
     }
 }

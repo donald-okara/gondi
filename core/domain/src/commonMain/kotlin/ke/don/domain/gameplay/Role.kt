@@ -9,6 +9,9 @@
  */
 package ke.don.domain.gameplay
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class Role(
     val faction: Faction,
     val canActInSleep: Boolean = false,

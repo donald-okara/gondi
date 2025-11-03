@@ -23,8 +23,8 @@ enum class Faction {
          * Determines the winner based on remaining players.
          *
          * The winning conditions are:
-         * - **VILLAGER win:** All Gondis are eliminated, and there is more than one Villager left.
-         * - **GONDI win:** The number of Gondis is equal to or greater than the number of Villagers.
+         * - **VILLAGER win:** All Gondis are eliminated, or only the Accomplice remains among Gondis.
+         * - **GONDI win:** All Villagers are eliminated (and at least one non-Accomplice Gondi remains) or if Gondis outnumber villagers.
          * - **Game continues:** Neither of the above conditions is met.
          *
          * @param players The list of players in the game.
@@ -40,7 +40,7 @@ enum class Faction {
                 gondiAlive.isEmpty() -> VILLAGER
 
                 // If no Villagers remain, Gondi win
-                villageAlive.isEmpty() -> GONDI
+                villageAlive.isEmpty() || gondiAlive.size > villageAlive.size -> GONDI
 
                 // If only the accomplice is left in Gondi faction, villagers win
                 gondiAlive.size == 1 && gondiAlive.first().role == Role.ACCOMPLICE -> VILLAGER

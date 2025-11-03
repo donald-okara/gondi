@@ -11,7 +11,7 @@ CREATE TABLE gameStateEntity (
 getGameState:
 SELECT * FROM gameStateEntity WHERE id = :id;
 
-getAllGAmeState:
+getAllGameState:
 SELECT * FROM gameStateEntity;
 
 insertOrReplaceGameState:

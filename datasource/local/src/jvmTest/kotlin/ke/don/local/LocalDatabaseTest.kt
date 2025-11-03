@@ -16,6 +16,7 @@ import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
+import ke.don.domain.state.Vote
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.local.db.DatabaseFactory
@@ -340,7 +341,8 @@ class LocalDatabaseTest {
     @Test
     fun testInsertAndGetVote_success() = runTest {
         val db = createDb()
-        db.insertOrReplaceVote("voter1", "target1", true)
+        val vote = Vote(voterId = "voter1", targetId = "target1", isGuilty = true)
+        db.insertOrReplaceVote(vote)
 
         val fetched = db.getAllVotes().first()
         assertEquals(1, fetched.size)
@@ -359,9 +361,9 @@ class LocalDatabaseTest {
     @Test
     fun clearVotes_clearsAllVotesFromTable() = runTest {
         val db = createDb()
-        val id = "vote1"
+        val vote = Vote("vote1", "player1", true)
 
-        db.insertOrReplaceVote(id, "player1", true)
+        db.insertOrReplaceVote(vote)
         val beforeClear = db.getAllVotes().first()
         assertEquals(1, beforeClear.size)
 

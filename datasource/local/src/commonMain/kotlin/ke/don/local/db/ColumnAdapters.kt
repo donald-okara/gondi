@@ -18,24 +18,35 @@ import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 val json = Json { ignoreUnknownKeys = true }
 
 val roleAdapter = object : ColumnAdapter<Role, String> {
-    override fun decode(databaseValue: String) = Role.valueOf(databaseValue)
+    override fun decode(databaseValue: String) = runCatching {
+        Role.valueOf(databaseValue)
+    }.getOrElse {
+        throw IllegalStateException("Invalid role value in database: $databaseValue", it)
+    }
+
     override fun encode(value: Role) = value.name
 }
 
 val avatarAdapter = object : ColumnAdapter<Avatar, String> {
-    override fun decode(databaseValue: String) = Avatar.valueOf(databaseValue)
+    override fun decode(databaseValue: String) = runCatching {
+        Avatar.valueOf(databaseValue)
+    } .getOrElse {
+        throw IllegalStateException("Invalid avatar value in database: $databaseValue", it)
+    }
     override fun encode(value: Avatar) = value.name
 }
 
 val backgroundAdapter = object : ColumnAdapter<AvatarBackground, String> {
-    override fun decode(databaseValue: String) = AvatarBackground.valueOf(databaseValue)
+    override fun decode(databaseValue: String) = runCatching {
+        AvatarBackground.valueOf(databaseValue)
+    }.getOrElse {
+        throw IllegalStateException("Invalid background value in database: $databaseValue", it)
+    }
     override fun encode(value: AvatarBackground) = value.name
 }
 
@@ -54,8 +65,11 @@ val knownIdentitiesAdapter = object : ColumnAdapter<Map<String, Role?>, String> 
 }
 
 val phaseAdapter = object : ColumnAdapter<GamePhase, String> {
-    override fun decode(databaseValue: String): GamePhase = GamePhase.valueOf(databaseValue)
-
+    override fun decode(databaseValue: String): GamePhase = runCatching {
+        GamePhase.valueOf(databaseValue)
+    }.getOrElse {
+        throw IllegalStateException("Invalid phase value in database: $databaseValue", it)
+    }
     override fun encode(value: GamePhase): String = value.name
 }
 
@@ -67,7 +81,7 @@ val booleanAdapter = object : ColumnAdapter<Boolean, Long> {
 
 val pendingKillsAdapter = object : ColumnAdapter<List<String>, String> {
     override fun decode(databaseValue: String): List<String> {
-        return if (databaseValue.isEmpty()) listOf() else databaseValue.split(",")
+        return databaseValue.split(",").filter { it.isNotEmpty() }
     }
 
     override fun encode(value: List<String>): String = value.joinToString(",")
@@ -83,7 +97,7 @@ val GameStateEntity.toGameState: GameState get() = GameState(
     revealEliminatedPlayer = booleanAdapter.decode(this.reveal_eliminated_player),
 )
 
-val GameState.toGameState: GameStateEntity get() = GameStateEntity(
+val GameState.toGameStateEntity: GameStateEntity get() = GameStateEntity(
     id = this.id,
     phase = phaseAdapter.encode(this.phase),
     round = this.round,
@@ -104,7 +118,7 @@ val PlayerEntity.toPlayer: Player get() = Player(
     knownIdentities = knownIdentitiesAdapter.decode(this.known_identities ?: "{}"),
 )
 
-val Player.toPlayers: PlayerEntity get() = PlayerEntity(
+val Player.toPlayerEntity: PlayerEntity get() = PlayerEntity(
     id = this.id,
     name = this.name,
     avatar = this.avatar?.let { avatarAdapter.encode(it) },
@@ -115,7 +129,7 @@ val Player.toPlayers: PlayerEntity get() = PlayerEntity(
     last_action = this.lastAction?.let { playerActionAdapter.encode(it) },
 )
 
-val Vote.toVotes: VoteEntity get() = VoteEntity(
+val Vote.toVoteEntity: VoteEntity get() = VoteEntity(
     voter_id = this.voterId,
     target_id = this.targetId,
     is_guilty = booleanAdapter.encode(this.isGuilty),

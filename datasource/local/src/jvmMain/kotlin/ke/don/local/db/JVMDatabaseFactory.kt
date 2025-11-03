@@ -16,7 +16,6 @@ class JVMDatabaseFactory : DatabaseFactory {
     override fun createDriver(): SqlDriver {
         val driver = JdbcSqliteDriver("jdbc:sqlite:gondi.db")
 
-        // Create schema only if it doesn't exist yet
         GondiDatabase.Schema.create(driver)
 
         return driver

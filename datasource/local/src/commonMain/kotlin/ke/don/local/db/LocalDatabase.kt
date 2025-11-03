@@ -32,7 +32,7 @@ class LocalDatabase(
     /**
      * GAME STATE
      */
-    fun getAllGameState(): Flow<List<GameState>> = stateQueries.getAllGAmeState()
+    fun getAllGameState(): Flow<List<GameState>> = stateQueries.getAllGameState()
         .asFlow()
         .map { it.executeAsList().map { state -> state.toGameState } }
 
@@ -41,13 +41,13 @@ class LocalDatabase(
         .map { it.executeAsOneOrNull()?.toGameState }
 
     fun insertOrReplaceGameState(gameState: GameState) = stateQueries.insertOrReplaceGameState(
-        gameState.toGameState.id,
-        gameState.toGameState.phase,
-        gameState.toGameState.round,
-        gameState.toGameState.pending_kills,
-        gameState.toGameState.last_saved_player_id,
-        gameState.toGameState.accused_player_id,
-        gameState.toGameState.reveal_eliminated_player,
+        gameState.toGameStateEntity.id,
+        gameState.toGameStateEntity.phase,
+        gameState.toGameStateEntity.round,
+        gameState.toGameStateEntity.pending_kills,
+        gameState.toGameStateEntity.last_saved_player_id,
+        gameState.toGameStateEntity.accused_player_id,
+        gameState.toGameStateEntity.reveal_eliminated_player,
     )
 
     fun updatePhase(phase: String, round: Long, id: String) = stateQueries.updatePhase(phase, round, id)
@@ -73,14 +73,14 @@ class LocalDatabase(
         .map { it.executeAsOneOrNull()?.toPlayer }
 
     fun insertOrReplacePlayer(player: Player) = playersQueries.insertOrReplacePlayer(
-        player.id,
-        name = player.name,
-        role = player.role?.let { roleAdapter.encode(it) },
-        is_alive = booleanAdapter.encode(player.isAlive),
-        known_identities = knownIdentitiesAdapter.encode(player.knownIdentities),
-        last_action = player.lastAction?.let { playerActionAdapter.encode(it) },
-        avatar = player.avatar?.let { avatarAdapter.encode(it) },
-        background = player.background.let { backgroundAdapter.encode(it) },
+        player.toPlayerEntity.id,
+        name = player.toPlayerEntity.name,
+        role = player.toPlayerEntity.role,
+        is_alive = player.toPlayerEntity.is_alive,
+        known_identities = player.toPlayerEntity.known_identities,
+        last_action = player.toPlayerEntity.last_action,
+        avatar = player.toPlayerEntity.avatar,
+        background = player.toPlayerEntity.background
     )
 
     fun updateAliveStatus(isAlive: Boolean, id: String) = playersQueries.updateAliveStatus(booleanAdapter.encode(isAlive), id)
@@ -99,7 +99,11 @@ class LocalDatabase(
         .asFlow()
         .map { it.executeAsList().map { vote -> vote.toVote } }
 
-    fun insertOrReplaceVote(voterId: String, targetId: String, isGuilty: Boolean) = votesQueries.insertOrReplaceVote(voterId, targetId, booleanAdapter.encode(isGuilty))
+    fun insertOrReplaceVote(vote: Vote) = votesQueries.insertOrReplaceVote(
+        vote.toVoteEntity.voter_id,
+        vote.toVoteEntity.target_id,
+        vote.toVoteEntity.is_guilty
+    )
 
     fun clearVotes() = votesQueries.clearVotes()
 }
