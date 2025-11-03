@@ -1,4 +1,4 @@
-CREATE TABLE game_state (
+CREATE TABLE gameStateEntity (
     id TEXT NOT NULL PRIMARY KEY,                      -- e.g., "current" or session UUID
     phase TEXT NOT NULL,                               -- e.g., "SLEEP", "TOWN_HALL", "COURT"
     round INTEGER NOT NULL DEFAULT 1,
@@ -9,20 +9,20 @@ CREATE TABLE game_state (
 );
 
 getGameState:
-SELECT * FROM game_state WHERE id = :id;
+SELECT * FROM gameStateEntity WHERE id = :id;
 
 getAllGAmeState:
-SELECT * FROM game_state;
+SELECT * FROM gameStateEntity;
 
 insertOrReplaceGameState:
-INSERT OR REPLACE INTO game_state(id, phase, round, pending_kills, last_saved_player_id, accused_player_id, reveal_eliminated_player)
+INSERT OR REPLACE INTO gameStateEntity(id, phase, round, pending_kills, last_saved_player_id, accused_player_id, reveal_eliminated_player)
 VALUES (:id, :phase, :round, :pending_kills, :last_saved_player_id, :accused_player_id, :reveal_eliminated_player);
 
 updatePhase:
-UPDATE game_state SET phase = :phase, round = :round WHERE id = :id;
+UPDATE gameStateEntity SET phase = :phase, round = :round WHERE id = :id;
 
 toggleRevealFlag:
-UPDATE game_state SET reveal_eliminated_player = :flag WHERE id = :id;
+UPDATE gameStateEntity SET reveal_eliminated_player = :flag WHERE id = :id;
 
 clearGameState:
-DELETE FROM game_state;
+DELETE FROM gameStateEntity;

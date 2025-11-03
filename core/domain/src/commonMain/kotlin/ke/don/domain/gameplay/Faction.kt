@@ -22,18 +22,18 @@ enum class Faction {
          */
         fun checkWinner(players: List<Player>): Faction? {
             val alive = players.filter { it.isAlive }
-            val gondiAlive = alive.filter { it.role.faction == Faction.GONDI }
-            val villageAlive = alive.filter { it.role.faction == Faction.VILLAGER }
+            val gondiAlive = alive.filter { it.role?.faction == GONDI }
+            val villageAlive = alive.filter { it.role?.faction == VILLAGER }
 
             return when {
                 // If no Gondi remain, villagers win
-                gondiAlive.isEmpty() -> Faction.VILLAGER
+                gondiAlive.isEmpty() -> VILLAGER
 
                 // If no Villagers remain, Gondi win
-                villageAlive.isEmpty() -> Faction.GONDI
+                villageAlive.isEmpty() -> GONDI
 
                 // If only the accomplice is left in Gondi faction, villagers win
-                gondiAlive.size == 1 && gondiAlive.first().role == Role.ACCOMPLICE -> Faction.VILLAGER
+                gondiAlive.size == 1 && gondiAlive.first().role == Role.ACCOMPLICE -> VILLAGER
 
                 else -> null // Game continues
             }

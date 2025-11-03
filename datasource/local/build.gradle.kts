@@ -18,7 +18,9 @@ kotlin{
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.core)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlin.coroutines)
             implementation(libs.sqldelight.runtime)
+            implementation(libs.sqldelight.coroutines)
         }
         androidMain.dependencies {
             implementation(libs.sqldelight.android)
@@ -28,6 +30,11 @@ kotlin{
         }
         jvmMain.dependencies {
             implementation(libs.sqldelight.sqlite)
+        }
+        jvmTest.dependencies {
+            implementation(libs.junit)
+            implementation(libs.sqldelight.sqlite)
+            implementation(libs.jetbrains.kotlinx.coroutines.test)
         }
     }
 }

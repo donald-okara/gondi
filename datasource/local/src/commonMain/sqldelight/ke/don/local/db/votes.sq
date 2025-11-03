@@ -1,4 +1,4 @@
-CREATE TABLE votes (
+CREATE TABLE voteEntity (
     voter_id TEXT NOT NULL,
     target_id TEXT NOT NULL,
     is_guilty INTEGER NOT NULL,
@@ -6,11 +6,11 @@ CREATE TABLE votes (
 );
 
 getAllVotes:
-SELECT * FROM votes;
+SELECT * FROM voteEntity;
 
 insertOrReplaceVote:
-INSERT OR REPLACE INTO votes(voter_id, target_id, is_guilty)
+INSERT OR REPLACE INTO voteEntity(voter_id, target_id, is_guilty)
 VALUES (:voter_id, :target_id, :is_guilty);
 
 clearVotes:
-DELETE FROM votes;
+DELETE FROM voteEntity;

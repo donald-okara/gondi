@@ -1,5 +1,5 @@
 
-CREATE TABLE players (
+CREATE TABLE playerEntity (
     id TEXT NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
     avatar TEXT,
@@ -11,26 +11,26 @@ CREATE TABLE players (
 );
 
 getAllPlayers:
-SELECT * FROM players;
+SELECT * FROM playerEntity;
 
 getAlivePlayers:
-SELECT * FROM players WHERE is_alive = 1;
+SELECT * FROM playerEntity WHERE is_alive = 1;
 
 getPlayerById:
-SELECT * FROM players WHERE id = :id;
+SELECT * FROM playerEntity WHERE id = :id;
 
 insertOrReplacePlayer:
-INSERT OR REPLACE INTO players(id, name, role, is_alive, known_identities, last_action, avatar, background)
+INSERT OR REPLACE INTO playerEntity(id, name, role, is_alive, known_identities, last_action, avatar, background)
 VALUES (:id, :name, :role, :is_alive, :known_identities, :last_action, :avatar, :background);
 
 updateAliveStatus:
-UPDATE players SET is_alive = :is_alive WHERE id = :id;
+UPDATE playerEntity SET is_alive = :is_alive WHERE id = :id;
 
 updateLastAction:
-UPDATE players SET last_action = :last_action WHERE id = :id;
+UPDATE playerEntity SET last_action = :last_action WHERE id = :id;
 
 updateKnownIdentities:
-UPDATE players SET known_identities = :known_identities WHERE id = :id;
+UPDATE playerEntity SET known_identities = :known_identities WHERE id = :id;
 
 clearPlayers:
-DELETE FROM players;
+DELETE FROM playerEntity;

@@ -1,10 +1,14 @@
 package ke.don.local.db
 
+import app.cash.sqldelight.coroutines.asFlow
 import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlin.collections.map
 
 class LocalDatabase(
     databaseFactory: DatabaseFactory
@@ -19,15 +23,13 @@ class LocalDatabase(
     /**
      * GAME STATE
      */
-    fun getAllGameState(): List<GameState> = stateQueries.getAllGAmeState()
-            .executeAsList()
-            .map { row ->
-                row.toGameState
-            }
+    fun getAllGameState(): Flow<List<GameState>> = stateQueries.getAllGAmeState()
+        .asFlow()
+        .map { it.executeAsList().map { state -> state.toGameState } }
 
-
-    fun getGameState(id: String): GameState = stateQueries.getGameState(id).executeAsOne().toGameState
-
+    fun getGameState(id: String): Flow<GameState?> = stateQueries.getGameState(id)
+        .asFlow()
+        .map { it.executeAsOneOrNull()?.toGameState }
 
     fun insertOrReplaceGameState(gameState: GameState) = stateQueries.insertOrReplaceGameState(
             gameState.toGameState.id,
@@ -39,12 +41,9 @@ class LocalDatabase(
             gameState.toGameState.reveal_eliminated_player
         )
 
-
     fun updatePhase(phase: String, round: Long, id: String ) = stateQueries.updatePhase(phase, round, id)
 
-
     fun toggleRevealFlag(flag: Boolean,id: String) = stateQueries.toggleRevealFlag(booleanAdapter.encode(flag), id)
-
 
     fun clearGameState()= stateQueries.clearGameState()
 
@@ -53,11 +52,17 @@ class LocalDatabase(
      * PLAYER
      */
 
-    fun getAllPlayers(): List<Player> = playersQueries.getAllPlayers().executeAsList().map { it.toPlayer }
+    fun getAllPlayers(): Flow<List<Player>> = playersQueries.getAllPlayers()
+        .asFlow()
+        .map { it.executeAsList().map { player -> player.toPlayer } }
 
-    fun getAlivePlayers(): List<Player> = playersQueries.getAlivePlayers().executeAsList().map { it.toPlayer }
+    fun getAlivePlayers(): Flow<List<Player>> = playersQueries.getAlivePlayers()
+        .asFlow()
+        .map { it.executeAsList().map { player -> player.toPlayer } }
 
-    fun getPlayerById(id: String): Player = playersQueries.getPlayerById(id).executeAsOne().toPlayer
+    fun getPlayerById(id: String): Flow<Player?> = playersQueries.getPlayerById(id)
+        .asFlow()
+        .map { it.executeAsOneOrNull()?.toPlayer }
 
     fun insertOrReplacePlayer(player: Player) = playersQueries.insertOrReplacePlayer(
         player.id,
@@ -82,7 +87,9 @@ class LocalDatabase(
      * VOTE
      */
 
-    fun getAllVotes(): List<Vote> = votesQueries.getAllVotes().executeAsList().map { it.toVote }
+    fun getAllVotes(): Flow<List<Vote>> = votesQueries.getAllVotes()
+        .asFlow()
+        .map { it.executeAsList().map { vote -> vote.toVote } }
 
     fun insertOrReplaceVote(voterId: String, targetId: String, isGuilty: Boolean) = votesQueries.insertOrReplaceVote(voterId, targetId, booleanAdapter.encode(isGuilty))
 

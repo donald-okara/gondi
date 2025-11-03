@@ -64,7 +64,7 @@ val pendingKillsAdapter = object  : ColumnAdapter<List<String>, String> {
     override fun encode(value: List<String>): String = value.joinToString(",")
 }
 
-val Game_state.toGameState: GameState get() = GameState(
+val GameStateEntity.toGameState: GameState get() = GameState(
     id = this.id,
     phase = phaseAdapter.decode(this.phase),
     round = this.round,
@@ -74,7 +74,7 @@ val Game_state.toGameState: GameState get() = GameState(
     revealEliminatedPlayer = booleanAdapter.decode(this.reveal_eliminated_player)
 )
 
-val GameState.toGameState: Game_state get() = Game_state(
+val GameState.toGameState: GameStateEntity get() = GameStateEntity(
     id = this.id,
     phase = phaseAdapter.encode(this.phase),
     round = this.round,
@@ -84,7 +84,7 @@ val GameState.toGameState: Game_state get() = Game_state(
     reveal_eliminated_player = booleanAdapter.encode(this.revealEliminatedPlayer)
 )
 
-val Players.toPlayer: Player get() = Player(
+val PlayerEntity.toPlayer: Player get() = Player(
     id = this.id,
     name = this.name,
     avatar = this.avatar?.let { avatarAdapter.decode(it) },
@@ -95,7 +95,7 @@ val Players.toPlayer: Player get() = Player(
     knownIdentities = knownIdentitiesAdapter.decode(this.known_identities ?: "{}")
 )
 
-val Player.toPlayers: Players get() = Players(
+val Player.toPlayers: PlayerEntity get() = PlayerEntity(
     id = this.id,
     name = this.name,
     avatar = this.avatar?.let { avatarAdapter.encode(it) },
@@ -106,13 +106,13 @@ val Player.toPlayers: Players get() = Players(
     last_action = this.lastAction?.let { playerActionAdapter.encode(it) },
 )
 
-val Vote.toVotes: Votes get() = Votes(
+val Vote.toVotes: VoteEntity get() = VoteEntity(
     voter_id = this.voterId,
     target_id = this.targetId,
     is_guilty = booleanAdapter.encode(this.isGuilty)
 )
 
-val Votes.toVote: Vote get() = Vote(
+val VoteEntity.toVote: Vote get() = Vote(
     voterId = this.voter_id,
     targetId = this.target_id,
     isGuilty = booleanAdapter.decode(this.is_guilty)
