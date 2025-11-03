@@ -21,8 +21,8 @@ import ke.don.components.empty_state.EmptyScreen
 import ke.don.components.helpers.Matcha
 import ke.don.components.profile.ProfileImageToken
 import ke.don.components.scaffold.ScaffoldToken
-import ke.don.domain.model.Avatar
-import ke.don.domain.model.Profile
+import ke.don.domain.table.Avatar
+import ke.don.domain.table.Profile
 
 class HomeScreen : Screen {
     @OptIn(ExperimentalMaterial3Api::class)

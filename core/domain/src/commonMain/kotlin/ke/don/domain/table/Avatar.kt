@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.domain.model
+package ke.don.domain.table
 
 import kotlinx.serialization.SerialName
 

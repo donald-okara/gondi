@@ -23,7 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import ke.don.domain.model.Profile
+import ke.don.domain.table.Profile
 import ke.don.resources.color
 import ke.don.resources.painter
 import org.jetbrains.compose.resources.painterResource

@@ -23,8 +23,8 @@ import gondi.shared.resources.generated.resources.leo
 import gondi.shared.resources.generated.resources.nolan
 import gondi.shared.resources.generated.resources.ryker
 import gondi.shared.resources.generated.resources.sawyer
-import ke.don.domain.model.Avatar
-import ke.don.domain.model.AvatarBackground
+import ke.don.domain.table.Avatar
+import ke.don.domain.table.AvatarBackground
 import org.jetbrains.compose.resources.DrawableResource
 
 fun AvatarBackground.color(): Color {
