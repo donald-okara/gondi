@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.local
 
 import junit.framework.TestCase.assertFalse
@@ -42,7 +51,7 @@ class LocalDatabaseTest {
             pendingKills = listOf("p1", "p2"),
             lastSavedPlayerId = "p3",
             accusedPlayerId = null,
-            revealEliminatedPlayer = false
+            revealEliminatedPlayer = false,
         )
 
         db.insertOrReplaceGameState(state)
@@ -55,12 +64,11 @@ class LocalDatabaseTest {
     fun testGetGameState_notExist_returnsNull() = runTest {
         val db = createDb()
 
-        // Use firstOrNull to handle empty table
         val fetched = db.getGameState("missing")
-            .map { it } // type: Flow<GameState>
-            .firstOrNull() // will throw if executeAsOne fails, so optional: modify flow to use executeAsOneOrNull in DB
+            .map { it }
+            .firstOrNull()
 
-        assertNull(fetched) // expected: null for missing ID
+        assertNull(fetched)
     }
 
     @Test
@@ -74,7 +82,7 @@ class LocalDatabaseTest {
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
             accusedPlayerId = null,
-            revealEliminatedPlayer = true
+            revealEliminatedPlayer = true,
         )
 
         db.insertOrReplaceGameState(state)
@@ -93,7 +101,7 @@ class LocalDatabaseTest {
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
             accusedPlayerId = null,
-            revealEliminatedPlayer = false
+            revealEliminatedPlayer = false,
         )
         db.insertOrReplaceGameState(state)
 
@@ -113,7 +121,7 @@ class LocalDatabaseTest {
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
             accusedPlayerId = null,
-            revealEliminatedPlayer = false
+            revealEliminatedPlayer = false,
         )
         db.insertOrReplaceGameState(state)
 
@@ -136,7 +144,7 @@ class LocalDatabaseTest {
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
             accusedPlayerId = null,
-            revealEliminatedPlayer = false
+            revealEliminatedPlayer = false,
         )
         val state2 = GameState(
             id = "s2",
@@ -145,7 +153,7 @@ class LocalDatabaseTest {
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
             accusedPlayerId = null,
-            revealEliminatedPlayer = false
+            revealEliminatedPlayer = false,
         )
 
         db.insertOrReplaceGameState(state1)
@@ -158,7 +166,6 @@ class LocalDatabaseTest {
         allStates = db.getAllGameState().first()
         assertTrue(allStates.isEmpty())
     }
-
 
     /** -------------------- PLAYER -------------------- **/
 
@@ -174,7 +181,7 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = mapOf("p2" to Role.VILLAGER)
+            knownIdentities = mapOf("p2" to Role.VILLAGER),
         )
 
         db.insertOrReplacePlayer(player)
@@ -185,7 +192,7 @@ class LocalDatabaseTest {
     @Test
     fun testGetPlayer_notExist_returnsNull() = runTest {
         val db = createDb()
-        val fetched = db.getPlayerById("missing").firstOrNull() // requires executeAsOneOrNull
+        val fetched = db.getPlayerById("missing").firstOrNull()
         assertNull(fetched)
     }
 
@@ -200,7 +207,7 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = false,
             lastAction = null,
-            knownIdentities = emptyMap()
+            knownIdentities = emptyMap(),
         )
         db.insertOrReplacePlayer(player)
         val fetched = db.getPlayerById("p2").first()
@@ -219,7 +226,7 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = emptyMap()
+            knownIdentities = emptyMap(),
         )
         db.insertOrReplacePlayer(player)
 
@@ -232,7 +239,6 @@ class LocalDatabaseTest {
         assertTrue(fetchedAgain?.isAlive == true)
     }
 
-
     @Test
     fun testUpdateLastAction_setsPlayerAction() = runTest {
         val db = createDb()
@@ -244,7 +250,7 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = emptyMap()
+            knownIdentities = emptyMap(),
         )
         db.insertOrReplacePlayer(player)
 
@@ -265,7 +271,7 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = emptyMap()
+            knownIdentities = emptyMap(),
         )
         db.insertOrReplacePlayer(player)
 
@@ -286,7 +292,7 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = emptyMap()
+            knownIdentities = emptyMap(),
         )
         val player2 = Player(
             id = "p2",
@@ -296,7 +302,7 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = emptyMap()
+            knownIdentities = emptyMap(),
         )
         db.insertOrReplacePlayer(player1)
         db.insertOrReplacePlayer(player2)
@@ -328,7 +334,6 @@ class LocalDatabaseTest {
         assertTrue(alivePlayers.all { it.isAlive })
         assertEquals(setOf("Alice", "Charles"), alivePlayers.map { it.name }.toSet())
     }
-
 
     /** -------------------- VOTE -------------------- **/
 
@@ -367,5 +372,4 @@ class LocalDatabaseTest {
         val afterClear = db.getAllVotes().first()
         assertTrue(afterClear.isEmpty())
     }
-
 }

@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.local.db
 
 import app.cash.sqldelight.coroutines.asFlow
@@ -11,10 +20,10 @@ import kotlinx.coroutines.flow.map
 import kotlin.collections.map
 
 class LocalDatabase(
-    databaseFactory: DatabaseFactory
+    databaseFactory: DatabaseFactory,
 ) {
     private val database = GondiDatabase(
-        databaseFactory.createDriver()
+        databaseFactory.createDriver(),
     )
     private val stateQueries = database.game_stateQueries
     private val playersQueries = database.playersQueries
@@ -32,21 +41,20 @@ class LocalDatabase(
         .map { it.executeAsOneOrNull()?.toGameState }
 
     fun insertOrReplaceGameState(gameState: GameState) = stateQueries.insertOrReplaceGameState(
-            gameState.toGameState.id,
-            gameState.toGameState.phase,
-            gameState.toGameState.round,
-            gameState.toGameState.pending_kills,
-            gameState.toGameState.last_saved_player_id,
-            gameState.toGameState.accused_player_id,
-            gameState.toGameState.reveal_eliminated_player
-        )
+        gameState.toGameState.id,
+        gameState.toGameState.phase,
+        gameState.toGameState.round,
+        gameState.toGameState.pending_kills,
+        gameState.toGameState.last_saved_player_id,
+        gameState.toGameState.accused_player_id,
+        gameState.toGameState.reveal_eliminated_player,
+    )
 
-    fun updatePhase(phase: String, round: Long, id: String ) = stateQueries.updatePhase(phase, round, id)
+    fun updatePhase(phase: String, round: Long, id: String) = stateQueries.updatePhase(phase, round, id)
 
-    fun toggleRevealFlag(flag: Boolean,id: String) = stateQueries.toggleRevealFlag(booleanAdapter.encode(flag), id)
+    fun toggleRevealFlag(flag: Boolean, id: String) = stateQueries.toggleRevealFlag(booleanAdapter.encode(flag), id)
 
-    fun clearGameState()= stateQueries.clearGameState()
-
+    fun clearGameState() = stateQueries.clearGameState()
 
     /**
      * PLAYER

@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.local.db
 
 import app.cash.sqldelight.ColumnAdapter
@@ -9,8 +18,8 @@ import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 val json = Json { ignoreUnknownKeys = true }
@@ -44,7 +53,7 @@ val knownIdentitiesAdapter = object : ColumnAdapter<Map<String, Role?>, String> 
         json.encodeToString(value)
 }
 
-val phaseAdapter = object  : ColumnAdapter<GamePhase, String> {
+val phaseAdapter = object : ColumnAdapter<GamePhase, String> {
     override fun decode(databaseValue: String): GamePhase = GamePhase.valueOf(databaseValue)
 
     override fun encode(value: GamePhase): String = value.name
@@ -56,7 +65,7 @@ val booleanAdapter = object : ColumnAdapter<Boolean, Long> {
     override fun encode(value: Boolean): Long = if (value) 1L else 0L
 }
 
-val pendingKillsAdapter = object  : ColumnAdapter<List<String>, String> {
+val pendingKillsAdapter = object : ColumnAdapter<List<String>, String> {
     override fun decode(databaseValue: String): List<String> {
         return if (databaseValue.isEmpty()) listOf() else databaseValue.split(",")
     }
@@ -71,7 +80,7 @@ val GameStateEntity.toGameState: GameState get() = GameState(
     pendingKills = pendingKillsAdapter.decode(this.pending_kills ?: ""),
     lastSavedPlayerId = this.last_saved_player_id,
     accusedPlayerId = this.accused_player_id,
-    revealEliminatedPlayer = booleanAdapter.decode(this.reveal_eliminated_player)
+    revealEliminatedPlayer = booleanAdapter.decode(this.reveal_eliminated_player),
 )
 
 val GameState.toGameState: GameStateEntity get() = GameStateEntity(
@@ -81,7 +90,7 @@ val GameState.toGameState: GameStateEntity get() = GameStateEntity(
     pending_kills = pendingKillsAdapter.encode(this.pendingKills),
     last_saved_player_id = this.lastSavedPlayerId,
     accused_player_id = this.accusedPlayerId,
-    reveal_eliminated_player = booleanAdapter.encode(this.revealEliminatedPlayer)
+    reveal_eliminated_player = booleanAdapter.encode(this.revealEliminatedPlayer),
 )
 
 val PlayerEntity.toPlayer: Player get() = Player(
@@ -92,7 +101,7 @@ val PlayerEntity.toPlayer: Player get() = Player(
     role = this.role?.let { roleAdapter.decode(it) },
     isAlive = booleanAdapter.decode(this.is_alive),
     lastAction = this.last_action?.let { playerActionAdapter.decode(it) },
-    knownIdentities = knownIdentitiesAdapter.decode(this.known_identities ?: "{}")
+    knownIdentities = knownIdentitiesAdapter.decode(this.known_identities ?: "{}"),
 )
 
 val Player.toPlayers: PlayerEntity get() = PlayerEntity(
@@ -109,11 +118,11 @@ val Player.toPlayers: PlayerEntity get() = PlayerEntity(
 val Vote.toVotes: VoteEntity get() = VoteEntity(
     voter_id = this.voterId,
     target_id = this.targetId,
-    is_guilty = booleanAdapter.encode(this.isGuilty)
+    is_guilty = booleanAdapter.encode(this.isGuilty),
 )
 
 val VoteEntity.toVote: Vote get() = Vote(
     voterId = this.voter_id,
     targetId = this.target_id,
-    isGuilty = booleanAdapter.decode(this.is_guilty)
+    isGuilty = booleanAdapter.decode(this.is_guilty),
 )

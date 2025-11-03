@@ -7,10 +7,14 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.local.db
+package ke.don.domain.state
 
-import app.cash.sqldelight.db.SqlDriver
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-interface DatabaseFactory {
-    fun createDriver(): SqlDriver
-}
+@Serializable
+data class Vote(
+    @SerialName("voter_id") val voterId: String,
+    @SerialName("target_id") val targetId: String,
+    @SerialName("is_guilty") val isGuilty: Boolean,
+)
