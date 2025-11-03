@@ -7,14 +7,12 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.authentication.di
+package ke.don.domain.gameplay
 
-import ke.don.authentication.model.AuthModel
-import ke.don.remote.di.remoteDatasourceModule
-import org.koin.core.module.dsl.factoryOf
-import org.koin.dsl.module
+interface ModeratorEngine {
+    suspend fun handle(command: ModeratorCommand)
+}
 
-val authModule = module {
-    includes(remoteDatasourceModule)
-    factoryOf(::AuthModel)
+interface GameEngine {
+    suspend fun reduce(intent: PlayerIntent)
 }

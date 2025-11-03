@@ -7,14 +7,13 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.authentication.di
+package ke.don.remote.di
 
-import ke.don.authentication.model.AuthModel
-import ke.don.remote.di.remoteDatasourceModule
-import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.Module
 import org.koin.dsl.module
 
-val authModule = module {
-    includes(remoteDatasourceModule)
-    factoryOf(::AuthModel)
+expect val authModule: Module
+
+val remoteDatasourceModule = module {
+    includes(authModule)
 }

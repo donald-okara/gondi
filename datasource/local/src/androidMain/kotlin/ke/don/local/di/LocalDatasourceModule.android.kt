@@ -7,13 +7,16 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.remote.di
+package ke.don.local.di
 
+import ke.don.local.db.AndroidDatabaseFactory
+import ke.don.local.db.DatabaseFactory
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
-expect val authModule: Module
-
-val datasourceModule = module {
-    includes(authModule)
-}
+actual val databaseModule: Module
+    get() = module {
+        singleOf(::AndroidDatabaseFactory).bind<DatabaseFactory>()
+    }

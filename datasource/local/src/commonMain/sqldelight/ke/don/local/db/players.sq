@@ -1,0 +1,36 @@
+
+CREATE TABLE playerEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    avatar TEXT,
+    background TEXT,
+    role TEXT,
+    is_alive INTEGER NOT NULL DEFAULT 1,
+    known_identities TEXT,                     -- JSON map of playerId → role name
+    last_action TEXT                           -- Encoded PlayerAction (e.g. "KILL:player123")
+);
+
+getAllPlayers:
+SELECT * FROM playerEntity;
+
+getAlivePlayers:
+SELECT * FROM playerEntity WHERE is_alive = 1;
+
+getPlayerById:
+SELECT * FROM playerEntity WHERE id = :id;
+
+insertOrReplacePlayer:
+INSERT OR REPLACE INTO playerEntity(id, name, role, is_alive, known_identities, last_action, avatar, background)
+VALUES (:id, :name, :role, :is_alive, :known_identities, :last_action, :avatar, :background);
+
+updateAliveStatus:
+UPDATE playerEntity SET is_alive = :is_alive WHERE id = :id;
+
+updateLastAction:
+UPDATE playerEntity SET last_action = :last_action WHERE id = :id;
+
+updateKnownIdentities:
+UPDATE playerEntity SET known_identities = :known_identities WHERE id = :id;
+
+clearPlayers:
+DELETE FROM playerEntity;

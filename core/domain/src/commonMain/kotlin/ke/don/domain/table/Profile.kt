@@ -7,14 +7,14 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.authentication.di
+package ke.don.domain.table
 
-import ke.don.authentication.model.AuthModel
-import ke.don.remote.di.remoteDatasourceModule
-import org.koin.core.module.dsl.factoryOf
-import org.koin.dsl.module
+import kotlinx.serialization.Serializable
 
-val authModule = module {
-    includes(remoteDatasourceModule)
-    factoryOf(::AuthModel)
-}
+@Serializable
+data class Profile(
+    val name: String = "",
+    val avatar: Avatar? = null,
+    val email: String = "",
+    val background: AvatarBackground = AvatarBackground.entries.first(),
+)

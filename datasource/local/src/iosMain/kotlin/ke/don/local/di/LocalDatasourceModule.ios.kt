@@ -7,14 +7,16 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.authentication.di
+package ke.don.local.di
 
-import ke.don.authentication.model.AuthModel
-import ke.don.remote.di.remoteDatasourceModule
-import org.koin.core.module.dsl.factoryOf
+import ke.don.local.db.DatabaseFactory
+import ke.don.local.db.IOSDatabaseFactory
+import org.koin.core.module.Module
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
-val authModule = module {
-    includes(remoteDatasourceModule)
-    factoryOf(::AuthModel)
-}
+actual val databaseModule: Module
+    get() = module {
+        singleOf(::IOSDatabaseFactory).bind<DatabaseFactory>()
+    }

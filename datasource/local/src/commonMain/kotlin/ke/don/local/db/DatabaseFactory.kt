@@ -7,14 +7,10 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.domain.model
+package ke.don.local.db
 
-import kotlinx.serialization.Serializable
+import app.cash.sqldelight.db.SqlDriver
 
-@Serializable
-data class Profile(
-    val name: String = "",
-    val avatar: Avatar? = null,
-    val email: String = "",
-    val background: AvatarBackground = AvatarBackground.entries.first(),
-)
+interface DatabaseFactory {
+    fun createDriver(): SqlDriver
+}

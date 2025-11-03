@@ -7,14 +7,14 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.authentication.di
+package ke.don.domain.state
 
-import ke.don.authentication.model.AuthModel
-import ke.don.remote.di.remoteDatasourceModule
-import org.koin.core.module.dsl.factoryOf
-import org.koin.dsl.module
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-val authModule = module {
-    includes(remoteDatasourceModule)
-    factoryOf(::AuthModel)
-}
+@Serializable
+data class Vote(
+    @SerialName("voter_id") val voterId: String,
+    @SerialName("target_id") val targetId: String,
+    @SerialName("is_guilty") val isGuilty: Boolean,
+)
