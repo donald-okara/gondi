@@ -25,9 +25,9 @@ fun validateIntent(player: Player, intent: PlayerIntent, currentPhase: GamePhase
     return when (intent) {
         is PlayerIntent.Kill ->
             player.isAlive &&
-                    currentPhase == GamePhase.SLEEP &&
-                    player.role?.faction == Faction.GONDI &&
-                    player.role.canActInSleep
+                currentPhase == GamePhase.SLEEP &&
+                player.role?.faction == Faction.GONDI &&
+                player.role.canActInSleep
 
         is PlayerIntent.Save ->
             player.isAlive &&
