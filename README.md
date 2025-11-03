@@ -39,49 +39,49 @@ Back to sleep
 ## Game Logic
 ### a. State machine diagram
 ```
-             ┌─────────────────────────────┐
-             │          LOBBY              │
-             │  (Waiting for all players)  │
-             └──────────────┬──────────────┘
-                            │
-                            ▼
-             ┌──────────────────────────────┐
-             │            SLEEP             │
-             │  Gondi kills → Doctor saves  │
-             │  Detective investigates      │
-             └──────────────┬───────────────┘
-                            │
-                            │  [Night actions resolved]
-                            ▼
-             ┌──────────────────────────────┐
-             │          TOWN HALL           │
-             │  Discussion + Accusations    │
-             │  If accusation & second →    │
-             │            COURT             │
-             └──────┬───────────┬───────────┘
-                    │           │
-                    │ no accuse │
-                    ▼           │
-             ┌────────────────┐ │
-             │   Next SLEEP   │ │
-             └────────────────┘ │
-                                │
-                                ▼
-             ┌──────────────────────────────┐
-             │            COURT             │
-             │  Accused defends → Vote      │
-             │  If guilty → Eliminate       │
-             └──────────────┬───────────────┘
-                            │
-                            │  [Check win condition]
-                            ▼
-             ┌──────────────────────────────┐
-             │   Win?                       │
-             │  ┌──────────────┬──────────┐ │
-             │  │ Yes          │ No       │ │
-             │  ▼              ▼          │ │
-             │ GAME OVER     Next SLEEP   │ │
-             └──────────────────────────────┘
+┌─────────────────────────────┐
+│          LOBBY              │
+│  (Waiting for all players)  │
+└──────────────┬──────────────┘
+              │
+              ▼
+┌──────────────────────────────┐
+│            SLEEP             │
+│  Gondi kills → Doctor saves  │
+│  Detective investigates      │
+└──────────────┬───────────────┘
+              │
+              │  [Night actions resolved]
+              ▼
+┌──────────────────────────────┐
+│          TOWN HALL           │
+│  Discussion + Accusations    │
+│  If accusation & second →    │
+│            COURT             │
+└──────┬───────────┬───────────┘
+      │           │
+      │ no accuse │
+      ▼           │
+┌────────────────┐ │
+│   Next SLEEP   │ │
+└────────────────┘ │
+                  │
+                  ▼
+┌──────────────────────────────┐
+│            COURT             │
+│  Accused defends → Vote      │
+│  If guilty → Eliminate       │
+└──────────────┬───────────────┘
+              │
+              │  [Check win condition]
+              ▼
+┌──────────────────────────────┐
+│   Win?                       │
+│  ┌──────────────┬──────────┐ │
+│  │ Yes          │ No       │ │
+│  ▼              ▼          │ │
+│ GAME OVER     Next SLEEP   │ │
+└──────────────────────────────┘
 
 
 ```
@@ -90,27 +90,27 @@ Back to sleep
 
 ```
 [Player Intent]
-      │
-      ▼
- ┌────────────────────┐
- │ GameEngine.reduce()│
- │ (Applies rules +   │
- │  validates actions)│
- └────────┬───────────┘
-          │
-          ▼
- ┌────────────────────┐
- │   Local Database   │
- │  (Room/SQLDelight) │
- │ game_state table   │
- │ player_state table │
- └────────┬───────────┘
-          │ emits
-          ▼
- ┌────────────────────┐
- │   Flow<GameState>  │
- │  Observed by UI    │
- └────────────────────┘
+    │
+    ▼
+┌────────────────────┐
+│ GameEngine.reduce()│
+│ (Applies rules +   │
+│  validates actions)│
+└────────┬───────────┘
+        │
+        ▼
+┌────────────────────┐
+│   Local Database   │
+│  (Room/SQLDelight) │
+│ game_state table   │
+│ player_state table │
+└────────┬───────────┘
+        │ emits
+        ▼
+┌────────────────────┐
+│   Flow<GameState>  │
+│  Observed by UI    │
+└────────────────────┘
 
 ```
 
