@@ -35,3 +35,88 @@ The villagers discuss who the Gondis are. If **anyone** accuses a Gondi and **an
 The Accused states their case and then everyone votes on eviction. Then on eviction, They get eliminated and their identity is revealed
 
 Back to sleep
+
+## Game Logic
+### a. State machine diagram
+```
+             ┌─────────────────────────────┐
+             │          LOBBY              │
+             │  (Waiting for all players)  │
+             └──────────────┬──────────────┘
+                            │
+                            ▼
+             ┌──────────────────────────────┐
+             │            SLEEP             │
+             │  Gondi kills → Doctor saves  │
+             │  Detective investigates      │
+             └──────────────┬───────────────┘
+                            │
+                            │  [Night actions resolved]
+                            ▼
+             ┌──────────────────────────────┐
+             │          TOWN HALL           │
+             │  Discussion + Accusations    │
+             │  If accusation & second →    │
+             │            COURT             │
+             └──────┬───────────┬───────────┘
+                    │           │
+                    │ no accuse │
+                    ▼           │
+             ┌────────────────┐│
+             │   Next SLEEP   ││
+             └────────────────┘│
+                                │
+                                ▼
+             ┌──────────────────────────────┐
+             │            COURT             │
+             │  Accused defends → Vote      │
+             │  If guilty → Eliminate       │
+             └──────────────┬───────────────┘
+                            │
+                            │  [Check win condition]
+                            ▼
+             ┌──────────────────────────────┐
+             │   Win?                       │
+             │  ┌──────────────┬──────────┐ │
+             │  │ Yes           │ No      │ │
+             │  ▼               ▼         │ │
+             │ GAME OVER     Next SLEEP   │ │
+             └──────────────────────────────┘
+
+
+```
+
+### b. Database-Oriented State Flow
+
+```
+[Player Intent]
+      │
+      ▼
+ ┌────────────────────┐
+ │ GameEngine.reduce()│
+ │ (Applies rules +   │
+ │  validates actions)│
+ └────────┬───────────┘
+          │
+          ▼
+ ┌────────────────────┐
+ │   Local Database   │
+ │  (Room/SQLDelight) │
+ │ game_state table   │
+ │ player_state table │
+ └────────┬───────────┘
+          │ emits
+          ▼
+ ┌────────────────────┐
+ │   Flow<GameState>  │
+ │  Observed by UI    │
+ └────────────────────┘
+
+```
+
+### c. Tables
+| Table        | Key Columns                                                                                                      | Notes                                    |
+| ------------ | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| `game_state` | `id`, `phase`, `round`, `pending_kills`, `last_saved_player_id`, `accused_player_id`, `reveal_eliminated_player` | Single-row table — current game metadata |
+| `players`    | `id`, `name`, `role`, `is_alive`, `known_identities`, `last_action`                                              | Holds per-player info                    |
+| `votes`      | `voter_id`, `target_id`, `is_guilty`                                                                             | Reused each court phase                  |
