@@ -35,7 +35,7 @@ val roleAdapter = object : ColumnAdapter<Role, String> {
 val avatarAdapter = object : ColumnAdapter<Avatar, String> {
     override fun decode(databaseValue: String) = runCatching {
         Avatar.valueOf(databaseValue)
-    } .getOrElse {
+    }.getOrElse {
         throw IllegalStateException("Invalid avatar value in database: $databaseValue", it)
     }
     override fun encode(value: Avatar) = value.name

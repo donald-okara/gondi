@@ -25,35 +25,35 @@ fun validateIntent(player: Player, intent: PlayerIntent, currentPhase: GamePhase
     return when (intent) {
         is PlayerIntent.Kill ->
             player.isAlive &&
-                    currentPhase == GamePhase.SLEEP &&
-                    player.role?.faction == Faction.GONDI &&
-                    player.role.canActInSleep
+                currentPhase == GamePhase.SLEEP &&
+                player.role?.faction == Faction.GONDI &&
+                player.role.canActInSleep
 
         is PlayerIntent.Save ->
             player.isAlive &&
-                    currentPhase == GamePhase.SLEEP &&
-                    player.role == Role.DOCTOR &&
-                    player.role.canActInSleep
+                currentPhase == GamePhase.SLEEP &&
+                player.role == Role.DOCTOR &&
+                player.role.canActInSleep
 
         is PlayerIntent.Investigate ->
             player.isAlive &&
-                    currentPhase == GamePhase.SLEEP &&
-                    player.role == Role.DETECTIVE &&
-                    player.role.canActInSleep
+                currentPhase == GamePhase.SLEEP &&
+                player.role == Role.DETECTIVE &&
+                player.role.canActInSleep
 
         is PlayerIntent.Accuse ->
             player.isAlive &&
-                    player.role?.canAccuse == true &&
-                    currentPhase == GamePhase.TOWN_HALL
+                player.role?.canAccuse == true &&
+                currentPhase == GamePhase.TOWN_HALL
 
         is PlayerIntent.Second ->
             player.isAlive &&
-                    player.role?.canAccuse == true &&
-                    currentPhase == GamePhase.TOWN_HALL
+                player.role?.canAccuse == true &&
+                currentPhase == GamePhase.TOWN_HALL
 
         is PlayerIntent.Vote ->
             player.isAlive &&
-                    player.role?.canVote == true &&
-                    currentPhase == GamePhase.COURT
+                player.role?.canVote == true &&
+                currentPhase == GamePhase.COURT
     }
 }

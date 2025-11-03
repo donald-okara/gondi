@@ -80,7 +80,7 @@ class LocalDatabase(
         known_identities = player.toPlayerEntity.known_identities,
         last_action = player.toPlayerEntity.last_action,
         avatar = player.toPlayerEntity.avatar,
-        background = player.toPlayerEntity.background
+        background = player.toPlayerEntity.background,
     )
 
     fun updateAliveStatus(isAlive: Boolean, id: String) = playersQueries.updateAliveStatus(booleanAdapter.encode(isAlive), id)
@@ -102,7 +102,7 @@ class LocalDatabase(
     fun insertOrReplaceVote(vote: Vote) = votesQueries.insertOrReplaceVote(
         vote.toVoteEntity.voter_id,
         vote.toVoteEntity.target_id,
-        vote.toVoteEntity.is_guilty
+        vote.toVoteEntity.is_guilty,
     )
 
     fun clearVotes() = votesQueries.clearVotes()

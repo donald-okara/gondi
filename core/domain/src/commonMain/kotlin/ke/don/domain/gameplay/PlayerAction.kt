@@ -16,7 +16,8 @@ import kotlin.time.ExperimentalTime
 
 @Serializable
 data class PlayerAction
-@OptIn(ExperimentalTime::class) constructor(
+@OptIn(ExperimentalTime::class)
+constructor(
     val type: ActionType,
     @SerialName("target_id") val targetId: String? = null,
     @SerialName("time_stamp") val timestamp: Long = Clock.System.now().toEpochMilliseconds(),
