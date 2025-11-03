@@ -10,11 +10,11 @@
 package ke.don.authentication.di
 
 import ke.don.authentication.model.AuthModel
-import ke.don.remote.di.datasourceModule
+import ke.don.remote.di.remoteDatasourceModule
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val authModule = module {
-    includes(datasourceModule)
+    includes(remoteDatasourceModule)
     factoryOf(::AuthModel)
 }

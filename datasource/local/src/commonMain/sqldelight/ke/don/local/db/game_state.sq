@@ -1,0 +1,28 @@
+CREATE TABLE game_state (
+    id TEXT NOT NULL PRIMARY KEY,                      -- e.g., "current" or session UUID
+    phase TEXT NOT NULL,                               -- e.g., "SLEEP", "TOWN_HALL", "COURT"
+    round INTEGER NOT NULL DEFAULT 1,
+    pending_kills TEXT,                                -- JSON/CSV list of player IDs
+    last_saved_player_id TEXT,
+    accused_player_id TEXT,
+    reveal_eliminated_player INTEGER NOT NULL DEFAULT 0
+);
+
+getGameState:
+SELECT * FROM game_state WHERE id = :id;
+
+getAllGAmeState:
+SELECT * FROM game_state;
+
+insertOrReplaceGameState:
+INSERT OR REPLACE INTO game_state(id, phase, round, pending_kills, last_saved_player_id, accused_player_id, reveal_eliminated_player)
+VALUES (:id, :phase, :round, :pending_kills, :last_saved_player_id, :accused_player_id, :reveal_eliminated_player);
+
+updatePhase:
+UPDATE game_state SET phase = :phase, round = :round WHERE id = :id;
+
+toggleRevealFlag:
+UPDATE game_state SET reveal_eliminated_player = :flag WHERE id = :id;
+
+clearGameState:
+DELETE FROM game_state;

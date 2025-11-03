@@ -1,0 +1,16 @@
+CREATE TABLE votes (
+    voter_id TEXT NOT NULL,
+    target_id TEXT NOT NULL,
+    is_guilty INTEGER NOT NULL,
+    PRIMARY KEY (voter_id)
+);
+
+getAllVotes:
+SELECT * FROM votes;
+
+insertOrReplaceVote:
+INSERT OR REPLACE INTO votes(voter_id, target_id, is_guilty)
+VALUES (:voter_id, :target_id, :is_guilty);
+
+clearVotes:
+DELETE FROM votes;

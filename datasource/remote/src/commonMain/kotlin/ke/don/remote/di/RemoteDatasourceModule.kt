@@ -14,6 +14,6 @@ import org.koin.dsl.module
 
 expect val authModule: Module
 
-val datasourceModule = module {
+val remoteDatasourceModule = module {
     includes(authModule)
 }

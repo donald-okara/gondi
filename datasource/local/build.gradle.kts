@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.datasourceConvention)
     alias(libs.plugins.sqlDelight)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 sqldelight {
@@ -15,6 +16,8 @@ sqldelight {
 kotlin{
     sourceSets {
         commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.core)
+            implementation(libs.kotlinx.serialization.json)
             implementation(libs.sqldelight.runtime)
         }
         androidMain.dependencies {
