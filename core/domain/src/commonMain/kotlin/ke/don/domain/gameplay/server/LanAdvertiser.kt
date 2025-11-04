@@ -2,12 +2,12 @@ package ke.don.domain.gameplay.server
 
 // commonMain
 interface LanAdvertiser {
-    fun start(serviceHost: String, serviceName: String, serviceType: String, servicePort: Int)
+    fun start(gameIdentity: GameIdentity)
     fun stop()
 }
 
 interface LanDiscovery {
-    fun start(serviceType: String, onDiscovered: (host: String, port: Int, name: String) -> Unit)
+    fun start(serviceType: String, onDiscovered: (GameIdentity) -> Unit)
     fun stop()
 }
 

@@ -62,50 +62,44 @@ fun TopBarToken(
     isCompact: Boolean = isCompact(),
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
-    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
-        val maxWidth = maxWidth
-
-        val wideEnough = maxWidth > 420.dp
-
-        Column(
-            modifier = modifier.padding(horizontal = if (isCompact) Values.compactScreenPadding else Values.expandedScreenPadding),
-        ) {
-            TopAppBar(
-                title = {
-                    if (wideEnough) {
-                        title?.let {
-                            Text(
-                                text = it,
-                                maxLines = 1,
-                                style = MaterialTheme.typography.bodyMedium,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = if (isCompact) Values.compactScreenPadding else Values.expandedScreenPadding),
+    ) {
+        TopAppBar(
+            title = {
+                title?.let {
+                    Text(
+                        text = it,
+                        maxLines = 1,
+                        style = MaterialTheme.typography.bodyMedium,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            },
+            navigationIcon = {
+                when (navigationIcon) {
+                    NavigationIcon.None -> {
+                        Image(
+                            painter = painterResource(Resources.Images.LOGO),
+                            contentDescription = "App Icon",
+                            modifier = Modifier.size(24.dp),
+                        )
                     }
-                },
-                navigationIcon = {
-                    when (navigationIcon) {
-                        NavigationIcon.None -> {
-                            Image(
-                                painter = painterResource(Resources.Images.LOGO),
-                                contentDescription = "App Icon",
-                                modifier = Modifier.size(24.dp),
-                            )
-                        }
-                        is NavigationIcon.Back -> IconButton(onClick = navigationIcon.navigateBack) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                        }
-                        is NavigationIcon.Burger -> IconButton(onClick = navigationIcon.toggleDrawer) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu")
-                        }
+                    is NavigationIcon.Back -> IconButton(onClick = navigationIcon.navigateBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
-                },
-                actions = {
-                    actions()
-                },
-                scrollBehavior = scrollBehavior,
-            )
-            HorizontalDivider()
-        }
+                    is NavigationIcon.Burger -> IconButton(onClick = navigationIcon.toggleDrawer) {
+                        Icon(Icons.Default.Menu, contentDescription = "Menu")
+                    }
+                }
+            },
+            actions = {
+                actions()
+            },
+            scrollBehavior = scrollBehavior,
+        )
+        HorizontalDivider()
     }
 }

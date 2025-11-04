@@ -4,7 +4,10 @@ package ke.don.remote.server
 import android.content.Context
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
+import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.domain.gameplay.server.LanDiscovery
+import ke.don.domain.table.Avatar
+import ke.don.domain.table.AvatarBackground
 import ke.don.utils.Logger
 
 class LanDiscoveryAndroid(
@@ -17,7 +20,7 @@ class LanDiscoveryAndroid(
 
     override fun start(
         serviceType: String,
-        onDiscovered: (host: String, port: Int, name: String) -> Unit
+        onDiscovered: (GameIdentity) -> Unit
     ) {
         discoveryListener = object : NsdManager.DiscoveryListener {
 
@@ -30,16 +33,34 @@ class LanDiscoveryAndroid(
 
                 nsdManager.resolveService(service, object : NsdManager.ResolveListener {
                     override fun onServiceResolved(resolved: NsdServiceInfo) {
-                        val host = resolved.host?.hostAddress
+                        val host = resolved.host?.hostAddress ?: return logger.error("⚠️ Host was null for ${resolved.serviceName}")
                         val port = resolved.port
+                        val type = resolved.serviceType
                         val name = resolved.serviceName
 
-                        if (host != null) {
-                            logger.info("✅ Resolved: $name at $host:$port")
-                            onDiscovered(host, port, name)
-                        } else {
-                            logger.error("⚠️ Host was null for ${resolved.serviceName}")
-                        }
+                        val txt = resolved.attributes.mapValues { it.value?.decodeToString() ?: "" }
+
+                        val id = txt["id"] ?: "Unknown"
+                        val moderatorName = txt["mod_name"] ?: "Unknown"
+                        val moderatorAvatarName = txt["mod_avatar"]
+                        val moderatorBackgroundName = txt["background"]
+
+                        val moderatorAvatar = runCatching { Avatar.fromValue(moderatorAvatarName) }.getOrDefault(Avatar.entries.first())
+                        val moderatorBackground = runCatching { AvatarBackground.fromValue(moderatorBackgroundName) ?: AvatarBackground.entries.first() }.getOrDefault(AvatarBackground.entries.first())
+
+                        val identity = GameIdentity(
+                            id = id,
+                            serviceHost = host,
+                            serviceType = type,
+                            servicePort = port,
+                            gameName = name,
+                            moderatorName = moderatorName,
+                            moderatorAvatarBackground = moderatorBackground,
+                            moderatorAvatar = moderatorAvatar,
+                        )
+
+                        logger.info("✅ Resolved: $identity")
+                        onDiscovered(identity)
                     }
 
                     override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
@@ -56,17 +77,11 @@ class LanDiscoveryAndroid(
                 logger.info("🛑 Discovery stopped for type: $type")
             }
 
-            override fun onStartDiscoveryFailed(type: String?, errorCode: Int) {
-                logger.error("🚫 Start discovery failed for $type (error $errorCode)")
-                try {
-                    nsdManager.stopServiceDiscovery(this)
-                } catch (e: IllegalArgumentException) {
-                    logger.error("⚠️ Tried to stop unregistered listener: ${e.message}")
-                }
-            }
+            override fun onStartDiscoveryFailed(type: String?, errorCode: Int) = handleDiscoveryFailure(type, errorCode)
+            override fun onStopDiscoveryFailed(type: String?, errorCode: Int) = handleDiscoveryFailure(type, errorCode)
 
-            override fun onStopDiscoveryFailed(type: String?, errorCode: Int) {
-                logger.error("⚠️ Stop discovery failed for $type (error $errorCode)")
+            private fun handleDiscoveryFailure(type: String?, errorCode: Int) {
+                logger.error("🚫 Discovery failure for $type (error $errorCode)")
                 try {
                     nsdManager.stopServiceDiscovery(this)
                 } catch (e: IllegalArgumentException) {
