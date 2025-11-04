@@ -12,7 +12,9 @@ package ke.don.local.db
 import app.cash.sqldelight.coroutines.asFlow
 import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.gameplay.Role
+import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
+import ke.don.domain.state.KnownIdentity
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import kotlinx.coroutines.flow.Flow
@@ -36,6 +38,10 @@ class LocalDatabase(
         .asFlow()
         .map { it.executeAsList().map { state -> state.toGameState } }
 
+    fun getFirstGameState(): Flow<GameState?> = stateQueries.getFirstGameState()
+        .asFlow()
+        .map { it.executeAsOneOrNull()?.toGameState }
+
     fun getGameState(id: String): Flow<GameState?> = stateQueries.getGameState(id)
         .asFlow()
         .map { it.executeAsOneOrNull()?.toGameState }
@@ -46,13 +52,17 @@ class LocalDatabase(
         gameState.toGameStateEntity.round,
         gameState.toGameStateEntity.pending_kills,
         gameState.toGameStateEntity.last_saved_player_id,
-        gameState.toGameStateEntity.accused_player_id,
+        gameState.toGameStateEntity.accused_player,
         gameState.toGameStateEntity.reveal_eliminated_player,
     )
 
-    fun updatePhase(phase: String, round: Long, id: String) = stateQueries.updatePhase(phase, round, id)
+    fun updatePhase(phase: GamePhase, round: Long, id: String) = stateQueries.updatePhase(phaseAdapter.encode(phase), round, id)
 
     fun toggleRevealFlag(flag: Boolean, id: String) = stateQueries.toggleRevealFlag(booleanAdapter.encode(flag), id)
+
+    fun accusePlayer(accusedPlayer: PlayerAction, id: String) = stateQueries.accusePlayer(playerActionAdapter.encode(accusedPlayer), id)
+
+    fun secondPlayer(accusedPlayer: PlayerAction, id: String) = stateQueries.secondPlayer(playerActionAdapter.encode(accusedPlayer), id)
 
     fun clearGameState() = stateQueries.clearGameState()
 
@@ -87,7 +97,9 @@ class LocalDatabase(
 
     fun updateLastAction(lastAction: PlayerAction, id: String) = playersQueries.updateLastAction(playerActionAdapter.encode(lastAction), id)
 
-    fun updateKnownIdentities(knownIdentities: Map<String, Role?>, id: String) = playersQueries.updateKnownIdentities(knownIdentitiesAdapter.encode(knownIdentities), id)
+    fun updateKnownIdentities(knownIdentities: List<KnownIdentity>, id: String) = playersQueries.updateKnownIdentities(knownIdentitiesAdapter.encode(knownIdentities), id)
+
+    fun updatePlayerRole(role: Role, id: String) = playersQueries.updatePlayerRole(roleAdapter.encode(role), id)
 
     fun clearPlayers() = playersQueries.clearPlayers()
 

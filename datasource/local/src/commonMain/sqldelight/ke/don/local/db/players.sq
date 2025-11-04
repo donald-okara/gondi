@@ -26,6 +26,9 @@ VALUES (:id, :name, :role, :is_alive, :known_identities, :last_action, :avatar, 
 updateAliveStatus:
 UPDATE playerEntity SET is_alive = :is_alive WHERE id = :id;
 
+updatePlayerRole:
+UPDATE playerEntity SET role = : role WHERE id = :id;
+
 updateLastAction:
 UPDATE playerEntity SET last_action = :last_action WHERE id = :id;
 

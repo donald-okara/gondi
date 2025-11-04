@@ -14,6 +14,7 @@ import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
+import ke.don.domain.state.KnownIdentity
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.domain.table.Avatar
@@ -57,10 +58,11 @@ val playerActionAdapter = object : ColumnAdapter<PlayerAction, String> {
         json.encodeToString(value)
 }
 
-val knownIdentitiesAdapter = object : ColumnAdapter<Map<String, Role?>, String> {
-    override fun decode(databaseValue: String): Map<String, Role?> =
+val knownIdentitiesAdapter = object : ColumnAdapter<List<KnownIdentity>, String> {
+    override fun decode(databaseValue: String): List<KnownIdentity> =
         json.decodeFromString(databaseValue)
-    override fun encode(value: Map<String, Role?>): String =
+
+    override fun encode(value: List<KnownIdentity>): String =
         json.encodeToString(value)
 }
 
@@ -93,7 +95,8 @@ val GameStateEntity.toGameState: GameState get() = GameState(
     round = this.round,
     pendingKills = pendingKillsAdapter.decode(this.pending_kills ?: ""),
     lastSavedPlayerId = this.last_saved_player_id,
-    accusedPlayerId = this.accused_player_id,
+    second = this.second?.let { playerActionAdapter.decode(it) },
+    accusedPlayer = this.accused_player?.let { playerActionAdapter.decode(it) },
     revealEliminatedPlayer = booleanAdapter.decode(this.reveal_eliminated_player),
 )
 
@@ -103,8 +106,9 @@ val GameState.toGameStateEntity: GameStateEntity get() = GameStateEntity(
     round = this.round,
     pending_kills = pendingKillsAdapter.encode(this.pendingKills),
     last_saved_player_id = this.lastSavedPlayerId,
-    accused_player_id = this.accusedPlayerId,
+    accused_player = this.accusedPlayer?.let { playerActionAdapter.encode(it) },
     reveal_eliminated_player = booleanAdapter.encode(this.revealEliminatedPlayer),
+    second = this.second?.let { playerActionAdapter.encode(it) }
 )
 
 val PlayerEntity.toPlayer: Player get() = Player(
@@ -114,8 +118,7 @@ val PlayerEntity.toPlayer: Player get() = Player(
     background = this.background?.let { backgroundAdapter.decode(it) } ?: AvatarBackground.entries.first(),
     role = this.role?.let { roleAdapter.decode(it) },
     isAlive = booleanAdapter.decode(this.is_alive),
-    lastAction = this.last_action?.let { playerActionAdapter.decode(it) },
-    knownIdentities = knownIdentitiesAdapter.decode(this.known_identities ?: "{}"),
+    lastAction = this.last_action?.let { playerActionAdapter.decode(it) }
 )
 
 val Player.toPlayerEntity: PlayerEntity get() = PlayerEntity(

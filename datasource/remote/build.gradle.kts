@@ -44,5 +44,11 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.jmdns)
         }
+        commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.core)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlin.coroutines)
+            implementation(project(":datasource:local"))
+        }
     }
 }

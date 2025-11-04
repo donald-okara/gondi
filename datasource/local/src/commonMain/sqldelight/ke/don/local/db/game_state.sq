@@ -4,7 +4,8 @@ CREATE TABLE gameStateEntity (
     round INTEGER NOT NULL DEFAULT 1,
     pending_kills TEXT,                                -- e.g., ["id1", "id2"]
     last_saved_player_id TEXT,
-    accused_player_id TEXT,
+    accused_player TEXT,
+    second TEXT,
     reveal_eliminated_player INTEGER NOT NULL DEFAULT 0
 );
 
@@ -14,8 +15,12 @@ SELECT * FROM gameStateEntity WHERE id = :id;
 getAllGameState:
 SELECT * FROM gameStateEntity;
 
+getFirstGameState:
+SELECT * FROM gameStateEntity
+LIMIT 1;
+
 insertOrReplaceGameState:
-INSERT OR REPLACE INTO gameStateEntity(id, phase, round, pending_kills, last_saved_player_id, accused_player_id, reveal_eliminated_player)
+INSERT OR REPLACE INTO gameStateEntity(id, phase, round, pending_kills, last_saved_player_id, accused_player, reveal_eliminated_player)
 VALUES (:id, :phase, :round, :pending_kills, :last_saved_player_id, :accused_player_id, :reveal_eliminated_player);
 
 updatePhase:
@@ -23,6 +28,13 @@ UPDATE gameStateEntity SET phase = :phase, round = :round WHERE id = :id;
 
 toggleRevealFlag:
 UPDATE gameStateEntity SET reveal_eliminated_player = :flag WHERE id = :id;
+
+accusePlayer:
+UPDATE gameStateEntity SET accused_player = : accused WHERE id = : id;
+
+secondPlayer:
+UPDATE gameStateEntity SET second = : second WHERE id = : id;
+
 
 clearGameState:
 DELETE FROM gameStateEntity;

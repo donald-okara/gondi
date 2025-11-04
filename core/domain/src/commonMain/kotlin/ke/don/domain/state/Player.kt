@@ -25,5 +25,11 @@ data class Player(
     val background: AvatarBackground = AvatarBackground.entries.first(),
     @SerialName("is_alive") val isAlive: Boolean = true,
     @SerialName("last_action") val lastAction: PlayerAction? = null,
-    @SerialName("known_identities") val knownIdentities: Map<String, Role?> = emptyMap(),
+    @SerialName("known_identities") val knownIdentities: List<KnownIdentity> = emptyList(),
+)
+
+@Serializable
+data class KnownIdentity(
+    val playerId: String,
+    val role: Role
 )

@@ -51,7 +51,7 @@ class LocalDatabaseTest {
             round = 1,
             pendingKills = listOf("p1", "p2"),
             lastSavedPlayerId = "p3",
-            accusedPlayerId = null,
+            accusedPlayer = null,
             revealEliminatedPlayer = false,
         )
 
@@ -82,7 +82,7 @@ class LocalDatabaseTest {
             round = 0,
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
-            accusedPlayerId = null,
+            accusedPlayer = null,
             revealEliminatedPlayer = true,
         )
 
@@ -101,7 +101,7 @@ class LocalDatabaseTest {
             round = 1,
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
-            accusedPlayerId = null,
+            accusedPlayer = null,
             revealEliminatedPlayer = false,
         )
         db.insertOrReplaceGameState(state)
@@ -121,7 +121,7 @@ class LocalDatabaseTest {
             round = 1,
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
-            accusedPlayerId = null,
+            accusedPlayer = null,
             revealEliminatedPlayer = false,
         )
         db.insertOrReplaceGameState(state)
@@ -144,7 +144,7 @@ class LocalDatabaseTest {
             round = 1,
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
-            accusedPlayerId = null,
+            accusedPlayer = null,
             revealEliminatedPlayer = false,
         )
         val state2 = GameState(
@@ -153,7 +153,7 @@ class LocalDatabaseTest {
             round = 2,
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
-            accusedPlayerId = null,
+            accusedPlayer = null,
             revealEliminatedPlayer = false,
         )
 
