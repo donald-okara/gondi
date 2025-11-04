@@ -4,6 +4,7 @@ import ke.don.domain.gameplay.server.LanDiscovery
 import ke.don.domain.gameplay.server.LocalServer
 import ke.don.domain.repo.AuthClient
 import ke.don.remote.repo.AuthClientIOS
+import ke.don.remote.server.LanServer
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
