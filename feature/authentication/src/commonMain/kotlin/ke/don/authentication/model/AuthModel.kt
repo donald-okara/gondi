@@ -13,6 +13,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.status.SessionStatus
+import ke.don.components.helpers.Matcha
 import ke.don.domain.repo.AuthClient
 import ke.don.domain.result.ResultStatus
 import ke.don.domain.result.onFailure
@@ -82,10 +83,17 @@ class AuthModel(
                     updateState {
                         it.copy(authStatus = ResultStatus.Success(data = result))
                     }
+                    Matcha.success(
+                        title = "Welcome to Gondi",
+                    )
                 }.onFailure { result ->
                     updateState {
                         it.copy(authStatus = ResultStatus.Error(message = result.message ?: "Unknown error"))
                     }
+                    Matcha.showErrorToast(
+                        title = "Error",
+                        message = result.message ?: "Unknown error",
+                    )
                 }
         }
     }

@@ -65,8 +65,7 @@ fun TopBarToken(
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
         val maxWidth = maxWidth
 
-        val wideEnough = maxWidth > 360.dp
-        val useFlowRow = !wideEnough
+        val wideEnough = maxWidth > 420.dp
 
         Column(
             modifier = modifier.padding(horizontal = if (isCompact) Values.compactScreenPadding else Values.expandedScreenPadding),
@@ -102,24 +101,10 @@ fun TopBarToken(
                     }
                 },
                 actions = {
-                    if (!useFlowRow) {
-                        actions()
-                    }
+                    actions()
                 },
                 scrollBehavior = scrollBehavior,
             )
-
-            if (useFlowRow) {
-                FlowRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    actions()
-                }
-            }
-
             HorizontalDivider()
         }
     }

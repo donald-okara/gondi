@@ -40,7 +40,7 @@ class LanAdvertiserAndroid(
         }
 
         try {
-            logger.info("📡 Registering service on $serviceHost:$servicePort (${serviceType}local.)")
+            logger.info("📡 Registering service on $serviceHost:$servicePort (${serviceType})")
             nsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, registrationListener)
         } catch (e: Exception) {
             logger.error("💥 Failed to start advertiser: ${e.message}")
