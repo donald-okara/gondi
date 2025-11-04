@@ -18,8 +18,9 @@ class DefaultGameEngine(private val db: LocalDatabase) : GameEngine {
             is PlayerIntent.Accuse -> gameId?.let {
                 db.accusePlayer(
                     PlayerAction(
-                        ActionType.ACCUSE,
-                        intent.targetId
+                        type = ActionType.ACCUSE,
+                        playerId = intent.playerId,
+                        targetId = intent.targetId
                     ), it)
             }
             is PlayerIntent.Investigate -> {
@@ -31,16 +32,17 @@ class DefaultGameEngine(private val db: LocalDatabase) : GameEngine {
                     )
                 )?.let {
                     db.updateKnownIdentities(
-                        it,
-                        intent.playerId
+                        knownIdentities = it,
+                        id = intent.playerId
                     )
                 }
             }
             is PlayerIntent.Second -> gameId?.let {
                 db.secondPlayer(
                     PlayerAction(
-                        ActionType.SECOND,
-                        intent.targetId
+                        type = ActionType.SECOND,
+                        playerId = intent.playerId,
+                        targetId = intent.targetId
                     ), it)
             }
             is PlayerIntent.Vote -> db.insertOrReplaceVote(vote = intent.vote)
