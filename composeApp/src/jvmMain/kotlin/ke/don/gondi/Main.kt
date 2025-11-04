@@ -9,10 +9,17 @@
  */
 package ke.don.gondi
 
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import ke.don.domain.gameplay.server.LanAdvertiser
+import ke.don.domain.gameplay.server.LocalServer
+import ke.don.domain.gameplay.server.SERVICE_TYPE
+import ke.don.remote.server.LanServerJvm
 import ke.don.resources.Resources
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.getKoin
 import java.awt.Dimension
 
 fun main() = application {
@@ -23,6 +30,19 @@ fun main() = application {
         icon = painterResource(Resources.Images.LOGO),
     ) {
         window.minimumSize = Dimension(500, 0)
+
+        val koin = getKoin()
+        val server = koin.get<LocalServer>()
+        val coroutineScope = rememberCoroutineScope()
+
+        coroutineScope.launch {
+            server.stop()
+            server.start(
+                serviceName = "Wamlambez",
+                serviceType = SERVICE_TYPE,
+                servicePort = 8080
+            )
+        }
 
         App()
     }

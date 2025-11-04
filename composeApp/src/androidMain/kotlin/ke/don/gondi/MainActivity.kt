@@ -9,20 +9,34 @@
  */
 package ke.don.gondi
 
+import android.R.attr.host
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import io.github.jan.supabase.auth.handleDeeplinks
+import ke.don.domain.gameplay.server.LanDiscovery
+import ke.don.domain.gameplay.server.SERVICE_TYPE
 import ke.don.remote.api.SupabaseConfig.supabase
 import ke.don.utils.Logger
+import org.koin.android.ext.android.getKoin
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
+            val koin = getKoin()
+            val lanDiscovery = koin.get<LanDiscovery>()
+
+            lanDiscovery.start(
+                serviceType = SERVICE_TYPE
+            ) { host, port, name ->
+                // Update your list of available games
+                println("Found $name on $host:$port")
+            }
+
             App()
         }
         // Handle initial deeplink (cold start)
