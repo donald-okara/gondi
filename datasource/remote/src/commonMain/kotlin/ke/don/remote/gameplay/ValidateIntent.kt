@@ -13,8 +13,11 @@ suspend fun validateIntent(
     currentPhase: GamePhase
 ): Boolean {
     val player = db.getPlayerById(intent.playerId).firstOrNull() ?: return false
+    val gameState = db.getFirstGameState().firstOrNull() ?: return false
+    val accused = gameState.accusedPlayer
 
     return when (intent) {
+        is PlayerIntent.Join -> currentPhase == GamePhase.LOBBY
         is PlayerIntent.Kill ->
             player.isAlive &&
                     currentPhase == GamePhase.SLEEP &&
@@ -33,7 +36,15 @@ suspend fun validateIntent(
                     player.role == Role.DETECTIVE &&
                     player.role?.canActInSleep == true
 
-        is PlayerIntent.Accuse, is PlayerIntent.Second ->
+        is PlayerIntent.Second ->
+            player.isAlive &&
+                    player.role?.canAccuse == true &&
+                    player.role?.canVote == true &&
+                    currentPhase == GamePhase.TOWN_HALL &&
+                    accused?.playerId != intent.targetId &&
+                    accused?.playerId == intent.playerId
+
+        is PlayerIntent.Accuse ->
             player.isAlive &&
                     player.role?.canAccuse == true &&
                     player.role?.canVote == true &&
@@ -42,6 +53,8 @@ suspend fun validateIntent(
         is PlayerIntent.Vote ->
             player.isAlive &&
                     player.role?.canVote == true &&
+                    gameState.accusedPlayer?.targetId == intent.vote.targetId &&
+                    player.id != intent.vote.targetId &&
                     currentPhase == GamePhase.COURT
     }
 }

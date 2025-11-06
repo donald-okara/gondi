@@ -18,6 +18,9 @@ sealed class PlayerIntent {
     abstract val playerId: String
 
     @Serializable
+    data class Join(override val playerId: String, val player: Player) : PlayerIntent()
+
+    @Serializable
     data class Kill(override val playerId: String, val targetId: String) : PlayerIntent()
 
     @Serializable

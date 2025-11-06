@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.androidKotlinMultiplatformLibrary) apply false
     alias(libs.plugins.jetbrainsKotlinJvm) apply false
-    id("com.diffplug.spotless") version "8.0.0"
+    alias(libs.plugins.spotless)
 }
 
 subprojects {

@@ -30,6 +30,8 @@ supabase = "3.2.5"
 uiTooling = "1.9.4"
 sqlDelight = "2.1.0"
 
+spotless = "8.0.0"
+
 [libraries]
 jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 jmdns = { module = "org.jmdns:jmdns", version.ref = "jmdns" }
@@ -124,6 +126,8 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 androidKotlinMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 jetbrainsKotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 sqlDelight = {id = "app.cash.sqldelight", version.ref = "sqlDelight"}
+spotless = {id = "com.diffplug.spotless", version.ref = "spotless"}
+
 
 # Custom app plugins
 composeMultiplatformPlugin = { id = "ke.don.gondi.composeMultiplatformPlugin", version = "unspecified" }

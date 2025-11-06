@@ -30,8 +30,8 @@ enum class Faction {
          * @param players The list of players in the game.
          * @return The winning [Faction] ([VILLAGER] or [GONDI]), or `null` if the game should continue.
          */
-        fun checkWinner(players: List<Player>): Faction? {
-            val alive = players.filter { it.isAlive }
+        fun List<Player>.checkWinner(): Faction? {
+            val alive = this.filter { it.isAlive }
             val gondiAlive = alive.filter { it.role?.faction == GONDI }
             val villageAlive = alive.filter { it.role?.faction == VILLAGER }
 

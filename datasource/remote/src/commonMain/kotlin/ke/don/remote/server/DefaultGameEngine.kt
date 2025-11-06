@@ -13,8 +13,22 @@ class DefaultGameEngine(private val db: LocalDatabase) : GameEngine {
         val gameId = db.getFirstGameState().firstOrNull()?.id
 
         when (intent) {
-            is PlayerIntent.Kill -> db.updateAliveStatus(false, intent.targetId)
-            is PlayerIntent.Save -> db.updateAliveStatus(true, intent.targetId)
+            is PlayerIntent.Join -> db.insertOrReplacePlayer(intent.player)
+            is PlayerIntent.Kill -> db.killAction(
+                    PlayerAction(
+                        type = ActionType.KILL,
+                        playerId = intent.playerId,
+                        targetId = intent.targetId
+                    )
+                )
+
+            is PlayerIntent.Save -> db.saveAction(
+                PlayerAction(
+                    type = ActionType.SAVE,
+                    playerId = intent.playerId,
+                    targetId = intent.targetId
+                )
+            )
             is PlayerIntent.Accuse -> gameId?.let {
                 db.accusePlayer(
                     PlayerAction(
