@@ -41,10 +41,10 @@ class AuthModel(
                 when (status) {
                     is SessionStatus.Authenticated -> {
                         val event = if (uiState.value.initiallyAuthenticated) {
-                            AuthEvent.SwitchMain
                             Matcha.success(
                                 title = "Welcome to Gondi",
                             )
+                            AuthEvent.SwitchMain
                         } else {
                             AuthEvent.SwitchProfile
                         }
