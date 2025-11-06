@@ -42,6 +42,7 @@ class DefaultModeratorEngine(
             }
 
             is ModeratorCommand.AssignRole -> db.updatePlayerRole(command.role, command.playerId)
+            is ModeratorCommand.AssignRoleBatch -> db.batchUpdatePlayerRole(command.players)
 
             is ModeratorCommand.DeclareWinner -> game?.let {
                 db.updatePhase(GamePhase.GAME_OVER, round = 0L, id = it.id)

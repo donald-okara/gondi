@@ -18,10 +18,11 @@ import kotlinx.serialization.Serializable
 sealed class ModeratorCommand {
     data class CreateGame(val game: GameState, val player: Player) : ModeratorCommand()
     object StartGame: ModeratorCommand()
-    data class AdvancePhase(val phase: GamePhase) : ModeratorCommand() // TODO: Check winner on call/
+    data class AdvancePhase(val phase: GamePhase) : ModeratorCommand()
     data class RevealDeaths(val playerIds: List<String>) : ModeratorCommand()
     data class RemovePlayer(val playerId: String) : ModeratorCommand()
-    data class AssignRole(val playerId: String, val role: Role) : ModeratorCommand() //TODO(Add a bulk update for this)
+    data class AssignRole(val playerId: String, val role: Role) : ModeratorCommand()
+    data class AssignRoleBatch(val players: List<Player>) : ModeratorCommand()
     data class DeclareWinner(val winner: Faction) : ModeratorCommand()
     object ResetGame : ModeratorCommand()
 }
