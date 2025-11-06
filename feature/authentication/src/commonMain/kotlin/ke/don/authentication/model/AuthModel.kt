@@ -42,6 +42,9 @@ class AuthModel(
                     is SessionStatus.Authenticated -> {
                         val event = if (uiState.value.initiallyAuthenticated) {
                             AuthEvent.SwitchMain
+                            Matcha.success(
+                                title = "Welcome to Gondi",
+                            )
                         } else {
                             AuthEvent.SwitchProfile
                         }
@@ -83,9 +86,6 @@ class AuthModel(
                     updateState {
                         it.copy(authStatus = ResultStatus.Success(data = result))
                     }
-                    Matcha.success(
-                        title = "Welcome to Gondi",
-                    )
                 }.onFailure { result ->
                     updateState {
                         it.copy(authStatus = ResultStatus.Error(message = result.message ?: "Unknown error"))

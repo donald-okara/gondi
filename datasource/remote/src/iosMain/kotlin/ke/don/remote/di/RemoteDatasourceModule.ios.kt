@@ -3,6 +3,7 @@ package ke.don.remote.di
 import ke.don.domain.gameplay.server.LanDiscovery
 import ke.don.domain.gameplay.server.LocalServer
 import ke.don.domain.repo.AuthClient
+import ke.don.local.di.localDatasourceModule
 import ke.don.remote.repo.AuthClientIOS
 import ke.don.remote.server.LanServer
 import org.koin.core.module.Module
@@ -12,6 +13,7 @@ import org.koin.dsl.module
 
 actual val serverModule: Module
     get() = module {
+        includes(localDatasourceModule)
         singleOf(::LanServer).bind<LocalServer>()
     }
 

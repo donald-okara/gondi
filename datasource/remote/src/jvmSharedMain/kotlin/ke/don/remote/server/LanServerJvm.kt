@@ -15,18 +15,14 @@ import io.ktor.server.websocket.webSocket
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
-import ke.don.domain.gameplay.Faction
 import ke.don.domain.gameplay.GameEngine
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.ModeratorEngine
-import ke.don.domain.gameplay.PlayerIntent
-import ke.don.domain.gameplay.Role
 import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.domain.gameplay.server.LanAdvertiser
 import ke.don.domain.gameplay.server.LocalServer
 import ke.don.domain.gameplay.server.ServerMessage
 import ke.don.domain.gameplay.server.ServerUpdate
-import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.local.db.LocalDatabase
@@ -36,6 +32,8 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
+import java.net.Inet4Address
+import java.net.NetworkInterface
 import kotlin.time.Duration.Companion.seconds
 
 class LanServerJvm(
@@ -175,13 +173,13 @@ suspend fun LocalDatabase.getAllPlayersSnapshot(): List<Player> =
 
 
 fun getLocalIpAddress(): String {
-    val interfaces = java.net.NetworkInterface.getNetworkInterfaces().toList()
+    val interfaces = NetworkInterface.getNetworkInterfaces().toList()
     for (iface in interfaces) {
         if (!iface.isUp || iface.isLoopback || iface.name.contains("docker", true) || iface.name.contains("vm", true)) continue
 
         val addresses = iface.inetAddresses.toList()
         for (address in addresses) {
-            if (address is java.net.Inet4Address && !address.isLoopbackAddress) {
+            if (address is Inet4Address && !address.isLoopbackAddress) {
                 return address.hostAddress
             }
         }

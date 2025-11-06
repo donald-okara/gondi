@@ -28,7 +28,8 @@ buildConfig {
 
 kotlin {
     sourceSets{
-        androidMain.dependencies {
+
+        jvmMain.dependencies {
             implementation(libs.ktor.server.websockets)
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.cio)
@@ -36,7 +37,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.jmdns)
         }
-        jvmMain.dependencies {
+        androidMain.dependencies {
             implementation(libs.ktor.server.websockets)
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.cio)

@@ -9,19 +9,10 @@
  */
 package ke.don.gondi
 
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import ke.don.domain.gameplay.server.LanAdvertiser
-import ke.don.domain.gameplay.server.LanDiscovery
-import ke.don.domain.gameplay.server.LocalServer
-import ke.don.domain.gameplay.server.SERVICE_TYPE
-import ke.don.remote.server.LanServerJvm
 import ke.don.resources.Resources
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.getKoin
 import java.awt.Dimension
 
 fun main() = application {
