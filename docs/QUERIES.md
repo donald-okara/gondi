@@ -126,6 +126,6 @@ execute procedure public.handle_new_user();
 
 ---
 
-And there you have it — your **Supabase backend** now hums quietly, keeping watch over every player that enters the realm.
+And there you have it — your **Supabase backend** now hums quietly, keeping watch over every player who enters the realm.
 
 If you’ve followed these steps, your fork now stands tall with a living, breathing data layer. ⚔️
