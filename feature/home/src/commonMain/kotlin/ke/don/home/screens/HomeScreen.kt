@@ -77,7 +77,7 @@ class HomeScreen : Screen {
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 ButtonToken(
-                    onClick = {
+                    onClick = { //TODO, implement permission request
                         coroutineScope.launch {
                             lanDiscovery.start(
                                 serviceType = SERVICE_TYPE,
