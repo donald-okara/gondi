@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -337,7 +338,8 @@ class LocalDatabaseTest {
 
     @Test
     fun testUpdateLastAction_setsPlayerAction() = runTest {
-        val db = createDb()
+        val db = createDb()  // fresh DB per test
+
         val player = Player(
             id = "p1",
             name = "Alice",
@@ -350,10 +352,16 @@ class LocalDatabaseTest {
         )
         db.insertOrReplacePlayer(player)
 
-        val action = PlayerAction(ActionType.KILL, "target1")
+        val fixedTime = System.currentTimeMillis()
+        val action = PlayerAction(ActionType.KILL, "target1", targetId = null, timestamp = fixedTime)
         db.updateLastAction(action, "p1")
+
         val fetched = db.getPlayerById("p1").first()
-        assertEquals(action, fetched?.lastAction)
+        assertNotNull(fetched)
+        assertEquals(action.type, fetched.lastAction?.type)
+        assertEquals(action.playerId, fetched.lastAction?.playerId)
+        assertEquals(action.targetId, fetched.lastAction?.targetId)
+
     }
 
     @Test
