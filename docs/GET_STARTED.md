@@ -10,7 +10,7 @@ Welcome, weary traveller. You’re here because you care about the code behind *
 
 Here are the docs you’ll want to check out first:
 
-1. [Authentication](docs/AUTHENTICATION.md)
-2. [Supabase Queries](docs/QUERIES.md)
+1. [Authentication](AUTHENTICATION.md)
+2. [Supabase Queries](QUERIES.md)
 
 Good luck, and may your builds be green.
