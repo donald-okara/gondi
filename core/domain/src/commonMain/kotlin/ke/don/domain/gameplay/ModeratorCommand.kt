@@ -16,13 +16,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class ModeratorCommand {
-    data class CreateGame(val game: GameState, val player: Player) : ModeratorCommand()
-    object StartGame : ModeratorCommand()
-    data class AdvancePhase(val phase: GamePhase) : ModeratorCommand()
-    data class RevealDeaths(val playerIds: List<String>) : ModeratorCommand()
-    data class RemovePlayer(val playerId: String) : ModeratorCommand()
-    data class AssignRole(val playerId: String, val role: Role) : ModeratorCommand()
-    data class AssignRoleBatch(val players: List<Player>) : ModeratorCommand()
-    data class DeclareWinner(val winner: Faction) : ModeratorCommand()
-    object ResetGame : ModeratorCommand()
+    abstract val gameId: String
+
+    data class CreateGame(override val gameId: String, val game: GameState, val player: Player) : ModeratorCommand()
+    class StartGame(override val gameId: String) : ModeratorCommand()
+    data class AdvancePhase(override val gameId: String, val phase: GamePhase) : ModeratorCommand()
+    data class RevealDeaths(override val gameId: String, val playerIds: List<String>) : ModeratorCommand()
+    data class RemovePlayer(override val gameId: String, val playerId: String) : ModeratorCommand()
+    data class AssignRole(override val gameId: String, val playerId: String, val role: Role) : ModeratorCommand()
+    data class AssignRoleBatch(override val gameId: String, val players: List<Player>) : ModeratorCommand()
+    data class DeclareWinner(override val gameId: String, val winner: Faction) : ModeratorCommand()
+    class ResetGame(override val gameId: String) : ModeratorCommand()
 }

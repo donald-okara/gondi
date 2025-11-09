@@ -10,9 +10,9 @@
 package ke.don.domain.gameplay
 
 interface ModeratorEngine {
-    suspend fun handle(command: ModeratorCommand)
+    suspend fun handle(gameId: String, command: ModeratorCommand)
 }
 
 interface GameEngine {
-    suspend fun reduce(intent: PlayerIntent)
+    suspend fun reduce(gameId: String, intent: PlayerIntent)
 }

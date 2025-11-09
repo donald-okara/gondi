@@ -37,13 +37,10 @@ class GondiHost(
     private val _votes = MutableStateFlow<List<Vote>>(emptyList())
     val votes: StateFlow<List<Vote>> = _votes
 
-    init {
-        observeDatabase()
-    }
 
-    private fun observeDatabase() {
+    private fun observeDatabase(gameId: String) {
         scope.launch {
-            database.getFirstGameState().collect { rows ->
+            database.getGameState(gameId).collect { rows ->
                 _gameState.value = rows
             }
         }
@@ -62,5 +59,6 @@ class GondiHost(
     }
 
     // Moderator actions
-    suspend fun handleIntent(intent: ModeratorCommand) = server.handleModeratorCommand(intent)
+    suspend fun handleIntent(intent: ModeratorCommand) = server.handleModeratorCommand(gameState.value?.id
+        ?: error("Game state cannot be null"), intent)
 }

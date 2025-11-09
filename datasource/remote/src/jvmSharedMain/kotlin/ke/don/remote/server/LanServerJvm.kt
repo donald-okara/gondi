@@ -85,7 +85,7 @@ class LanServerJvm(
                         incoming.consumeEach { frame ->
                             if (frame is Frame.Text) {
                                 val text = frame.readText()
-                                handleMessage(text)
+                                handleMessage(identity.id, text)
                             }
                         }
                     } finally {
@@ -108,8 +108,8 @@ class LanServerJvm(
         server?.stop()
     }
 
-    override suspend fun handleModeratorCommand(command: ModeratorCommand) {
-        moderatorEngine.handle(command)
+    override suspend fun handleModeratorCommand(gameId: String, command: ModeratorCommand) {
+        moderatorEngine.handle(gameId, command)
 
         // After moderator actions, broadcast updates
         val newState = database.getCurrentGameState()
@@ -125,6 +125,7 @@ class LanServerJvm(
     }
 
     private suspend fun DefaultWebSocketServerSession.handleMessage(
+        gameId: String,
         json: String,
     ) {
         try {
@@ -133,16 +134,16 @@ class LanServerJvm(
                 is ServerMessage.PlayerIntentMsg -> {
                     val currentPhase = database.getCurrentGameState()?.phase ?: return
 
-                    if (!validateIntent(db = database, intent = message.intent, currentPhase = currentPhase)) {
+                    if (!validateIntent(gameId = gameId, db = database, intent = message.intent, currentPhase = currentPhase)) {
                         send(Json.encodeToString(ServerUpdate.Error("Invalid intent")))
                         return
                     }
 
                     // 1️⃣ Apply the intent
-                    gameEngine.reduce(message.intent)
+                    gameEngine.reduce(gameId, message.intent)
 
                     // 2️⃣ Broadcast updated state
-                    val newState = database.getCurrentGameState()
+                    val newState = database.getGameState(id = gameId).firstOrNull()
                     val players = database.getAllPlayersSnapshot()
                     broadcast(ServerUpdate.GameStateSnapshot(newState))
                     broadcast(ServerUpdate.PlayersSnapshot(players))
@@ -151,11 +152,11 @@ class LanServerJvm(
                 }
 
                 is ServerMessage.ModeratorCommandMsg -> {
-                    handleModeratorCommand(message.command)
+                    handleModeratorCommand(gameId = gameId, message.command)
                 }
 
                 is ServerMessage.GetGameState -> {
-                    val newState = database.getCurrentGameState()
+                    val newState = database.getGameState(id = gameId).firstOrNull()
                     val players = database.getAllPlayersSnapshot()
 
                     send(Json.encodeToString(ServerUpdate.GameStateSnapshot(newState)))

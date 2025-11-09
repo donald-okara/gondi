@@ -25,8 +25,8 @@ class DefaultModeratorEngine(
     private val db: LocalDatabase,
 ) : ModeratorEngine {
 
-    override suspend fun handle(command: ModeratorCommand) {
-        val game = db.getFirstGameState().firstOrNull()
+    override suspend fun handle(gameId: String, command: ModeratorCommand) {
+        val game = db.getGameState(gameId).firstOrNull()
         val players = db.getAlivePlayers()
         val currentRound = game?.round
 
@@ -62,7 +62,7 @@ class DefaultModeratorEngine(
                 db.toggleRevealFlag(true, it.id)
             }
 
-            ModeratorCommand.StartGame -> game?.let {
+            is ModeratorCommand.StartGame -> game?.let {
                 db.updatePhase(GamePhase.SLEEP, round = 0L, id = it.id)
             }
         }

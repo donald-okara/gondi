@@ -20,7 +20,7 @@ import kotlinx.serialization.Serializable
 sealed class ServerMessage {
     @Serializable data class PlayerIntentMsg(val intent: PlayerIntent) : ServerMessage()
 
-    @Serializable data class ModeratorCommandMsg(val command: ModeratorCommand) : ServerMessage()
+    @Serializable data class ModeratorCommandMsg(val gameId: String, val command: ModeratorCommand) : ServerMessage()
 
     @Serializable object GetGameState : ServerMessage()
 }

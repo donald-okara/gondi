@@ -18,11 +18,12 @@ import kotlinx.coroutines.flow.firstOrNull
 
 suspend fun validateIntent(
     db: LocalDatabase,
+    gameId: String,
     intent: PlayerIntent,
     currentPhase: GamePhase,
 ): Boolean {
     val player = db.getPlayerById(intent.playerId).firstOrNull() ?: return false
-    val gameState = db.getFirstGameState().firstOrNull() ?: return false
+    val gameState = db.getGameState(gameId).firstOrNull() ?: return false
     val accused = gameState.accusedPlayer
 
     return when (intent) {

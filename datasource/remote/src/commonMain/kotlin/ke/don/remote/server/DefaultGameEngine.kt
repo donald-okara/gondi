@@ -18,9 +18,7 @@ import ke.don.local.db.LocalDatabase
 import kotlinx.coroutines.flow.firstOrNull
 
 class DefaultGameEngine(private val db: LocalDatabase) : GameEngine {
-    override suspend fun reduce(intent: PlayerIntent) {
-        val gameId = db.getFirstGameState().firstOrNull()?.id
-
+    override suspend fun reduce(gameId: String, intent: PlayerIntent) {
         when (intent) {
             is PlayerIntent.Join -> db.insertOrReplacePlayer(intent.player)
             is PlayerIntent.Kill -> db.killAction(
@@ -38,16 +36,14 @@ class DefaultGameEngine(private val db: LocalDatabase) : GameEngine {
                     targetId = intent.targetId,
                 ),
             )
-            is PlayerIntent.Accuse -> gameId?.let {
-                db.accusePlayer(
-                    PlayerAction(
-                        type = ActionType.ACCUSE,
-                        playerId = intent.playerId,
-                        targetId = intent.targetId,
-                    ),
-                    it,
-                )
-            }
+            is PlayerIntent.Accuse -> db.accusePlayer(
+                PlayerAction(
+                    type = ActionType.ACCUSE,
+                    playerId = intent.playerId,
+                    targetId = intent.targetId,
+                ),
+                gameId,
+            )
             is PlayerIntent.Investigate -> {
                 val player = db.getPlayerById(id = intent.targetId).firstOrNull()
                 player?.knownIdentities?.plus(
