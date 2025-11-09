@@ -12,7 +12,7 @@ import ke.don.domain.gameplay.server.ServerUpdate
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
-import ke.don.remote.server.CientObject.client
+import ke.don.remote.server.ClientObject.client
 import ke.don.utils.Logger
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.*
