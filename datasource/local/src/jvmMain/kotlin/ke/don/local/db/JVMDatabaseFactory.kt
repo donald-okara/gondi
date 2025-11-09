@@ -11,12 +11,15 @@ package ke.don.local.db
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import java.io.File
 
 class JVMDatabaseFactory : DatabaseFactory {
     override fun createDriver(): SqlDriver {
         val driver = JdbcSqliteDriver("jdbc:sqlite:gondi.db")
 
-        GondiDatabase.Schema.create(driver)
+        if (!File("gondi.db").exists()) {
+            GondiDatabase.Schema.create(driver)
+        }
 
         return driver
     }
