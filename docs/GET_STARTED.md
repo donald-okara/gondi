@@ -1,6 +1,6 @@
 <p align="center">
-  <img src="shared/resources/src/commonMain/composeResources/drawable/app_icon.png" 
-       alt="Gondi Banner" 
+  <img src="../shared/resources/src/commonMain/composeResources/drawable/app_icon.png"
+       alt="Gondi Banner"
        width="180" />
 </p>
 
