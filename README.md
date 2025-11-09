@@ -8,6 +8,8 @@
 
 Gondi is a rendition of the group game "Mafia" where there are 2 Gondis (Mafia members), one police officer, one accomplice, one detective, a doctor and the villagers
 
+Consult the [setup guide](docs/GET_STARTED.md) on how to get started.
+
 ## Roles
 **Gondi (x2)** - In the beginning of every round (the villagers asleep), they kill a villager each
 
