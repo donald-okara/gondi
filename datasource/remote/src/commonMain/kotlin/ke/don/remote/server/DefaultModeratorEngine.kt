@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.remote.server
 
 import ke.don.domain.gameplay.Faction
@@ -8,14 +17,12 @@ import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
-import ke.don.local.db.GameStateEntity
 import ke.don.local.db.LocalDatabase
-import ke.don.local.db.PlayerEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 
 class DefaultModeratorEngine(
-    private val db: LocalDatabase
+    private val db: LocalDatabase,
 ) : ModeratorEngine {
 
     override suspend fun handle(command: ModeratorCommand) {
@@ -65,7 +72,7 @@ class DefaultModeratorEngine(
         command: ModeratorCommand.AdvancePhase,
         game: GameState,
         players: Flow<List<Player>>,
-        currentRound: Long?
+        currentRound: Long?,
     ) {
         val gameId = game.id
         val round = currentRound ?: error("Current round cannot be null")
@@ -81,7 +88,7 @@ class DefaultModeratorEngine(
         game: GameState,
         phase: GamePhase,
         round: Long,
-        gameId: String
+        gameId: String,
     ) {
         val lastSaved = game.lastSavedPlayerId
         val pendingKills = game.pendingKills
@@ -100,7 +107,7 @@ class DefaultModeratorEngine(
         phase: GamePhase,
         round: Long,
         players: Flow<List<Player>>,
-        gameId: String
+        gameId: String,
     ) {
         val votes = db.getAllVotes().firstOrNull()
 
@@ -113,7 +120,7 @@ class DefaultModeratorEngine(
         val gondiPlayers = currentPlayers?.filter { player ->
             player.role == Role.GONDI
         }
-        val accomplices =  currentPlayers?.filter { player ->
+        val accomplices = currentPlayers?.filter { player ->
             player.role == Role.ACCOMPLICE
         }
 
@@ -123,7 +130,7 @@ class DefaultModeratorEngine(
                     db.updateAliveStatus(false, it)
                 }
             }
-            if (round == 0L){
+            if (round == 0L) {
                 gondiPlayers?.forEach { player ->
                     db.updateKnownIdentities(knownIdentities = gondiPlayers.map { it.toKnownIdentity() }, id = player.id)
                 }

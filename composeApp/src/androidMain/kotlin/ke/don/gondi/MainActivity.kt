@@ -15,16 +15,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import io.github.jan.supabase.auth.handleDeeplinks
-import ke.don.domain.gameplay.server.LanDiscovery
-import ke.don.domain.gameplay.server.LocalServer
-import ke.don.domain.gameplay.server.SERVICE_TYPE
 import ke.don.remote.api.SupabaseConfig.supabase
 import ke.don.utils.Logger
-import kotlinx.coroutines.launch
-import org.koin.android.ext.android.getKoin
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -22,7 +22,7 @@ data class GameState(
     val winners: Faction? = null,
     @SerialName("pending_kills") val pendingKills: List<String> = emptyList(),
     @SerialName("last_saved_player_id") val lastSavedPlayerId: String? = null,
-    @SerialName("accused_player_id") val accusedPlayer: PlayerAction? = null, //Accuser to accused
-    @SerialName("second") val second: PlayerAction? = null, //Accuser to accused
+    @SerialName("accused_player_id") val accusedPlayer: PlayerAction? = null, // Accuser to accused
+    @SerialName("second") val second: PlayerAction? = null, // Accuser to accused
     @SerialName("reveal_eliminated_player") val revealEliminatedPlayer: Boolean,
 )

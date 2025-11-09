@@ -19,7 +19,6 @@ import ke.don.domain.state.KnownIdentity
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlin.collections.map
 import kotlin.time.Clock
@@ -35,7 +34,7 @@ class LocalDatabase(
     private val playersQueries = database.playersQueries
     private val votesQueries = database.votesQueries
 
-    fun transaction(block : () -> Unit){
+    fun transaction(block: () -> Unit) {
         database.transaction {
             block()
         }
@@ -69,8 +68,8 @@ class LocalDatabase(
     fun killAction(playerAction: PlayerAction) = database.transaction {
         val originalPendingKills = stateQueries.getFirstGameState()
             .executeAsOneOrNull()?.toGameState?.pendingKills
-        if (originalPendingKills?.contains(playerAction.targetId) == false){
-            playerAction.targetId?.let{
+        if (originalPendingKills?.contains(playerAction.targetId) == false) {
+            playerAction.targetId?.let {
                 val newList = originalPendingKills.plus(it)
                 stateQueries.updatePendingKills(pendingKillsAdapter.encode(newList))
                 playersQueries.updateLastAction(last_action = playerActionAdapter.encode(playerAction), id = playerAction.playerId ?: error("PlayerId cannot be null"))
@@ -79,7 +78,7 @@ class LocalDatabase(
     }
 
     fun saveAction(playerAction: PlayerAction) = database.transaction {
-        stateQueries.updateLastSaved( lastSavedPlayer = playerAction.targetId )
+        stateQueries.updateLastSaved(lastSavedPlayer = playerAction.targetId)
         playersQueries.updateLastAction(last_action = playerActionAdapter.encode(playerAction), id = playerAction.playerId ?: "PlayerId cannot be null")
     }
 

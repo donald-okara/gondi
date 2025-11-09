@@ -27,7 +27,7 @@ buildConfig {
 }
 
 kotlin {
-    sourceSets{
+    sourceSets {
 
         jvmMain.dependencies {
             implementation(libs.ktor.server.websockets)

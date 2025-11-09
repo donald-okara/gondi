@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.remote.server
 
 import io.ktor.serialization.kotlinx.json.json
@@ -88,7 +97,7 @@ class LanServerJvm(
         }.start(wait = false)
 
         advertiser.start(
-            gameIdentity = identity.copy(serviceHost = host)
+            gameIdentity = identity.copy(serviceHost = host),
         )
 
         logger.debug("✅ LAN WebSocket server started and advertised on ws://$host:${identity.servicePort}/chat")
@@ -111,7 +120,6 @@ class LanServerJvm(
         logger.debug("Moderator command executed ✅ ($command)")
     }
 
-
     suspend fun DefaultWebSocketServerSession.sendJson(message: ServerMessage) {
         send(json.encodeToString(message))
     }
@@ -129,7 +137,6 @@ class LanServerJvm(
                         send(Json.encodeToString(ServerUpdate.Error("Invalid intent")))
                         return
                     }
-
 
                     // 1️⃣ Apply the intent
                     gameEngine.reduce(message.intent)
@@ -171,7 +178,6 @@ suspend fun LocalDatabase.getCurrentGameState(): GameState? =
 suspend fun LocalDatabase.getAllPlayersSnapshot(): List<Player> =
     getAllPlayers().first()
 
-
 fun getLocalIpAddress(): String {
     val interfaces = NetworkInterface.getNetworkInterfaces().toList()
     for (iface in interfaces) {
@@ -186,5 +192,3 @@ fun getLocalIpAddress(): String {
     }
     return "0.0.0.0"
 }
-
-

@@ -1,12 +1,21 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.remote.server
 
 // jvmMain
 import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.domain.gameplay.server.LanAdvertiser
 import ke.don.utils.Logger
+import java.net.InetAddress
 import javax.jmdns.JmDNS
 import javax.jmdns.ServiceInfo
-import java.net.InetAddress
 
 class LanAdvertiserJvm : LanAdvertiser {
     private val logger = Logger("LanAdvertiser_JVM")
@@ -17,10 +26,11 @@ class LanAdvertiserJvm : LanAdvertiser {
         val ip = InetAddress.getByName(gameIdentity.serviceHost)
         jmdns = JmDNS.create(ip)
 
-        val fullType = if (gameIdentity.serviceType.endsWith("."))
+        val fullType = if (gameIdentity.serviceType.endsWith(".")) {
             gameIdentity.serviceType
-        else
+        } else {
             "${gameIdentity.serviceType}."
+        }
 
         // ✅ Create TXT record metadata
         val txtRecord = mapOf(
@@ -28,7 +38,7 @@ class LanAdvertiserJvm : LanAdvertiser {
             "mod_name" to gameIdentity.moderatorName,
             "mod_avatar" to gameIdentity.moderatorAvatar?.name,
             "background" to gameIdentity.moderatorAvatarBackground.name,
-            "gameName" to gameIdentity.gameName
+            "gameName" to gameIdentity.gameName,
         )
 
         // ✅ Create advertised service
@@ -38,7 +48,7 @@ class LanAdvertiserJvm : LanAdvertiser {
             gameIdentity.servicePort,
             0, // weight
             0, // priority
-            txtRecord
+            txtRecord,
         )
 
         try {

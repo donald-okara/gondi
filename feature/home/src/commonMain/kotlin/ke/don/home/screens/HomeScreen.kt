@@ -13,10 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
 import androidx.compose.material.ListItem
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,8 +28,6 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
-import ke.don.components.empty_state.EmptyScreen
-import ke.don.components.helpers.Matcha
 import ke.don.components.profile.ProfileImageToken
 import ke.don.components.scaffold.ScaffoldToken
 import ke.don.domain.gameplay.server.GameIdentity
@@ -43,18 +38,18 @@ import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.domain.table.Profile
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.getKoin
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 class HomeScreen : Screen {
-    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class,
-        ExperimentalUuidApi::class
+    @OptIn(
+        ExperimentalMaterial3Api::class,
+        ExperimentalMaterialApi::class,
+        ExperimentalUuidApi::class,
     )
     @Composable
     override fun Content() {
-
         val koin = getKoin()
         val lanDiscovery = koin.get<LanDiscovery>()
         val server = koin.get<LocalServer>()
@@ -79,25 +74,25 @@ class HomeScreen : Screen {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
                 ButtonToken(
                     onClick = {
                         coroutineScope.launch {
                             lanDiscovery.start(
-                                serviceType = SERVICE_TYPE
+                                serviceType = SERVICE_TYPE,
                             ) { identity ->
                                 if (!gamesList.contains(identity)) gamesList += identity
                             }
                         }
                     },
-                    buttonType = ComponentType.Inverse
-                ){
+                    buttonType = ComponentType.Inverse,
+                ) {
                     Text("Discover")
                 }
                 ButtonToken(
                     onClick = {
-                        coroutineScope.launch{
+                        coroutineScope.launch {
                             server.stop()
                             server.start(
                                 GameIdentity(
@@ -107,13 +102,13 @@ class HomeScreen : Screen {
                                     servicePort = 8080,
                                     moderatorName = "Goo goo",
                                     moderatorAvatarBackground = AvatarBackground.PURPLE_ORCHID,
-                                    moderatorAvatar = Avatar.George
-                                )
+                                    moderatorAvatar = Avatar.George,
+                                ),
                             )
                         }
                     },
-                    buttonType = ComponentType.Primary
-                ){
+                    buttonType = ComponentType.Primary,
+                ) {
                     Text("Advertise")
                 }
 
@@ -124,9 +119,9 @@ class HomeScreen : Screen {
                                 profile = Profile(
                                     avatar = item.moderatorAvatar,
                                     background = item.moderatorAvatarBackground,
-                                    name = item.moderatorName
+                                    name = item.moderatorName,
                                 ),
-                                isHero = false
+                                isHero = false,
                             )
                         },
                         text = {
@@ -134,7 +129,7 @@ class HomeScreen : Screen {
                         },
                         secondaryText = {
                             Text(item.moderatorName)
-                        }
+                        },
                     )
                 }
             }

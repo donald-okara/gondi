@@ -27,15 +27,15 @@ data class Player(
     @SerialName("is_alive") val isAlive: Boolean = true,
     @SerialName("last_action") val lastAction: PlayerAction? = null,
     @SerialName("known_identities") val knownIdentities: List<KnownIdentity> = emptyList(),
-){
+) {
     fun toKnownIdentity(): KnownIdentity = KnownIdentity(
         playerId = id,
-        role = role ?: error("Role cannot be null")
+        role = role ?: error("Role cannot be null"),
     )
 }
 
 @Serializable
 data class KnownIdentity(
     val playerId: String,
-    val role: Role
+    val role: Role,
 )

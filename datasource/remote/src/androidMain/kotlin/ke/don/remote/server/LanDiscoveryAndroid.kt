@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.remote.server
 
 // jvmMain
@@ -20,7 +29,7 @@ class LanDiscoveryAndroid(
 
     override fun start(
         serviceType: String,
-        onDiscovered: (GameIdentity) -> Unit
+        onDiscovered: (GameIdentity) -> Unit,
     ) {
         discoveryListener = object : NsdManager.DiscoveryListener {
 
@@ -31,42 +40,45 @@ class LanDiscoveryAndroid(
             override fun onServiceFound(service: NsdServiceInfo) {
                 logger.info("🟡 Service found: ${service.serviceName} (${service.serviceType})")
 
-                nsdManager.resolveService(service, object : NsdManager.ResolveListener {
-                    override fun onServiceResolved(resolved: NsdServiceInfo) {
-                        val host = resolved.host?.hostAddress ?: return logger.error("⚠️ Host was null for ${resolved.serviceName}")
-                        val port = resolved.port
-                        val type = resolved.serviceType
-                        val name = resolved.serviceName
+                nsdManager.resolveService(
+                    service,
+                    object : NsdManager.ResolveListener {
+                        override fun onServiceResolved(resolved: NsdServiceInfo) {
+                            val host = resolved.host?.hostAddress ?: return logger.error("⚠️ Host was null for ${resolved.serviceName}")
+                            val port = resolved.port
+                            val type = resolved.serviceType
+                            val name = resolved.serviceName
 
-                        val txt = resolved.attributes.mapValues { it.value?.decodeToString() ?: "" }
+                            val txt = resolved.attributes.mapValues { it.value?.decodeToString() ?: "" }
 
-                        val id = txt["id"] ?: "Unknown"
-                        val moderatorName = txt["mod_name"] ?: "Unknown"
-                        val moderatorAvatarName = txt["mod_avatar"]
-                        val moderatorBackgroundName = txt["background"]
+                            val id = txt["id"] ?: "Unknown"
+                            val moderatorName = txt["mod_name"] ?: "Unknown"
+                            val moderatorAvatarName = txt["mod_avatar"]
+                            val moderatorBackgroundName = txt["background"]
 
-                        val moderatorAvatar = runCatching { Avatar.fromValue(moderatorAvatarName) }.getOrDefault(Avatar.entries.first())
-                        val moderatorBackground = runCatching { AvatarBackground.fromValue(moderatorBackgroundName) ?: AvatarBackground.entries.first() }.getOrDefault(AvatarBackground.entries.first())
+                            val moderatorAvatar = runCatching { Avatar.fromValue(moderatorAvatarName) }.getOrDefault(Avatar.entries.first())
+                            val moderatorBackground = runCatching { AvatarBackground.fromValue(moderatorBackgroundName) ?: AvatarBackground.entries.first() }.getOrDefault(AvatarBackground.entries.first())
 
-                        val identity = GameIdentity(
-                            id = id,
-                            serviceHost = host,
-                            serviceType = type,
-                            servicePort = port,
-                            gameName = name,
-                            moderatorName = moderatorName,
-                            moderatorAvatarBackground = moderatorBackground,
-                            moderatorAvatar = moderatorAvatar,
-                        )
+                            val identity = GameIdentity(
+                                id = id,
+                                serviceHost = host,
+                                serviceType = type,
+                                servicePort = port,
+                                gameName = name,
+                                moderatorName = moderatorName,
+                                moderatorAvatarBackground = moderatorBackground,
+                                moderatorAvatar = moderatorAvatar,
+                            )
 
-                        logger.info("✅ Resolved: $identity")
-                        onDiscovered(identity)
-                    }
+                            logger.info("✅ Resolved: $identity")
+                            onDiscovered(identity)
+                        }
 
-                    override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
-                        logger.error("❌ Resolve failed for ${serviceInfo.serviceName} (error $errorCode)")
-                    }
-                })
+                        override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
+                            logger.error("❌ Resolve failed for ${serviceInfo.serviceName} (error $errorCode)")
+                        }
+                    },
+                )
             }
 
             override fun onServiceLost(service: NsdServiceInfo) {
@@ -102,5 +114,3 @@ class LanDiscoveryAndroid(
         }
     }
 }
-
-

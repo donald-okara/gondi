@@ -61,7 +61,9 @@ enum class AvatarBackground {
     PINK_HOT, // #FF4081
 
     @SerialName("orange_coral")
-    ORANGE_CORAL; // #FF6E40
+    ORANGE_CORAL, // #FF6E40
+
+    ;
 
     companion object {
         fun fromValue(value: String?): AvatarBackground? {

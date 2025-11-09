@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.remote.server
 
 // jvmMain
@@ -19,7 +28,7 @@ class LanDiscoveryJvm : LanDiscovery {
 
     override fun start(
         serviceType: String,
-        onDiscovered: (GameIdentity) -> Unit
+        onDiscovered: (GameIdentity) -> Unit,
     ) {
         val localIp = getLocalIpAddress()
         logger.info("Binding JmDNS to $localIp")
@@ -27,25 +36,28 @@ class LanDiscoveryJvm : LanDiscovery {
 
         val normalizedType = if (serviceType.endsWith(".")) serviceType else "$serviceType."
 
-        jmdns?.addServiceListener(normalizedType, object : ServiceListener {
-            override fun serviceAdded(event: ServiceEvent) {
-                logger.info("🟡 Service added: ${event.name}")
-                jmdns?.getServiceInfo(normalizedType, event.name, true)?.let { info ->
-                    parseGameIdentity(info)?.let { identity ->
-                        logger.info("✅ Resolved ${identity.gameName} hosted by ${identity.moderatorName} at ${identity.serviceHost}:${identity.servicePort}")
-                        onDiscovered(identity)
+        jmdns?.addServiceListener(
+            normalizedType,
+            object : ServiceListener {
+                override fun serviceAdded(event: ServiceEvent) {
+                    logger.info("🟡 Service added: ${event.name}")
+                    jmdns?.getServiceInfo(normalizedType, event.name, true)?.let { info ->
+                        parseGameIdentity(info)?.let { identity ->
+                            logger.info("✅ Resolved ${identity.gameName} hosted by ${identity.moderatorName} at ${identity.serviceHost}:${identity.servicePort}")
+                            onDiscovered(identity)
+                        }
                     }
                 }
-            }
 
-            override fun serviceRemoved(event: ServiceEvent) {
-                logger.error("❌ Game removed: ${event.name}")
-            }
+                override fun serviceRemoved(event: ServiceEvent) {
+                    logger.error("❌ Game removed: ${event.name}")
+                }
 
-            override fun serviceResolved(event: ServiceEvent) {
-                logger.info("🔹 Service resolved: ${event.name}")
-            }
-        })
+                override fun serviceResolved(event: ServiceEvent) {
+                    logger.info("🔹 Service resolved: ${event.name}")
+                }
+            },
+        )
 
         logger.info("🔍 Started LAN discovery for $normalizedType")
     }
@@ -79,7 +91,7 @@ class LanDiscoveryJvm : LanDiscovery {
             gameName = gameName,
             moderatorName = moderatorName,
             moderatorAvatar = moderatorAvatar,
-            moderatorAvatarBackground = moderatorBackground
+            moderatorAvatarBackground = moderatorBackground,
         )
     }
 

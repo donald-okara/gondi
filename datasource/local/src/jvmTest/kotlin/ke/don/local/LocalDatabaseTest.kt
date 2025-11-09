@@ -156,7 +156,7 @@ class LocalDatabaseTest {
             type = ActionType.ACCUSE,
             playerId = "accuser1",
             targetId = "accused1",
-            timestamp = 1L
+            timestamp = 1L,
         )
 
         db.insertOrReplaceGameState(state)
@@ -166,6 +166,7 @@ class LocalDatabaseTest {
         }
         assertEquals(accusedPlayer, fetched?.accusedPlayer)
     }
+
     @Test
     fun testSecondPlayer_success() = runTest {
         val db = createDb()
@@ -183,7 +184,7 @@ class LocalDatabaseTest {
             type = ActionType.SECOND,
             playerId = "accuser1",
             targetId = "accused1",
-            timestamp = 1L
+            timestamp = 1L,
         )
 
         db.insertOrReplaceGameState(state)
@@ -245,7 +246,7 @@ class LocalDatabaseTest {
                 KnownIdentity(
                     playerId = "p1",
                     role = Role.VILLAGER,
-                )
+                ),
             ),
         )
 
@@ -299,11 +300,11 @@ class LocalDatabaseTest {
                 KnownIdentity(
                     playerId = "p2",
                     role = Role.VILLAGER,
-                )
+                ),
             ),
         )
         db.insertOrReplacePlayer(player)
-        val fetched = db.getPlayerById("p2").first().also{
+        val fetched = db.getPlayerById("p2").first().also {
             logger.info(it.toString())
         }
         assertTrue(fetched?.knownIdentities?.isEmpty() == false)
@@ -360,7 +361,7 @@ class LocalDatabaseTest {
         val db = createDb()
         val player = Player(
             id = "player1",
-            name = "Alice"
+            name = "Alice",
         )
 
         db.insertOrReplacePlayer(player)
@@ -392,10 +393,10 @@ class LocalDatabaseTest {
             KnownIdentity(
                 playerId = "p2",
                 role = Role.VILLAGER,
-            )
+            ),
         )
         db.updateKnownIdentities(known, "p1")
-        val fetched = db.getPlayerById("p1").first().also{
+        val fetched = db.getPlayerById("p1").first().also {
             logger.info(it.toString())
         }
         assertEquals(known, fetched?.knownIdentities)
@@ -440,11 +441,11 @@ class LocalDatabaseTest {
         val db = createDb()
         val player1 = Player(
             id = "p1",
-            name = "Alice"
+            name = "Alice",
         )
         val player2 = Player(
             id = "p2",
-            name = "Bob"
+            name = "Bob",
         )
 
         db.insertOrReplacePlayer(player1)
@@ -458,9 +459,7 @@ class LocalDatabaseTest {
 
     @Test
     fun testGetAlivePlayers_returnsOnlyAlivePlayers() = runTest {
-
     }
-
 
     @Test
     fun testGetAlivePlayers_emitsOnlyAlivePlayers() = runTest {

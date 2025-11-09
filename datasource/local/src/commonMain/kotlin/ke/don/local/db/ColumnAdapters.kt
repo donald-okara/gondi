@@ -74,7 +74,7 @@ val knownIdentitiesAdapter = object : ColumnAdapter<List<KnownIdentity>, String>
 }
 
 val factionAdapter = object : ColumnAdapter<Faction, String> {
-    override fun decode(databaseValue: String): Faction =  runCatching {
+    override fun decode(databaseValue: String): Faction = runCatching {
         Faction.valueOf(databaseValue)
     }.getOrElse {
         throw IllegalStateException("Invalid faction value in database: $databaseValue", it)
@@ -83,7 +83,6 @@ val factionAdapter = object : ColumnAdapter<Faction, String> {
     override fun encode(value: Faction): String {
         return value.name
     }
-
 }
 
 val phaseAdapter = object : ColumnAdapter<GamePhase, String> {
@@ -118,7 +117,7 @@ val GameStateEntity.toGameState: GameState get() = GameState(
     second = this.second?.let { playerActionAdapter.decode(it) },
     accusedPlayer = this.accused_player?.let { playerActionAdapter.decode(it) },
     revealEliminatedPlayer = booleanAdapter.decode(this.reveal_eliminated_player),
-    winners = this.winners?.let { factionAdapter.decode(it) }
+    winners = this.winners?.let { factionAdapter.decode(it) },
 )
 
 val GameState.toGameStateEntity: GameStateEntity get() = GameStateEntity(
@@ -130,7 +129,7 @@ val GameState.toGameStateEntity: GameStateEntity get() = GameStateEntity(
     accused_player = this.accusedPlayer?.let { playerActionAdapter.encode(it) },
     reveal_eliminated_player = booleanAdapter.encode(this.revealEliminatedPlayer),
     second = this.second?.let { playerActionAdapter.encode(it) },
-    winners = this.winners?.let { factionAdapter.encode(it) }
+    winners = this.winners?.let { factionAdapter.encode(it) },
 )
 
 val PlayerEntity.toPlayer: Player get() = Player(

@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.usecase
 
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -14,11 +23,11 @@ import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.remote.server.ClientObject.client
 import ke.don.utils.Logger
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import kotlinx.serialization.json.Json
 
-class GondiClient(): ScreenModel {
+class GondiClient() : ScreenModel {
 
     val logger = Logger("GondiClient")
 
@@ -47,12 +56,12 @@ class GondiClient(): ScreenModel {
                             is ServerUpdate.GameStateSnapshot -> _gameState.value = update.state
                             is ServerUpdate.PlayersSnapshot -> _players.value = update.players
                             is ServerUpdate.VotesSnapshot -> _votes.value = update.votes
-                            is ServerUpdate.Error ->{
+                            is ServerUpdate.Error -> {
                                 logger.error("❌ ${update.message}")
 
                                 Matcha.error(
                                     title = "Error",
-                                    description = update.message
+                                    description = update.message,
                                 )
                             }
                             is ServerUpdate.Announcement -> {
@@ -60,7 +69,7 @@ class GondiClient(): ScreenModel {
 
                                 Matcha.info(
                                     title = "Announcement",
-                                    description = update.message
+                                    description = update.message,
                                 )
                             }
                         }
@@ -70,14 +79,12 @@ class GondiClient(): ScreenModel {
         }
     }
 
-
     fun sendIntent(intent: PlayerIntent) {
         screenModelScope.launch {
             val message = ServerMessage.PlayerIntentMsg(intent)
             session?.send(Frame.Text(Json.encodeToString(message)))
                 ?: logger.error("⚠️ Not connected to server")
         }
-
     }
 
     fun disconnect() {

@@ -17,7 +17,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class ModeratorCommand {
     data class CreateGame(val game: GameState, val player: Player) : ModeratorCommand()
-    object StartGame: ModeratorCommand()
+    object StartGame : ModeratorCommand()
     data class AdvancePhase(val phase: GamePhase) : ModeratorCommand()
     data class RevealDeaths(val playerIds: List<String>) : ModeratorCommand()
     data class RemovePlayer(val playerId: String) : ModeratorCommand()
