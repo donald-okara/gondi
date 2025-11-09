@@ -39,15 +39,15 @@ class KtorSupabasePlugin : Plugin<Project> {
 
                 jvmMain.dependencies {
                     // JVM-specific server bits
-                    implementation(libs.findLibrary("ktor-client-cio").get())
+                    api(libs.findLibrary("ktor-client-cio").get())
                 }
                 androidMain.dependencies {
                     // JVM-specific server bits
-                    implementation(libs.findLibrary("ktor-client-cio").get())
+                    api(libs.findLibrary("ktor-client-cio").get())
                 }
 
                 iosMain.dependencies {
-                    implementation(libs.findLibrary("ktor-client-darwin").get())
+                    api(libs.findLibrary("ktor-client-darwin").get())
                 }
 
                 commonMain.dependencies {

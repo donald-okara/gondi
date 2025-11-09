@@ -1,8 +1,7 @@
-package ke.don.remote.gameplay
+package ke.don.game_play.usecase
 
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.server.LocalServer
-import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
