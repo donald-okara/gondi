@@ -1,6 +1,6 @@
 CREATE TABLE gameStateEntity (
     id TEXT NOT NULL PRIMARY KEY,                      -- e.g., "current" or session UUID
-    phase TEXT NOT NULL,                               -- e.g., "SLEEP", "TOWN_HALL", "COURT"
+    phase TEXT NOT NULL DEFAULT 0,                               -- e.g., "SLEEP", "TOWN_HALL", "COURT"
     round INTEGER NOT NULL DEFAULT 1,
     pending_kills TEXT,                                -- e.g., ["id1", "id2"]
     last_saved_player_id TEXT,

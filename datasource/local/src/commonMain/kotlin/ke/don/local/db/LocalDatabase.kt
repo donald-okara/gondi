@@ -22,6 +22,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlin.collections.map
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class LocalDatabase(
     databaseFactory: DatabaseFactory,
@@ -119,13 +121,16 @@ class LocalDatabase(
         last_action = player.toPlayerEntity.last_action,
         avatar = player.toPlayerEntity.avatar,
         background = player.toPlayerEntity.background,
+        timeOfDeath = player.toPlayerEntity.time_of_death,
     )
 
     fun updateAliveStatus(isAlive: Boolean, id: String) = playersQueries.updateAliveStatus(booleanAdapter.encode(isAlive), id)
 
+    @OptIn(ExperimentalTime::class)
     fun updateAliveStatus(isAlive: Boolean, ids: List<String>) = database.transaction {
         ids.forEach { id ->
             playersQueries.updateAliveStatus(booleanAdapter.encode(isAlive), id)
+            playersQueries.updateTimeOfDeath(Clock.System.now().toEpochMilliseconds(), id)
         }
     }
     fun updatePendingKills(pendingKills: List<String>) = stateQueries.updatePendingKills(pendingKillsAdapter.encode(pendingKills))

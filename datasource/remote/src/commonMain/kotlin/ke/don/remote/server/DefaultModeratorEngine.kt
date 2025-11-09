@@ -4,12 +4,14 @@ import ke.don.domain.gameplay.Faction
 import ke.don.domain.gameplay.Faction.Companion.checkWinner
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.ModeratorEngine
+import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.local.db.GameStateEntity
 import ke.don.local.db.LocalDatabase
 import ke.don.local.db.PlayerEntity
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 
 class DefaultModeratorEngine(
@@ -30,7 +32,7 @@ class DefaultModeratorEngine(
             }
 
             is ModeratorCommand.AdvancePhase -> game?.let { currentGame ->
-                players.firstOrNull()?.let { handlePhaseAdvance(command, currentGame, it, currentRound) }
+                handlePhaseAdvance(command, currentGame, players, currentRound)
             }
 
             is ModeratorCommand.RemovePlayer -> db.updateAliveStatus(false, command.playerId)
@@ -42,6 +44,7 @@ class DefaultModeratorEngine(
             }
 
             is ModeratorCommand.AssignRole -> db.updatePlayerRole(command.role, command.playerId)
+
             is ModeratorCommand.AssignRoleBatch -> db.batchUpdatePlayerRole(command.players)
 
             is ModeratorCommand.DeclareWinner -> game?.let {
@@ -61,7 +64,7 @@ class DefaultModeratorEngine(
     private suspend fun handlePhaseAdvance(
         command: ModeratorCommand.AdvancePhase,
         game: GameState,
-        players: List<Player>,
+        players: Flow<List<Player>>,
         currentRound: Long?
     ) {
         val gameId = game.id
@@ -96,13 +99,23 @@ class DefaultModeratorEngine(
         game: GameState,
         phase: GamePhase,
         round: Long,
-        players: List<Player>,
+        players: Flow<List<Player>>,
         gameId: String
     ) {
         val votes = db.getAllVotes().firstOrNull()
+
         val guiltyVotes = votes?.count { it.isGuilty } ?: 0
         val totalVotes = votes?.size ?: 0
         val isGuilty = guiltyVotes > (totalVotes / 2)
+
+        val currentPlayers = players.firstOrNull()
+
+        val gondiPlayers = currentPlayers?.filter { player ->
+            player.role == Role.GONDI
+        }
+        val accomplices =  currentPlayers?.filter { player ->
+            player.role == Role.ACCOMPLICE
+        }
 
         db.transaction {
             if (isGuilty) {
@@ -110,10 +123,18 @@ class DefaultModeratorEngine(
                     db.updateAliveStatus(false, it)
                 }
             }
+            if (round == 0L){
+                gondiPlayers?.forEach { player ->
+                    db.updateKnownIdentities(knownIdentities = gondiPlayers.map { it.toKnownIdentity() }, id = player.id)
+                }
+                accomplices?.forEach { accomplice ->
+                    db.updateKnownIdentities(knownIdentities = gondiPlayers?.map { it.toKnownIdentity() } ?: error("Players cannot be null"), id = accomplice.id)
+                }
+            }
 
             db.updatePendingKills(emptyList())
 
-            when (players.checkWinner()) {
+            when (currentPlayers?.checkWinner()) {
                 Faction.GONDI -> {
                     db.updatePhase(GamePhase.GAME_OVER, 0L, gameId)
                     db.updateWinners(Faction.GONDI)

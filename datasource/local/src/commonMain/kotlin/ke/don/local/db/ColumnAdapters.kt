@@ -21,7 +21,6 @@ import ke.don.domain.state.Vote
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
 
 val json = Json { ignoreUnknownKeys = true }
@@ -142,6 +141,7 @@ val PlayerEntity.toPlayer: Player get() = Player(
     role = this.role?.let { roleAdapter.decode(it) },
     isAlive = booleanAdapter.decode(this.is_alive),
     lastAction = this.last_action?.let { playerActionAdapter.decode(it) },
+    timeOfDeath = this.time_of_death,
     knownIdentities = this.known_identities?.let { knownIdentitiesAdapter.decode(it) } ?: emptyList(),
 )
 
@@ -153,6 +153,7 @@ val Player.toPlayerEntity: PlayerEntity get() = PlayerEntity(
     role = this.role?.let { roleAdapter.encode(it) },
     is_alive = booleanAdapter.encode(this.isAlive),
     known_identities = knownIdentitiesAdapter.encode(this.knownIdentities),
+    time_of_death = this.timeOfDeath,
     last_action = this.lastAction?.let { playerActionAdapter.encode(it) },
 )
 

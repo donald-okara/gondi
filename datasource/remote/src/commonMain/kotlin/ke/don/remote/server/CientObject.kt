@@ -8,6 +8,4 @@ object CientObject {
     val client = HttpClient {
         install(WebSockets)
     }
-
-    suspend fun getWebsocket(host: String, port: String) = client.webSocket("ws://$host:$port/game")
 }
