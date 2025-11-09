@@ -30,9 +30,8 @@ import ke.don.domain.gameplay.ModeratorEngine
 import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.domain.gameplay.server.LanAdvertiser
 import ke.don.domain.gameplay.server.LocalServer
-import ke.don.domain.gameplay.server.ServerMessage
+import ke.don.domain.gameplay.server.ClientUpdate
 import ke.don.domain.gameplay.server.ServerUpdate
-import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.local.db.LocalDatabase
 import ke.don.remote.gameplay.validateIntent
@@ -43,7 +42,9 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
 import java.net.Inet4Address
 import java.net.NetworkInterface
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 
 class LanServerJvm(
     private val advertiser: LanAdvertiser,
@@ -112,7 +113,7 @@ class LanServerJvm(
         moderatorEngine.handle(gameId, command)
 
         // After moderator actions, broadcast updates
-        val newState = database.getCurrentGameState()
+        val newState = database.getGameState(gameId).firstOrNull()
         val players = database.getAllPlayersSnapshot()
         broadcast(ServerUpdate.GameStateSnapshot(newState))
         broadcast(ServerUpdate.PlayersSnapshot(players))
@@ -120,19 +121,20 @@ class LanServerJvm(
         logger.debug("Moderator command executed ✅ ($command)")
     }
 
-    suspend fun DefaultWebSocketServerSession.sendJson(message: ServerMessage) {
+    suspend fun DefaultWebSocketServerSession.sendJson(message: ClientUpdate) {
         send(json.encodeToString(message))
     }
 
+    @OptIn(ExperimentalTime::class)
     private suspend fun DefaultWebSocketServerSession.handleMessage(
         gameId: String,
         json: String,
     ) {
         try {
-            val message = this@LanServerJvm.json.decodeFromString<ServerMessage>(json)
+            val message = this@LanServerJvm.json.decodeFromString<ClientUpdate>(json)
             when (message) {
-                is ServerMessage.PlayerIntentMsg -> {
-                    val currentPhase = database.getCurrentGameState()?.phase ?: return
+                is ClientUpdate.PlayerIntentMsg -> {
+                    val currentPhase = database.getGameState(gameId).firstOrNull()?.phase ?: return
 
                     if (!validateIntent(gameId = gameId, db = database, intent = message.intent, currentPhase = currentPhase)) {
                         send(Json.encodeToString(ServerUpdate.Error("Invalid intent")))
@@ -151,16 +153,19 @@ class LanServerJvm(
                     send(Json.encodeToString(ServerUpdate.Announcement("Intent processed ✅")))
                 }
 
-                is ServerMessage.ModeratorCommandMsg -> {
+                is ClientUpdate.ModeratorCommandMsg -> {
                     handleModeratorCommand(gameId = gameId, message.command)
                 }
 
-                is ServerMessage.GetGameState -> {
+                is ClientUpdate.GetGameState -> {
                     val newState = database.getGameState(id = gameId).firstOrNull()
                     val players = database.getAllPlayersSnapshot()
 
                     send(Json.encodeToString(ServerUpdate.GameStateSnapshot(newState)))
                     send(Json.encodeToString(ServerUpdate.PlayersSnapshot(players)))
+                }
+                is ClientUpdate.Ping -> {
+                    send(Json.encodeToString(ServerUpdate.LastPing(Clock.System.now().toEpochMilliseconds())))
                 }
             }
         } catch (e: Exception) {
@@ -173,8 +178,6 @@ class LanServerJvm(
         sessions.forEach { it.send(Frame.Text(text)) }
     }
 }
-suspend fun LocalDatabase.getCurrentGameState(): GameState? =
-    getAllGameState().firstOrNull()?.first()
 
 suspend fun LocalDatabase.getAllPlayersSnapshot(): List<Player> =
     getAllPlayers().first()

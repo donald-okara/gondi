@@ -59,6 +59,5 @@ class GondiHost(
     }
 
     // Moderator actions
-    suspend fun handleIntent(intent: ModeratorCommand) = server.handleModeratorCommand(gameState.value?.id
-        ?: error("Game state cannot be null"), intent)
+    suspend fun handleIntent(intent: ModeratorCommand) = server.handleModeratorCommand(gameState.value?.id ?: error("Game state cannot be null"), intent)
 }

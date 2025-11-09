@@ -17,18 +17,14 @@ import ke.don.domain.state.Vote
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class ServerMessage {
-    @Serializable data class PlayerIntentMsg(val intent: PlayerIntent) : ServerMessage()
+sealed class ClientUpdate {
+    @Serializable data class PlayerIntentMsg(val intent: PlayerIntent) : ClientUpdate()
 
-    @Serializable data class ModeratorCommandMsg(val gameId: String, val command: ModeratorCommand) : ServerMessage()
+    @Serializable data class ModeratorCommandMsg(val gameId: String, val command: ModeratorCommand) : ClientUpdate()
 
-    @Serializable object GetGameState : ServerMessage()
-}
+    @Serializable object GetGameState : ClientUpdate()
 
-@Serializable
-sealed class ClientMessage {
-    data class Intent(val intent: PlayerIntent) : ClientMessage()
-    object Ping : ClientMessage()
+    @Serializable object Ping : ClientUpdate()
 }
 
 @Serializable
@@ -47,7 +43,9 @@ sealed class ServerUpdate {
 
     /** Sent for general info (phase change, winner declared, etc.). */
     @Serializable
-    data class Announcement(val message: String) : ServerUpdate()
+    data class Announcement(val message: String) : ServerUpdate()@Serializable
+
+    data class LastPing(val long: Long) : ServerUpdate()
 
     /** Sent for invalid intents or errors. */
     @Serializable

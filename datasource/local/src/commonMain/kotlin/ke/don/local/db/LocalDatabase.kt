@@ -79,7 +79,10 @@ class LocalDatabase(
 
     fun saveAction(playerAction: PlayerAction) = database.transaction {
         stateQueries.updateLastSaved(lastSavedPlayer = playerAction.targetId)
-        playersQueries.updateLastAction(last_action = playerActionAdapter.encode(playerAction), id = playerAction.playerId ?: "PlayerId cannot be null")
+        playersQueries.updateLastAction(
+            last_action = playerActionAdapter.encode(playerAction),
+            id = playerAction.playerId ?: error("PlayerId cannot be null")
+        )
     }
 
     fun updateLastSaved(id: String?) = stateQueries.updateLastSaved(lastSavedPlayer = id)

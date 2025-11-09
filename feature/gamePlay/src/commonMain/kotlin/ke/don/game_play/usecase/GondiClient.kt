@@ -15,8 +15,7 @@ import io.ktor.client.plugins.websocket.*
 import io.ktor.websocket.*
 import ke.don.components.helpers.Matcha
 import ke.don.domain.gameplay.PlayerIntent
-import ke.don.domain.gameplay.server.ClientMessage
-import ke.don.domain.gameplay.server.ServerMessage
+import ke.don.domain.gameplay.server.ClientUpdate
 import ke.don.domain.gameplay.server.ServerUpdate
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
@@ -26,6 +25,8 @@ import ke.don.utils.Logger
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlinx.serialization.json.Json
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class GondiClient() : ScreenModel {
 
@@ -39,6 +40,10 @@ class GondiClient() : ScreenModel {
 
     private val _votes = MutableStateFlow<List<Vote>>(emptyList())
     val votes: StateFlow<List<Vote>> = _votes.asStateFlow()
+
+    @OptIn(ExperimentalTime::class)
+    private val _lastPing = MutableStateFlow(Clock.System.now().toEpochMilliseconds())
+    val lastPing: StateFlow<Long> = _lastPing.asStateFlow()
 
     private var session: DefaultClientWebSocketSession? = null
 
@@ -72,6 +77,9 @@ class GondiClient() : ScreenModel {
                                     description = update.message,
                                 )
                             }
+                            is ServerUpdate.LastPing -> _lastPing.update {
+                                update.long
+                            }
                         }
                     }
                 }
@@ -81,7 +89,7 @@ class GondiClient() : ScreenModel {
 
     fun sendIntent(intent: PlayerIntent) {
         screenModelScope.launch {
-            val message = ServerMessage.PlayerIntentMsg(intent)
+            val message = ClientUpdate.PlayerIntentMsg(intent)
             session?.send(Frame.Text(Json.encodeToString(message)))
                 ?: logger.error("⚠️ Not connected to server")
         }
@@ -97,7 +105,7 @@ class GondiClient() : ScreenModel {
     fun startPing() = screenModelScope.launch {
         while (true) {
             delay(10_000)
-            session?.send(Frame.Text(Json.encodeToString(ClientMessage.Ping)))
+            session?.send(Frame.Text(Json.encodeToString(ClientUpdate.Ping)))
         }
     }
 }
