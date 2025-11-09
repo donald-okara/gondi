@@ -12,7 +12,7 @@ The game uses Supabase for profile management and high score tracking (at least 
 
 The first step is creating your Supabase project, copying your `SUPABASE_URL` and `ANON_KEY`, and adding them to your `local.properties` in your forked project:
 
-```
+```properties
 SUPABASE_KEY=ey*******
 SUPABASE_URL=https://*****.supabase.co
 ```
