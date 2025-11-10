@@ -48,6 +48,8 @@ class GondiClient() : ScreenModel {
     private var session: DefaultClientWebSocketSession? = null
 
     fun connect(host: String, port: Int) = screenModelScope.launch {
+        session?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnecting"))
+
         client.webSocket("ws://$host:$port/game") {
             session = this
             logger.info("Connected ✅")

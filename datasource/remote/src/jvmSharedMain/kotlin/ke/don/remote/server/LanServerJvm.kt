@@ -72,7 +72,7 @@ class LanServerJvm(
             install(WebSockets) {
                 pingPeriod = 15.seconds
                 timeout = 30.seconds
-                maxFrameSize = Long.MAX_VALUE
+                maxFrameSize = 10 * 1024 * 1024  // 10MB
                 masking = false
             }
 
