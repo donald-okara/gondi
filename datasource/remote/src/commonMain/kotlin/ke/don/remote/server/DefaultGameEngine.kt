@@ -19,7 +19,7 @@ import ke.don.utils.Logger
 import kotlinx.coroutines.flow.firstOrNull
 
 class DefaultGameEngine(
-    private val db: LocalDatabase
+    private val db: LocalDatabase,
 ) : GameEngine {
     val logger = Logger("DefaultGameEngine")
     override suspend fun reduce(gameId: String, intent: PlayerIntent) {
@@ -39,7 +39,7 @@ class DefaultGameEngine(
                     playerId = intent.playerId,
                     targetId = intent.targetId,
                 ),
-                gameId = gameId
+                gameId = gameId,
             )
             is PlayerIntent.Accuse -> db.accusePlayer(
                 PlayerAction(
