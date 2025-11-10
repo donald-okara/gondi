@@ -35,6 +35,7 @@ import ke.don.domain.gameplay.server.ServerUpdate
 import ke.don.domain.state.Player
 import ke.don.local.db.LocalDatabase
 import ke.don.remote.gameplay.validateIntent
+import ke.don.remote.gameplay.validationMessage
 import ke.don.utils.Logger
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.firstOrNull
@@ -132,10 +133,8 @@ class LanServerJvm(
             val message = this@LanServerJvm.json.decodeFromString<ClientUpdate>(json)
             when (message) {
                 is ClientUpdate.PlayerIntentMsg -> {
-                    val currentPhase = database.getGameState(gameId).firstOrNull()?.phase ?: return
-
-                    if (!validateIntent(gameId = gameId, db = database, intent = message.intent, currentPhase = currentPhase)) {
-                        send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.Error("Invalid intent")))
+                    if (!validateIntent(gameId = gameId, db = database, intent = message.intent)) {
+                        send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.Error(message.intent.validationMessage)))
                         return
                     }
 

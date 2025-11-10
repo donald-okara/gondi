@@ -14,6 +14,7 @@ import ke.don.local.db.GondiDatabase
 import ke.don.local.db.JVMDatabaseFactory
 import ke.don.local.db.LocalDatabase
 import ke.don.remote.gameplay.validateIntent
+import ke.don.remote.server.DefaultGameEngine
 import ke.don.utils.Logger
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -34,6 +35,129 @@ abstract class BaseGameTest {
         revealEliminatedPlayer = false
     )
 
+    val player1 = Player(
+        id = "player1",
+        role = null,
+        isAlive = true,
+        lastAction = null,
+        knownIdentities = emptyList(),
+        avatar = Avatar.Christian,
+        name = "Otis",
+        timeOfDeath = null,
+        background = AvatarBackground.GREEN_EMERALD
+    )
+    val player2 = Player(
+        id = "player2",
+        role = null,
+        isAlive = true,
+        lastAction = null,
+        knownIdentities = emptyList(),
+        avatar = Avatar.Leo,
+        name = "Noah",
+        timeOfDeath = null,
+        background = AvatarBackground.PURPLE_ORCHID
+    )
+    val player3 = Player(
+        id = "player3",
+        role = null,
+        isAlive = true,
+        lastAction = null,
+        knownIdentities = emptyList(),
+        avatar = Avatar.Adrian,
+        name = "Kellen",
+        timeOfDeath = null,
+        background = AvatarBackground.PURPLE_ORCHID
+    )
+    val player4 = Player(
+        id = "player4",
+        role = null,
+        isAlive = true,
+        lastAction = null,
+        knownIdentities = emptyList(),
+        avatar = Avatar.Amaya,
+        name = "Elliot",
+        timeOfDeath = null,
+        background = AvatarBackground.PURPLE_ORCHID
+    )
+    val player5 = Player(
+        id = "player5",
+        role = null,
+        isAlive = true,
+        lastAction = null,
+        knownIdentities = emptyList(),
+        avatar = Avatar.Ryker,
+        name = "Julian",
+        timeOfDeath = null,
+        background = AvatarBackground.PURPLE_LILAC
+    )
+    val player6 = Player(
+        id = "player6",
+        role = null,
+        isAlive = true,
+        lastAction = null,
+        knownIdentities = emptyList(),
+        avatar = Avatar.George,
+        name = "Theodore",
+        timeOfDeath = null,
+        background = AvatarBackground.YELLOW_SUNNY
+    )
+    val player7 = Player(
+        id = "player7",
+        role = null,
+        isAlive = true,
+        lastAction = null,
+        knownIdentities = emptyList(),
+        avatar = Avatar.Nolan,
+        name = "Levi",
+        timeOfDeath = null,
+        background = AvatarBackground.PINK_HOT
+    )
+    val player8 = Player(
+        id = "player8",
+        role = null,
+        isAlive = true,
+        lastAction = null,
+        knownIdentities = emptyList(),
+        avatar = Avatar.Sawyer,
+        name = "Arthur",
+        timeOfDeath = null,
+        background = AvatarBackground.YELLOW_SUNNY
+    )
+    val player9 = Player(
+        id = "player9",
+        role = null,
+        isAlive = true,
+        lastAction = null,
+        knownIdentities = emptyList(),
+        avatar = Avatar.Aidan,
+        name = "Jasper",
+        timeOfDeath = null,
+        background = AvatarBackground.PURPLE_LILAC
+    )
+    val player10 = Player(
+        id = "player10",
+        role = null,
+        isAlive = true,
+        lastAction = null,
+        knownIdentities = emptyList(),
+        avatar = Avatar.George,
+        name = "Asher",
+        timeOfDeath = null,
+        background = AvatarBackground.PURPLE_ORCHID
+    )
+
+    val batchUpdateRoles= listOf(
+        player1.copy(role = Role.VILLAGER),
+        player2.copy(role = Role.VILLAGER),
+        player3.copy(role = Role.VILLAGER),
+        player4.copy(role = Role.VILLAGER),
+        player5.copy(role = Role.VILLAGER),
+        player6.copy(role = Role.DOCTOR),
+        player7.copy(role = Role.ACCOMPLICE),
+        player8.copy(role = Role.DETECTIVE),
+        player9.copy(role = Role.GONDI),
+        player10.copy(role = Role.GONDI)
+    )
     @Before
     fun setupDb() = runBlocking {
         db = createDb()
@@ -49,33 +173,19 @@ abstract class BaseGameTest {
 
 
     private fun prepopulateDb() {
-        db.insertOrReplacePlayer(
-            Player(
-                id = "player1",
-                role = Role.VILLAGER,
-                isAlive = true,
-                lastAction = null,
-                knownIdentities = emptyList(),
-                avatar = Avatar.Christian,
-                name = "Otis",
-                timeOfDeath = null,
-                background = AvatarBackground.GREEN_EMERALD
-            )
-        )
-        db.insertOrReplacePlayer(
-            Player(
-                id = "player2",
-                role = Role.GONDI,
-                isAlive = true,
-                lastAction = null,
-                knownIdentities = emptyList(),
-                avatar = Avatar.Leo,
-                name = "Noah",
-                timeOfDeath = null,
-                background = AvatarBackground.PURPLE_ORCHID
-            )
-        )
-        db.insertOrReplaceGameState( gameState )
+        db.transaction{
+            db.insertOrReplacePlayer(player1)
+            db.insertOrReplacePlayer(player2)
+            db.insertOrReplacePlayer(player3)
+            db.insertOrReplacePlayer(player4)
+            db.insertOrReplacePlayer(player5)
+            db.insertOrReplacePlayer(player6)
+            db.insertOrReplacePlayer(player7)
+            db.insertOrReplacePlayer(player8)
+            db.insertOrReplacePlayer(player9)
+            db.insertOrReplacePlayer(player10)
+            db.insertOrReplaceGameState(gameState)
+        }
     }
 
     fun createDb(): LocalDatabase {
@@ -88,15 +198,13 @@ abstract class BaseGameTest {
     suspend fun executeValidated(
         engine: GameEngine,
         intent: PlayerIntent,
-        currentPhase: GamePhase
     ) {
-        val logger = Logger("executeValidated")
-        if (validateIntent(db, gameState.id, intent, currentPhase)) {
+        val logger = Logger("Validation")
+        if (validateIntent(db, gameState.id, intent)) {
             engine.reduce(gameState.id, intent)
         } else {
-            val error = "Invalid intent for player ${intent.playerId} in phase $currentPhase"
+            val error = "Invalid intent for player ${intent.playerId}"
             logger.error(error)
-            throw IllegalArgumentException(error)
         }
     }
 }

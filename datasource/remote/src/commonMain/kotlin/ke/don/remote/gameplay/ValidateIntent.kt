@@ -20,15 +20,17 @@ suspend fun validateIntent(
     db: LocalDatabase,
     gameId: String,
     intent: PlayerIntent,
-    currentPhase: GamePhase,
 ): Boolean {
     val players = db.getAllPlayers().firstOrNull() ?: return false
     val gameState = db.getGameState(gameId).firstOrNull() ?: return false
+    val votes = db.getAllVotes().firstOrNull() ?: return false
+    val phase = gameState.phase
     val accused = gameState.accusedPlayer
+    val lastSaved = gameState.lastSavedPlayerId
 
     // Handle Join separately — player may not exist in DB yet
     if (intent is PlayerIntent.Join) {
-        return currentPhase == GamePhase.LOBBY && players.none { it.role != null }
+        return phase == GamePhase.LOBBY && players.none { it.role != null }
     }
 
     // For all other intents, fetch the player
@@ -36,21 +38,62 @@ suspend fun validateIntent(
     val role = player.role
 
     return when (intent) {
-        is PlayerIntent.Kill -> player.isAlive && role?.faction == Faction.GONDI && currentPhase == GamePhase.SLEEP && role.canActInSleep
-        is PlayerIntent.Save -> player.isAlive && role == Role.DOCTOR && currentPhase == GamePhase.SLEEP && role.canActInSleep
-        is PlayerIntent.Investigate -> player.isAlive && role == Role.DETECTIVE && currentPhase == GamePhase.SLEEP && role.canActInSleep
-        is PlayerIntent.Second ->
+        is PlayerIntent.Kill ->
             player.isAlive &&
-                role?.canAccuse == true && role.canVote && currentPhase == GamePhase.TOWN_HALL && accused?.targetId == intent.targetId && accused.playerId != intent.playerId
+                    role?.faction == Faction.GONDI
+                    && phase == GamePhase.SLEEP &&
+                    intent.playerId != intent.targetId &&
+                    role.canActInSleep
+
+        is PlayerIntent.Save ->
+            player.isAlive &&
+                    role == Role.DOCTOR &&
+                    phase == GamePhase.SLEEP &&
+                    lastSaved != intent.targetId &&
+                    role.canActInSleep
+
+        is PlayerIntent.Investigate ->
+            player.isAlive &&
+                    role == Role.DETECTIVE &&
+                    phase == GamePhase.SLEEP &&
+                    role.canActInSleep
+
         is PlayerIntent.Accuse ->
             player.isAlive &&
-                role?.canAccuse == true && role.canVote && currentPhase == GamePhase.TOWN_HALL
+                    role?.canAccuse == true &&
+                    role.canVote &&
+                    phase == GamePhase.TOWN_HALL &&
+                    player.id != intent.targetId &&
+                    intent.playerId == player.id
+
+        is PlayerIntent.Second ->
+            player.isAlive &&
+                    role?.canAccuse == true &&
+                    role.canVote &&
+                    phase == GamePhase.TOWN_HALL &&
+                    accused?.targetId == intent.targetId &&
+                    intent.playerId != intent.targetId &&
+                    accused.playerId != intent.playerId
+
         is PlayerIntent.Vote ->
             player.isAlive &&
-                role?.canVote == true &&
-                gameState.accusedPlayer?.targetId == intent.vote.targetId &&
-                player.id != intent.vote.targetId &&
-                currentPhase == GamePhase.COURT
+                    role?.canVote == true &&
+                    gameState.accusedPlayer?.targetId == intent.vote.targetId &&
+                    player.id != intent.vote.targetId &&
+                    phase == GamePhase.COURT &&
+                    votes.filter { it.targetId == intent.vote.targetId }.size < 2
+
         else -> false
     }
 }
+
+val PlayerIntent.validationMessage
+    get() = when (this) {
+        is PlayerIntent.Accuse -> "You are not allowed to accuse this player."
+        is PlayerIntent.Investigate -> "You cannot investigate this player at this time."
+        is PlayerIntent.Join -> "You cannot join the game at this time."
+        is PlayerIntent.Kill -> "You are not allowed to kill this player."
+        is PlayerIntent.Save -> "You are not allowed to save this player."
+        is PlayerIntent.Second -> "You cannot second this accusation."
+        is PlayerIntent.Vote -> "You cannot vote at this time."
+    }

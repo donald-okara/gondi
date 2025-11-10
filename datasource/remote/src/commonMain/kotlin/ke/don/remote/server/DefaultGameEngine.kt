@@ -25,6 +25,7 @@ class DefaultGameEngine(
     override suspend fun reduce(gameId: String, intent: PlayerIntent) {
         when (intent) {
             is PlayerIntent.Join -> db.insertOrReplacePlayer(intent.player)
+
             is PlayerIntent.Kill -> db.killAction(
                 PlayerAction(
                     type = ActionType.KILL,
@@ -41,6 +42,31 @@ class DefaultGameEngine(
                 ),
                 gameId = gameId,
             )
+
+            is PlayerIntent.Investigate -> {
+            val target = db.getPlayerById(intent.targetId).firstOrNull()
+            val investigator = db.getPlayerById(intent.playerId).firstOrNull()
+
+            if (target == null || target.role == null) {
+                logger.error("Target player missing or has no role")
+                return
+            }
+
+            if (investigator == null) {
+                logger.error("Investigator not found")
+                return
+            }
+
+            val updatedKnown = investigator.knownIdentities
+                .plus(KnownIdentity(playerId = target.id, role = target.role!!))
+                .distinctBy { it.playerId } // prevent duplicates
+
+            db.updateKnownIdentities(
+                id = investigator.id,
+                knownIdentities = updatedKnown,
+            )
+        }
+
             is PlayerIntent.Accuse -> db.accusePlayer(
                 PlayerAction(
                     type = ActionType.ACCUSE,
@@ -50,29 +76,6 @@ class DefaultGameEngine(
                 gameId,
             )
 
-            is PlayerIntent.Investigate -> {
-                val target = db.getPlayerById(intent.targetId).firstOrNull()
-                val investigator = db.getPlayerById(intent.playerId).firstOrNull()
-
-                if (target == null || target.role == null) {
-                    logger.error("Target player missing or has no role")
-                    return
-                }
-
-                if (investigator == null) {
-                    logger.error("Investigator not found")
-                    return
-                }
-
-                val updatedKnown = investigator.knownIdentities
-                    .plus(KnownIdentity(playerId = target.id, role = target.role!!))
-                    .distinctBy { it.playerId } // prevent duplicates
-
-                db.updateKnownIdentities(
-                    id = investigator.id,
-                    knownIdentities = updatedKnown,
-                )
-            }
             is PlayerIntent.Second -> gameId.let {
                 db.secondPlayer(
                     PlayerAction(
