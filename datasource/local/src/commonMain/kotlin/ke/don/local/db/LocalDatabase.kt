@@ -94,6 +94,8 @@ class LocalDatabase(
 
     fun accusePlayer(accusedPlayer: PlayerAction, id: String) = stateQueries.accusePlayer(playerActionAdapter.encode(accusedPlayer), id)
 
+    fun clearAccused(gameId: String) = stateQueries.accusePlayer(null, gameId)
+
     fun secondPlayer(accusedPlayer: PlayerAction, id: String) = stateQueries.secondPlayer(playerActionAdapter.encode(accusedPlayer), id)
 
     fun clearGameState() = stateQueries.clearGameState()

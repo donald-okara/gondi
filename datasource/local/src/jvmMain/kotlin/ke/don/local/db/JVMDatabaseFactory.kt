@@ -23,4 +23,10 @@ class JVMDatabaseFactory : DatabaseFactory {
 
         return driver
     }
+
+    fun createInMemoryDriver(): SqlDriver {
+        val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
+        GondiDatabase.Schema.create(driver)
+        return driver
+    }
 }

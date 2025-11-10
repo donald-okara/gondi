@@ -17,6 +17,9 @@ import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.local.db.LocalDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -56,4 +59,14 @@ class GondiHost(
 
     // Moderator actions
     suspend fun handleIntent(intent: ModeratorCommand) = server.handleModeratorCommand(gameState.value?.id ?: error("Game state cannot be null"), intent)
+
+    override fun onDispose() {
+        super.onDispose()
+        database.clearPlayers()
+        database.clearGameState()
+        database.clearVotes()
+        CoroutineScope(Dispatchers.IO).launch {
+            server.stop()
+        }
+    }
 }

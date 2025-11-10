@@ -35,13 +35,6 @@ import kotlin.test.assertTrue
 
 class LocalDatabaseTest {
 
-    private fun createDb(): LocalDatabase {
-        val driver = createInMemoryDriver() // your helper for in-memory SQLDelight
-        return LocalDatabase(object : DatabaseFactory {
-            override fun createDriver() = driver
-        })
-    }
-
     private val logger = Logger(LocalDatabaseTest::class.java.simpleName)
 
     /** -------------------- GAMESTATE -------------------- **/

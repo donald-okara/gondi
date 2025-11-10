@@ -144,6 +144,8 @@ class DefaultModeratorEngine(
             }
 
             db.updatePendingKills(emptyList())
+            db.clearVotes()
+            db.clearAccused(gameId)
         }
 
         val updatedPlayers = players.firstOrNull()
