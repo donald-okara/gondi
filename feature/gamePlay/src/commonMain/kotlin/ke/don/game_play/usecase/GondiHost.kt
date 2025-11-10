@@ -9,6 +9,8 @@
  */
 package ke.don.game_play.usecase
 
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.server.LocalServer
 import ke.don.domain.state.GameState
@@ -25,9 +27,7 @@ import kotlinx.coroutines.launch
 class GondiHost(
     private val server: LocalServer,
     private val database: LocalDatabase,
-) {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-
+): ScreenModel {
     private val _gameState = MutableStateFlow<GameState?>(null)
     val gameState: StateFlow<GameState?> = _gameState
 
@@ -39,19 +39,19 @@ class GondiHost(
 
 
     private fun observeDatabase(gameId: String) {
-        scope.launch {
+        screenModelScope.launch {
             database.getGameState(gameId).collect { rows ->
                 _gameState.value = rows
             }
         }
 
-        scope.launch {
+        screenModelScope.launch {
             database.getAllPlayers().collect { rows ->
                 _players.value = rows
             }
         }
 
-        scope.launch {
+        screenModelScope.launch {
             database.getAllVotes().collect { rows ->
                 _votes.value = rows
             }

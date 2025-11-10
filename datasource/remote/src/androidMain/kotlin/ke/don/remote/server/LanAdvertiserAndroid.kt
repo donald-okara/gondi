@@ -34,7 +34,7 @@ class LanAdvertiserAndroid(
             setAttribute("id", gameIdentity.id)
             setAttribute("mod_name", gameIdentity.moderatorName)
             setAttribute("background", gameIdentity.moderatorAvatarBackground.name)
-            setAttribute("mod_avatar", gameIdentity.moderatorAvatar?.name)
+            gameIdentity.moderatorAvatar?.let { setAttribute("mod_avatar", it.name) }
         }
 
         registrationListener = object : NsdManager.RegistrationListener {

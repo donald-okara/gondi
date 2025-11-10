@@ -31,6 +31,7 @@ class LanDiscoveryAndroid(
         serviceType: String,
         onDiscovered: (GameIdentity) -> Unit,
     ) {
+        stop()
         discoveryListener = object : NsdManager.DiscoveryListener {
 
             override fun onDiscoveryStarted(type: String?) {
