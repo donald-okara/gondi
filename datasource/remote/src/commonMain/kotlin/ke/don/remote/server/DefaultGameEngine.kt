@@ -18,7 +18,9 @@ import ke.don.local.db.LocalDatabase
 import ke.don.utils.Logger
 import kotlinx.coroutines.flow.firstOrNull
 
-class DefaultGameEngine(private val db: LocalDatabase) : GameEngine {
+class DefaultGameEngine(
+    private val db: LocalDatabase
+) : GameEngine {
     val logger = Logger("DefaultGameEngine")
     override suspend fun reduce(gameId: String, intent: PlayerIntent) {
         when (intent) {
