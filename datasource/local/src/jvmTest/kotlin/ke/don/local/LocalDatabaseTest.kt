@@ -338,7 +338,7 @@ class LocalDatabaseTest {
 
     @Test
     fun testUpdateLastAction_setsPlayerAction() = runTest {
-        val db = createDb()  // fresh DB per test
+        val db = createDb() // fresh DB per test
 
         val player = Player(
             id = "p1",
@@ -361,7 +361,6 @@ class LocalDatabaseTest {
         assertEquals(action.type, fetched.lastAction?.type)
         assertEquals(action.playerId, fetched.lastAction?.playerId)
         assertEquals(action.targetId, fetched.lastAction?.targetId)
-
     }
 
     @Test

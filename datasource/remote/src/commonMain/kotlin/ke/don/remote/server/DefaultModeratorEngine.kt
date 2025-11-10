@@ -131,14 +131,14 @@ class DefaultModeratorEngine(
                 gondiPlayers?.forEach { player ->
                     db.updateKnownIdentities(
                         knownIdentities = gondiPlayers.map { it.toKnownIdentity() },
-                        id = player.id
+                        id = player.id,
                     )
                 }
                 accomplices?.forEach { accomplice ->
                     db.updateKnownIdentities(
                         knownIdentities = gondiPlayers?.map { it.toKnownIdentity() }
                             ?: error("Players cannot be null"),
-                        id = accomplice.id
+                        id = accomplice.id,
                     )
                 }
             }
@@ -164,5 +164,4 @@ class DefaultModeratorEngine(
             else -> db.updatePhase(phase, round + 1, gameId)
         }
     }
-
 }

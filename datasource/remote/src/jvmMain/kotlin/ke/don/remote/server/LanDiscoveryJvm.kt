@@ -16,7 +16,6 @@ import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.utils.Logger
 import java.net.InetAddress
-import java.net.NetworkInterface
 import javax.jmdns.JmDNS
 import javax.jmdns.ServiceEvent
 import javax.jmdns.ServiceInfo

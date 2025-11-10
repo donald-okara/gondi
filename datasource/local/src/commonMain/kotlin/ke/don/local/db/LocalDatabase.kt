@@ -81,7 +81,7 @@ class LocalDatabase(
         stateQueries.updateLastSaved(lastSavedPlayer = playerAction.targetId)
         playersQueries.updateLastAction(
             last_action = playerActionAdapter.encode(playerAction),
-            id = playerAction.playerId ?: error("PlayerId cannot be null")
+            id = playerAction.playerId ?: error("PlayerId cannot be null"),
         )
     }
 
@@ -130,12 +130,11 @@ class LocalDatabase(
 
     @OptIn(ExperimentalTime::class)
     fun updateAliveStatus(isAlive: Boolean, ids: List<String>) = database.transaction {
-
         ids.forEach { id ->
             playersQueries.updateAliveStatus(booleanAdapter.encode(isAlive), id)
             playersQueries.updateTimeOfDeath(
                 if (isAlive) null else Clock.System.now().toEpochMilliseconds(),
-                id
+                id,
             )
         }
     }

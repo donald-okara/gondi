@@ -27,10 +27,10 @@ import io.ktor.websocket.send
 import ke.don.domain.gameplay.GameEngine
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.ModeratorEngine
+import ke.don.domain.gameplay.server.ClientUpdate
 import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.domain.gameplay.server.LanAdvertiser
 import ke.don.domain.gameplay.server.LocalServer
-import ke.don.domain.gameplay.server.ClientUpdate
 import ke.don.domain.gameplay.server.ServerUpdate
 import ke.don.domain.state.Player
 import ke.don.local.db.LocalDatabase
@@ -69,7 +69,7 @@ class LanServerJvm(
             install(WebSockets) {
                 pingPeriod = 15.seconds
                 timeout = 30.seconds
-                maxFrameSize = 10 * 1024 * 1024  // 10MB
+                maxFrameSize = 10 * 1024 * 1024 // 10MB
                 masking = false
             }
 
@@ -173,4 +173,3 @@ class LanServerJvm(
 
 suspend fun LocalDatabase.getAllPlayersSnapshot(): List<Player> =
     getAllPlayers().firstOrNull() ?: emptyList()
-

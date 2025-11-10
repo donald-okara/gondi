@@ -52,7 +52,6 @@ class LanAdvertiserJvm : LanAdvertiser {
                 txtRecord,
             )
 
-
             jmdns?.registerService(serviceInfo)
             logger.info("📡 Advertised '${gameIdentity.gameName}' by ${gameIdentity.moderatorName} on ${ip.hostAddress}:${gameIdentity.servicePort}")
         } catch (e: Exception) {

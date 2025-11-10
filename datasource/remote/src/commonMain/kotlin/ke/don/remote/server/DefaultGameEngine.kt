@@ -67,7 +67,7 @@ class DefaultGameEngine(private val db: LocalDatabase) : GameEngine {
 
                 db.updateKnownIdentities(
                     id = investigator.id,
-                    knownIdentities = updatedKnown
+                    knownIdentities = updatedKnown,
                 )
             }
             is PlayerIntent.Second -> gameId.let {

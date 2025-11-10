@@ -39,11 +39,14 @@ suspend fun validateIntent(
         is PlayerIntent.Kill -> player.isAlive && role?.faction == Faction.GONDI && currentPhase == GamePhase.SLEEP && role.canActInSleep
         is PlayerIntent.Save -> player.isAlive && role == Role.DOCTOR && currentPhase == GamePhase.SLEEP && role.canActInSleep
         is PlayerIntent.Investigate -> player.isAlive && role == Role.DETECTIVE && currentPhase == GamePhase.SLEEP && role.canActInSleep
-        is PlayerIntent.Second -> player.isAlive &&
+        is PlayerIntent.Second ->
+            player.isAlive &&
                 role?.canAccuse == true && role.canVote && currentPhase == GamePhase.TOWN_HALL && accused?.targetId == intent.targetId && accused.playerId != intent.playerId
-        is PlayerIntent.Accuse -> player.isAlive &&
+        is PlayerIntent.Accuse ->
+            player.isAlive &&
                 role?.canAccuse == true && role.canVote && currentPhase == GamePhase.TOWN_HALL
-        is PlayerIntent.Vote -> player.isAlive &&
+        is PlayerIntent.Vote ->
+            player.isAlive &&
                 role?.canVote == true &&
                 gameState.accusedPlayer?.targetId == intent.vote.targetId &&
                 player.id != intent.vote.targetId &&

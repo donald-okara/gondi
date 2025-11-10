@@ -93,7 +93,6 @@ class GondiClient() : ScreenModel {
         _votes.value = emptyList()
     }
 
-
     private fun CoroutineScope.connectWithRetry(host: String, port: Int, maxRetries: Int = 5) = launch {
         var attempt = 0
         while (isActive && attempt < maxRetries) {
@@ -107,7 +106,6 @@ class GondiClient() : ScreenModel {
             }
         }
     }
-
 
     private suspend fun connectOnce(host: String, port: Int) {
         session?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnecting"))
@@ -130,8 +128,6 @@ class GondiClient() : ScreenModel {
         }
     }
 
-
-
     private fun handleServerUpdate(json: String) {
         val update = Json.decodeFromString<ServerUpdate>(json)
         when (update) {
@@ -149,5 +145,4 @@ class GondiClient() : ScreenModel {
             is ServerUpdate.LastPing -> _lastPing.update { update.long }
         }
     }
-
 }
