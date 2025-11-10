@@ -23,6 +23,11 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+    androidTestImplementation(libs.screengrab)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.testExt.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
 }
 
 compose.desktop {
