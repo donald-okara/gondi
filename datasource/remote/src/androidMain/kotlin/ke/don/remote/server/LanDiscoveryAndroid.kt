@@ -113,5 +113,6 @@ class LanDiscoveryAndroid(
             nsdManager.stopServiceDiscovery(it)
             logger.info("🛑 Stopped LAN service discovery")
         }
+        discoveryListener = null
     }
 }
