@@ -18,12 +18,24 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class ClientUpdate {
+    /**
+     * A message sent from the client to the server representing a player's intended action.
+     * This is the primary way a player interacts with the game, such as voting, using abilities, etc.
+     *
+     * @property intent The specific action the player wants to perform.
+     */
     @Serializable data class PlayerIntentMsg(val intent: PlayerIntent) : ClientUpdate()
 
-    @Serializable data class ModeratorCommandMsg(val gameId: String, val command: ModeratorCommand) : ClientUpdate()
-
+    /**
+     * A message from a client requesting the full current [GameState].
+     * The server should respond with a [ServerUpdate.GameStateSnapshot].
+     */
     @Serializable object GetGameState : ClientUpdate()
 
+    /**
+     * A keep-alive message sent from the client to the server to maintain the connection
+     * and measure latency. The server may respond with a [ServerUpdate.LastPing].
+     */
     @Serializable object Ping : ClientUpdate()
 }
 
@@ -43,8 +55,9 @@ sealed class ServerUpdate {
 
     /** Sent for general info (phase change, winner declared, etc.). */
     @Serializable
-    data class Announcement(val message: String) : ServerUpdate()@Serializable
+    data class Announcement(val message: String) : ServerUpdate()
 
+    @Serializable
     data class LastPing(val long: Long) : ServerUpdate()
 
     /** Sent for invalid intents or errors. */

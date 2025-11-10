@@ -31,7 +31,7 @@ updateTimeOfDeath:
 UPDATE playerEntity SET time_of_death = :timeOfDeath WHERE id = :id;
 
 updatePlayerRole:
-UPDATE playerEntity SET role = : role WHERE id = :id;
+UPDATE playerEntity SET role = :role WHERE id = :id;
 
 updateLastAction:
 UPDATE playerEntity SET last_action = :last_action WHERE id = :id;

@@ -41,10 +41,10 @@ toggleRevealFlag:
 UPDATE gameStateEntity SET reveal_eliminated_player = :flag WHERE id = :id;
 
 accusePlayer:
-UPDATE gameStateEntity SET accused_player = : accused WHERE id = : id;
+UPDATE gameStateEntity SET accused_player = :accused WHERE id = : id;
 
 secondPlayer:
-UPDATE gameStateEntity SET second = : second WHERE id = : id;
+UPDATE gameStateEntity SET second = :second WHERE id = : id;
 
 clearGameState:
 DELETE FROM gameStateEntity;

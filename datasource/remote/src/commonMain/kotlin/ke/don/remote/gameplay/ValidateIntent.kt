@@ -22,49 +22,32 @@ suspend fun validateIntent(
     intent: PlayerIntent,
     currentPhase: GamePhase,
 ): Boolean {
-    val player = db.getPlayerById(intent.playerId).firstOrNull() ?: return false
+    val players = db.getAllPlayers().firstOrNull() ?: return false
     val gameState = db.getGameState(gameId).firstOrNull() ?: return false
     val accused = gameState.accusedPlayer
 
+    // Handle Join separately — player may not exist in DB yet
+    if (intent is PlayerIntent.Join) {
+        return currentPhase == GamePhase.LOBBY && players.none { it.role != null }
+    }
+
+    // For all other intents, fetch the player
+    val player = db.getPlayerById(intent.playerId).firstOrNull() ?: return false
+    val role = player.role
+
     return when (intent) {
-        is PlayerIntent.Join -> currentPhase == GamePhase.LOBBY
-        is PlayerIntent.Kill ->
-            player.isAlive &&
-                currentPhase == GamePhase.SLEEP &&
-                player.role?.faction == Faction.GONDI &&
-                player.role?.canActInSleep == true
-
-        is PlayerIntent.Save ->
-            player.isAlive &&
-                currentPhase == GamePhase.SLEEP &&
-                player.role == Role.DOCTOR &&
-                player.role?.canActInSleep == true
-
-        is PlayerIntent.Investigate ->
-            player.isAlive &&
-                currentPhase == GamePhase.SLEEP &&
-                player.role == Role.DETECTIVE &&
-                player.role?.canActInSleep == true
-
-        is PlayerIntent.Second ->
-            player.isAlive &&
-                player.role?.canAccuse == true &&
-                player.role?.canVote == true &&
-                currentPhase == GamePhase.TOWN_HALL &&
-                accused?.playerId != intent.targetId &&
-                accused?.playerId == intent.playerId
-
-        is PlayerIntent.Accuse ->
-            player.isAlive &&
-                player.role?.canAccuse == true &&
-                player.role?.canVote == true &&
-                currentPhase == GamePhase.TOWN_HALL
-
-        is PlayerIntent.Vote ->
-            player.isAlive &&
-                player.role?.canVote == true &&
+        is PlayerIntent.Kill -> player.isAlive && role?.faction == Faction.GONDI && currentPhase == GamePhase.SLEEP && role.canActInSleep
+        is PlayerIntent.Save -> player.isAlive && role == Role.DOCTOR && currentPhase == GamePhase.SLEEP && role.canActInSleep
+        is PlayerIntent.Investigate -> player.isAlive && role == Role.DETECTIVE && currentPhase == GamePhase.SLEEP && role.canActInSleep
+        is PlayerIntent.Second -> player.isAlive &&
+                role?.canAccuse == true && role.canVote && currentPhase == GamePhase.TOWN_HALL && accused?.targetId == intent.targetId && accused.playerId != intent.playerId
+        is PlayerIntent.Accuse -> player.isAlive &&
+                role?.canAccuse == true && role.canVote && currentPhase == GamePhase.TOWN_HALL
+        is PlayerIntent.Vote -> player.isAlive &&
+                role?.canVote == true &&
                 gameState.accusedPlayer?.targetId == intent.vote.targetId &&
                 player.id != intent.vote.targetId &&
                 currentPhase == GamePhase.COURT
+        else -> false
     }
 }

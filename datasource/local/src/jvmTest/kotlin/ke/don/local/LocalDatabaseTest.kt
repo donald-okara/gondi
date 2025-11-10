@@ -466,10 +466,6 @@ class LocalDatabaseTest {
     }
 
     @Test
-    fun testGetAlivePlayers_returnsOnlyAlivePlayers() = runTest {
-    }
-
-    @Test
     fun testGetAlivePlayers_emitsOnlyAlivePlayers() = runTest {
         // Arrange
         val db = createDb()

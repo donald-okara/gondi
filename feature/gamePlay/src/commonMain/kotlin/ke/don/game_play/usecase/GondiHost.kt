@@ -37,7 +37,6 @@ class GondiHost(
     private val _votes = MutableStateFlow<List<Vote>>(emptyList())
     val votes: StateFlow<List<Vote>> = _votes
 
-
     private fun observeDatabase(gameId: String) {
         screenModelScope.launch {
             database.getGameState(gameId).collect { rows ->

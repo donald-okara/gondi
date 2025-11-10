@@ -37,11 +37,8 @@ import ke.don.local.db.LocalDatabase
 import ke.don.remote.gameplay.validateIntent
 import ke.don.utils.Logger
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
-import java.net.Inet4Address
-import java.net.NetworkInterface
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
@@ -80,13 +77,13 @@ class LanServerJvm(
                 webSocket("/game") {
                     // Register this new client session
                     sessions += this
-                    send(Json.encodeToString(ServerUpdate.Announcement("Connected to Gondi server ✅")))
+                    send(json.encodeToString(ServerUpdate.serializer(), ServerUpdate.Announcement("Connected to Gondi server ✅")))
 
                     try {
                         incoming.consumeEach { frame ->
                             if (frame is Frame.Text) {
                                 val text = frame.readText()
-                                handleMessage(identity.id, text)
+                                handleClientMessage(identity.id, text)
                             }
                         }
                     } finally {
@@ -101,7 +98,7 @@ class LanServerJvm(
             gameIdentity = identity.copy(serviceHost = host),
         )
 
-        logger.debug("✅ LAN WebSocket server started and advertised on ws://$host:${identity.servicePort}/chat")
+        logger.debug("✅ LAN WebSocket server started and advertised on ws://$host:${identity.servicePort}/game")
     }
 
     override suspend fun stop() {
@@ -126,7 +123,7 @@ class LanServerJvm(
     }
 
     @OptIn(ExperimentalTime::class)
-    private suspend fun DefaultWebSocketServerSession.handleMessage(
+    private suspend fun DefaultWebSocketServerSession.handleClientMessage(
         gameId: String,
         json: String,
     ) {
@@ -137,7 +134,7 @@ class LanServerJvm(
                     val currentPhase = database.getGameState(gameId).firstOrNull()?.phase ?: return
 
                     if (!validateIntent(gameId = gameId, db = database, intent = message.intent, currentPhase = currentPhase)) {
-                        send(Json.encodeToString(ServerUpdate.Error("Invalid intent")))
+                        send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.Error("Invalid intent")))
                         return
                     }
 
@@ -150,26 +147,21 @@ class LanServerJvm(
                     broadcast(ServerUpdate.GameStateSnapshot(newState))
                     broadcast(ServerUpdate.PlayersSnapshot(players))
 
-                    send(Json.encodeToString(ServerUpdate.Announcement("Intent processed ✅")))
+                    send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.Announcement("Intent processed ✅")))
                 }
-
-                is ClientUpdate.ModeratorCommandMsg -> {
-                    handleModeratorCommand(gameId = gameId, message.command)
-                }
-
                 is ClientUpdate.GetGameState -> {
                     val newState = database.getGameState(id = gameId).firstOrNull()
                     val players = database.getAllPlayersSnapshot()
 
-                    send(Json.encodeToString(ServerUpdate.GameStateSnapshot(newState)))
-                    send(Json.encodeToString(ServerUpdate.PlayersSnapshot(players)))
+                    send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.GameStateSnapshot(newState)))
+                    send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.PlayersSnapshot(players)))
                 }
                 is ClientUpdate.Ping -> {
-                    send(Json.encodeToString(ServerUpdate.LastPing(Clock.System.now().toEpochMilliseconds())))
+                    send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.LastPing(Clock.System.now().toEpochMilliseconds())))
                 }
             }
         } catch (e: Exception) {
-            send(Json.encodeToString(ServerUpdate.Error("Error: ${e.message}")))
+            send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.Error("Error: ${e.message}")))
         }
     }
 
@@ -180,5 +172,5 @@ class LanServerJvm(
 }
 
 suspend fun LocalDatabase.getAllPlayersSnapshot(): List<Player> =
-    getAllPlayers().first()
+    getAllPlayers().firstOrNull() ?: emptyList()
 

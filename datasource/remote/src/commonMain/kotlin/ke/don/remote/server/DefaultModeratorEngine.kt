@@ -94,8 +94,9 @@ class DefaultModeratorEngine(
         val pendingKills = game.pendingKills
 
         db.transaction {
-            if (!pendingKills.contains(lastSaved)) {
-                db.updateAliveStatus(isAlive = false, ids = pendingKills)
+            val toEliminate = pendingKills.filterNot { it == lastSaved }
+            if (toEliminate.isNotEmpty()) {
+                db.updateAliveStatus(isAlive = false, ids = toEliminate)
             }
             db.updateLastSaved(null)
             db.updatePhase(phase, round, gameId)
@@ -116,13 +117,8 @@ class DefaultModeratorEngine(
         val isGuilty = guiltyVotes > (totalVotes / 2)
 
         val currentPlayers = players.firstOrNull()
-
-        val gondiPlayers = currentPlayers?.filter { player ->
-            player.role == Role.GONDI
-        }
-        val accomplices = currentPlayers?.filter { player ->
-            player.role == Role.ACCOMPLICE
-        }
+        val gondiPlayers = currentPlayers?.filter { it.role == Role.GONDI }
+        val accomplices = currentPlayers?.filter { it.role == Role.ACCOMPLICE }
 
         db.transaction {
             if (isGuilty) {
@@ -130,30 +126,43 @@ class DefaultModeratorEngine(
                     db.updateAliveStatus(false, it)
                 }
             }
+
             if (round == 0L) {
                 gondiPlayers?.forEach { player ->
-                    db.updateKnownIdentities(knownIdentities = gondiPlayers.map { it.toKnownIdentity() }, id = player.id)
+                    db.updateKnownIdentities(
+                        knownIdentities = gondiPlayers.map { it.toKnownIdentity() },
+                        id = player.id
+                    )
                 }
                 accomplices?.forEach { accomplice ->
-                    db.updateKnownIdentities(knownIdentities = gondiPlayers?.map { it.toKnownIdentity() } ?: error("Players cannot be null"), id = accomplice.id)
+                    db.updateKnownIdentities(
+                        knownIdentities = gondiPlayers?.map { it.toKnownIdentity() }
+                            ?: error("Players cannot be null"),
+                        id = accomplice.id
+                    )
                 }
             }
 
             db.updatePendingKills(emptyList())
+        }
 
-            when (currentPlayers?.checkWinner()) {
-                Faction.GONDI -> {
+        val updatedPlayers = players.firstOrNull()
+
+        when (updatedPlayers?.checkWinner()) {
+            Faction.GONDI -> {
+                db.transaction {
                     db.updatePhase(GamePhase.GAME_OVER, 0L, gameId)
                     db.updateWinners(Faction.GONDI)
                 }
-
-                Faction.VILLAGER -> {
+            }
+            Faction.VILLAGER -> {
+                db.transaction {
                     db.updatePhase(GamePhase.GAME_OVER, 0L, gameId)
                     db.updateWinners(Faction.VILLAGER)
                 }
-
-                else -> db.updatePhase(phase, round + 1, gameId)
             }
+            else -> db.updatePhase(phase, round + 1, gameId)
         }
     }
+
 }

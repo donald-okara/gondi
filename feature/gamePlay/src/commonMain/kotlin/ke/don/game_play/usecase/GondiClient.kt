@@ -47,52 +47,15 @@ class GondiClient() : ScreenModel {
 
     private var session: DefaultClientWebSocketSession? = null
 
-    fun connect(host: String, port: Int) = screenModelScope.launch {
+    suspend fun connect(host: String, port: Int) {
         session?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnecting"))
-
-        client.webSocket("ws://$host:$port/game") {
-            session = this
-            logger.info("Connected ✅")
-
-            launch {
-                for (frame in incoming) {
-                    if (frame is Frame.Text) {
-                        val json = frame.readText()
-                        val update = Json.decodeFromString<ServerUpdate>(json)
-                        when (update) {
-                            is ServerUpdate.GameStateSnapshot -> _gameState.value = update.state
-                            is ServerUpdate.PlayersSnapshot -> _players.value = update.players
-                            is ServerUpdate.VotesSnapshot -> _votes.value = update.votes
-                            is ServerUpdate.Error -> {
-                                logger.error("❌ ${update.message}")
-
-                                Matcha.error(
-                                    title = "Error",
-                                    description = update.message,
-                                )
-                            }
-                            is ServerUpdate.Announcement -> {
-                                logger.info("📣 ${update.message}")
-
-                                Matcha.info(
-                                    title = "Announcement",
-                                    description = update.message,
-                                )
-                            }
-                            is ServerUpdate.LastPing -> _lastPing.update {
-                                update.long
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        screenModelScope.connectWithRetry(host, port)
     }
 
     fun sendIntent(intent: PlayerIntent) {
         screenModelScope.launch {
             val message = ClientUpdate.PlayerIntentMsg(intent)
-            session?.send(Frame.Text(Json.encodeToString(message)))
+            session?.send(Frame.Text(Json.encodeToString(ClientUpdate.serializer(), message)))
                 ?: logger.error("⚠️ Not connected to server")
         }
     }
@@ -105,9 +68,86 @@ class GondiClient() : ScreenModel {
     }
 
     fun startPing() = screenModelScope.launch {
-        while (true) {
+        while (isActive && session != null) {
             delay(10_000)
-            session?.send(Frame.Text(Json.encodeToString(ClientUpdate.Ping)))
+            session?.send(Frame.Text(Json.encodeToString(ClientUpdate.serializer(), ClientUpdate.Ping)))
         }
     }
+
+    override fun onDispose() {
+        super.onDispose()
+
+        // Gracefully close any active session
+        CoroutineScope(Dispatchers.IO).launch {
+            session?.close(CloseReason(CloseReason.Codes.NORMAL, "Disposed"))
+        }
+
+        session = null
+
+        // Cancel all running coroutines tied to this model
+        screenModelScope.cancel()
+
+        // Reset state
+        _gameState.value = null
+        _players.value = emptyList()
+        _votes.value = emptyList()
+    }
+
+
+    private fun CoroutineScope.connectWithRetry(host: String, port: Int, maxRetries: Int = 5) = launch {
+        var attempt = 0
+        while (isActive && attempt < maxRetries) {
+            try {
+                connectOnce(host, port)
+                return@launch
+            } catch (e: Exception) {
+                attempt++
+                val delayTime = (attempt * 2_000L).coerceAtMost(10_000L)
+                delay(delayTime)
+            }
+        }
+    }
+
+
+    private suspend fun connectOnce(host: String, port: Int) {
+        session?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnecting"))
+        try {
+            client.webSocket("ws://$host:$port/game") {
+                session = this
+                logger.info("Connected ✅")
+
+                for (frame in incoming) {
+                    if (frame is Frame.Text) handleServerUpdate(frame.readText())
+                }
+            }
+        } catch (e: Exception) {
+            logger.error("Connection error: ${e.message}")
+            throw e // bubble up to retry
+        } finally {
+            logger.info("Disconnected")
+            Matcha.error(title = "Disconnected", description = "Disconnected from server")
+            session = null
+        }
+    }
+
+
+
+    private fun handleServerUpdate(json: String) {
+        val update = Json.decodeFromString<ServerUpdate>(json)
+        when (update) {
+            is ServerUpdate.GameStateSnapshot -> _gameState.value = update.state
+            is ServerUpdate.PlayersSnapshot -> _players.value = update.players
+            is ServerUpdate.VotesSnapshot -> _votes.value = update.votes
+            is ServerUpdate.Error -> {
+                logger.error("❌ ${update.message}")
+                Matcha.error(title = "Error", description = update.message)
+            }
+            is ServerUpdate.Announcement -> {
+                logger.info("📣 ${update.message}")
+                Matcha.info(title = "Announcement", description = update.message)
+            }
+            is ServerUpdate.LastPing -> _lastPing.update { update.long }
+        }
+    }
+
 }

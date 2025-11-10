@@ -130,9 +130,13 @@ class LocalDatabase(
 
     @OptIn(ExperimentalTime::class)
     fun updateAliveStatus(isAlive: Boolean, ids: List<String>) = database.transaction {
+
         ids.forEach { id ->
             playersQueries.updateAliveStatus(booleanAdapter.encode(isAlive), id)
-            playersQueries.updateTimeOfDeath(Clock.System.now().toEpochMilliseconds(), id)
+            playersQueries.updateTimeOfDeath(
+                if (isAlive) null else Clock.System.now().toEpochMilliseconds(),
+                id
+            )
         }
     }
     fun updatePendingKills(pendingKills: List<String>) = stateQueries.updatePendingKills(pendingKillsAdapter.encode(pendingKills))

@@ -15,9 +15,11 @@ import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.gameplay.PlayerIntent
 import ke.don.domain.state.KnownIdentity
 import ke.don.local.db.LocalDatabase
+import ke.don.utils.Logger
 import kotlinx.coroutines.flow.firstOrNull
 
 class DefaultGameEngine(private val db: LocalDatabase) : GameEngine {
+    val logger = Logger("DefaultGameEngine")
     override suspend fun reduce(gameId: String, intent: PlayerIntent) {
         when (intent) {
             is PlayerIntent.Join -> db.insertOrReplacePlayer(intent.player)
@@ -44,21 +46,31 @@ class DefaultGameEngine(private val db: LocalDatabase) : GameEngine {
                 ),
                 gameId,
             )
+
             is PlayerIntent.Investigate -> {
-                val player = db.getPlayerById(id = intent.targetId).firstOrNull()
-                player?.knownIdentities?.plus(
-                    KnownIdentity(
-                        playerId = intent.playerId,
-                        role = player.role!!,
-                    ),
-                )?.let {
-                    db.updateKnownIdentities(
-                        knownIdentities = it,
-                        id = intent.playerId,
-                    )
+                val target = db.getPlayerById(intent.targetId).firstOrNull()
+                val investigator = db.getPlayerById(intent.playerId).firstOrNull()
+
+                if (target == null || target.role == null) {
+                    logger.error("Target player missing or has no role")
+                    return
                 }
+
+                if (investigator == null) {
+                    logger.error("Investigator not found")
+                    return
+                }
+
+                val updatedKnown = investigator.knownIdentities
+                    .plus(KnownIdentity(playerId = target.id, role = target.role!!))
+                    .distinctBy { it.playerId } // prevent duplicates
+
+                db.updateKnownIdentities(
+                    id = investigator.id,
+                    knownIdentities = updatedKnown
+                )
             }
-            is PlayerIntent.Second -> gameId?.let {
+            is PlayerIntent.Second -> gameId.let {
                 db.secondPlayer(
                     PlayerAction(
                         type = ActionType.SECOND,
