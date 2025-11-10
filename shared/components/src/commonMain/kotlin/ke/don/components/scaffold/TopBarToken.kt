@@ -10,11 +10,8 @@
 package ke.don.components.scaffold
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -62,65 +59,44 @@ fun TopBarToken(
     isCompact: Boolean = isCompact(),
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
-    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
-        val maxWidth = maxWidth
-
-        val wideEnough = maxWidth > 360.dp
-        val useFlowRow = !wideEnough
-
-        Column(
-            modifier = modifier.padding(horizontal = if (isCompact) Values.compactScreenPadding else Values.expandedScreenPadding),
-        ) {
-            TopAppBar(
-                title = {
-                    if (wideEnough) {
-                        title?.let {
-                            Text(
-                                text = it,
-                                maxLines = 1,
-                                style = MaterialTheme.typography.bodyMedium,
-                                overflow = TextOverflow.Ellipsis,
-                            )
-                        }
-                    }
-                },
-                navigationIcon = {
-                    when (navigationIcon) {
-                        NavigationIcon.None -> {
-                            Image(
-                                painter = painterResource(Resources.Images.LOGO),
-                                contentDescription = "App Icon",
-                                modifier = Modifier.size(24.dp),
-                            )
-                        }
-                        is NavigationIcon.Back -> IconButton(onClick = navigationIcon.navigateBack) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                        }
-                        is NavigationIcon.Burger -> IconButton(onClick = navigationIcon.toggleDrawer) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu")
-                        }
-                    }
-                },
-                actions = {
-                    if (!useFlowRow) {
-                        actions()
-                    }
-                },
-                scrollBehavior = scrollBehavior,
-            )
-
-            if (useFlowRow) {
-                FlowRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    actions()
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = if (isCompact) Values.compactScreenPadding else Values.expandedScreenPadding),
+    ) {
+        TopAppBar(
+            title = {
+                title?.let {
+                    Text(
+                        text = it,
+                        maxLines = 1,
+                        style = MaterialTheme.typography.bodyMedium,
+                        overflow = TextOverflow.Ellipsis,
+                    )
                 }
-            }
-
-            HorizontalDivider()
-        }
+            },
+            navigationIcon = {
+                when (navigationIcon) {
+                    NavigationIcon.None -> {
+                        Image(
+                            painter = painterResource(Resources.Images.LOGO),
+                            contentDescription = "App Icon",
+                            modifier = Modifier.size(24.dp),
+                        )
+                    }
+                    is NavigationIcon.Back -> IconButton(onClick = navigationIcon.navigateBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                    is NavigationIcon.Burger -> IconButton(onClick = navigationIcon.toggleDrawer) {
+                        Icon(Icons.Default.Menu, contentDescription = "Menu")
+                    }
+                }
+            },
+            actions = {
+                actions()
+            },
+            scrollBehavior = scrollBehavior,
+        )
+        HorizontalDivider()
     }
 }

@@ -22,8 +22,20 @@ data class Player(
     val name: String,
     val role: Role? = null,
     val avatar: Avatar? = null,
+    val timeOfDeath: Long? = null,
     val background: AvatarBackground = AvatarBackground.entries.first(),
     @SerialName("is_alive") val isAlive: Boolean = true,
     @SerialName("last_action") val lastAction: PlayerAction? = null,
-    @SerialName("known_identities") val knownIdentities: Map<String, Role?> = emptyMap(),
+    @SerialName("known_identities") val knownIdentities: List<KnownIdentity> = emptyList(),
+) {
+    fun toKnownIdentity(): KnownIdentity = KnownIdentity(
+        playerId = id,
+        role = role ?: error("Role cannot be null"),
+    )
+}
+
+@Serializable
+data class KnownIdentity(
+    val playerId: String,
+    val role: Role,
 )

@@ -9,47 +9,31 @@
  */
 package ke.don.domain.gameplay
 
-import ke.don.domain.state.GamePhase
 import ke.don.domain.state.Player
+import kotlinx.serialization.Serializable
 
+@Serializable
 sealed class PlayerIntent {
-    data class Kill(val targetId: String) : PlayerIntent()
-    data class Save(val targetId: String) : PlayerIntent()
-    data class Investigate(val targetId: String) : PlayerIntent()
-    data class Accuse(val targetId: String) : PlayerIntent()
-    data class Second(val targetId: String) : PlayerIntent()
-    data class Vote(val guilty: Boolean) : PlayerIntent()
-}
+    abstract val playerId: String
 
-fun validateIntent(player: Player, intent: PlayerIntent, currentPhase: GamePhase): Boolean {
-    return when (intent) {
-        is PlayerIntent.Kill ->
-            player.isAlive &&
-                currentPhase == GamePhase.SLEEP &&
-                player.role?.faction == Faction.GONDI &&
-                player.role.canActInSleep
+    @Serializable
+    data class Join(override val playerId: String, val player: Player) : PlayerIntent()
 
-        is PlayerIntent.Save ->
-            player.isAlive &&
-                currentPhase == GamePhase.SLEEP &&
-                player.role == Role.DOCTOR &&
-                player.role.canActInSleep
+    @Serializable
+    data class Kill(override val playerId: String, val targetId: String) : PlayerIntent()
 
-        is PlayerIntent.Investigate ->
-            player.isAlive &&
-                currentPhase == GamePhase.SLEEP &&
-                player.role == Role.DETECTIVE &&
-                player.role.canActInSleep
+    @Serializable
+    data class Save(override val playerId: String, val targetId: String) : PlayerIntent()
 
-        is PlayerIntent.Accuse, is PlayerIntent.Second ->
-            player.isAlive &&
-                player.role?.canAccuse == true &&
-                player.role.canVote &&
-                currentPhase == GamePhase.TOWN_HALL
+    @Serializable
+    data class Investigate(override val playerId: String, val targetId: String) : PlayerIntent()
 
-        is PlayerIntent.Vote ->
-            player.isAlive &&
-                player.role?.canVote == true &&
-                currentPhase == GamePhase.COURT
-    }
+    @Serializable
+    data class Accuse(override val playerId: String, val targetId: String) : PlayerIntent()
+
+    @Serializable
+    data class Second(override val playerId: String, val targetId: String) : PlayerIntent()
+
+    @Serializable
+    data class Vote(override val playerId: String, val vote: ke.don.domain.state.Vote) : PlayerIntent()
 }

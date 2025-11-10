@@ -10,14 +10,19 @@
 package ke.don.local.db
 
 import app.cash.sqldelight.coroutines.asFlow
+import ke.don.domain.gameplay.Faction
 import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.gameplay.Role
+import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
+import ke.don.domain.state.KnownIdentity
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlin.collections.map
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class LocalDatabase(
     databaseFactory: DatabaseFactory,
@@ -29,12 +34,22 @@ class LocalDatabase(
     private val playersQueries = database.playersQueries
     private val votesQueries = database.votesQueries
 
+    fun transaction(block: () -> Unit) {
+        database.transaction {
+            block()
+        }
+    }
+
     /**
      * GAME STATE
      */
     fun getAllGameState(): Flow<List<GameState>> = stateQueries.getAllGameState()
         .asFlow()
         .map { it.executeAsList().map { state -> state.toGameState } }
+
+    fun getFirstGameState(): Flow<GameState?> = stateQueries.getFirstGameState()
+        .asFlow()
+        .map { it.executeAsOneOrNull()?.toGameState }
 
     fun getGameState(id: String): Flow<GameState?> = stateQueries.getGameState(id)
         .asFlow()
@@ -46,13 +61,40 @@ class LocalDatabase(
         gameState.toGameStateEntity.round,
         gameState.toGameStateEntity.pending_kills,
         gameState.toGameStateEntity.last_saved_player_id,
-        gameState.toGameStateEntity.accused_player_id,
+        gameState.toGameStateEntity.accused_player,
         gameState.toGameStateEntity.reveal_eliminated_player,
     )
 
-    fun updatePhase(phase: String, round: Long, id: String) = stateQueries.updatePhase(phase, round, id)
+    fun killAction(playerAction: PlayerAction) = database.transaction {
+        val originalPendingKills = stateQueries.getFirstGameState()
+            .executeAsOneOrNull()?.toGameState?.pendingKills
+        if (originalPendingKills?.contains(playerAction.targetId) == false) {
+            playerAction.targetId?.let {
+                val newList = originalPendingKills.plus(it)
+                stateQueries.updatePendingKills(pendingKillsAdapter.encode(newList))
+                playersQueries.updateLastAction(last_action = playerActionAdapter.encode(playerAction), id = playerAction.playerId ?: error("PlayerId cannot be null"))
+            }
+        }
+    }
+
+    fun saveAction(playerAction: PlayerAction, gameId: String) = database.transaction {
+        stateQueries.updateLastSaved(lastSavedPlayer = playerAction.targetId, gameId)
+        playersQueries.updateLastAction(
+            last_action = playerActionAdapter.encode(playerAction),
+            id = playerAction.playerId ?: error("PlayerId cannot be null"),
+        )
+    }
+
+    fun updateLastSaved(playerId: String?, gameId: String) = stateQueries.updateLastSaved(lastSavedPlayer = playerId, gameId = gameId)
+    fun updatePhase(phase: GamePhase, round: Long, id: String) = stateQueries.updatePhase(phaseAdapter.encode(phase), round, id)
 
     fun toggleRevealFlag(flag: Boolean, id: String) = stateQueries.toggleRevealFlag(booleanAdapter.encode(flag), id)
+
+    fun updateWinners(winners: Faction, gameId: String) = stateQueries.updateWinners(factionAdapter.encode(winners), gameId)
+
+    fun accusePlayer(accusedPlayer: PlayerAction, id: String) = stateQueries.accusePlayer(playerActionAdapter.encode(accusedPlayer), id)
+
+    fun secondPlayer(accusedPlayer: PlayerAction, id: String) = stateQueries.secondPlayer(playerActionAdapter.encode(accusedPlayer), id)
 
     fun clearGameState() = stateQueries.clearGameState()
 
@@ -81,13 +123,33 @@ class LocalDatabase(
         last_action = player.toPlayerEntity.last_action,
         avatar = player.toPlayerEntity.avatar,
         background = player.toPlayerEntity.background,
+        timeOfDeath = player.toPlayerEntity.time_of_death,
     )
 
     fun updateAliveStatus(isAlive: Boolean, id: String) = playersQueries.updateAliveStatus(booleanAdapter.encode(isAlive), id)
 
+    @OptIn(ExperimentalTime::class)
+    fun updateAliveStatus(isAlive: Boolean, ids: List<String>) = database.transaction {
+        ids.forEach { id ->
+            playersQueries.updateAliveStatus(booleanAdapter.encode(isAlive), id)
+            playersQueries.updateTimeOfDeath(
+                if (isAlive) null else Clock.System.now().toEpochMilliseconds(),
+                id,
+            )
+        }
+    }
+    fun updatePendingKills(pendingKills: List<String>) = stateQueries.updatePendingKills(pendingKillsAdapter.encode(pendingKills))
     fun updateLastAction(lastAction: PlayerAction, id: String) = playersQueries.updateLastAction(playerActionAdapter.encode(lastAction), id)
 
-    fun updateKnownIdentities(knownIdentities: Map<String, Role?>, id: String) = playersQueries.updateKnownIdentities(knownIdentitiesAdapter.encode(knownIdentities), id)
+    fun updateKnownIdentities(knownIdentities: List<KnownIdentity>, id: String) = playersQueries.updateKnownIdentities(knownIdentitiesAdapter.encode(knownIdentities), id)
+
+    fun updatePlayerRole(role: Role, id: String) = playersQueries.updatePlayerRole(roleAdapter.encode(role), id)
+
+    fun batchUpdatePlayerRole(players: List<Player>) = database.transaction {
+        players.forEach { player ->
+            playersQueries.updatePlayerRole(player.role?.let { roleAdapter.encode(it) }, player.id)
+        }
+    }
 
     fun clearPlayers() = playersQueries.clearPlayers()
 

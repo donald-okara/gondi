@@ -62,4 +62,16 @@ enum class AvatarBackground {
 
     @SerialName("orange_coral")
     ORANGE_CORAL, // #FF6E40
+
+    ;
+
+    companion object {
+        fun fromValue(value: String?): AvatarBackground? {
+            return try {
+                if (value == null) null else AvatarBackground.valueOf(value)
+            } catch (e: IllegalArgumentException) {
+                null
+            }
+        }
+    }
 }

@@ -15,18 +15,21 @@ import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
+import ke.don.domain.state.KnownIdentity
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.local.db.DatabaseFactory
 import ke.don.local.db.LocalDatabase
+import ke.don.utils.Logger
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -38,6 +41,8 @@ class LocalDatabaseTest {
             override fun createDriver() = driver
         })
     }
+
+    private val logger = Logger(LocalDatabaseTest::class.java.simpleName)
 
     /** -------------------- GAMESTATE -------------------- **/
 
@@ -51,7 +56,7 @@ class LocalDatabaseTest {
             round = 1,
             pendingKills = listOf("p1", "p2"),
             lastSavedPlayerId = "p3",
-            accusedPlayerId = null,
+            accusedPlayer = null,
             revealEliminatedPlayer = false,
         )
 
@@ -82,7 +87,7 @@ class LocalDatabaseTest {
             round = 0,
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
-            accusedPlayerId = null,
+            accusedPlayer = null,
             revealEliminatedPlayer = true,
         )
 
@@ -101,12 +106,12 @@ class LocalDatabaseTest {
             round = 1,
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
-            accusedPlayerId = null,
+            accusedPlayer = null,
             revealEliminatedPlayer = false,
         )
         db.insertOrReplaceGameState(state)
 
-        db.updatePhase(GamePhase.COURT.name, 5, "current")
+        db.updatePhase(GamePhase.COURT, 5, "current")
         val fetched = db.getGameState("current").first()
         assertEquals(GamePhase.COURT, fetched?.phase)
         assertEquals(5, fetched?.round)
@@ -121,7 +126,7 @@ class LocalDatabaseTest {
             round = 1,
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
-            accusedPlayerId = null,
+            accusedPlayer = null,
             revealEliminatedPlayer = false,
         )
         db.insertOrReplaceGameState(state)
@@ -136,6 +141,62 @@ class LocalDatabaseTest {
     }
 
     @Test
+    fun testAccusePlayer_success() = runTest {
+        val db = createDb()
+        val state = GameState(
+            id = "current",
+            phase = GamePhase.TOWN_HALL,
+            round = 1,
+            pendingKills = emptyList(),
+            lastSavedPlayerId = null,
+            revealEliminatedPlayer = false,
+            accusedPlayer = null,
+        )
+
+        val accusedPlayer = PlayerAction(
+            type = ActionType.ACCUSE,
+            playerId = "accuser1",
+            targetId = "accused1",
+            timestamp = 1L,
+        )
+
+        db.insertOrReplaceGameState(state)
+        db.accusePlayer(accusedPlayer = accusedPlayer, id = "current")
+        val fetched = db.getGameState("current").first().also {
+            logger.info(it.toString())
+        }
+        assertEquals(accusedPlayer, fetched?.accusedPlayer)
+    }
+
+    @Test
+    fun testSecondPlayer_success() = runTest {
+        val db = createDb()
+        val state = GameState(
+            id = "current",
+            phase = GamePhase.TOWN_HALL,
+            round = 1,
+            pendingKills = emptyList(),
+            lastSavedPlayerId = null,
+            revealEliminatedPlayer = false,
+            accusedPlayer = null,
+        )
+
+        val accusedPlayer = PlayerAction(
+            type = ActionType.SECOND,
+            playerId = "accuser1",
+            targetId = "accused1",
+            timestamp = 1L,
+        )
+
+        db.insertOrReplaceGameState(state)
+        db.secondPlayer(accusedPlayer = accusedPlayer, id = "current")
+        val fetched = db.getGameState("current").first().also {
+            logger.info(it.toString())
+        }
+        assertEquals(accusedPlayer, fetched?.second)
+    }
+
+    @Test
     fun testClearGameState_removesAllStates() = runTest {
         val db = createDb()
         val state1 = GameState(
@@ -144,7 +205,7 @@ class LocalDatabaseTest {
             round = 1,
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
-            accusedPlayerId = null,
+            accusedPlayer = null,
             revealEliminatedPlayer = false,
         )
         val state2 = GameState(
@@ -153,7 +214,7 @@ class LocalDatabaseTest {
             round = 2,
             pendingKills = emptyList(),
             lastSavedPlayerId = null,
-            accusedPlayerId = null,
+            accusedPlayer = null,
             revealEliminatedPlayer = false,
         )
 
@@ -182,7 +243,12 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = mapOf("p2" to Role.VILLAGER),
+            knownIdentities = listOf(
+                KnownIdentity(
+                    playerId = "p1",
+                    role = Role.VILLAGER,
+                ),
+            ),
         )
 
         db.insertOrReplacePlayer(player)
@@ -208,7 +274,7 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = false,
             lastAction = null,
-            knownIdentities = emptyMap(),
+            knownIdentities = emptyList(),
         )
         db.insertOrReplacePlayer(player)
         val fetched = db.getPlayerById("p2").first()
@@ -227,13 +293,21 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = false,
             lastAction = null,
-            knownIdentities = mapOf(
-                "p1" to Role.VILLAGER,
-                "p3" to Role.DETECTIVE,
+            knownIdentities = listOf(
+                KnownIdentity(
+                    playerId = "p1",
+                    role = Role.VILLAGER,
+                ),
+                KnownIdentity(
+                    playerId = "p2",
+                    role = Role.VILLAGER,
+                ),
             ),
         )
         db.insertOrReplacePlayer(player)
-        val fetched = db.getPlayerById("p2").first()
+        val fetched = db.getPlayerById("p2").first().also {
+            logger.info(it.toString())
+        }
         assertTrue(fetched?.knownIdentities?.isEmpty() == false)
         assertFalse(fetched.isAlive)
     }
@@ -249,7 +323,7 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = emptyMap(),
+            knownIdentities = emptyList(),
         )
         db.insertOrReplacePlayer(player)
 
@@ -264,7 +338,8 @@ class LocalDatabaseTest {
 
     @Test
     fun testUpdateLastAction_setsPlayerAction() = runTest {
-        val db = createDb()
+        val db = createDb() // fresh DB per test
+
         val player = Player(
             id = "p1",
             name = "Alice",
@@ -273,14 +348,33 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = emptyMap(),
+            knownIdentities = emptyList(),
         )
         db.insertOrReplacePlayer(player)
 
-        val action = PlayerAction(ActionType.KILL, "target1")
+        val fixedTime = System.currentTimeMillis()
+        val action = PlayerAction(ActionType.KILL, "target1", targetId = null, timestamp = fixedTime)
         db.updateLastAction(action, "p1")
+
         val fetched = db.getPlayerById("p1").first()
-        assertEquals(action, fetched?.lastAction)
+        assertNotNull(fetched)
+        assertEquals(action.type, fetched.lastAction?.type)
+        assertEquals(action.playerId, fetched.lastAction?.playerId)
+        assertEquals(action.targetId, fetched.lastAction?.targetId)
+    }
+
+    @Test
+    fun testUpdatePlayerRole_success() = runTest {
+        val db = createDb()
+        val player = Player(
+            id = "player1",
+            name = "Alice",
+        )
+
+        db.insertOrReplacePlayer(player)
+        db.updatePlayerRole(Role.VILLAGER, "player1")
+        val fetched = db.getPlayerById("player1").first()
+        assertEquals(Role.VILLAGER, fetched?.role)
     }
 
     @Test
@@ -294,13 +388,24 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = emptyMap(),
+            knownIdentities = emptyList(),
         )
         db.insertOrReplacePlayer(player)
 
-        val known = mapOf("p2" to Role.VILLAGER, "p3" to Role.DETECTIVE)
+        val known = listOf(
+            KnownIdentity(
+                playerId = "p1",
+                role = Role.VILLAGER,
+            ),
+            KnownIdentity(
+                playerId = "p2",
+                role = Role.VILLAGER,
+            ),
+        )
         db.updateKnownIdentities(known, "p1")
-        val fetched = db.getPlayerById("p1").first()
+        val fetched = db.getPlayerById("p1").first().also {
+            logger.info(it.toString())
+        }
         assertEquals(known, fetched?.knownIdentities)
     }
 
@@ -315,7 +420,7 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = emptyMap(),
+            knownIdentities = emptyList(),
         )
         val player2 = Player(
             id = "p2",
@@ -325,7 +430,7 @@ class LocalDatabaseTest {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = emptyMap(),
+            knownIdentities = emptyList(),
         )
         db.insertOrReplacePlayer(player1)
         db.insertOrReplacePlayer(player2)
@@ -336,6 +441,27 @@ class LocalDatabaseTest {
         db.clearPlayers()
         allPlayers = db.getAllPlayers().first()
         assertTrue(allPlayers.isEmpty())
+    }
+
+    @Test
+    fun testBatchUpdatePlayerRoles_success() = runTest {
+        val db = createDb()
+        val player1 = Player(
+            id = "p1",
+            name = "Alice",
+        )
+        val player2 = Player(
+            id = "p2",
+            name = "Bob",
+        )
+
+        db.insertOrReplacePlayer(player1)
+        db.insertOrReplacePlayer(player2)
+
+        db.batchUpdatePlayerRole(listOf(player1.copy(role = Role.GONDI), player2.copy(role = Role.DETECTIVE)))
+        val fetched = db.getAllPlayers().first()
+        assertEquals(Role.GONDI, fetched[0].role)
+        assertEquals(Role.DETECTIVE, fetched[1].role)
     }
 
     @Test

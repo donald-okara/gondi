@@ -44,4 +44,16 @@ enum class Avatar {
 
     @SerialName("sawyer")
     Sawyer,
+
+    ;
+
+    companion object {
+        fun fromValue(value: String?): Avatar? {
+            return try {
+                if (value == null) null else Avatar.valueOf(value)
+            } catch (e: IllegalArgumentException) {
+                null
+            }
+        }
+    }
 }

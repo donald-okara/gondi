@@ -9,6 +9,8 @@
  */
 package ke.don.domain.state
 
+import ke.don.domain.gameplay.Faction
+import ke.don.domain.gameplay.PlayerAction
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -17,8 +19,10 @@ data class GameState(
     val id: String,
     val phase: GamePhase,
     val round: Long,
+    val winners: Faction? = null,
     @SerialName("pending_kills") val pendingKills: List<String> = emptyList(),
     @SerialName("last_saved_player_id") val lastSavedPlayerId: String? = null,
-    @SerialName("accused_player_id") val accusedPlayerId: String? = null,
+    @SerialName("accused_player_id") val accusedPlayer: PlayerAction? = null, // Accuser to accused
+    @SerialName("second") val second: PlayerAction? = null, // Accuser to accused
     @SerialName("reveal_eliminated_player") val revealEliminatedPlayer: Boolean,
 )

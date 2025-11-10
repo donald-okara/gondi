@@ -10,14 +10,17 @@
 package ke.don.local.db
 
 import app.cash.sqldelight.ColumnAdapter
+import ke.don.domain.gameplay.Faction
 import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
+import ke.don.domain.state.KnownIdentity
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 
 val json = Json { ignoreUnknownKeys = true }
@@ -57,11 +60,29 @@ val playerActionAdapter = object : ColumnAdapter<PlayerAction, String> {
         json.encodeToString(value)
 }
 
-val knownIdentitiesAdapter = object : ColumnAdapter<Map<String, Role?>, String> {
-    override fun decode(databaseValue: String): Map<String, Role?> =
-        json.decodeFromString(databaseValue)
-    override fun encode(value: Map<String, Role?>): String =
-        json.encodeToString(value)
+val knownIdentitiesAdapter = object : ColumnAdapter<List<KnownIdentity>, String> {
+    private val serializer = ListSerializer(KnownIdentity.serializer())
+    override fun decode(databaseValue: String): List<KnownIdentity> {
+        if (databaseValue.isEmpty()) return emptyList()
+        return runCatching {
+            json.decodeFromString(serializer, databaseValue)
+        }.getOrElse { emptyList() }
+    }
+
+    override fun encode(value: List<KnownIdentity>): String =
+        json.encodeToString(serializer, value)
+}
+
+val factionAdapter = object : ColumnAdapter<Faction, String> {
+    override fun decode(databaseValue: String): Faction = runCatching {
+        Faction.valueOf(databaseValue)
+    }.getOrElse {
+        throw IllegalStateException("Invalid faction value in database: $databaseValue", it)
+    }
+
+    override fun encode(value: Faction): String {
+        return value.name
+    }
 }
 
 val phaseAdapter = object : ColumnAdapter<GamePhase, String> {
@@ -93,8 +114,10 @@ val GameStateEntity.toGameState: GameState get() = GameState(
     round = this.round,
     pendingKills = pendingKillsAdapter.decode(this.pending_kills ?: ""),
     lastSavedPlayerId = this.last_saved_player_id,
-    accusedPlayerId = this.accused_player_id,
+    second = this.second?.let { playerActionAdapter.decode(it) },
+    accusedPlayer = this.accused_player?.let { playerActionAdapter.decode(it) },
     revealEliminatedPlayer = booleanAdapter.decode(this.reveal_eliminated_player),
+    winners = this.winners?.let { factionAdapter.decode(it) },
 )
 
 val GameState.toGameStateEntity: GameStateEntity get() = GameStateEntity(
@@ -103,8 +126,10 @@ val GameState.toGameStateEntity: GameStateEntity get() = GameStateEntity(
     round = this.round,
     pending_kills = pendingKillsAdapter.encode(this.pendingKills),
     last_saved_player_id = this.lastSavedPlayerId,
-    accused_player_id = this.accusedPlayerId,
+    accused_player = this.accusedPlayer?.let { playerActionAdapter.encode(it) },
     reveal_eliminated_player = booleanAdapter.encode(this.revealEliminatedPlayer),
+    second = this.second?.let { playerActionAdapter.encode(it) },
+    winners = this.winners?.let { factionAdapter.encode(it) },
 )
 
 val PlayerEntity.toPlayer: Player get() = Player(
@@ -115,7 +140,8 @@ val PlayerEntity.toPlayer: Player get() = Player(
     role = this.role?.let { roleAdapter.decode(it) },
     isAlive = booleanAdapter.decode(this.is_alive),
     lastAction = this.last_action?.let { playerActionAdapter.decode(it) },
-    knownIdentities = knownIdentitiesAdapter.decode(this.known_identities ?: "{}"),
+    timeOfDeath = this.time_of_death,
+    knownIdentities = this.known_identities?.let { knownIdentitiesAdapter.decode(it) } ?: emptyList(),
 )
 
 val Player.toPlayerEntity: PlayerEntity get() = PlayerEntity(
@@ -126,6 +152,7 @@ val Player.toPlayerEntity: PlayerEntity get() = PlayerEntity(
     role = this.role?.let { roleAdapter.encode(it) },
     is_alive = booleanAdapter.encode(this.isAlive),
     known_identities = knownIdentitiesAdapter.encode(this.knownIdentities),
+    time_of_death = this.timeOfDeath,
     last_action = this.lastAction?.let { playerActionAdapter.encode(it) },
 )
 

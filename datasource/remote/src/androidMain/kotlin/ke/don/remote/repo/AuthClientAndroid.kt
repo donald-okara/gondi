@@ -9,9 +9,12 @@
  */
 package ke.don.remote.repo
 
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.Google
 import ke.don.domain.repo.AuthClient
 import ke.don.domain.result.NetworkError
 import ke.don.domain.result.Result
+import ke.don.remote.api.SupabaseConfig.supabase
 import ke.don.utils.Logger
 
 class AuthClientAndroid : AuthClient {
@@ -20,6 +23,7 @@ class AuthClientAndroid : AuthClient {
     override suspend fun signInWithGoogle(): Result<Unit, NetworkError> {
         return try {
             logger.info("🟢 Starting Google sign-in flow...")
+            supabase.auth.signInWith(Google)
 
             Result.success(Unit)
         } catch (e: Exception) {

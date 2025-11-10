@@ -25,3 +25,31 @@ buildConfig {
     buildConfigField("SUPABASE_URL", supabaseUrl)
     buildConfigField("SUPABASE_KEY", supabaseKey)
 }
+
+kotlin {
+    sourceSets {
+
+        jvmMain.dependencies {
+            implementation(libs.ktor.server.websockets)
+            implementation(libs.ktor.server.core)
+            implementation(libs.ktor.server.cio)
+            implementation(libs.ktor.server.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.jmdns)
+        }
+        androidMain.dependencies {
+            implementation(libs.ktor.server.websockets)
+            implementation(libs.ktor.server.core)
+            implementation(libs.ktor.server.cio)
+            implementation(libs.ktor.server.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.jmdns)
+        }
+        commonMain.dependencies {
+            implementation(libs.kotlinx.serialization.core)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlin.coroutines)
+            implementation(project(":datasource:local"))
+        }
+    }
+}
