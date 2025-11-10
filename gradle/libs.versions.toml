@@ -31,6 +31,7 @@ uiTooling = "1.9.4"
 sqlDelight = "2.1.0"
 
 spotless = "8.0.0"
+kover = "0.9.3"
 
 [libraries]
 jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
@@ -127,6 +128,7 @@ androidKotlinMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.lib
 jetbrainsKotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 sqlDelight = {id = "app.cash.sqldelight", version.ref = "sqlDelight"}
 spotless = {id = "com.diffplug.spotless", version.ref = "spotless"}
+kover ={id="org.jetbrains.kotlinx.kover", version.ref = "kover"}
 
 
 # Custom app plugins

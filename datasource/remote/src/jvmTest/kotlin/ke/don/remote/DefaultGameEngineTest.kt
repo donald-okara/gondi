@@ -18,7 +18,6 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertNull
 
 class DefaultGameEngineTest: BaseGameTest() {
-
     /**
      * JOIN
      */

@@ -10,10 +10,12 @@ plugins {
     alias(libs.plugins.androidKotlinMultiplatformLibrary) apply false
     alias(libs.plugins.jetbrainsKotlinJvm) apply false
     alias(libs.plugins.spotless)
+    alias(libs.plugins.kover)
 }
 
 subprojects {
     apply(plugin = "com.diffplug.spotless")
+    apply(plugin = "org.jetbrains.kotlinx.kover")
     configure<SpotlessExtension> {
         kotlin {
             target("**/*.kt")
@@ -31,6 +33,31 @@ subprojects {
         kotlinGradle {
             target("*.gradle.kts")
             ktlint("1.7.0")
+        }
+    }
+}
+
+kover {
+    reports {
+        total {
+            xml {
+                onCheck = true
+                xmlFile = layout.projectDirectory.file("kover.xml")
+            }
+        }
+        filters {
+            excludes {
+                androidGeneratedClasses()
+                classes("**/build/**")
+            }
+        }
+        verify {
+            rule {
+                bound {
+                    minValue = 50
+                    maxValue = 75
+                }
+            }
         }
     }
 }
