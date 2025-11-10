@@ -77,20 +77,20 @@ class LocalDatabase(
         }
     }
 
-    fun saveAction(playerAction: PlayerAction) = database.transaction {
-        stateQueries.updateLastSaved(lastSavedPlayer = playerAction.targetId)
+    fun saveAction(playerAction: PlayerAction, gameId: String) = database.transaction {
+        stateQueries.updateLastSaved(lastSavedPlayer = playerAction.targetId, gameId)
         playersQueries.updateLastAction(
             last_action = playerActionAdapter.encode(playerAction),
             id = playerAction.playerId ?: error("PlayerId cannot be null"),
         )
     }
 
-    fun updateLastSaved(id: String?) = stateQueries.updateLastSaved(lastSavedPlayer = id)
+    fun updateLastSaved(playerId: String?, gameId: String) = stateQueries.updateLastSaved(lastSavedPlayer = playerId, gameId = gameId)
     fun updatePhase(phase: GamePhase, round: Long, id: String) = stateQueries.updatePhase(phaseAdapter.encode(phase), round, id)
 
     fun toggleRevealFlag(flag: Boolean, id: String) = stateQueries.toggleRevealFlag(booleanAdapter.encode(flag), id)
 
-    fun updateWinners(winners: Faction) = stateQueries.updateWinners(factionAdapter.encode(winners))
+    fun updateWinners(winners: Faction, gameId: String) = stateQueries.updateWinners(factionAdapter.encode(winners), gameId)
 
     fun accusePlayer(accusedPlayer: PlayerAction, id: String) = stateQueries.accusePlayer(playerActionAdapter.encode(accusedPlayer), id)
 

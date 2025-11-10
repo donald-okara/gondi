@@ -98,7 +98,7 @@ class DefaultModeratorEngine(
             if (toEliminate.isNotEmpty()) {
                 db.updateAliveStatus(isAlive = false, ids = toEliminate)
             }
-            db.updateLastSaved(null)
+            db.updateLastSaved(null, gameId = gameId)
             db.updatePhase(phase, round, gameId)
         }
     }
@@ -152,13 +152,13 @@ class DefaultModeratorEngine(
             Faction.GONDI -> {
                 db.transaction {
                     db.updatePhase(GamePhase.GAME_OVER, 0L, gameId)
-                    db.updateWinners(Faction.GONDI)
+                    db.updateWinners(Faction.GONDI, gameId)
                 }
             }
             Faction.VILLAGER -> {
                 db.transaction {
                     db.updatePhase(GamePhase.GAME_OVER, 0L, gameId)
-                    db.updateWinners(Faction.VILLAGER)
+                    db.updateWinners(Faction.VILLAGER, gameId)
                 }
             }
             else -> db.updatePhase(phase, round + 1, gameId)

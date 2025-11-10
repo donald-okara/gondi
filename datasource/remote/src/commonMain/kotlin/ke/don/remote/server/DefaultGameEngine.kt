@@ -39,6 +39,7 @@ class DefaultGameEngine(
                     playerId = intent.playerId,
                     targetId = intent.targetId,
                 ),
+                gameId = gameId
             )
             is PlayerIntent.Accuse -> db.accusePlayer(
                 PlayerAction(

@@ -13,7 +13,7 @@ import java.net.Inet4Address
 import java.net.NetworkInterface
 
 fun getLocalIpAddress(): String {
-    val interfaces = NetworkInterface.getNetworkInterfaces().toList()
+    val interfaces = NetworkInterface.getNetworkInterfaces()?.toList() ?: return "127.0.0.1"
     for (iface in interfaces) {
         if (!iface.isUp || iface.isLoopback || iface.name.contains("docker", true) || iface.name.contains("vm", true)) continue
 

@@ -25,7 +25,7 @@ INSERT OR REPLACE INTO gameStateEntity(id, phase, round, pending_kills, last_sav
 VALUES (:id, :phase, :round, :pending_kills, :last_saved_player_id, :accused_player_id, :reveal_eliminated_player);
 
 updateWinners:
-UPDATE gameStateEntity SET winners = :winners;
+UPDATE gameStateEntity SET winners = :winners WHERE id = :id;
 
 updatePhase:
 UPDATE gameStateEntity SET phase = :phase, round = :round WHERE id = :id;
@@ -34,17 +34,16 @@ updatePendingKills:
 UPDATE gameStateEntity SET pending_kills = :pendingKills;
 
 updateLastSaved:
-UPDATE gameStateEntity SET last_saved_player_id = :lastSavedPlayer;
-
+UPDATE gameStateEntity SET last_saved_player_id = :lastSavedPlayer WHERE id = :gameId;
 
 toggleRevealFlag:
 UPDATE gameStateEntity SET reveal_eliminated_player = :flag WHERE id = :id;
 
 accusePlayer:
-UPDATE gameStateEntity SET accused_player = :accused WHERE id = : id;
+UPDATE gameStateEntity SET accused_player = :accused WHERE id = :id;
 
 secondPlayer:
-UPDATE gameStateEntity SET second = :second WHERE id = : id;
+UPDATE gameStateEntity SET second = :second WHERE id = :id;
 
 clearGameState:
 DELETE FROM gameStateEntity;

@@ -39,6 +39,7 @@ import ke.don.utils.Logger
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
@@ -58,7 +59,7 @@ class LanServerJvm(
     // 👇 Provide a Json instance for encoding messages
     private val json = Json { prettyPrint = true }
 
-    private val sessions = mutableSetOf<DefaultWebSocketServerSession>()
+    private val sessions = ConcurrentHashMap.newKeySet<DefaultWebSocketServerSession>()
 
     override suspend fun start(identity: GameIdentity) {
         val host = getLocalIpAddress()
