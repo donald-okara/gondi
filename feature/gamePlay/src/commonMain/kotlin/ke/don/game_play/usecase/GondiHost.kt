@@ -125,7 +125,7 @@ class GondiHost(
             runCatching {
                 server.handleModeratorCommand(
                     targetGameId,
-                    ModeratorCommand.ResetGame(targetGameId)
+                    ModeratorCommand.ResetGame(targetGameId),
                 )
             }.onFailure { it.printStackTrace() }
             runCatching { server.stop() }.onFailure { it.printStackTrace() }

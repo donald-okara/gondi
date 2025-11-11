@@ -30,8 +30,8 @@ suspend fun validateIntent(
     // Handle Join separately — player may not exist in DB yet
     if (intent is PlayerIntent.Join) {
         return phase == GamePhase.LOBBY &&
-                players.count { it.role == Role.MODERATOR } == 1 &&
-                players.all { it.role == null || it.role == Role.MODERATOR }
+            players.count { it.role == Role.MODERATOR } == 1 &&
+            players.all { it.role == null || it.role == Role.MODERATOR }
     }
 
     // For all other intents, fetch the player
