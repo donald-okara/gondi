@@ -110,6 +110,7 @@ val pendingKillsAdapter = object : ColumnAdapter<List<String>, String> {
 
 val GameStateEntity.toGameState: GameState get() = GameState(
     id = this.id,
+    name = this.name,
     phase = phaseAdapter.decode(this.phase),
     round = this.round,
     pendingKills = pendingKillsAdapter.decode(this.pending_kills ?: ""),
@@ -122,6 +123,7 @@ val GameStateEntity.toGameState: GameState get() = GameState(
 
 val GameState.toGameStateEntity: GameStateEntity get() = GameStateEntity(
     id = this.id,
+    name = this.name,
     phase = phaseAdapter.encode(this.phase),
     round = this.round,
     pending_kills = pendingKillsAdapter.encode(this.pendingKills),

@@ -57,6 +57,7 @@ class LocalDatabase(
 
     fun insertOrReplaceGameState(gameState: GameState) = stateQueries.insertOrReplaceGameState(
         gameState.toGameStateEntity.id,
+        gameState.toGameStateEntity.name,
         gameState.toGameStateEntity.phase,
         gameState.toGameStateEntity.round,
         gameState.toGameStateEntity.pending_kills,
@@ -93,6 +94,8 @@ class LocalDatabase(
     fun updateWinners(winners: Faction, gameId: String) = stateQueries.updateWinners(factionAdapter.encode(winners), gameId)
 
     fun accusePlayer(accusedPlayer: PlayerAction, id: String) = stateQueries.accusePlayer(playerActionAdapter.encode(accusedPlayer), id)
+
+    fun clearAccused(gameId: String) = stateQueries.accusePlayer(null, gameId)
 
     fun secondPlayer(accusedPlayer: PlayerAction, id: String) = stateQueries.secondPlayer(playerActionAdapter.encode(accusedPlayer), id)
 

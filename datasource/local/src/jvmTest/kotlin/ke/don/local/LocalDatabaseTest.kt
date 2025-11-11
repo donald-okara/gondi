@@ -20,8 +20,6 @@ import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
-import ke.don.local.db.DatabaseFactory
-import ke.don.local.db.LocalDatabase
 import ke.don.utils.Logger
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -34,13 +32,6 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class LocalDatabaseTest {
-
-    private fun createDb(): LocalDatabase {
-        val driver = createInMemoryDriver() // your helper for in-memory SQLDelight
-        return LocalDatabase(object : DatabaseFactory {
-            override fun createDriver() = driver
-        })
-    }
 
     private val logger = Logger(LocalDatabaseTest::class.java.simpleName)
 

@@ -75,10 +75,9 @@ class GondiClient() : ScreenModel {
     }
 
     override fun onDispose() {
-        super.onDispose()
-
         // Gracefully close any active session
-        CoroutineScope(Dispatchers.IO).launch {
+        val cleanupScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        cleanupScope.launch {
             session?.close(CloseReason(CloseReason.Codes.NORMAL, "Disposed"))
         }
 
@@ -91,6 +90,7 @@ class GondiClient() : ScreenModel {
         _gameState.value = null
         _players.value = emptyList()
         _votes.value = emptyList()
+        super.onDispose()
     }
 
     private fun CoroutineScope.connectWithRetry(host: String, port: Int, maxRetries: Int = 5) = launch {
@@ -137,6 +137,10 @@ class GondiClient() : ScreenModel {
             is ServerUpdate.Error -> {
                 logger.error("❌ ${update.message}")
                 Matcha.error(title = "Error", description = update.message)
+            }
+            is ServerUpdate.Forbidden -> {
+                logger.warn("❌ ${update.message}")
+                Matcha.warning(title = "Forbidden", description = update.message)
             }
             is ServerUpdate.Announcement -> {
                 logger.info("📣 ${update.message}")

@@ -51,5 +51,10 @@ kotlin {
             implementation(libs.kotlin.coroutines)
             implementation(project(":datasource:local"))
         }
+        jvmTest.dependencies {
+            implementation(libs.junit)
+            implementation(libs.sqldelight.sqlite)
+            implementation(libs.jetbrains.kotlinx.coroutines.test)
+        }
     }
 }

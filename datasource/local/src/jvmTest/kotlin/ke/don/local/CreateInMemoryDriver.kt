@@ -9,12 +9,13 @@
  */
 package ke.don.local
 
-import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
-import ke.don.local.db.GondiDatabase
+import ke.don.local.db.DatabaseFactory
+import ke.don.local.db.JVMDatabaseFactory
+import ke.don.local.db.LocalDatabase
 
-fun createInMemoryDriver(): SqlDriver {
-    val driver = JdbcSqliteDriver(JdbcSqliteDriver.IN_MEMORY)
-    GondiDatabase.Schema.create(driver)
-    return driver
+fun createDb(): LocalDatabase {
+    val driver = JVMDatabaseFactory().createInMemoryDriver() // your helper for in-memory SQLDelight
+    return LocalDatabase(object : DatabaseFactory {
+        override fun createDriver() = driver
+    })
 }
