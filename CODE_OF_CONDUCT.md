@@ -1,4 +1,10 @@
-# Contributor Covenant Code of Conduct
+<p align="center">
+  <img src="shared/resources/src/commonMain/composeResources/drawable/app_icon.png" 
+       alt="Gondi Banner" 
+       width="180" />
+</p>
+
+<h1 align="center">Contributor Covenant Code of Conduct</h1>
 
 ## Our Pledge
 
