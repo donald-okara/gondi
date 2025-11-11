@@ -118,7 +118,8 @@ class GondiHost(
         database.clearGameState()
         database.clearVotes()
         screenModelScope.launch(Dispatchers.IO) {
-            handleIntent(ModeratorCommand.ResetGame(gameState.value?.id ?: error("Game state cannot be null")))
+            val targetGameId = gameState.value?.id ?: createGameState.value.id
+            handleIntent(ModeratorCommand.ResetGame(targetGameId))
             server.stop()
         }
     }
