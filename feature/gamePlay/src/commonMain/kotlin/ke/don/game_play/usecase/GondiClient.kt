@@ -76,7 +76,8 @@ class GondiClient() : ScreenModel {
 
     override fun onDispose() {
         // Gracefully close any active session
-        screenModelScope.launch {
+        val cleanupScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        cleanupScope.launch {
             session?.close(CloseReason(CloseReason.Codes.NORMAL, "Disposed"))
         }
 
