@@ -69,3 +69,8 @@ sealed class ServerUpdate {
     @Serializable
     data class Forbidden(val message: String) : ServerUpdate()
 }
+
+sealed class PhaseValidationResult {
+    data object Success : PhaseValidationResult()
+    data class Error(val message: String) : PhaseValidationResult()
+}

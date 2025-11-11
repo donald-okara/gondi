@@ -31,11 +31,11 @@ import ke.don.domain.gameplay.server.ClientUpdate
 import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.domain.gameplay.server.LanAdvertiser
 import ke.don.domain.gameplay.server.LocalServer
+import ke.don.domain.gameplay.server.PhaseValidationResult
 import ke.don.domain.gameplay.server.ServerUpdate
 import ke.don.domain.state.Player
 import ke.don.local.db.LocalDatabase
 import ke.don.remote.gameplay.validateIntent
-import ke.don.remote.gameplay.validationMessage
 import ke.don.utils.Logger
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.firstOrNull
@@ -133,13 +133,14 @@ class LanServerJvm(
             val message = this@LanServerJvm.json.decodeFromString<ClientUpdate>(json)
             when (message) {
                 is ClientUpdate.PlayerIntentMsg -> {
-                    if (!validateIntent(gameId = gameId, db = database, intent = message.intent)) {
-                        send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.Forbidden(message.intent.validationMessage)))
-                        return
+                    when (val result = validateIntent(db = database, gameId = gameId, intent = message.intent)) {
+                        is PhaseValidationResult.Success -> gameEngine.reduce(gameId, message.intent)
+                        is PhaseValidationResult.Error ->
+                            send(
+                                Json.encodeToString(ServerUpdate.serializer(),
+                                ServerUpdate.Forbidden(result.message))
+                            )
                     }
-
-                    // 1️⃣ Apply the intent
-                    gameEngine.reduce(gameId, message.intent)
 
                     // 2️⃣ Broadcast updated state
                     val newState = database.getGameState(id = gameId).firstOrNull()

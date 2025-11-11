@@ -12,6 +12,7 @@ package ke.don.remote
 import ke.don.domain.gameplay.GameEngine
 import ke.don.domain.gameplay.PlayerIntent
 import ke.don.domain.gameplay.Role
+import ke.don.domain.gameplay.server.PhaseValidationResult
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
@@ -207,11 +208,12 @@ abstract class BaseGameTest {
         intent: PlayerIntent,
     ) {
         val logger = Logger("Validation")
-        if (validateIntent(db, gameState.id, intent)) {
-            engine.reduce(gameState.id, intent)
-        } else {
-            val error = "Invalid intent for player ${intent.playerId}"
-            logger.error(error)
+        when (val result = validateIntent(db, gameState.id, intent)) {
+            is PhaseValidationResult.Success ->  engine.reduce(gameState.id, intent)
+            is PhaseValidationResult.Error -> {
+                val error = "Invalid intent for player ${intent.playerId} \n ${result.message}"
+                logger.warn(error)
+            }
         }
     }
 }
