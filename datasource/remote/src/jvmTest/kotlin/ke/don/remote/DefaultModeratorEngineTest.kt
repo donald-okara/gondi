@@ -70,8 +70,11 @@ class DefaultModeratorEngineTest : BaseGameTest() {
 
         val game = db.getGameState(gameState.id).firstOrNull()
 
+        val gondi = db.getPlayerById(player10.id).firstOrNull()
         assertNotNull(game)
         assert(game.phase == GamePhase.SLEEP)
+
+        assert(gondi?.knownIdentities?.isNotEmpty() == true)
     }
 
     @Test
