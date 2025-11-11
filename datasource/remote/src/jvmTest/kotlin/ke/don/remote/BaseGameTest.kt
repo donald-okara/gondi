@@ -209,7 +209,7 @@ abstract class BaseGameTest {
     ) {
         val logger = Logger("Validation")
         when (val result = validateIntent(db, gameState.id, intent)) {
-            is PhaseValidationResult.Success ->  engine.reduce(gameState.id, intent)
+            is PhaseValidationResult.Success -> engine.reduce(gameState.id, intent)
             is PhaseValidationResult.Error -> {
                 val error = "Invalid intent for player ${intent.playerId} \n ${result.message}"
                 logger.warn(error)

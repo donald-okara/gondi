@@ -34,8 +34,9 @@ suspend fun validateIntent(
         val moderators = players.count { it.role == Role.MODERATOR }
         if (moderators == 0) return PhaseValidationResult.Error("No moderator assigned. The game requires one moderator to start.")
         if (moderators > 1) return PhaseValidationResult.Error("Multiple moderators assigned. Only one moderator is allowed.")
-        if (!players.all { it.role == null || it.role == Role.MODERATOR })
+        if (!players.all { it.role == null || it.role == Role.MODERATOR }) {
             return PhaseValidationResult.Error("Some players already have roles. Joining is only allowed before role assignment.")
+        }
         return PhaseValidationResult.Success
     }
 

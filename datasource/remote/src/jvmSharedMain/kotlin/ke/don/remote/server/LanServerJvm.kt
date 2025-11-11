@@ -137,8 +137,10 @@ class LanServerJvm(
                         is PhaseValidationResult.Success -> gameEngine.reduce(gameId, message.intent)
                         is PhaseValidationResult.Error ->
                             send(
-                                Json.encodeToString(ServerUpdate.serializer(),
-                                ServerUpdate.Forbidden(result.message))
+                                Json.encodeToString(
+                                    ServerUpdate.serializer(),
+                                    ServerUpdate.Forbidden(result.message),
+                                ),
                             )
                     }
 
