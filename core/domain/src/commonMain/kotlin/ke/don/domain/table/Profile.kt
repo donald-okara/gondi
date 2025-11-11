@@ -18,12 +18,12 @@ data class Profile(
     val avatar: Avatar? = null,
     val email: String = "",
     val background: AvatarBackground = AvatarBackground.entries.first(),
-){
-    fun toPlayer(): Player{
+) {
+    fun toPlayer(): Player {
         return Player(
             name = name,
             avatar = avatar,
-            background = background
+            background = background,
         )
     }
 }

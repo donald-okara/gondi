@@ -1,9 +1,16 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.remote
 
 import ke.don.domain.gameplay.PlayerIntent
-import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GamePhase
-import ke.don.domain.state.KnownIdentity
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.domain.table.Avatar
@@ -12,18 +19,17 @@ import ke.don.remote.server.DefaultGameEngine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
-import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNull
 
-class DefaultGameEngineTest: BaseGameTest() {
+class DefaultGameEngineTest : BaseGameTest() {
     /**
      * JOIN
      */
 
     @Test
-    fun testJoinGame_success() = runTest{
+    fun testJoinGame_success() = runTest {
         val engine = DefaultGameEngine(db)
 
         val newPlayer = Player(
@@ -35,7 +41,7 @@ class DefaultGameEngineTest: BaseGameTest() {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = emptyList()
+            knownIdentities = emptyList(),
         )
 
         executeValidated(engine, PlayerIntent.Join(newPlayer.id, newPlayer))
@@ -45,7 +51,7 @@ class DefaultGameEngineTest: BaseGameTest() {
     }
 
     @Test
-    fun testJoinGame_error() = runTest{
+    fun testJoinGame_error() = runTest {
         val engine = DefaultGameEngine(db)
 
         val newPlayer = Player(
@@ -57,7 +63,7 @@ class DefaultGameEngineTest: BaseGameTest() {
             background = AvatarBackground.GREEN_EMERALD,
             isAlive = true,
             lastAction = null,
-            knownIdentities = emptyList()
+            knownIdentities = emptyList(),
         )
 
         db.batchUpdatePlayerRole(batchUpdateRoles)
@@ -70,15 +76,15 @@ class DefaultGameEngineTest: BaseGameTest() {
 
     /**
      * KILL
-      */
+     */
     @Test
-    fun testKillPlayer_success() = runTest{
+    fun testKillPlayer_success() = runTest {
         val engine = DefaultGameEngine(db)
 
         val gondi = player9
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
@@ -89,7 +95,7 @@ class DefaultGameEngineTest: BaseGameTest() {
     }
 
     @Test
-    fun testKillPlayer_errorWhenNotSleep() = runTest{
+    fun testKillPlayer_errorWhenNotSleep() = runTest {
         val engine = DefaultGameEngine(db)
 
         val gondi = player9
@@ -104,13 +110,13 @@ class DefaultGameEngineTest: BaseGameTest() {
     }
 
     @Test
-    fun testKillPlayer_errorWhenNotGondi() = runTest{
+    fun testKillPlayer_errorWhenNotGondi() = runTest {
         val engine = DefaultGameEngine(db)
 
         val gondi = player2
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
@@ -121,13 +127,13 @@ class DefaultGameEngineTest: BaseGameTest() {
     }
 
     @Test
-    fun testKillPlayer_errorWhenSuicide() = runTest{
+    fun testKillPlayer_errorWhenSuicide() = runTest {
         val engine = DefaultGameEngine(db)
 
         val gondi = player9
         val target = player9
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
@@ -138,13 +144,13 @@ class DefaultGameEngineTest: BaseGameTest() {
     }
 
     @Test
-    fun testKillPlayer_errorWhenDead() = runTest{
+    fun testKillPlayer_errorWhenDead() = runTest {
         val engine = DefaultGameEngine(db)
 
         val gondi = player9
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updateAliveStatus(false, gondi.id)
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
@@ -159,13 +165,13 @@ class DefaultGameEngineTest: BaseGameTest() {
      * SAVE
      */
     @Test
-    fun testSavePlayer_success() = runTest{
+    fun testSavePlayer_success() = runTest {
         val engine = DefaultGameEngine(db)
 
         val doctor = player6
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
@@ -177,13 +183,13 @@ class DefaultGameEngineTest: BaseGameTest() {
     }
 
     @Test
-    fun testSavePlayer_errorWhenNotDoctor() = runTest{
+    fun testSavePlayer_errorWhenNotDoctor() = runTest {
         val engine = DefaultGameEngine(db)
 
         val doctor = player3
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
@@ -195,7 +201,7 @@ class DefaultGameEngineTest: BaseGameTest() {
     }
 
     @Test
-    fun testSavePlayer_errorWhenNotAsleep() = runTest{
+    fun testSavePlayer_errorWhenNotAsleep() = runTest {
         val engine = DefaultGameEngine(db)
 
         val doctor = player6
@@ -210,7 +216,7 @@ class DefaultGameEngineTest: BaseGameTest() {
     }
 
     @Test
-    fun testSavePlayer_errorWhenDead() = runTest{
+    fun testSavePlayer_errorWhenDead() = runTest {
         val engine = DefaultGameEngine(db)
 
         val doctor = player6
@@ -237,7 +243,7 @@ class DefaultGameEngineTest: BaseGameTest() {
         val detective = player8
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
@@ -256,7 +262,7 @@ class DefaultGameEngineTest: BaseGameTest() {
         val detective = player3
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
@@ -275,7 +281,7 @@ class DefaultGameEngineTest: BaseGameTest() {
         val detective = player8
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.TOWN_HALL, 1L, gameState.id)
         }
@@ -288,7 +294,6 @@ class DefaultGameEngineTest: BaseGameTest() {
         val updatedTarget = db.getPlayerById(target.id).first()?.toKnownIdentity()
 
         assert(fetched.first()?.knownIdentities?.contains(updatedTarget) == false)
-
     }
 
     @Test
@@ -298,7 +303,7 @@ class DefaultGameEngineTest: BaseGameTest() {
         val detective = player8
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
             db.updateAliveStatus(false, detective.id)
@@ -315,13 +320,13 @@ class DefaultGameEngineTest: BaseGameTest() {
     }
 
     @Test
-    fun testAccusePlayer_success() = runTest{
+    fun testAccusePlayer_success() = runTest {
         val engine = DefaultGameEngine(db)
 
         val accuser = player3
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.TOWN_HALL, 1L, gameState.id)
         }
@@ -343,7 +348,7 @@ class DefaultGameEngineTest: BaseGameTest() {
         val accuser = player3
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
             db.updateAliveStatus(false, accuser.id)
@@ -365,7 +370,7 @@ class DefaultGameEngineTest: BaseGameTest() {
         val accuser = player3
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.SLEEP, round = 1L, id = gameState.id)
         }
@@ -380,14 +385,13 @@ class DefaultGameEngineTest: BaseGameTest() {
         assertNull(fetched)
     }
 
-
     @Test
     fun testAccusePlayer_errorWhenSelfAccusing() = runTest {
         val engine = DefaultGameEngine(db)
         val accuser = player3
         val target = player3
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
         }
@@ -407,14 +411,14 @@ class DefaultGameEngineTest: BaseGameTest() {
      */
 
     @Test
-    fun testSecondPlayer_success() = runTest{
+    fun testSecondPlayer_success() = runTest {
         val engine = DefaultGameEngine(db)
 
         val accuser = player3
         val seconder = player2
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
         }
@@ -439,7 +443,7 @@ class DefaultGameEngineTest: BaseGameTest() {
         val seconder = player2
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
             db.updateAliveStatus(false, seconder.id)
@@ -466,7 +470,7 @@ class DefaultGameEngineTest: BaseGameTest() {
         val seconder = player2
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.SLEEP, round = 1L, id = gameState.id)
         }
@@ -492,7 +496,7 @@ class DefaultGameEngineTest: BaseGameTest() {
         val seconder = player2
         val target = player2
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
         }
@@ -517,7 +521,7 @@ class DefaultGameEngineTest: BaseGameTest() {
         val seconder = player2
         val target = player1
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
         }
@@ -548,10 +552,10 @@ class DefaultGameEngineTest: BaseGameTest() {
         val vote = Vote(
             voterId = voter.id,
             targetId = accused.id,
-            isGuilty = false
+            isGuilty = false,
         )
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
         }
@@ -580,10 +584,10 @@ class DefaultGameEngineTest: BaseGameTest() {
         val vote = Vote(
             voterId = voter.id,
             targetId = accused.id,
-            isGuilty = false
+            isGuilty = false,
         )
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
         }
@@ -597,7 +601,6 @@ class DefaultGameEngineTest: BaseGameTest() {
         executeValidated(engine, PlayerIntent.Vote(voter.id, vote))
 
         val fetched = db.getAllVotes().first()
-
 
         assert(!fetched.contains(vote))
     }
@@ -613,10 +616,10 @@ class DefaultGameEngineTest: BaseGameTest() {
         val vote = Vote(
             voterId = voter.id,
             targetId = accused.id,
-            isGuilty = false
+            isGuilty = false,
         )
 
-        db.transaction{
+        db.transaction {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
         }
@@ -634,6 +637,4 @@ class DefaultGameEngineTest: BaseGameTest() {
 
         assert(fetched.size == 1)
     }
-
-
 }

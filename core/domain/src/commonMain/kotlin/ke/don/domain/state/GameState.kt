@@ -11,14 +11,15 @@ package ke.don.domain.state
 
 import ke.don.domain.gameplay.Faction
 import ke.don.domain.gameplay.PlayerAction
-import ke.don.domain.gameplay.server.GameIdentity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @Serializable
-data class GameState @OptIn(ExperimentalUuidApi::class) constructor(
+data class GameState
+@OptIn(ExperimentalUuidApi::class)
+constructor(
     val id: String = Uuid.random().toString(),
     val name: String = "",
     val phase: GamePhase = GamePhase.LOBBY,

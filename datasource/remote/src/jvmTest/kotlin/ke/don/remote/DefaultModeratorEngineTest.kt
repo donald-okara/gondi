@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.remote
 
 import ke.don.domain.gameplay.Faction
@@ -14,14 +23,14 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertNotNull
 
-class DefaultModeratorEngineTest: BaseGameTest() {
+class DefaultModeratorEngineTest : BaseGameTest() {
     val logger = Logger("DefaultModeratorEngineTest")
 
     /**
      * CREATE
      */
     @Test
-    fun testCreateGame_success() = runTest{
+    fun testCreateGame_success() = runTest {
         val engine = DefaultModeratorEngine(db)
         val moderator = player1
         engine.handle(gameState.id, ModeratorCommand.CreateGame(gameState.id, gameState, moderator))
@@ -58,7 +67,6 @@ class DefaultModeratorEngineTest: BaseGameTest() {
 
         moderatorEngine.handle(gameState.id, ModeratorCommand.CreateGame(gameState.id, gameState, moderator))
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.SLEEP))
-
 
         val game = db.getGameState(gameState.id).firstOrNull()
 
@@ -97,9 +105,7 @@ class DefaultModeratorEngineTest: BaseGameTest() {
         gameEngine.reduce(gameState.id, PlayerIntent.Vote(player9.id, Vote(voterId = player9.id, targetId = player2.id, isGuilty = isGuilty)))
         gameEngine.reduce(gameState.id, PlayerIntent.Vote(player10.id, Vote(voterId = player10.id, targetId = player2.id, isGuilty = isGuilty)))
 
-
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.SLEEP))
-
 
         val game = db.getGameState(gameState.id).firstOrNull()
         val player = db.getPlayerById(gondi.id).firstOrNull()
@@ -140,9 +146,7 @@ class DefaultModeratorEngineTest: BaseGameTest() {
         gameEngine.reduce(gameState.id, PlayerIntent.Vote(player9.id, Vote(voterId = player9.id, targetId = player2.id, isGuilty = isGuilty)))
         gameEngine.reduce(gameState.id, PlayerIntent.Vote(player10.id, Vote(voterId = player10.id, targetId = player2.id, isGuilty = isGuilty)))
 
-
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.SLEEP))
-
 
         val game = db.getGameState(gameState.id).firstOrNull()
         val player = db.getPlayerById(gondi.id).firstOrNull()
@@ -151,7 +155,6 @@ class DefaultModeratorEngineTest: BaseGameTest() {
         assert(game.phase == GamePhase.SLEEP)
         assert(player?.isAlive == true)
     }
-
 
     /**
      * BOOM! Just tested court as well
@@ -216,7 +219,6 @@ class DefaultModeratorEngineTest: BaseGameTest() {
         assert(target2TownHall?.isAlive == true)
     }
 
-
     /**
      * REMOVE PLAYER, REVEAL DEATHS, START GAME
      *
@@ -224,13 +226,12 @@ class DefaultModeratorEngineTest: BaseGameTest() {
      * tested in other classes. We will skip them
      */
 
-
     /**
      * GAME OVER
      *
      */
     @Test
-    fun testGameOver_success() = runTest{
+    fun testGameOver_success() = runTest {
         val moderatorEngine = DefaultModeratorEngine(db)
 
         val moderator = player1
@@ -246,7 +247,7 @@ class DefaultModeratorEngineTest: BaseGameTest() {
     }
 
     @Test
-    fun testGameOver_gondisWin() = runTest{
+    fun testGameOver_gondisWin() = runTest {
         val moderatorEngine = DefaultModeratorEngine(db)
 
         val moderator = player1
@@ -271,7 +272,7 @@ class DefaultModeratorEngineTest: BaseGameTest() {
     }
 
     @Test
-    fun testGameOver_vilagersWin() = runTest{
+    fun testGameOver_vilagersWin() = runTest {
         val moderatorEngine = DefaultModeratorEngine(db)
 
         val moderator = player1
@@ -345,8 +346,5 @@ class DefaultModeratorEngineTest: BaseGameTest() {
         assert(games?.isEmpty() == true)
         assert(votes?.isEmpty() == true)
         assert(players?.isEmpty() == true)
-
     }
-
-
 }

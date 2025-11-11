@@ -9,10 +9,7 @@
  */
 package ke.don.local
 
-import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import ke.don.local.db.DatabaseFactory
-import ke.don.local.db.GondiDatabase
 import ke.don.local.db.JVMDatabaseFactory
 import ke.don.local.db.LocalDatabase
 
@@ -22,4 +19,3 @@ fun createDb(): LocalDatabase {
         override fun createDriver() = driver
     })
 }
-

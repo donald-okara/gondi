@@ -9,7 +9,6 @@
  */
 package ke.don.remote.gameplay
 
-import ke.don.domain.gameplay.Faction
 import ke.don.domain.gameplay.PlayerIntent
 import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GamePhase
@@ -40,48 +39,48 @@ suspend fun validateIntent(
     return when (intent) {
         is PlayerIntent.Kill ->
             player.isAlive &&
-                    role == Role.GONDI
-                    && phase == GamePhase.SLEEP &&
-                    intent.playerId != intent.targetId &&
-                    role.canActInSleep
+                role == Role.GONDI &&
+                phase == GamePhase.SLEEP &&
+                intent.playerId != intent.targetId &&
+                role.canActInSleep
 
         is PlayerIntent.Save ->
             player.isAlive &&
-                    role == Role.DOCTOR &&
-                    phase == GamePhase.SLEEP &&
-                    lastSaved != intent.targetId &&
-                    role.canActInSleep
+                role == Role.DOCTOR &&
+                phase == GamePhase.SLEEP &&
+                lastSaved != intent.targetId &&
+                role.canActInSleep
 
         is PlayerIntent.Investigate ->
             player.isAlive &&
-                    role == Role.DETECTIVE &&
-                    phase == GamePhase.SLEEP &&
-                    role.canActInSleep
+                role == Role.DETECTIVE &&
+                phase == GamePhase.SLEEP &&
+                role.canActInSleep
 
         is PlayerIntent.Accuse ->
             player.isAlive &&
-                    role?.canAccuse == true &&
-                    role.canVote &&
-                    phase == GamePhase.TOWN_HALL &&
-                    player.id != intent.targetId &&
-                    intent.playerId == player.id
+                role?.canAccuse == true &&
+                role.canVote &&
+                phase == GamePhase.TOWN_HALL &&
+                player.id != intent.targetId &&
+                intent.playerId == player.id
 
         is PlayerIntent.Second ->
             player.isAlive &&
-                    role?.canAccuse == true &&
-                    role.canVote &&
-                    phase == GamePhase.TOWN_HALL &&
-                    accused?.targetId == intent.targetId &&
-                    intent.playerId != intent.targetId &&
-                    accused.playerId != intent.playerId
+                role?.canAccuse == true &&
+                role.canVote &&
+                phase == GamePhase.TOWN_HALL &&
+                accused?.targetId == intent.targetId &&
+                intent.playerId != intent.targetId &&
+                accused.playerId != intent.playerId
 
         is PlayerIntent.Vote ->
             player.isAlive &&
-                    role?.canVote == true &&
-                    gameState.accusedPlayer?.targetId == intent.vote.targetId &&
-                    player.id != intent.vote.targetId &&
-                    phase == GamePhase.COURT &&
-                    votes.filter { it.targetId == intent.vote.targetId }.size < 2
+                role?.canVote == true &&
+                gameState.accusedPlayer?.targetId == intent.vote.targetId &&
+                player.id != intent.vote.targetId &&
+                phase == GamePhase.COURT &&
+                votes.filter { it.targetId == intent.vote.targetId }.size < 2
 
         else -> false
     }

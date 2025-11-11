@@ -39,7 +39,6 @@ enum class Faction {
                 // If no Gondi remain, villagers win
                 gondiAlive.isEmpty() -> VILLAGER
 
-
                 // If only the accomplice is left in Gondi faction, villagers win
                 gondiAlive.size == 1 && gondiAlive.first().role == Role.ACCOMPLICE -> VILLAGER
 

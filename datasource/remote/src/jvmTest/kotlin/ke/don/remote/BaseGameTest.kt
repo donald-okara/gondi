@@ -1,6 +1,14 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.remote
 
-import app.cash.sqldelight.db.SqlDriver
 import ke.don.domain.gameplay.GameEngine
 import ke.don.domain.gameplay.PlayerIntent
 import ke.don.domain.gameplay.Role
@@ -10,11 +18,9 @@ import ke.don.domain.state.Player
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.local.db.DatabaseFactory
-import ke.don.local.db.GondiDatabase
 import ke.don.local.db.JVMDatabaseFactory
 import ke.don.local.db.LocalDatabase
 import ke.don.remote.gameplay.validateIntent
-import ke.don.remote.server.DefaultGameEngine
 import ke.don.utils.Logger
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -33,7 +39,7 @@ abstract class BaseGameTest {
         lastSavedPlayerId = null,
         accusedPlayer = null,
         second = null,
-        revealEliminatedPlayer = false
+        revealEliminatedPlayer = false,
     )
 
     val player1 = Player(
@@ -45,7 +51,7 @@ abstract class BaseGameTest {
         avatar = Avatar.Christian,
         name = "Otis",
         timeOfDeath = null,
-        background = AvatarBackground.GREEN_EMERALD
+        background = AvatarBackground.GREEN_EMERALD,
     )
     val player2 = Player(
         id = "player2",
@@ -56,7 +62,7 @@ abstract class BaseGameTest {
         avatar = Avatar.Leo,
         name = "Noah",
         timeOfDeath = null,
-        background = AvatarBackground.PURPLE_ORCHID
+        background = AvatarBackground.PURPLE_ORCHID,
     )
     val player3 = Player(
         id = "player3",
@@ -67,7 +73,7 @@ abstract class BaseGameTest {
         avatar = Avatar.Adrian,
         name = "Kellen",
         timeOfDeath = null,
-        background = AvatarBackground.PURPLE_ORCHID
+        background = AvatarBackground.PURPLE_ORCHID,
     )
     val player4 = Player(
         id = "player4",
@@ -78,7 +84,7 @@ abstract class BaseGameTest {
         avatar = Avatar.Amaya,
         name = "Elliot",
         timeOfDeath = null,
-        background = AvatarBackground.PURPLE_ORCHID
+        background = AvatarBackground.PURPLE_ORCHID,
     )
     val player5 = Player(
         id = "player5",
@@ -89,7 +95,7 @@ abstract class BaseGameTest {
         avatar = Avatar.Ryker,
         name = "Julian",
         timeOfDeath = null,
-        background = AvatarBackground.PURPLE_LILAC
+        background = AvatarBackground.PURPLE_LILAC,
     )
     val player6 = Player(
         id = "player6",
@@ -100,7 +106,7 @@ abstract class BaseGameTest {
         avatar = Avatar.George,
         name = "Theodore",
         timeOfDeath = null,
-        background = AvatarBackground.YELLOW_SUNNY
+        background = AvatarBackground.YELLOW_SUNNY,
     )
     val player7 = Player(
         id = "player7",
@@ -111,7 +117,7 @@ abstract class BaseGameTest {
         avatar = Avatar.Nolan,
         name = "Levi",
         timeOfDeath = null,
-        background = AvatarBackground.PINK_HOT
+        background = AvatarBackground.PINK_HOT,
     )
     val player8 = Player(
         id = "player8",
@@ -122,7 +128,7 @@ abstract class BaseGameTest {
         avatar = Avatar.Sawyer,
         name = "Arthur",
         timeOfDeath = null,
-        background = AvatarBackground.YELLOW_SUNNY
+        background = AvatarBackground.YELLOW_SUNNY,
     )
     val player9 = Player(
         id = "player9",
@@ -133,7 +139,7 @@ abstract class BaseGameTest {
         avatar = Avatar.Aidan,
         name = "Jasper",
         timeOfDeath = null,
-        background = AvatarBackground.PURPLE_LILAC
+        background = AvatarBackground.PURPLE_LILAC,
     )
     val player10 = Player(
         id = "player10",
@@ -144,10 +150,10 @@ abstract class BaseGameTest {
         avatar = Avatar.George,
         name = "Asher",
         timeOfDeath = null,
-        background = AvatarBackground.PURPLE_ORCHID
+        background = AvatarBackground.PURPLE_ORCHID,
     )
 
-    val batchUpdateRoles= listOf(
+    val batchUpdateRoles = listOf(
         player1.copy(role = Role.VILLAGER),
         player2.copy(role = Role.VILLAGER),
         player3.copy(role = Role.VILLAGER),
@@ -157,8 +163,9 @@ abstract class BaseGameTest {
         player7.copy(role = Role.ACCOMPLICE),
         player8.copy(role = Role.DETECTIVE),
         player9.copy(role = Role.GONDI),
-        player10.copy(role = Role.GONDI)
+        player10.copy(role = Role.GONDI),
     )
+
     @Before
     fun setupDb() = runBlocking {
         db = createDb()
@@ -172,9 +179,8 @@ abstract class BaseGameTest {
         db.clearPlayers()
     }
 
-
     private fun prepopulateDb() {
-        db.transaction{
+        db.transaction {
             db.insertOrReplacePlayer(player1)
             db.insertOrReplacePlayer(player2)
             db.insertOrReplacePlayer(player3)

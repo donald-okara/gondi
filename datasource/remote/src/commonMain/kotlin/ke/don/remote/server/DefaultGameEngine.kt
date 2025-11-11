@@ -44,28 +44,28 @@ class DefaultGameEngine(
             )
 
             is PlayerIntent.Investigate -> {
-            val target = db.getPlayerById(intent.targetId).firstOrNull()
-            val investigator = db.getPlayerById(intent.playerId).firstOrNull()
+                val target = db.getPlayerById(intent.targetId).firstOrNull()
+                val investigator = db.getPlayerById(intent.playerId).firstOrNull()
 
-            if (target == null || target.role == null) {
-                logger.error("Target player missing or has no role")
-                return
+                if (target == null || target.role == null) {
+                    logger.error("Target player missing or has no role")
+                    return
+                }
+
+                if (investigator == null) {
+                    logger.error("Investigator not found")
+                    return
+                }
+
+                val updatedKnown = investigator.knownIdentities
+                    .plus(KnownIdentity(playerId = target.id, role = target.role!!))
+                    .distinctBy { it.playerId } // prevent duplicates
+
+                db.updateKnownIdentities(
+                    id = investigator.id,
+                    knownIdentities = updatedKnown,
+                )
             }
-
-            if (investigator == null) {
-                logger.error("Investigator not found")
-                return
-            }
-
-            val updatedKnown = investigator.knownIdentities
-                .plus(KnownIdentity(playerId = target.id, role = target.role!!))
-                .distinctBy { it.playerId } // prevent duplicates
-
-            db.updateKnownIdentities(
-                id = investigator.id,
-                knownIdentities = updatedKnown,
-            )
-        }
 
             is PlayerIntent.Accuse -> db.accusePlayer(
                 PlayerAction(

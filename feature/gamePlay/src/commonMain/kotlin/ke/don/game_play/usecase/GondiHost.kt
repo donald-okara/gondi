@@ -18,7 +18,6 @@ import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.local.db.LocalDatabase
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
@@ -57,7 +56,7 @@ class GondiHost(
             combine(
                 database.getGameState(gameId),
                 database.getAllPlayers(),
-                database.getAllVotes()
+                database.getAllVotes(),
             ) { state, players, votes ->
                 Triple(state, players, votes)
             }.collect { (state, playerList, voteList) ->
@@ -69,17 +68,17 @@ class GondiHost(
     }
 
     fun updateRoomName(
-        name: String
-    ){
+        name: String,
+    ) {
         _createGameState.update {
             it.copy(
-                name = name
+                name = name,
             )
         }
     }
 
-    fun startServer(){
-        screenModelScope.launch{
+    fun startServer() {
+        screenModelScope.launch {
             handleIntent(ModeratorCommand.ResetGame(createGameState.value.id))
             val identity = GameIdentity(
                 id = createGameState.value.id,
@@ -96,8 +95,8 @@ class GondiHost(
                     ModeratorCommand.CreateGame(
                         createGameState.value.id,
                         createGameState.value,
-                        it
-                    )
+                        it,
+                    ),
                 )
             }
                 ?: error("Player is not present")
