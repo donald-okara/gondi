@@ -113,14 +113,18 @@ class GondiHost(
 
     override fun onDispose() {
         super.onDispose()
-        dbObserveJob?.cancel()
-        database.clearPlayers()
-        database.clearGameState()
-        database.clearVotes()
-        screenModelScope.launch(Dispatchers.IO) {
-            val targetGameId = gameState.value?.id ?: createGameState.value.id
-            handleIntent(ModeratorCommand.ResetGame(targetGameId))
-            server.stop()
+        try {
+            dbObserveJob?.cancel()
+            database.clearPlayers()
+            database.clearGameState()
+            database.clearVotes()
+            screenModelScope.launch(Dispatchers.IO) {
+                val targetGameId = gameState.value?.id ?: createGameState.value.id
+                handleIntent(ModeratorCommand.ResetGame(targetGameId))
+                server.stop()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

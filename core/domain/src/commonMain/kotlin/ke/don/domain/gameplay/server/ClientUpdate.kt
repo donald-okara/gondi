@@ -59,7 +59,13 @@ sealed class ServerUpdate {
     @Serializable
     data class LastPing(val long: Long) : ServerUpdate()
 
-    /** Sent for invalid intents or errors. */
+    /** Sent for errors. */
     @Serializable
     data class Error(val message: String) : ServerUpdate()
+
+    /**
+     * A server message indicating that the requested action is not allowed.
+     */
+    @Serializable
+    data class Forbidden(val message: String) : ServerUpdate()
 }

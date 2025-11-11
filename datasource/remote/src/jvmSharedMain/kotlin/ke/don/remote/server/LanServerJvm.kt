@@ -134,7 +134,7 @@ class LanServerJvm(
             when (message) {
                 is ClientUpdate.PlayerIntentMsg -> {
                     if (!validateIntent(gameId = gameId, db = database, intent = message.intent)) {
-                        send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.Error(message.intent.validationMessage)))
+                        send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.Forbidden(message.intent.validationMessage)))
                         return
                     }
 

@@ -138,6 +138,10 @@ class GondiClient() : ScreenModel {
                 logger.error("❌ ${update.message}")
                 Matcha.error(title = "Error", description = update.message)
             }
+            is ServerUpdate.Forbidden -> {
+                logger.warn("❌ ${update.message}")
+                Matcha.warning(title = "Forbidden", description = update.message)
+            }
             is ServerUpdate.Announcement -> {
                 logger.info("📣 ${update.message}")
                 Matcha.info(title = "Announcement", description = update.message)
