@@ -18,8 +18,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Player(
-    val id: String,
-    val name: String,
+    val id: String = "",
+    val name: String = "",
     val role: Role? = null,
     val avatar: Avatar? = null,
     val timeOfDeath: Long? = null,

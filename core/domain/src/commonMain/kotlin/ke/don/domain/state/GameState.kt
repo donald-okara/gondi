@@ -11,18 +11,22 @@ package ke.don.domain.state
 
 import ke.don.domain.gameplay.Faction
 import ke.don.domain.gameplay.PlayerAction
+import ke.don.domain.gameplay.server.GameIdentity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Serializable
-data class GameState(
-    val id: String,
-    val phase: GamePhase,
-    val round: Long,
+data class GameState @OptIn(ExperimentalUuidApi::class) constructor(
+    val id: String = Uuid.random().toString(),
+    val name: String = "",
+    val phase: GamePhase = GamePhase.LOBBY,
+    val round: Long = 0L,
     val winners: Faction? = null,
     @SerialName("pending_kills") val pendingKills: List<String> = emptyList(),
     @SerialName("last_saved_player_id") val lastSavedPlayerId: String? = null,
     @SerialName("accused_player_id") val accusedPlayer: PlayerAction? = null, // Accuser to accused
     @SerialName("second") val second: PlayerAction? = null, // Accuser to accused
-    @SerialName("reveal_eliminated_player") val revealEliminatedPlayer: Boolean,
+    @SerialName("reveal_eliminated_player") val revealEliminatedPlayer: Boolean = false,
 )

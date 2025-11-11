@@ -9,6 +9,7 @@
  */
 package ke.don.domain.table
 
+import ke.don.domain.state.Player
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -17,4 +18,12 @@ data class Profile(
     val avatar: Avatar? = null,
     val email: String = "",
     val background: AvatarBackground = AvatarBackground.entries.first(),
-)
+){
+    fun toPlayer(): Player{
+        return Player(
+            name = name,
+            avatar = avatar,
+            background = background
+        )
+    }
+}

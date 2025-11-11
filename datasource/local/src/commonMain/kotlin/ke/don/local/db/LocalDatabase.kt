@@ -57,6 +57,7 @@ class LocalDatabase(
 
     fun insertOrReplaceGameState(gameState: GameState) = stateQueries.insertOrReplaceGameState(
         gameState.toGameStateEntity.id,
+        gameState.toGameStateEntity.name,
         gameState.toGameStateEntity.phase,
         gameState.toGameStateEntity.round,
         gameState.toGameStateEntity.pending_kills,

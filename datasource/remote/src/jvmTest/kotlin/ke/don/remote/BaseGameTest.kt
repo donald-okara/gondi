@@ -25,6 +25,7 @@ abstract class BaseGameTest {
     lateinit var db: LocalDatabase
     val gameState = GameState(
         id = "game1",
+        name = "game1",
         phase = GamePhase.LOBBY,
         round = 0L,
         winners = null,

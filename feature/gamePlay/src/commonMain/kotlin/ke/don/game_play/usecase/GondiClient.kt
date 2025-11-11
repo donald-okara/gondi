@@ -78,7 +78,7 @@ class GondiClient() : ScreenModel {
         super.onDispose()
 
         // Gracefully close any active session
-        CoroutineScope(Dispatchers.IO).launch {
+        screenModelScope.launch {
             session?.close(CloseReason(CloseReason.Codes.NORMAL, "Disposed"))
         }
 

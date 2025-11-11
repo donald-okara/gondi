@@ -30,7 +30,7 @@ suspend fun validateIntent(
 
     // Handle Join separately — player may not exist in DB yet
     if (intent is PlayerIntent.Join) {
-        return phase == GamePhase.LOBBY && players.none { it.role != null }
+        return phase == GamePhase.LOBBY && players.all { it.role == null }
     }
 
     // For all other intents, fetch the player
@@ -40,7 +40,7 @@ suspend fun validateIntent(
     return when (intent) {
         is PlayerIntent.Kill ->
             player.isAlive &&
-                    role?.faction == Faction.GONDI
+                    role == Role.GONDI
                     && phase == GamePhase.SLEEP &&
                     intent.playerId != intent.targetId &&
                     role.canActInSleep

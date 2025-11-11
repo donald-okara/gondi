@@ -34,9 +34,13 @@ class DefaultModeratorEngine(
             is ModeratorCommand.CreateGame -> {
                 db.transaction {
                     db.insertOrReplaceGameState(command.game)
-                    db.insertOrReplacePlayer(command.player)
+                    db.insertOrReplacePlayer(command.player.copy(role = Role.MODERATOR))
                 }
             }
+
+            is ModeratorCommand.AssignRole -> db.updatePlayerRole(command.role, command.playerId)
+
+            is ModeratorCommand.AssignRoleBatch -> db.batchUpdatePlayerRole(command.players)
 
             is ModeratorCommand.AdvancePhase -> game?.let { currentGame ->
                 handlePhaseAdvance(command, currentGame, players, currentRound)
@@ -50,12 +54,11 @@ class DefaultModeratorEngine(
                 db.clearVotes()
             }
 
-            is ModeratorCommand.AssignRole -> db.updatePlayerRole(command.role, command.playerId)
-
-            is ModeratorCommand.AssignRoleBatch -> db.batchUpdatePlayerRole(command.players)
-
-            is ModeratorCommand.DeclareWinner -> game?.let {
-                db.updatePhase(GamePhase.GAME_OVER, round = 0L, id = it.id)
+            is ModeratorCommand.GameOver -> game?.let {
+                db.transaction {
+                    db.updatePhase(GamePhase.GAME_OVER, round = 0L, id = it.id)
+                    db.updateWinners(command.winner, it.id)
+                }
             }
 
             is ModeratorCommand.RevealDeaths -> game?.let {
@@ -81,25 +84,6 @@ class DefaultModeratorEngine(
             GamePhase.TOWN_HALL -> handleTownHallPhase(game, command.phase, round, gameId)
             GamePhase.SLEEP -> handleSleepPhase(game, command.phase, round, players, gameId)
             else -> db.updatePhase(command.phase, round, gameId)
-        }
-    }
-
-    private fun handleTownHallPhase(
-        game: GameState,
-        phase: GamePhase,
-        round: Long,
-        gameId: String,
-    ) {
-        val lastSaved = game.lastSavedPlayerId
-        val pendingKills = game.pendingKills
-
-        db.transaction {
-            val toEliminate = pendingKills.filterNot { it == lastSaved }
-            if (toEliminate.isNotEmpty()) {
-                db.updateAliveStatus(isAlive = false, ids = toEliminate)
-            }
-            db.updateLastSaved(null, gameId = gameId)
-            db.updatePhase(phase, round, gameId)
         }
     }
 
@@ -143,6 +127,8 @@ class DefaultModeratorEngine(
                 }
             }
 
+            db.updateLastSaved(null, gameId = gameId)
+
             db.updatePendingKills(emptyList())
             db.clearVotes()
             db.clearAccused(gameId)
@@ -164,6 +150,24 @@ class DefaultModeratorEngine(
                 }
             }
             else -> db.updatePhase(phase, round + 1, gameId)
+        }
+    }
+
+    private fun handleTownHallPhase(
+        game: GameState,
+        phase: GamePhase,
+        round: Long,
+        gameId: String,
+    ) {
+        val lastSaved = game.lastSavedPlayerId
+        val pendingKills = game.pendingKills
+
+        db.transaction {
+            val toEliminate = pendingKills.filterNot { it == lastSaved }
+            if (toEliminate.isNotEmpty()) {
+                db.updateAliveStatus(isAlive = false, ids = toEliminate)
+            }
+            db.updatePhase(phase, round, gameId)
         }
     }
 }

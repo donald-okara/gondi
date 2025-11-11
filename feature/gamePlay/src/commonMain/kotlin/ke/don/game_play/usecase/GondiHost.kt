@@ -12,6 +12,7 @@ package ke.don.game_play.usecase
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import ke.don.domain.gameplay.ModeratorCommand
+import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.domain.gameplay.server.LocalServer
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
@@ -20,8 +21,11 @@ import ke.don.local.db.LocalDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class GondiHost(
@@ -34,26 +38,71 @@ class GondiHost(
     private val _players = MutableStateFlow<List<Player>>(emptyList())
     val players: StateFlow<List<Player>> = _players
 
+    private val _hostPlayer = MutableStateFlow<Player?>(null) // TODO: Update this to populate from datastore once that task is complete
+    val hostPlayer: StateFlow<Player?> = _hostPlayer
+
     private val _votes = MutableStateFlow<List<Vote>>(emptyList())
     val votes: StateFlow<List<Vote>> = _votes
 
+    private val _createGameState = MutableStateFlow(GameState())
+    val createGameState: StateFlow<GameState> = _createGameState
+
+    private var dbObserveJob: Job? = null
+
     private fun observeDatabase(gameId: String) {
-        screenModelScope.launch {
-            database.getGameState(gameId).collect { rows ->
-                _gameState.value = rows
+        // Cancel any previous observation
+        dbObserveJob?.cancel()
+
+        dbObserveJob = screenModelScope.launch {
+            combine(
+                database.getGameState(gameId),
+                database.getAllPlayers(),
+                database.getAllVotes()
+            ) { state, players, votes ->
+                Triple(state, players, votes)
+            }.collect { (state, playerList, voteList) ->
+                _gameState.value = state
+                _players.value = playerList
+                _votes.value = voteList
             }
         }
+    }
 
-        screenModelScope.launch {
-            database.getAllPlayers().collect { rows ->
-                _players.value = rows
-            }
+    fun updateRoomName(
+        name: String
+    ){
+        _createGameState.update {
+            it.copy(
+                name = name
+            )
         }
+    }
 
-        screenModelScope.launch {
-            database.getAllVotes().collect { rows ->
-                _votes.value = rows
+    fun startServer(){
+        screenModelScope.launch{
+            handleIntent(ModeratorCommand.ResetGame(createGameState.value.id))
+            val identity = GameIdentity(
+                id = createGameState.value.id,
+                gameName = createGameState.value.name,
+                moderatorName = hostPlayer.value?.name ?: error("Player is not present"),
+                moderatorAvatar = hostPlayer.value?.avatar ?: error("Player is not present"),
+                moderatorAvatarBackground = hostPlayer.value?.background
+                    ?: error("Player is not present"),
+            )
+
+            server.start(identity)
+            hostPlayer.value?.let {
+                handleIntent(
+                    ModeratorCommand.CreateGame(
+                        createGameState.value.id,
+                        createGameState.value,
+                        it
+                    )
+                )
             }
+                ?: error("Player is not present")
+
+            observeDatabase(identity.id)
         }
     }
 
@@ -62,10 +111,12 @@ class GondiHost(
 
     override fun onDispose() {
         super.onDispose()
+        dbObserveJob?.cancel()
         database.clearPlayers()
         database.clearGameState()
         database.clearVotes()
-        CoroutineScope(Dispatchers.IO).launch {
+        screenModelScope.launch(Dispatchers.IO) {
+            handleIntent(ModeratorCommand.ResetGame(gameState.value?.id ?: error("Game state cannot be null")))
             server.stop()
         }
     }
