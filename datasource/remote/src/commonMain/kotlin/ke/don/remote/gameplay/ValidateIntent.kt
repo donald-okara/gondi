@@ -76,11 +76,12 @@ suspend fun validateIntent(
 
         is PlayerIntent.Vote ->
             player.isAlive &&
-                role?.canVote == true &&
-                gameState.accusedPlayer?.targetId == intent.vote.targetId &&
-                player.id != intent.vote.targetId &&
-                phase == GamePhase.COURT &&
-                votes.filter { it.targetId == intent.vote.targetId }.size < 2
+                    role?.canVote == true &&
+                    gameState.accusedPlayer?.targetId == intent.vote.targetId &&
+                    player.id != intent.vote.targetId &&
+                    phase == GamePhase.COURT &&
+                    votes.none { it.voterId == intent.vote.voterId } &&
+                    votes.count { it.targetId == intent.vote.targetId } < 2
 
         else -> false
     }
