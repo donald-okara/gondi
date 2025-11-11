@@ -36,8 +36,10 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import ke.don.authentication.components.SignInScreen
 import ke.don.authentication.components.SplashScreen
+import ke.don.authentication.model.AuthAction
 import ke.don.authentication.model.AuthEvent
 import ke.don.authentication.model.AuthModel
+import ke.don.authentication.model.AuthState
 import ke.don.authentication.model.StartupPhase
 import ke.don.components.background.GradientBackground
 import ke.don.components.empty_state.EmptyScreen
@@ -70,47 +72,62 @@ class AuthenticationScreen : Screen {
             }
         }
 
-        GradientBackground(
-            modifier = Modifier.fillMaxSize(),
-            accentColor = MaterialTheme.colorScheme.primaryContainer,
-        ) {
-            SharedTransitionLayout {
-                AnimatedContent(
-                    targetState = startupPhase,
-                    transitionSpec = {
-                        val next = targetState.ordinal > initialState.ordinal
-                        if (next) {
-                            (scaleIn(initialScale = 1.2f) + fadeIn()) togetherWith
-                                (scaleOut(targetScale = 0.8f) + fadeOut())
-                        } else {
-                            (scaleIn(initialScale = 0.8f) + fadeIn()) togetherWith
-                                (scaleOut(targetScale = 1.2f) + fadeOut())
-                        }
-                    },
-                    label = "StartupPhaseTransition",
-                ) { phase ->
-                    CompositionLocalProvider(
-                        LocalSharedScope provides this@SharedTransitionLayout,
-                        LocalVisibilityScope provides this@AnimatedContent,
-                    ) {
-                        when (phase) {
-                            StartupPhase.Splash -> SplashScreen()
-                            StartupPhase.OnBoarding -> SignInScreen(
-                                state = state,
-                                onEvent = screenModel::handleAction,
-                            )
-                            StartupPhase.Main -> EmptyScreen(
-                                icon = Icons.Outlined.Lock,
-                                title = "Main",
-                                description = "Screen is in development",
-                            )
+        AuthenticationScreenContent(
+            startupPhase = startupPhase,
+            onEvent = screenModel::handleAction,
+            state = state
+        )
+    }
+}
 
-                            StartupPhase.Profile -> EmptyScreen(
-                                icon = Icons.Outlined.Lock,
-                                title = "Profile",
-                                description = "Screen is in development",
-                            )
-                        }
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+fun AuthenticationScreenContent(
+    startupPhase: StartupPhase,
+    onEvent: (AuthAction) -> Unit,
+    state: AuthState,
+){
+    GradientBackground(
+        modifier = Modifier.fillMaxSize(),
+        accentColor = MaterialTheme.colorScheme.primaryContainer,
+    ) {
+        SharedTransitionLayout {
+            AnimatedContent(
+                targetState = startupPhase,
+                transitionSpec = {
+                    val next = targetState.ordinal > initialState.ordinal
+                    if (next) {
+                        (scaleIn(initialScale = 1.2f) + fadeIn()) togetherWith
+                                (scaleOut(targetScale = 0.8f) + fadeOut())
+                    } else {
+                        (scaleIn(initialScale = 0.8f) + fadeIn()) togetherWith
+                                (scaleOut(targetScale = 1.2f) + fadeOut())
+                    }
+                },
+                label = "StartupPhaseTransition",
+            ) { phase ->
+                CompositionLocalProvider(
+                    LocalSharedScope provides this@SharedTransitionLayout,
+                    LocalVisibilityScope provides this@AnimatedContent,
+                ) {
+                    when (phase) {
+                        StartupPhase.Splash -> SplashScreen()
+                        StartupPhase.OnBoarding -> SignInScreen(
+                            state = state,
+                            onEvent = onEvent,
+                        )
+                        StartupPhase.Main -> EmptyScreen(
+                            icon = Icons.Outlined.Lock,
+                            title = "Main",
+                            description = "Screen is in development",
+                        )
+
+                        StartupPhase.Profile -> EmptyScreen(
+                            icon = Icons.Outlined.Lock,
+                            title = "Profile",
+                            description = "Screen is in development",
+                        )
                     }
                 }
             }

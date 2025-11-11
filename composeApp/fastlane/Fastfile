@@ -24,6 +24,21 @@ platform :android do
     )
   end
 
+  desc "Take screenshots"
+    lane :screenshots do
+    gradle(
+     task: "clean assembleDebug assembleAndroidTest",
+     project_dir: "../"
+    )
+
+    screengrab(
+     app_package_name: "ke.don.gondi",
+     test_instrumentation_runner: "androidx.test.runner.AndroidJUnitRunner",
+     app_apk_path: "../composeApp/build/outputs/apk/debug/composeApp-debug.apk",
+     tests_apk_path: "../composeApp/build/outputs/apk/androidTest/debug/composeApp-debug-androidTest.apk"
+    )
+    end
+
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
     gradle(

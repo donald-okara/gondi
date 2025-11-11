@@ -18,6 +18,12 @@ internal fun Project.configureKotlinAndroid(
     compileSdk = libs.findVersion("android-compileSdk").get().requiredVersion.toInt()
     defaultConfig {
         minSdk = libs.findVersion("android-minSdk").get().requiredVersion.toInt()
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Screengrab & test screenshots need external file access
+        testInstrumentationRunnerArguments += mapOf(
+            "clearPackageData" to "true"
+        )
     }
     if (this is ApplicationExtension) {
         defaultConfig {
@@ -33,6 +39,12 @@ internal fun Project.configureKotlinAndroid(
             isMinifyEnabled = false
         }
     }
+
+
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
+
     packaging {
         resources {
             excludes += "META-INF/INDEX.LIST"
