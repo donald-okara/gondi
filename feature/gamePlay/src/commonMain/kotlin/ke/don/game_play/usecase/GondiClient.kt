@@ -75,8 +75,6 @@ class GondiClient() : ScreenModel {
     }
 
     override fun onDispose() {
-        super.onDispose()
-
         // Gracefully close any active session
         screenModelScope.launch {
             session?.close(CloseReason(CloseReason.Codes.NORMAL, "Disposed"))
@@ -91,6 +89,7 @@ class GondiClient() : ScreenModel {
         _gameState.value = null
         _players.value = emptyList()
         _votes.value = emptyList()
+        super.onDispose()
     }
 
     private fun CoroutineScope.connectWithRetry(host: String, port: Int, maxRetries: Int = 5) = launch {
