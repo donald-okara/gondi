@@ -47,12 +47,10 @@ class DefaultGameEngine(
                 val target = db.getPlayerById(intent.targetId).firstOrNull()
                 val investigator = db.getPlayerById(intent.playerId).firstOrNull()
 
-
                 if (investigator == null) {
                     logger.error("Investigator not found")
                     return
                 }
-
 
                 target?.role?.let { targetRole ->
                     val updatedKnown = investigator.knownIdentities
