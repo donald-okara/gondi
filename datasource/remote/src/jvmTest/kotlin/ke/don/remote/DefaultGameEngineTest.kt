@@ -10,6 +10,7 @@
 package ke.don.remote
 
 import ke.don.domain.gameplay.PlayerIntent
+import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
@@ -43,6 +44,7 @@ class DefaultGameEngineTest : BaseGameTest() {
             lastAction = null,
             knownIdentities = emptyList(),
         )
+        db.updatePlayerRole(Role.MODERATOR, player1.id)
 
         executeValidated(engine, PlayerIntent.Join(newPlayer.id, newPlayer))
 

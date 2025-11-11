@@ -18,9 +18,11 @@ import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.local.db.LocalDatabase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -112,19 +114,23 @@ class GondiHost(
     }
 
     override fun onDispose() {
-        super.onDispose()
-        try {
-            dbObserveJob?.cancel()
-            database.clearPlayers()
-            database.clearGameState()
-            database.clearVotes()
-            screenModelScope.launch(Dispatchers.IO) {
-                val targetGameId = gameState.value?.id ?: createGameState.value.id
-                handleIntent(ModeratorCommand.ResetGame(targetGameId))
-                server.stop()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        val targetGameId = gameState.value?.id ?: createGameState.value.id
+        dbObserveJob?.cancel()
+
+        val cleanupScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        cleanupScope.launch {
+            runCatching { database.clearPlayers() }.onFailure { it.printStackTrace() }
+            runCatching { database.clearGameState() }.onFailure { it.printStackTrace() }
+            runCatching { database.clearVotes() }.onFailure { it.printStackTrace() }
+            runCatching {
+                server.handleModeratorCommand(
+                    targetGameId,
+                    ModeratorCommand.ResetGame(targetGameId)
+                )
+            }.onFailure { it.printStackTrace() }
+            runCatching { server.stop() }.onFailure { it.printStackTrace() }
         }
+
+        super.onDispose()
     }
 }
