@@ -32,6 +32,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import ke.don.authentication.components.SignInScreen
@@ -56,9 +58,8 @@ class AuthenticationScreen : Screen {
             mutableStateOf(StartupPhase.Splash)
         }
         val koin = getKoin()
-        val screenModel = rememberScreenModel {
-            koin.get<AuthModel>()
-        }
+        val screenModel = koinScreenModel<AuthModel>()
+
         val state by screenModel.uiState.collectAsState()
 
         ObserveAsEvent(screenModel.events) { event ->

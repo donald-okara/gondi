@@ -24,7 +24,7 @@ core = "1.7.0"
 jetbrainsKotlinJvm = "2.2.21"
 koffee = "0.2.1"
 koin = "4.1.1"
-voyager = "1.0.1"
+voyager = "1.1.0-beta03"
 ktor = "3.3.1"
 supabase = "3.2.5"
 uiTooling = "1.9.4"
@@ -97,6 +97,7 @@ supabase-realtime = { module = "io.github.jan-tennert.supabase:realtime-kt", ver
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 voyager-screen-model = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
+voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
 
 
 [bundles]
@@ -114,7 +115,8 @@ preview = [
 voyager = [
     "voyager-navigator",
     "voyager-transitions",
-    "voyager-screen-model"
+    "voyager-screen-model",
+    "voyager-koin"
 ]
 
 [plugins]
