@@ -19,7 +19,6 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -30,9 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -47,7 +44,6 @@ import ke.don.components.helpers.ObserveAsEvent
 import ke.don.home.screens.HomeScreen
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
-import org.koin.compose.getKoin
 
 class AuthenticationScreen : Screen {
     @OptIn(ExperimentalSharedTransitionApi::class)
@@ -57,7 +53,6 @@ class AuthenticationScreen : Screen {
         var startupPhase by rememberSaveable {
             mutableStateOf(StartupPhase.Splash)
         }
-        val koin = getKoin()
         val screenModel = koinScreenModel<AuthModel>()
 
         val state by screenModel.uiState.collectAsState()
