@@ -350,7 +350,7 @@ class LocalDatabaseTest {
             round = 0L,
             playerId = "target1",
             targetId = null,
-            timestamp = fixedTime
+            timestamp = fixedTime,
         )
         db.updateLastAction(action, "p1")
 

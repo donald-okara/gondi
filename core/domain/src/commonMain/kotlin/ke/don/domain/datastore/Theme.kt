@@ -20,10 +20,10 @@ enum class Theme {
             return value?.let {
                 try {
                     valueOf(it)
-                    } catch (e: IllegalArgumentException) {
+                } catch (e: IllegalArgumentException) {
                     System
-                    }
-                } ?: System
+                }
+            } ?: System
         }
     }
 }
