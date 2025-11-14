@@ -171,13 +171,13 @@ fun AppTheme(
     @Composable()
     () -> Unit,
 ) {
-    val colorScheme = when(theme){
+    val colorScheme = when (theme) {
         Theme.Light -> lightScheme
         Theme.Dark -> darkScheme
         Theme.System -> if (systemIsDark) darkScheme else lightScheme
     }
 
-    val extendedColors = when(theme) {
+    val extendedColors = when (theme) {
         Theme.Light -> extendedLight
         Theme.Dark -> extendedDark
         Theme.System -> if (systemIsDark) extendedDark else extendedLight

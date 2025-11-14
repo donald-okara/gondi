@@ -28,6 +28,7 @@ import kotlin.test.assertNull
 
 class DefaultGameEngineTest : BaseGameTest() {
     val logger = Logger("DefaultGameEngineTest")
+
     /**
      * JOIN
      */
@@ -172,6 +173,7 @@ class DefaultGameEngineTest : BaseGameTest() {
         val fetched = db.getGameState(gameState.id).first()?.pendingKills
         assert(fetched?.contains(target.id) == false)
     }
+
     @Test
     fun testKillPlayer_errorWhenKillTwice() = runTest {
         val engine = DefaultGameEngine(db)
@@ -290,7 +292,6 @@ class DefaultGameEngineTest : BaseGameTest() {
         assertEquals(target.id, fetched)
         assertNotEquals(target2.id, fetched)
     }
-
 
     /**
      * INVESTIGATE
@@ -435,6 +436,7 @@ class DefaultGameEngineTest : BaseGameTest() {
         assert(fetched.first()?.knownIdentities?.size == 1)
         assert(fetched.first()?.lastAction?.round == 1L)
     }
+
     /**
      * ACCUSE
      */
@@ -528,8 +530,6 @@ class DefaultGameEngineTest : BaseGameTest() {
 
         assertNull(fetched)
     }
-
-
 
     /**
      * SECOND

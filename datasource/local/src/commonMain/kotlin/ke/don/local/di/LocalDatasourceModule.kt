@@ -21,7 +21,7 @@ expect val datastoreModule: Module
 
 val sharedThemeModule = module {
     includes(datastoreModule)
-    singleOf( ::ThemeRepository)
+    singleOf(::ThemeRepository)
 }
 
 val localDatasourceModule = module {

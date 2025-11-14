@@ -30,7 +30,7 @@ fun DevicePreviewContainer(
     content: @Composable () -> Unit,
 ) {
     AppTheme(
-        theme = theme
+        theme = theme,
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),

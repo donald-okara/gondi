@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.local.datastore
 
 import ke.don.domain.table.Profile
@@ -6,7 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import platform.Foundation.NSUserDefaults
 
-class IosProfileStore: ProfileStore {
+class IosProfileStore : ProfileStore {
     private val defaults = NSUserDefaults.standardUserDefaults()
     private val profileKey = PROFILE_KEY
     private val _profileFlow = MutableStateFlow(loadProfile())

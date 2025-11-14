@@ -16,8 +16,6 @@ import io.github.jan.supabase.auth.status.SessionStatus
 import ke.don.components.helpers.Matcha
 import ke.don.domain.repo.AuthClient
 import ke.don.domain.repo.ProfileRepository
-import ke.don.domain.result.ResultStatus
-import ke.don.domain.result.onFailure
 import ke.don.domain.result.onSuccess
 import ke.don.koffee.model.ToastDuration
 import ke.don.remote.api.SupabaseConfig.supabase
@@ -32,7 +30,7 @@ import kotlinx.coroutines.launch
 
 class AuthModel(
     private val authClient: AuthClient,
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
 ) : ScreenModel {
     private val _uiState = MutableStateFlow(AuthState())
     val uiState: StateFlow<AuthState> = _uiState
@@ -84,12 +82,12 @@ class AuthModel(
         }
     }
 
-    fun syncProfile(){
-        screenModelScope.launch{
+    fun syncProfile() {
+        screenModelScope.launch {
             profileRepository.getProfile().onSuccess { result ->
                 _uiState.update {
                     it.copy(
-                        profile = result
+                        profile = result,
                     )
                 }
             }
@@ -102,7 +100,7 @@ class AuthModel(
             Matcha.info(
                 title = "Signing in with Google",
                 description = "Check your browser",
-                duration = ToastDuration.Long
+                duration = ToastDuration.Long,
             )
         }
     }

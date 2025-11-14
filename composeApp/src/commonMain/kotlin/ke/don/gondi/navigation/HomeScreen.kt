@@ -134,9 +134,9 @@ class HomeScreen : Screen {
                         }
                     },
                     buttonType = ComponentType.Inverse,
-                ){
+                ) {
                     Text(
-                        "Log out"
+                        "Log out",
                     )
                 }
 
@@ -147,7 +147,7 @@ class HomeScreen : Screen {
                             coroutineScope.launch {
                                 themeRepository.setTheme(it)
                             }
-                        }
+                        },
                     )
 
                     Text(

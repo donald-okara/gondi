@@ -96,12 +96,12 @@ class DefaultModeratorEngineTest : BaseGameTest() {
 
         val gameFirst = db.getGameState(gameState.id).firstOrNull()
 
-        gameEngine.reduce(gameState.id, PlayerIntent.Accuse(accuser.id, gameFirst?.round ?: error("Round cannot be null"),gondi.id))
+        gameEngine.reduce(gameState.id, PlayerIntent.Accuse(accuser.id, gameFirst?.round ?: error("Round cannot be null"), gondi.id))
         gameEngine.reduce(gameState.id, PlayerIntent.Second(seconder.id, gameFirst.round, gondi.id))
 
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.COURT))
 
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player3.id,gameFirst.round ,Vote(voterId = player3.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player3.id, gameFirst.round, Vote(voterId = player3.id, targetId = player2.id, isGuilty = isGuilty)))
         gameEngine.reduce(gameState.id, PlayerIntent.Vote(player4.id, gameFirst.round, Vote(voterId = player4.id, targetId = player2.id, isGuilty = isGuilty)))
         gameEngine.reduce(gameState.id, PlayerIntent.Vote(player5.id, gameFirst.round, Vote(voterId = player5.id, targetId = player2.id, isGuilty = isGuilty)))
         gameEngine.reduce(gameState.id, PlayerIntent.Vote(player6.id, gameFirst.round, Vote(voterId = player6.id, targetId = player2.id, isGuilty = isGuilty)))
@@ -139,7 +139,7 @@ class DefaultModeratorEngineTest : BaseGameTest() {
 
         val gameFirst = db.getGameState(gameState.id).firstOrNull()
         gameEngine.reduce(gameState.id, PlayerIntent.Accuse(accuser.id, gameFirst?.round ?: error("Round cannot be null"), gondi.id))
-        gameEngine.reduce(gameState.id, PlayerIntent.Second(seconder.id, gameFirst.round,gondi.id))
+        gameEngine.reduce(gameState.id, PlayerIntent.Second(seconder.id, gameFirst.round, gondi.id))
 
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.COURT))
 
@@ -205,7 +205,7 @@ class DefaultModeratorEngineTest : BaseGameTest() {
         val gameFirst = db.getGameState(gameState.id).firstOrNull()
 
         gameEngine.reduce(gameState.id, PlayerIntent.Kill(gondi.id, gameFirst?.round ?: error("Round cannot be null"), target.id))
-        gameEngine.reduce(gameState.id, PlayerIntent.Kill(gondi2.id, gameFirst.round,target2.id))
+        gameEngine.reduce(gameState.id, PlayerIntent.Kill(gondi2.id, gameFirst.round, target2.id))
 
         gameEngine.reduce(gameState.id, PlayerIntent.Save(doctor.id, gameFirst.round, target2.id))
 

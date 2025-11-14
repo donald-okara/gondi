@@ -31,7 +31,7 @@ data class Player(
     fun toKnownIdentity(round: Long): KnownIdentity = KnownIdentity(
         playerId = id,
         role = role ?: error("Role cannot be null"),
-        round = round
+        round = round,
     )
 }
 
@@ -39,5 +39,5 @@ data class Player(
 data class KnownIdentity(
     val playerId: String,
     val role: Role,
-    val round: Long = 0L
+    val round: Long = 0L,
 )

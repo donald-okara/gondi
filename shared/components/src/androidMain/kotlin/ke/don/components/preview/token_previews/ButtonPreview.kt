@@ -33,7 +33,7 @@ class ThemeProvider : PreviewParameterProvider<Theme> {
 fun ButtonPreview(
     @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
-    DevicePreviewContainer( theme ) {
+    DevicePreviewContainer(theme) {
         ButtonShowcase()
     }
 }

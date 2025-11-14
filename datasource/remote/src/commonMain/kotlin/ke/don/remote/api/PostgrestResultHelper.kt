@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.remote.api
 
 import io.github.jan.supabase.postgrest.result.PostgrestResult
@@ -10,7 +19,6 @@ import ke.don.utils.result.ErrorCategory
 import ke.don.utils.result.NetworkError
 import ke.don.utils.result.Result
 import kotlinx.serialization.SerializationException
-
 
 val logger = Logger("Postgrest")
 
@@ -102,7 +110,7 @@ fun Exception.toNetworkError(): NetworkError {
 
         is ServerResponseException,
         is ResponseException,
-            ->
+        ->
             ErrorCategory.SERVER to "Server error, please try again later"
 
         is SerializationException ->

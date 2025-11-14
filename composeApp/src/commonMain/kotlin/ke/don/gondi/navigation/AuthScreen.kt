@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.gondi.navigation
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -37,7 +46,7 @@ class AuthScreen : Screen {
             state.profile?.let { profile ->
                 if (profile.avatar == null) {
                     Matcha.info(
-                        title = "Simulate navigation to edit profile"
+                        title = "Simulate navigation to edit profile",
                     )
                 } else {
                     navigator.replaceAll(HomeScreen())
@@ -45,7 +54,7 @@ class AuthScreen : Screen {
             }
         }
 
-        DisposableEffect(Unit){
+        DisposableEffect(Unit) {
             onDispose {
                 Koffee.dismissAll()
             }

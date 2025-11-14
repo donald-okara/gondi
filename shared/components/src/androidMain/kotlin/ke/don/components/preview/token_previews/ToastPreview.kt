@@ -26,7 +26,7 @@ import ke.don.domain.datastore.Theme
 fun ToastPreview(
     @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
-    DevicePreviewContainer( theme ) {
+    DevicePreviewContainer(theme) {
         ToastShowcase()
     }
 }

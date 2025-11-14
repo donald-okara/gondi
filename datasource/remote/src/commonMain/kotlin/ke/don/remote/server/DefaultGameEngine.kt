@@ -59,20 +59,20 @@ class DefaultGameEngine(
                         .plus(KnownIdentity(playerId = target.id, role = targetRole, round = intent.round))
                         .distinctBy { it.playerId }
 
-                        db.transaction{
-                            db.updateLastAction(
-                                id = investigator.id,
-                                lastAction = PlayerAction(
-                                    round = intent.round,
-                                    type = ActionType.INVESTIGATE,
-                                    playerId = investigator.id,
-                                )
-                            )
-                            db.updateKnownIdentities(
-                                id = investigator.id,
-                                knownIdentities = updatedKnown,
-                            )
-                        }
+                    db.transaction {
+                        db.updateLastAction(
+                            id = investigator.id,
+                            lastAction = PlayerAction(
+                                round = intent.round,
+                                type = ActionType.INVESTIGATE,
+                                playerId = investigator.id,
+                            ),
+                        )
+                        db.updateKnownIdentities(
+                            id = investigator.id,
+                            knownIdentities = updatedKnown,
+                        )
+                    }
                 } ?: logger.error("Target player missing or has no role")
             }
 

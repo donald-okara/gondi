@@ -20,7 +20,7 @@ data class Profile(
     val avatar: Avatar? = null,
     @SerialName("avatar_background") val background: AvatarBackground = AvatarBackground.entries.first(),
     @SerialName("created_at") val createdAt: String = "",
-    @SerialName("updated_at") val updatedAt: String = ""
+    @SerialName("updated_at") val updatedAt: String = "",
 ) {
     fun toPlayer(): Player {
         return Player(

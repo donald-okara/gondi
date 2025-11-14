@@ -21,9 +21,9 @@ android {
     }
 }
 
-kotlin{
-    sourceSets{
-        commonMain.dependencies{
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
             implementation(libs.bundles.voyager)
         }
     }

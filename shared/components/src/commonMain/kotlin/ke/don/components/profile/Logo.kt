@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.profile
 
 import androidx.compose.foundation.Image
@@ -15,7 +24,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun AdaptiveLogo(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AdaptiveIcon(
         modifier = modifier,
@@ -23,7 +32,6 @@ fun AdaptiveLogo(
         contentDescription = "App Logo",
     )
 }
-
 
 @Composable
 fun AdaptiveIcon(
@@ -42,7 +50,6 @@ fun AdaptiveIcon(
         modifier = modifier,
         alignment = alignment,
         contentScale = contentScale,
-        alpha = alpha
+        alpha = alpha,
     )
 }
-
