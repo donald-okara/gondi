@@ -17,7 +17,6 @@ import kotlinx.serialization.Serializable
 data class Profile(
     val id: String = "",
     val username: String = "",
-    @SerialName("full_name") val fullName: String = "",
     val avatar: Avatar? = null,
     @SerialName("avatar_background") val background: AvatarBackground = AvatarBackground.entries.first(),
     @SerialName("created_at") val createdAt: String = "",
@@ -25,7 +24,7 @@ data class Profile(
 ) {
     fun toPlayer(): Player {
         return Player(
-            name = fullName,
+            name = username,
             avatar = avatar,
             background = background,
         )
