@@ -11,12 +11,14 @@ package ke.don.gondi
 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import ke.don.remote.repo.startAuthServer
 import ke.don.resources.Resources
 import org.jetbrains.compose.resources.painterResource
 import java.awt.Dimension
 
 fun main() = application {
     initKoin()
+    startAuthServer()
     Window(
         onCloseRequest = ::exitApplication,
         title = "Gondi",

@@ -28,6 +28,7 @@ class DefaultGameEngine(
 
             is PlayerIntent.Kill -> db.killAction(
                 PlayerAction(
+                    round = intent.round,
                     type = ActionType.KILL,
                     playerId = intent.playerId,
                     targetId = intent.targetId,
@@ -36,6 +37,7 @@ class DefaultGameEngine(
 
             is PlayerIntent.Save -> db.saveAction(
                 PlayerAction(
+                    round = intent.round,
                     type = ActionType.SAVE,
                     playerId = intent.playerId,
                     targetId = intent.targetId,
@@ -54,18 +56,29 @@ class DefaultGameEngine(
 
                 target?.role?.let { targetRole ->
                     val updatedKnown = investigator.knownIdentities
-                        .plus(KnownIdentity(playerId = target.id, role = targetRole))
+                        .plus(KnownIdentity(playerId = target.id, role = targetRole, round = intent.round))
                         .distinctBy { it.playerId }
 
-                    db.updateKnownIdentities(
-                        id = investigator.id,
-                        knownIdentities = updatedKnown,
-                    )
+                    db.transaction {
+                        db.updateLastAction(
+                            id = investigator.id,
+                            lastAction = PlayerAction(
+                                round = intent.round,
+                                type = ActionType.INVESTIGATE,
+                                playerId = investigator.id,
+                            ),
+                        )
+                        db.updateKnownIdentities(
+                            id = investigator.id,
+                            knownIdentities = updatedKnown,
+                        )
+                    }
                 } ?: logger.error("Target player missing or has no role")
             }
 
             is PlayerIntent.Accuse -> db.accusePlayer(
                 PlayerAction(
+                    round = intent.round,
                     type = ActionType.ACCUSE,
                     playerId = intent.playerId,
                     targetId = intent.targetId,
@@ -76,6 +89,7 @@ class DefaultGameEngine(
             is PlayerIntent.Second -> gameId.let {
                 db.secondPlayer(
                     PlayerAction(
+                        round = intent.round,
                         type = ActionType.SECOND,
                         playerId = intent.playerId,
                         targetId = intent.targetId,

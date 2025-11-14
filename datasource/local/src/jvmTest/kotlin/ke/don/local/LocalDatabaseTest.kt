@@ -344,7 +344,14 @@ class LocalDatabaseTest {
         db.insertOrReplacePlayer(player)
 
         val fixedTime = System.currentTimeMillis()
-        val action = PlayerAction(ActionType.KILL, "target1", targetId = null, timestamp = fixedTime)
+
+        val action = PlayerAction(
+            type = ActionType.KILL,
+            round = 0L,
+            playerId = "target1",
+            targetId = null,
+            timestamp = fixedTime,
+        )
         db.updateLastAction(action, "p1")
 
         val fetched = db.getPlayerById("p1").first()

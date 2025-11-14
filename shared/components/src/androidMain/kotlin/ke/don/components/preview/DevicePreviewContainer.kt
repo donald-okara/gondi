@@ -14,6 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ke.don.design.theme.AppTheme
+import ke.don.domain.datastore.Theme
 
 /**
  * Provides a themed full-screen container for previewing composables.
@@ -25,11 +26,11 @@ import ke.don.design.theme.AppTheme
  */
 @Composable
 fun DevicePreviewContainer(
-    isDarkTheme: Boolean = false,
+    theme: Theme,
     content: @Composable () -> Unit,
 ) {
     AppTheme(
-        darkTheme = isDarkTheme,
+        theme = theme,
     ) {
         Surface(
             modifier = Modifier.fillMaxSize(),

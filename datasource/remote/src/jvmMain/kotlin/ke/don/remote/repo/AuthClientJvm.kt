@@ -32,7 +32,6 @@ class AuthClientJvm : AuthClient {
 
     override suspend fun signInWithGoogle(): Result<Unit, NetworkError> {
         return try {
-            startAuthServer()
             logger.info("🟢 Starting Google sign-in flow...")
             val result = supabase.auth.signUpWith(Google, redirectUrl = "http://localhost:3000/auth-callback")
 
@@ -71,27 +70,20 @@ fun startAuthServer() {
     // 🧹 Try to free port 3000 first
     freePort(3000, logger)
 
-    logger.debug("🟡 Starting local auth server on http://localhost:3000 ...")
     embeddedServer(Netty, port = 3000) {
         routing {
             get("/auth-callback") {
-                logger.info("📩 Callback hit! Query params: ${call.parameters.entries()}")
                 val code = call.parameters["code"]
                 if (code != null) {
-                    logger.info("✅ Received auth code: $code")
                     call.application.launch {
                         try {
-                            logger.info("🔄 Exchanging code for session...")
                             supabase.auth.exchangeCodeForSession(code)
-                            logger.info("🎉 Session exchange successful!")
                         } catch (e: Exception) {
-                            logger.error("🔥 Failed to exchange code: $e")
                             e.printStackTrace()
                         }
                     }
                     call.respondText("Login successful! 🎊 You can close this window.")
                 } else {
-                    logger.error("⚠️ Missing 'code' in callback query")
                     call.respondText("Missing auth code", status = HttpStatusCode.BadRequest)
                 }
             }

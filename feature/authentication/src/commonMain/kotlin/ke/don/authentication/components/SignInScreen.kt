@@ -38,6 +38,7 @@ import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.card.CardToken
 import ke.don.components.card.CardType
+import ke.don.components.profile.AdaptiveLogo
 import ke.don.domain.result.isLoading
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
@@ -73,9 +74,7 @@ fun SignInScreen(
             // Logo
             with(sharedScope) {
                 with(visibilityScope) {
-                    Image(
-                        painter = painterResource(Resources.Images.LOGO),
-                        contentDescription = "Logo",
+                    AdaptiveLogo(
                         modifier = Modifier
                             .size(100.dp)
                             .sharedElement(

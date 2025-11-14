@@ -31,6 +31,6 @@ actual val serverModule: Module
         singleOf(::LanDiscoveryJvm).bind<LanDiscovery>()
     }
 
-actual val authModule: Module = module {
+actual val authDatasourceModule: Module = module {
     singleOf(::AuthClientJvm).bind<AuthClient>()
 }

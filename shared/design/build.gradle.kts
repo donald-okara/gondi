@@ -7,6 +7,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":shared:resources"))
+            implementation(project(":core:domain"))
         }
     }
 }

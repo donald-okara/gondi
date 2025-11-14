@@ -9,7 +9,6 @@
  */
 package ke.don.components.scaffold
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.RowScope
@@ -31,10 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import ke.don.resources.Resources
+import ke.don.components.profile.AdaptiveLogo
 import ke.don.resources.Values
 import ke.don.resources.isCompact
-import org.jetbrains.compose.resources.painterResource
 
 /**
  * Renders a responsive top app bar with an optional title, adaptive navigation icon, and actions.
@@ -78,9 +76,7 @@ fun TopBarToken(
             navigationIcon = {
                 when (navigationIcon) {
                     NavigationIcon.None -> {
-                        Image(
-                            painter = painterResource(Resources.Images.LOGO),
-                            contentDescription = "App Icon",
+                        AdaptiveLogo(
                             modifier = Modifier.size(24.dp),
                         )
                     }

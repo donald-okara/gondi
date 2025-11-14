@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.home.screens
+package ke.don.gondi.navigation
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,8 +15,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,17 +28,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.profile.ProfileImageToken
 import ke.don.components.scaffold.ScaffoldToken
+import ke.don.domain.datastore.Theme
 import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.domain.gameplay.server.LanDiscovery
 import ke.don.domain.gameplay.server.LocalServer
 import ke.don.domain.gameplay.server.SERVICE_TYPE
+import ke.don.domain.repo.ProfileRepository
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.domain.table.Profile
+import ke.don.local.datastore.ThemeRepository
 import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
 import kotlin.uuid.ExperimentalUuidApi
@@ -57,6 +64,13 @@ class HomeScreen : Screen {
             mutableStateOf<List<GameIdentity>>(emptyList())
         }
 
+        val themeRepository = koin.get<ThemeRepository>()
+        val theme by themeRepository.theme.collectAsState(
+            initial = Theme.System,
+        )
+        val profileRepository = koin.get<ProfileRepository>()
+        val navigator = LocalNavigator.currentOrThrow
+
         val coroutineScope = rememberCoroutineScope()
 
         ScaffoldToken(
@@ -65,7 +79,7 @@ class HomeScreen : Screen {
                 ProfileImageToken( // TODO: Temporary until profile is implemented
                     isHero = false,
                     profile = Profile(
-                        name = "Donald Isoe",
+                        username = "Donald Isoe",
                         avatar = Avatar.Leo,
                     ),
                 )
@@ -112,6 +126,35 @@ class HomeScreen : Screen {
                     Text("Advertise")
                 }
 
+                ButtonToken(
+                    onClick = {
+                        coroutineScope.launch {
+                            profileRepository.logOut()
+                            navigator.replaceAll(AuthScreen())
+                        }
+                    },
+                    buttonType = ComponentType.Inverse,
+                ) {
+                    Text(
+                        "Log out",
+                    )
+                }
+
+                Theme.entries.forEach {
+                    RadioButton(
+                        selected = theme == it,
+                        onClick = {
+                            coroutineScope.launch {
+                                themeRepository.setTheme(it)
+                            }
+                        },
+                    )
+
+                    Text(
+                        text = it.name,
+                    )
+                }
+
                 gamesList.forEach { item ->
                     ListItem(
                         icon = {
@@ -119,7 +162,7 @@ class HomeScreen : Screen {
                                 profile = Profile(
                                     avatar = item.moderatorAvatar,
                                     background = item.moderatorAvatarBackground,
-                                    name = item.moderatorName,
+                                    username = item.moderatorName,
                                 ),
                                 isHero = false,
                             )

@@ -15,25 +15,26 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class PlayerIntent {
     abstract val playerId: String
+    abstract val round: Long
 
     @Serializable
-    data class Join(override val playerId: String, val player: Player) : PlayerIntent()
+    data class Join(override val playerId: String, override val round: Long, val player: Player) : PlayerIntent()
 
     @Serializable
-    data class Kill(override val playerId: String, val targetId: String) : PlayerIntent()
+    data class Kill(override val playerId: String, override val round: Long, val targetId: String) : PlayerIntent()
 
     @Serializable
-    data class Save(override val playerId: String, val targetId: String) : PlayerIntent()
+    data class Save(override val playerId: String, override val round: Long, val targetId: String) : PlayerIntent()
 
     @Serializable
-    data class Investigate(override val playerId: String, val targetId: String) : PlayerIntent()
+    data class Investigate(override val playerId: String, override val round: Long, val targetId: String) : PlayerIntent()
 
     @Serializable
-    data class Accuse(override val playerId: String, val targetId: String) : PlayerIntent()
+    data class Accuse(override val playerId: String, override val round: Long, val targetId: String) : PlayerIntent()
 
     @Serializable
-    data class Second(override val playerId: String, val targetId: String) : PlayerIntent()
+    data class Second(override val playerId: String, override val round: Long, val targetId: String) : PlayerIntent()
 
     @Serializable
-    data class Vote(override val playerId: String, val vote: ke.don.domain.state.Vote) : PlayerIntent()
+    data class Vote(override val playerId: String, override val round: Long, val vote: ke.don.domain.state.Vote) : PlayerIntent()
 }
