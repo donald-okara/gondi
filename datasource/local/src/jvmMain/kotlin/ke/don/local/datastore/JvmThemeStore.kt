@@ -1,11 +1,10 @@
-package ke.don.local
+package ke.don.local.datastore
 
-// jvmMain
 import ke.don.domain.datastore.Theme
-import ke.don.local.datastore.THEME_KEY
-import ke.don.local.datastore.ThemeStore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.util.prefs.Preferences
-import kotlinx.coroutines.flow.*
 
 class JvmThemeStore : ThemeStore {
     private val prefs = Preferences.userRoot().node("app_prefs")
@@ -16,7 +15,7 @@ class JvmThemeStore : ThemeStore {
 
     private fun loadTheme(): Theme? {
         val stored = prefs.get(key, null)
-        return Theme.fromString(stored)
+        return Theme.Companion.fromString(stored)
     }
 
     override suspend fun setTheme(theme: Theme) {

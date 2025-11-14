@@ -9,7 +9,9 @@
  */
 package ke.don.local.di
 
-import ke.don.local.JvmThemeStore
+import ke.don.local.datastore.JvmProfileStore
+import ke.don.local.datastore.JvmThemeStore
+import ke.don.local.datastore.ProfileStore
 import ke.don.local.datastore.ThemeStore
 import ke.don.local.db.DatabaseFactory
 import ke.don.local.db.JVMDatabaseFactory
@@ -22,7 +24,8 @@ actual val databaseModule: Module
     get() = module {
         singleOf(::JVMDatabaseFactory).bind<DatabaseFactory>()
     }
-actual val platformThemeModule: Module
+actual val datastoreModule: Module
     get() = module {
+        singleOf(::JvmProfileStore).bind<ProfileStore>()
         singleOf(::JvmThemeStore).bind<ThemeStore>()
     }

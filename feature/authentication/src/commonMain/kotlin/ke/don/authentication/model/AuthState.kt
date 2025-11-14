@@ -10,8 +10,10 @@
 package ke.don.authentication.model
 
 import ke.don.domain.result.ResultStatus
+import ke.don.domain.table.Profile
 
 data class AuthState(
     val initiallyAuthenticated: Boolean = true,
+    val profile: Profile? = null,
     val authStatus: ResultStatus<Unit> = ResultStatus.Idle,
 )

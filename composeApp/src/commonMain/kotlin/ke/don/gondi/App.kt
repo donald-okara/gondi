@@ -24,10 +24,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.stack.StackEvent
 import cafe.adriel.voyager.navigator.Navigator
-import ke.don.authentication.screens.AuthenticationScreen
+import ke.don.gondi.navigation.AuthScreen
 import ke.don.components.card.Toast
 import ke.don.design.theme.AppTheme
 import ke.don.domain.datastore.Theme
@@ -74,7 +73,7 @@ fun App() {
             Surface(
                 modifier = Modifier.fillMaxSize(),
             ) {
-                val startDestination = AuthenticationScreen()
+                val startDestination = AuthScreen()
                 Navigator(startDestination) { navigator ->
                     SharedTransitionLayout {
                         AnimatedContent(

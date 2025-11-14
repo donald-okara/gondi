@@ -10,18 +10,22 @@
 package ke.don.domain.table
 
 import ke.don.domain.state.Player
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Profile(
-    val name: String = "",
+    val id: String = "",
+    val username: String = "",
+    @SerialName("full_name") val fullName: String = "",
     val avatar: Avatar? = null,
-    val email: String = "",
-    val background: AvatarBackground = AvatarBackground.entries.first(),
+    @SerialName("avatar_background") val background: AvatarBackground = AvatarBackground.entries.first(),
+    @SerialName("created_at") val createdAt: String = "",
+    @SerialName("updated_at") val updatedAt: String = ""
 ) {
     fun toPlayer(): Player {
         return Player(
-            name = name,
+            name = fullName,
             avatar = avatar,
             background = background,
         )

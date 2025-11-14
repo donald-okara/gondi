@@ -21,6 +21,14 @@ android {
     }
 }
 
+kotlin{
+    sourceSets{
+        commonMain.dependencies{
+            implementation(libs.bundles.voyager)
+        }
+    }
+}
+
 dependencies {
     debugImplementation(compose.uiTooling)
 }

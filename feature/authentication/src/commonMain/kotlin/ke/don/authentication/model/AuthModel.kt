@@ -15,10 +15,14 @@ import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.status.SessionStatus
 import ke.don.components.helpers.Matcha
 import ke.don.domain.repo.AuthClient
+import ke.don.domain.repo.ProfileRepository
 import ke.don.domain.result.ResultStatus
 import ke.don.domain.result.onFailure
 import ke.don.domain.result.onSuccess
+import ke.don.koffee.model.ToastDuration
 import ke.don.remote.api.SupabaseConfig.supabase
+import ke.don.utils.Logger
+import ke.don.utils.result.onSuccess
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,12 +32,15 @@ import kotlinx.coroutines.launch
 
 class AuthModel(
     private val authClient: AuthClient,
+    private val profileRepository: ProfileRepository
 ) : ScreenModel {
     private val _uiState = MutableStateFlow(AuthState())
     val uiState: StateFlow<AuthState> = _uiState
 
     private val eventChannel = Channel<AuthEvent>()
     val events = eventChannel.receiveAsFlow()
+
+    private val logger = Logger("AuthModel")
 
     init {
         screenModelScope.launch {
@@ -46,6 +53,7 @@ class AuthModel(
                             Matcha.success(
                                 title = "Welcome to Gondi",
                             )
+                            syncProfile()
                             AuthEvent.SwitchProfile
                         }
                         eventChannel.send(event)
@@ -76,25 +84,26 @@ class AuthModel(
         }
     }
 
-    fun signInWithGoogle() {
-        screenModelScope.launch {
-            updateState {
-                it.copy(authStatus = ResultStatus.Loading)
-            }
-            authClient.signInWithGoogle()
-                .onSuccess { result ->
-                    updateState {
-                        it.copy(authStatus = ResultStatus.Success(data = result))
-                    }
-                }.onFailure { result ->
-                    updateState {
-                        it.copy(authStatus = ResultStatus.Error(message = result.message ?: "Unknown error"))
-                    }
-                    Matcha.showErrorToast(
-                        title = "Error",
-                        message = result.message ?: "Unknown error",
+    fun syncProfile(){
+        screenModelScope.launch{
+            profileRepository.getProfile().onSuccess { result ->
+                _uiState.update {
+                    it.copy(
+                        profile = result
                     )
                 }
+            }
+        }
+    }
+
+    fun signInWithGoogle() {
+        screenModelScope.launch {
+            authClient.signInWithGoogle()
+            Matcha.info(
+                title = "Signing in with Google",
+                description = "Check your browser",
+                duration = ToastDuration.Long
+            )
         }
     }
 }

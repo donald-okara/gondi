@@ -31,6 +31,6 @@ actual val serverModule: Module
         singleOf(::LanAdvertiserAndroid).bind<LanAdvertiser>()
     }
 
-actual val authModule: Module = module {
+actual val authDatasourceModule: Module = module {
     singleOf(::AuthClientAndroid).bind<AuthClient>()
 }

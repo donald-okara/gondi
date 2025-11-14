@@ -9,7 +9,9 @@
  */
 package ke.don.local.di
 
+import ke.don.local.datastore.IosProfileStore
 import ke.don.local.datastore.IosThemeStore
+import ke.don.local.datastore.ProfileStore
 import ke.don.local.datastore.ThemeStore
 import ke.don.local.db.DatabaseFactory
 import ke.don.local.db.IOSDatabaseFactory
@@ -22,7 +24,8 @@ actual val databaseModule: Module
     get() = module {
         singleOf(::IOSDatabaseFactory).bind<DatabaseFactory>()
     }
-actual val platformThemeModule: Module
+actual val datastoreModule: Module
     get() = module {
+        singleOf(::IosProfileStore).bind<ProfileStore>()
         singleOf(::IosThemeStore).bind<ThemeStore>()
     }

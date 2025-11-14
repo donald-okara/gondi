@@ -26,10 +26,10 @@ import ke.don.domain.table.Profile
 
 val profiles = listOf(
     Profile(
-        name = "Christian",
+        username = "Christian",
     ),
     Profile(
-        name = "Jason",
+        username = "Jason",
     ),
 )
 
@@ -49,7 +49,7 @@ fun ProfilePreview(
                 AvatarBackground.entries.forEach {
                     ProfileImageToken(
                         profile = Profile(
-                            name = it.name,
+                            username = it.name,
                             background = it,
                         ),
                         isHero = true,
@@ -64,7 +64,7 @@ fun ProfilePreview(
                 AvatarBackground.entries.forEach {
                     ProfileImageToken(
                         profile = Profile(
-                            name = it.name,
+                            username = it.name,
                             background = it,
                         ),
                         isHero = false,
@@ -81,7 +81,7 @@ fun ProfilePreview(
             AvatarBackground.entries.forEach {
                 ProfileImageToken(
                     profile = Profile(
-                        name = it.name,
+                        username = it.name,
                         background = it,
                     ),
                     isHero = true,
@@ -96,7 +96,7 @@ fun ProfilePreview(
             AvatarBackground.entries.forEach {
                 ProfileImageToken(
                     profile = Profile(
-                        name = it.name,
+                        username = it.name,
                         background = it,
                     ),
                     isHero = false,

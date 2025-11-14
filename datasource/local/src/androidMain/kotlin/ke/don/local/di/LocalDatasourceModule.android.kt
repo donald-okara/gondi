@@ -9,7 +9,9 @@
  */
 package ke.don.local.di
 
+import ke.don.local.datastore.AndroidProfileStore
 import ke.don.local.datastore.AndroidThemeStore
+import ke.don.local.datastore.ProfileStore
 import ke.don.local.datastore.ThemeStore
 import ke.don.local.db.AndroidDatabaseFactory
 import ke.don.local.db.DatabaseFactory
@@ -23,7 +25,8 @@ actual val databaseModule: Module
     get() = module {
         singleOf(::AndroidDatabaseFactory).bind<DatabaseFactory>()
     }
-actual val platformThemeModule: Module
+actual val datastoreModule: Module
     get() = module {
+        singleOf(::AndroidProfileStore).bind<ProfileStore>()
         singleOf(::AndroidThemeStore).bind<ThemeStore>()
     }

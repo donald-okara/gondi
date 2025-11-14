@@ -17,10 +17,10 @@ import org.koin.dsl.module
 
 expect val databaseModule: Module
 
-expect val platformThemeModule: Module
+expect val datastoreModule: Module
 
 val sharedThemeModule = module {
-    includes(platformThemeModule)
+    includes(datastoreModule)
     singleOf( ::ThemeRepository)
 }
 

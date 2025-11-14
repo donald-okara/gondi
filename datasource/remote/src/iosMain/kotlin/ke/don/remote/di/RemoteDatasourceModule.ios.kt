@@ -25,6 +25,6 @@ actual val serverModule: Module
         singleOf(::LanServer).bind<LocalServer>()
     }
 
-actual val authModule: Module = module {
+actual val authDatasourceModule: Module = module {
     singleOf(::AuthClientIOS).bind<AuthClient>()
 }

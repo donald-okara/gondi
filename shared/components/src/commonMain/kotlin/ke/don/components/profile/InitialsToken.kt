@@ -39,7 +39,7 @@ fun InitialsToken(
         modifier = modifier.fillMaxSize(),
     ) {
         Text(
-            text = profile.name.getInitials(),
+            text = profile.username.getInitials(),
             style = baseTextStyle.copy(
                 fontWeight = FontWeight.Bold,
                 color = profile.background.color().onColorWithOverlay(),
