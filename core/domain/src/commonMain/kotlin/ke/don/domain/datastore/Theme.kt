@@ -17,7 +17,13 @@ enum class Theme {
 
     companion object {
         fun fromString(value: String?): Theme {
-            return value?.let { valueOf(it) } ?: System
+            return value?.let {
+                try {
+                    valueOf(it)
+                    } catch (e: IllegalArgumentException) {
+                    System
+                    }
+                } ?: System
         }
     }
 }

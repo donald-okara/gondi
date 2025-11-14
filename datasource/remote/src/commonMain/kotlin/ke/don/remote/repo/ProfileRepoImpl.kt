@@ -26,7 +26,6 @@ class ProfileRepoImpl(
         if (it is Result.Success) {
             profileStore.setProfile(it.data)
         }
-        logger.info(it.toString())
     }
 
     override suspend fun updateProfile(profile: Profile): Result<Profile, NetworkError> = apiClient.updateProfile(profile).also {

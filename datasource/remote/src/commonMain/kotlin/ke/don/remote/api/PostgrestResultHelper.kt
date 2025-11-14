@@ -27,10 +27,10 @@ inline fun <reified D : Any> PostgrestResult.toDomainResult(
 ): Result<D, NetworkError> =
     try {
         val decoded = decodeAs<D>()
-        if (log) println("Decoded: $decoded")
+        if (log) logger.info("Decoded: $decoded")
         Result.Success(decoded)
     } catch (e: Exception) {
-        if (log) println("Error: $e")
+        if (log) logger.error("Error: $e")
         Result.Error(e.toNetworkError())
     }
 
@@ -42,10 +42,10 @@ inline fun <reified D : Any> PostgrestResult.toDomainListResult(
 ): Result<List<D>, NetworkError> =
     try {
         val decoded = decodeList<D>()
-        if (log) println("Decoded: $decoded")
+        if (log) logger.info("Decoded: $decoded")
         Result.Success(decoded)
     } catch (e: Exception) {
-        if (log) println("Error: $e")
+        if (log) logger.error("Error: $e")
         Result.Error(e.toNetworkError())
     }
 
@@ -57,21 +57,23 @@ inline fun <reified D : Any> PostgrestResult.toDomainSingleResult(
 ): Result<D, NetworkError> =
     try {
         val decoded = decodeSingle<D>()
-        if (log) println("Decoded: $decoded")
+        if (log) logger.info("Decoded: $decoded")
         Result.Success(decoded)
     } catch (e: Exception) {
-        if (log) println("Error: $e")
+        if (log) logger.error("Error: $e")
         Result.Error(e.toNetworkError())
     }
 
-inline fun <reified D : Any> PostgrestResult.toDomainUnitResult(
+inline fun <reified D : Any> PostgrestResult.toUnitResult(
     log: Boolean = false,
-) {
+): Result<Unit, NetworkError> {
     try {
         val decoded = decodeAs<D>()
-        if (log) println("Decoded: $decoded")
+        if (log) logger.info("Decoded: $decoded")
+        return Result.Success(Unit)
     } catch (e: Exception) {
-        if (log) println("Error: ${e.toNetworkError()}")
+        if (log) logger.error("Error: ${e.toNetworkError()}")
+        return Result.Error(e.toNetworkError())
     }
 }
 
@@ -94,7 +96,6 @@ val ErrorCategory.errorTitle
         ErrorCategory.NO_INTERNET -> "No Internet"
         ErrorCategory.PAYLOAD_TOO_LARGE -> "Payload Too Large"
         ErrorCategory.SERVER -> "Server Error"
-        ErrorCategory.SERVER_ERROR -> "Server Error"
         ErrorCategory.SERIALIZATION -> "Data Error"
         ErrorCategory.DECODING -> "Data Error"
         ErrorCategory.UNKNOWN -> "Unknown Error"
@@ -103,7 +104,7 @@ val ErrorCategory.errorTitle
 fun Exception.toNetworkError(): NetworkError {
     val (category, userMessage) = when (this) {
         is UnresolvedAddressException ->
-            ErrorCategory.REQUEST_TIMEOUT to "No internet connection"
+            ErrorCategory.NO_INTERNET to "No internet connection"
 
         is HttpRequestTimeoutException ->
             ErrorCategory.REQUEST_TIMEOUT to "The request took too long"

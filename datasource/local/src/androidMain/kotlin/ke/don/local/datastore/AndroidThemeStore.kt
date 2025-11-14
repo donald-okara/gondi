@@ -20,7 +20,7 @@ private val Context.dataStore by preferencesDataStore(name = "app_prefs")
 
 class AndroidThemeStore(private val context: Context) : ThemeStore {
     private val ds = context.dataStore
-    val themeKey = stringPreferencesKey(THEME_KEY)
+    private val themeKey = stringPreferencesKey(THEME_KEY)
 
     override val themeFlow = ds.data
         .map { prefs -> Theme.fromString(prefs[themeKey]) }
@@ -30,6 +30,6 @@ class AndroidThemeStore(private val context: Context) : ThemeStore {
     }
 
     override suspend fun clear() {
-        ds.edit { it.clear() }
+        ds.edit { it.remove(themeKey) }
     }
 }

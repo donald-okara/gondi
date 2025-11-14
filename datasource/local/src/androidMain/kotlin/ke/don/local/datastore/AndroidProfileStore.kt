@@ -28,7 +28,7 @@ class AndroidProfileStore(private val context: Context) : ProfileStore {
         encodeDefaults = true
     }
 
-    val profileKey = stringPreferencesKey(PROFILE_KEY)
+    private val profileKey = stringPreferencesKey(PROFILE_KEY)
     override val profileFlow: Flow<Profile?> = ds.data
         .map { prefs ->
             prefs[profileKey]?.let { json.decodeFromString<Profile>(it) }
@@ -39,6 +39,6 @@ class AndroidProfileStore(private val context: Context) : ProfileStore {
     }
 
     override suspend fun clear() {
-        ds.edit { it.clear() }
+        ds.edit { it.remove(profileKey) }
     }
 }

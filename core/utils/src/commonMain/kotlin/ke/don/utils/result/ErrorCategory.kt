@@ -17,7 +17,6 @@ enum class ErrorCategory {
     NO_INTERNET,
     PAYLOAD_TOO_LARGE,
     SERVER,
-    SERVER_ERROR,
     SERIALIZATION,
     DECODING,
     UNKNOWN,
