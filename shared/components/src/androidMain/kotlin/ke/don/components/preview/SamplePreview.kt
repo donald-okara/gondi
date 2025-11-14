@@ -12,15 +12,16 @@ package ke.don.components.preview
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import ke.don.domain.datastore.Theme
 
-data class DemoData(val title: String, val isDark: Boolean = false)
+data class DemoData(val title: String, val theme: Theme)
 
 class DemoDataProvider : PreviewParameterProvider<DemoData> {
     override val values = sequenceOf(
-        DemoData("Lucy", true),
-        DemoData("Lucy", false),
-        DemoData("Annie", true),
-        DemoData("Annie", false),
+        DemoData("Lucy", Theme.Dark),
+        DemoData("Lucy", Theme.Light),
+        DemoData("Annie", Theme.Dark),
+        DemoData("Annie", Theme.Light),
     )
 }
 
@@ -36,7 +37,7 @@ class DemoDataProvider : PreviewParameterProvider<DemoData> {
 fun MyScreenPreview(
     @PreviewParameter(DemoDataProvider::class) demoData: DemoData,
 ) {
-    DevicePreviewContainer(isDarkTheme = demoData.isDark) {
+    DevicePreviewContainer(demoData.theme) {
         SampleScreen(demoData.title)
     }
 }

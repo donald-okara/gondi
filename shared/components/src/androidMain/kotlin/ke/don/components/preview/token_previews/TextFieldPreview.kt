@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 import ke.don.components.text_field.TextFieldToken
+import ke.don.domain.datastore.Theme
 
 /**
  * Shows a device preview of a TextFieldToken configured to display an error state and length guidance.
@@ -29,9 +30,9 @@ import ke.don.components.text_field.TextFieldToken
 @DevicePreviews
 @Composable
 fun FormTextFieldPreview(
-    @PreviewParameter(DarkModeProvider::class) isDarkTheme: Boolean,
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
-    DevicePreviewContainer(isDarkTheme = isDarkTheme) {
+    DevicePreviewContainer(theme = theme) {
         Column {
             TextFieldToken(
                 label = "Name",

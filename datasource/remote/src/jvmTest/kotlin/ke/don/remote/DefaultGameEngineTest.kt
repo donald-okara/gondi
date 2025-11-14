@@ -17,7 +17,9 @@ import ke.don.domain.state.Vote
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.remote.server.DefaultGameEngine
+import ke.don.utils.Logger
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,6 +27,7 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertNull
 
 class DefaultGameEngineTest : BaseGameTest() {
+    val logger = Logger("DefaultGameEngineTest")
     /**
      * JOIN
      */
@@ -46,7 +49,8 @@ class DefaultGameEngineTest : BaseGameTest() {
         )
         db.updatePlayerRole(Role.MODERATOR, player1.id)
 
-        executeValidated(engine, PlayerIntent.Join(newPlayer.id, newPlayer))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Join(newPlayer.id, game?.round ?: error("Round cannot be null"), newPlayer))
 
         val fetched = db.getPlayerById(newPlayer.id).first()
         assertEquals(newPlayer, fetched)
@@ -70,7 +74,8 @@ class DefaultGameEngineTest : BaseGameTest() {
 
         db.batchUpdatePlayerRole(batchUpdateRoles)
 
-        executeValidated(engine, PlayerIntent.Join(newPlayer.id, newPlayer))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Join(newPlayer.id, game?.round ?: error("Round cannot be null"), newPlayer))
 
         val fetched = db.getPlayerById(newPlayer.id).first()
         assertNull(fetched)
@@ -90,7 +95,8 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
-        executeValidated(engine, PlayerIntent.Kill(gondi.id, target.id))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Kill(gondi.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.pendingKills
         assert(fetched?.contains(target.id) == true)
@@ -105,7 +111,8 @@ class DefaultGameEngineTest : BaseGameTest() {
 
         db.batchUpdatePlayerRole(batchUpdateRoles)
 
-        executeValidated(engine, PlayerIntent.Kill(gondi.id, target.id))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Kill(gondi.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.pendingKills
         assert(fetched?.contains(target.id) == false)
@@ -122,7 +129,8 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
-        executeValidated(engine, PlayerIntent.Kill(gondi.id, target.id))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Kill(gondi.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.pendingKills
         assert(fetched?.contains(target.id) == false)
@@ -139,7 +147,8 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
-        executeValidated(engine, PlayerIntent.Kill(gondi.id, target.id))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Kill(gondi.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.pendingKills
         assert(fetched?.contains(target.id) == false)
@@ -157,10 +166,31 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.updateAliveStatus(false, gondi.id)
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
-        executeValidated(engine, PlayerIntent.Kill(gondi.id, target.id))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Kill(gondi.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.pendingKills
         assert(fetched?.contains(target.id) == false)
+    }
+    @Test
+    fun testKillPlayer_errorWhenKillTwice() = runTest {
+        val engine = DefaultGameEngine(db)
+
+        val gondi = player9
+        val target = player1
+        val target2 = player2
+
+        db.transaction {
+            db.batchUpdatePlayerRole(batchUpdateRoles)
+            db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
+        }
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Kill(gondi.id, game?.round ?: error("Round cannot be null"), target.id))
+        executeValidated(engine, PlayerIntent.Kill(gondi.id, game.round, target2.id))
+
+        val fetched = db.getGameState(gameState.id).first()?.pendingKills
+        assert(fetched?.contains(target.id) == true)
+        assert(fetched?.contains(target2.id) == false)
     }
 
     /**
@@ -178,7 +208,8 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
 
-        executeValidated(engine, PlayerIntent.Save(doctor.id, target.id))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Save(doctor.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.lastSavedPlayerId
         assertEquals(target.id, fetched)
@@ -196,7 +227,8 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
 
-        executeValidated(engine, PlayerIntent.Save(doctor.id, target.id))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Save(doctor.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.lastSavedPlayerId
         assertNotEquals(target.id, fetched)
@@ -211,7 +243,8 @@ class DefaultGameEngineTest : BaseGameTest() {
 
         db.batchUpdatePlayerRole(batchUpdateRoles)
 
-        executeValidated(engine, PlayerIntent.Save(doctor.id, target.id))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Save(doctor.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.lastSavedPlayerId
         assertNotEquals(target.id, fetched)
@@ -229,11 +262,35 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.updateAliveStatus(isAlive = false, doctor.id)
         }
 
-        executeValidated(engine, PlayerIntent.Save(doctor.id, target.id))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Save(doctor.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.lastSavedPlayerId
         assertNotEquals(target.id, fetched)
     }
+
+    @Test
+    fun testSavePlayer_errorWhenSaveTwice() = runTest {
+        val engine = DefaultGameEngine(db)
+
+        val doctor = player6
+        val target = player1
+        val target2 = player2
+
+        db.transaction {
+            db.batchUpdatePlayerRole(batchUpdateRoles)
+            db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
+        }
+
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Save(doctor.id, game?.round ?: error("Round cannot be null"), target.id))
+        executeValidated(engine, PlayerIntent.Save(doctor.id, game.round, target2.id))
+
+        val fetched = db.getGameState(gameState.id).first()?.lastSavedPlayerId
+        assertEquals(target.id, fetched)
+        assertNotEquals(target2.id, fetched)
+    }
+
 
     /**
      * INVESTIGATE
@@ -250,9 +307,10 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
 
-        executeValidated(engine, PlayerIntent.Investigate(detective.id, target.id))
+        val game = db.getGameState(gameState.id).first()
+        executeValidated(engine, PlayerIntent.Investigate(detective.id, game?.round ?: error("Round cannot be null"), target.id))
         val fetched = db.getPlayerById(detective.id)
-        val updatedTarget = db.getPlayerById(target.id).first()?.toKnownIdentity()
+        val updatedTarget = db.getPlayerById(target.id).first()?.toKnownIdentity(game.round)
 
         assert(fetched.first()?.knownIdentities?.contains(updatedTarget) == true)
     }
@@ -269,9 +327,10 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
         }
 
-        executeValidated(engine, PlayerIntent.Investigate(detective.id, target.id))
+        val game = db.getGameState(gameState.id).first()
+        executeValidated(engine, PlayerIntent.Investigate(detective.id, game?.round ?: error("Round cannot be null"), target.id))
         val fetched = db.getPlayerById(detective.id)
-        val updatedTarget = db.getPlayerById(target.id).first()?.toKnownIdentity()
+        val updatedTarget = db.getPlayerById(target.id).first()?.toKnownIdentity(game.round)
 
         assert(fetched.first()?.knownIdentities?.contains(updatedTarget) == false)
     }
@@ -291,9 +350,10 @@ class DefaultGameEngineTest : BaseGameTest() {
         val phase = db.getGameState(gameState.id).first()?.phase
         assertNotEquals(GamePhase.SLEEP, phase)
 
-        executeValidated(engine, PlayerIntent.Investigate(detective.id, target.id))
+        val game = db.getGameState(gameState.id).first()
+        executeValidated(engine, PlayerIntent.Investigate(detective.id, game?.round ?: error("Round cannot be null"), target.id))
         val fetched = db.getPlayerById(detective.id)
-        val updatedTarget = db.getPlayerById(target.id).first()?.toKnownIdentity()
+        val updatedTarget = db.getPlayerById(target.id).first()?.toKnownIdentity(game.round)
 
         assert(fetched.first()?.knownIdentities?.contains(updatedTarget) == false)
     }
@@ -314,13 +374,70 @@ class DefaultGameEngineTest : BaseGameTest() {
         val phase = db.getGameState(gameState.id).first()?.phase
         assertEquals(GamePhase.SLEEP, phase)
 
-        executeValidated(engine, PlayerIntent.Investigate(detective.id, target.id))
+        val game = db.getGameState(gameState.id).first()
+        executeValidated(engine, PlayerIntent.Investigate(detective.id, game?.round ?: error("Round cannot be null"), target.id))
         val fetched = db.getPlayerById(detective.id)
-        val updatedTarget = db.getPlayerById(target.id).first()?.toKnownIdentity()
+        val updatedTarget = db.getPlayerById(target.id).first()?.toKnownIdentity(game.round)
 
         assert(fetched.first()?.knownIdentities?.contains(updatedTarget) == false)
     }
 
+    @Test
+    fun testInvestigatePlayer_errorWhenAlreadyInvestigated() = runTest {
+        val engine = DefaultGameEngine(db)
+
+        val detective = player8
+        val target = player1
+        val target2 = player2
+
+        db.transaction {
+            db.batchUpdatePlayerRole(batchUpdateRoles)
+            db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
+        }
+
+        val game = db.getGameState(gameState.id).first()
+
+        executeValidated(engine, PlayerIntent.Investigate(detective.id, game?.round ?: error("Round cannot be null"), target.id))
+        executeValidated(engine, PlayerIntent.Investigate(detective.id, game.round, target2.id))
+
+        val fetched = db.getPlayerById(detective.id).also {
+            logger.debug(it.firstOrNull()?.knownIdentities.toString())
+        }
+        val updatedTarget = db.getPlayerById(target.id).first()?.toKnownIdentity(game.round)
+        val updatedTarget2 = db.getPlayerById(target2.id).first()?.toKnownIdentity(game.round)
+
+        assert(fetched.first()?.knownIdentities?.contains(updatedTarget) == true)
+        assert(fetched.first()?.knownIdentities?.contains(updatedTarget2) == false)
+    }
+
+    @Test
+    fun testInvestigatePlayer_errorWhenAlreadyKnown() = runTest {
+        val engine = DefaultGameEngine(db)
+
+        val detective = player8
+        val target = player1
+
+        db.transaction {
+            db.batchUpdatePlayerRole(batchUpdateRoles)
+            db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
+        }
+
+        val game = db.getGameState(gameState.id).first()
+
+        executeValidated(engine, PlayerIntent.Investigate(detective.id, game?.round ?: error("Round cannot be null"), target.id))
+        db.updatePhase(GamePhase.SLEEP, 2L, gameState.id)
+        executeValidated(engine, PlayerIntent.Investigate(detective.id, game.round, target.id))
+
+        val fetched = db.getPlayerById(detective.id)
+        val updatedTarget = db.getPlayerById(target.id).first()?.toKnownIdentity(game.round)
+
+        assert(fetched.first()?.knownIdentities?.contains(updatedTarget) == true)
+        assert(fetched.first()?.knownIdentities?.size == 1)
+        assert(fetched.first()?.lastAction?.round == 1L)
+    }
+    /**
+     * ACCUSE
+     */
     @Test
     fun testAccusePlayer_success() = runTest {
         val engine = DefaultGameEngine(db)
@@ -336,7 +453,8 @@ class DefaultGameEngineTest : BaseGameTest() {
         val phase = db.getGameState(gameState.id).first()?.phase
         assertEquals(GamePhase.TOWN_HALL, phase)
 
-        executeValidated(engine, PlayerIntent.Accuse(accuser.id, target.id))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Accuse(accuser.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.accusedPlayer
 
@@ -359,7 +477,8 @@ class DefaultGameEngineTest : BaseGameTest() {
         val phase = db.getGameState(gameState.id).first()?.phase
         assertEquals(GamePhase.TOWN_HALL, phase)
 
-        executeValidated(engine, PlayerIntent.Accuse(accuser.id, target.id))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Accuse(accuser.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.accusedPlayer
 
@@ -380,7 +499,8 @@ class DefaultGameEngineTest : BaseGameTest() {
         val phase = db.getGameState(gameState.id).first()?.phase
         assertEquals(GamePhase.SLEEP, phase)
 
-        executeValidated(engine, PlayerIntent.Accuse(accuser.id, target.id))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Accuse(accuser.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.accusedPlayer
 
@@ -401,12 +521,15 @@ class DefaultGameEngineTest : BaseGameTest() {
         val phase = db.getGameState(gameState.id).first()?.phase
         assertEquals(GamePhase.TOWN_HALL, phase)
 
-        executeValidated(engine, PlayerIntent.Accuse(accuser.id, target.id))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        executeValidated(engine, PlayerIntent.Accuse(accuser.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.accusedPlayer
 
         assertNull(fetched)
     }
+
+
 
     /**
      * SECOND
@@ -424,12 +547,12 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.batchUpdatePlayerRole(batchUpdateRoles)
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
         }
-        val phase = db.getGameState(gameState.id).first()?.phase
-        assertEquals(GamePhase.TOWN_HALL, phase)
+        var game = db.getGameState(gameState.id).first()
+        assertEquals(GamePhase.TOWN_HALL, game?.phase)
 
-        executeValidated(engine, PlayerIntent.Accuse(accuser.id, target.id))
-
-        executeValidated(engine, PlayerIntent.Second(seconder.id, target.id))
+        executeValidated(engine, PlayerIntent.Accuse(accuser.id, game?.round ?: error("Round cannot be null"), target.id))
+        game = db.getGameState(gameState.id).first()
+        executeValidated(engine, PlayerIntent.Second(seconder.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.second
 
@@ -451,12 +574,12 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.updateAliveStatus(false, seconder.id)
         }
 
-        val phase = db.getGameState(gameState.id).first()?.phase
-        assertEquals(GamePhase.TOWN_HALL, phase)
+        var game = db.getGameState(gameState.id).first()
+        assertEquals(GamePhase.TOWN_HALL, game?.phase)
 
-        executeValidated(engine, PlayerIntent.Accuse(accuser.id, target.id))
-
-        executeValidated(engine, PlayerIntent.Second(seconder.id, target.id))
+        executeValidated(engine, PlayerIntent.Accuse(accuser.id, game?.round ?: error("Round cannot be null"), target.id))
+        game = db.getGameState(gameState.id).first()
+        executeValidated(engine, PlayerIntent.Second(seconder.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.second
 
@@ -477,12 +600,12 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.updatePhase(GamePhase.SLEEP, round = 1L, id = gameState.id)
         }
 
-        val phase = db.getGameState(gameState.id).first()?.phase
-        assertEquals(GamePhase.SLEEP, phase)
+        var game = db.getGameState(gameState.id).first()
+        assertEquals(GamePhase.SLEEP, game?.phase)
 
-        executeValidated(engine, PlayerIntent.Accuse(accuser.id, target.id))
-
-        executeValidated(engine, PlayerIntent.Second(seconder.id, target.id))
+        executeValidated(engine, PlayerIntent.Accuse(accuser.id, game?.round ?: error("Round cannot be null"), target.id))
+        game = db.getGameState(gameState.id).first()
+        executeValidated(engine, PlayerIntent.Second(seconder.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.second
 
@@ -503,12 +626,12 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
         }
 
-        val phase = db.getGameState(gameState.id).first()?.phase
-        assertEquals(GamePhase.TOWN_HALL, phase)
+        var game = db.getGameState(gameState.id).first()
+        assertEquals(GamePhase.TOWN_HALL, game?.phase)
 
-        executeValidated(engine, PlayerIntent.Accuse(accuser.id, target.id))
-
-        executeValidated(engine, PlayerIntent.Second(seconder.id, target.id))
+        executeValidated(engine, PlayerIntent.Accuse(accuser.id, game?.round ?: error("Round cannot be null"), target.id))
+        game = db.getGameState(gameState.id).first()
+        executeValidated(engine, PlayerIntent.Second(seconder.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.second
 
@@ -528,12 +651,12 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
         }
 
-        val phase = db.getGameState(gameState.id).first()?.phase
-        assertEquals(GamePhase.TOWN_HALL, phase)
+        var game = db.getGameState(gameState.id).first()
+        assertEquals(GamePhase.TOWN_HALL, game?.phase)
 
-        executeValidated(engine, PlayerIntent.Accuse(accuser.id, target.id))
-
-        executeValidated(engine, PlayerIntent.Second(seconder.id, target.id))
+        executeValidated(engine, PlayerIntent.Accuse(accuser.id, game?.round ?: error("Round cannot be null"), target.id))
+        game = db.getGameState(gameState.id).first()
+        executeValidated(engine, PlayerIntent.Second(seconder.id, game?.round ?: error("Round cannot be null"), target.id))
 
         val fetched = db.getGameState(gameState.id).first()?.second
 
@@ -562,13 +685,14 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
         }
 
-        executeValidated(engine, PlayerIntent.Accuse(accuser.id, accused.id))
+        var game = db.getGameState(gameState.id).first()
+        executeValidated(engine, PlayerIntent.Accuse(accuser.id, game?.round ?: error("Round cannot be null"), accused.id))
 
-        val phase = db.getGameState(gameState.id).first()?.phase
-        assertEquals(GamePhase.TOWN_HALL, phase)
+        game = db.getGameState(gameState.id).first()
+        assertEquals(GamePhase.TOWN_HALL, game?.phase)
 
         db.updatePhase(GamePhase.COURT, 1L, gameState.id)
-        executeValidated(engine, PlayerIntent.Vote(voter.id, vote))
+        executeValidated(engine, PlayerIntent.Vote(voter.id, game?.round ?: error("Round cannot be null"), vote))
 
         val fetched = db.getAllVotes().first()
 
@@ -594,13 +718,14 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
         }
 
-        executeValidated(engine, PlayerIntent.Accuse(accuser.id, accused.id))
+        var game = db.getGameState(gameState.id).first()
+        executeValidated(engine, PlayerIntent.Accuse(accuser.id, game?.round ?: error("Round cannot be null"), accused.id))
 
-        val phase = db.getGameState(gameState.id).first()?.phase
-        assertEquals(GamePhase.TOWN_HALL, phase)
+        game = db.getGameState(gameState.id).first()
+        assertEquals(GamePhase.TOWN_HALL, game?.phase)
 
         db.updatePhase(GamePhase.COURT, 1L, gameState.id)
-        executeValidated(engine, PlayerIntent.Vote(voter.id, vote))
+        executeValidated(engine, PlayerIntent.Vote(voter.id, game?.round ?: error("Round cannot be null"), vote))
 
         val fetched = db.getAllVotes().first()
 
@@ -626,14 +751,15 @@ class DefaultGameEngineTest : BaseGameTest() {
             db.updatePhase(GamePhase.TOWN_HALL, round = 1L, id = gameState.id)
         }
 
-        executeValidated(engine, PlayerIntent.Accuse(accuser.id, accused.id))
+        var game = db.getGameState(gameState.id).first()
+        executeValidated(engine, PlayerIntent.Accuse(accuser.id, game?.round ?: error("Round cannot be null"), accused.id))
 
-        val phase = db.getGameState(gameState.id).first()?.phase
-        assertEquals(GamePhase.TOWN_HALL, phase)
+        game = db.getGameState(gameState.id).first()
+        assertEquals(GamePhase.TOWN_HALL, game?.phase)
 
         db.updatePhase(GamePhase.COURT, 1L, gameState.id)
-        executeValidated(engine, PlayerIntent.Vote(voter.id, vote))
-        executeValidated(engine, PlayerIntent.Vote(voter.id, vote))
+        executeValidated(engine, PlayerIntent.Vote(voter.id, game?.round ?: error("Round cannot be null"), vote))
+        executeValidated(engine, PlayerIntent.Vote(voter.id, game.round, vote))
 
         val fetched = db.getAllVotes().first()
 

@@ -9,6 +9,8 @@
  */
 package ke.don.local.di
 
+import ke.don.local.datastore.IosThemeStore
+import ke.don.local.datastore.ThemeStore
 import ke.don.local.db.DatabaseFactory
 import ke.don.local.db.IOSDatabaseFactory
 import org.koin.core.module.Module
@@ -19,4 +21,8 @@ import org.koin.dsl.module
 actual val databaseModule: Module
     get() = module {
         singleOf(::IOSDatabaseFactory).bind<DatabaseFactory>()
+    }
+actual val platformThemeModule: Module
+    get() = module {
+        singleOf(::IosThemeStore).bind<ThemeStore>()
     }

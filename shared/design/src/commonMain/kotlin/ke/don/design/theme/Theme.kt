@@ -16,6 +16,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import ke.don.domain.datastore.Theme
 
 @Immutable
 data class ExtendedColorScheme(
@@ -160,22 +161,26 @@ val LocalExtendedColorScheme = staticCompositionLocalOf<ExtendedColorScheme> {
  * @param darkTheme When `true`, applies the dark color scheme and corresponding extended colors; when `false`, applies the light equivalents.
  * @param content The composable content that will be wrapped by the theme.
  */
+
+expect val systemIsDark: Boolean
+
 @Composable
 fun AppTheme(
-    darkTheme: Boolean = true,
-    // Dynamic color is available on Android 12+
+    theme: Theme,
     content:
     @Composable()
     () -> Unit,
 ) {
-    val colorScheme = when {
-        darkTheme -> darkScheme
-        else -> lightScheme
+    val colorScheme = when(theme){
+        Theme.Light -> lightScheme
+        Theme.Dark -> darkScheme
+        Theme.System -> if (systemIsDark) darkScheme else lightScheme
     }
 
-    val extendedColors = when {
-        darkTheme -> extendedDark
-        else -> extendedLight
+    val extendedColors = when(theme) {
+        Theme.Light -> extendedLight
+        Theme.Dark -> extendedDark
+        Theme.System -> if (systemIsDark) extendedDark else extendedLight
     }
 
     CompositionLocalProvider(

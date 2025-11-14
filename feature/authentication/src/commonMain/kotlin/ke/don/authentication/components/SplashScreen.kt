@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import ke.don.components.profile.AdaptiveLogo
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
 import ke.don.resources.Resources
@@ -35,9 +36,7 @@ fun SplashScreen(
     ) {
         with(sharedScope) {
             with(visibilityScope) {
-                Image(
-                    painter = painterResource(Resources.Images.LOGO),
-                    contentDescription = "Logo",
+                AdaptiveLogo(
                     modifier = Modifier
                         .fillMaxSize(0.5f)
                         .sharedElement(

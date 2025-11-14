@@ -20,6 +20,7 @@ kotlin {
             implementation(libs.kotlin.coroutines)
             implementation(libs.sqldelight.runtime)
             implementation(libs.sqldelight.coroutines)
+            implementation(libs.bundles.datastore)
         }
         androidMain.dependencies {
             implementation(libs.sqldelight.android)

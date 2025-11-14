@@ -15,9 +15,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import ke.don.components.button.ButtonShowcase
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
+import ke.don.domain.datastore.Theme
 
-class DarkModeProvider : PreviewParameterProvider<Boolean> {
-    override val values = sequenceOf(true, false)
+class ThemeProvider : PreviewParameterProvider<Theme> {
+    override val values = sequenceOf(Theme.Light, Theme.Dark)
 }
 
 /**
@@ -30,11 +31,9 @@ class DarkModeProvider : PreviewParameterProvider<Boolean> {
 @DevicePreviews
 @Composable
 fun ButtonPreview(
-    @PreviewParameter(DarkModeProvider::class) isDarkTheme: Boolean,
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
-    DevicePreviewContainer(
-        isDarkTheme,
-    ) {
+    DevicePreviewContainer( theme ) {
         ButtonShowcase()
     }
 }

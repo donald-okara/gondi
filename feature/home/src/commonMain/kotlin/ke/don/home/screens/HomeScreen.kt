@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
+import androidx.compose.material.RadioButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +32,7 @@ import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.profile.ProfileImageToken
 import ke.don.components.scaffold.ScaffoldToken
+import ke.don.domain.datastore.Theme
 import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.domain.gameplay.server.LanDiscovery
 import ke.don.domain.gameplay.server.LocalServer
@@ -37,6 +40,7 @@ import ke.don.domain.gameplay.server.SERVICE_TYPE
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.domain.table.Profile
+import ke.don.local.datastore.ThemeRepository
 import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
 import kotlin.uuid.ExperimentalUuidApi
@@ -56,6 +60,11 @@ class HomeScreen : Screen {
         var gamesList by remember {
             mutableStateOf<List<GameIdentity>>(emptyList())
         }
+
+        val themeRepository = koin.get<ThemeRepository>()
+        val theme by themeRepository.theme.collectAsState(
+            initial = Theme.System,
+        )
 
         val coroutineScope = rememberCoroutineScope()
 
@@ -110,6 +119,21 @@ class HomeScreen : Screen {
                     buttonType = ComponentType.Primary,
                 ) {
                     Text("Advertise")
+                }
+
+                Theme.entries.forEach {
+                    RadioButton(
+                        selected = theme == it,
+                        onClick = {
+                            coroutineScope.launch {
+                                themeRepository.setTheme(it)
+                            }
+                        }
+                    )
+
+                    Text(
+                        text = it.name,
+                    )
                 }
 
                 gamesList.forEach { item ->

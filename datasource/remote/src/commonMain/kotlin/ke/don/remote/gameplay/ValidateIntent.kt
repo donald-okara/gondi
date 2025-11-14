@@ -9,6 +9,7 @@
  */
 package ke.don.remote.gameplay
 
+import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.PlayerIntent
 import ke.don.domain.gameplay.Role
 import ke.don.domain.gameplay.server.PhaseValidationResult
@@ -25,6 +26,7 @@ suspend fun validateIntent(
     val gameState = db.getGameState(gameId).firstOrNull() ?: return PhaseValidationResult.Error("Game state not found.")
     val votes = db.getAllVotes().firstOrNull() ?: return PhaseValidationResult.Error("No votes found.")
     val phase = gameState.phase
+    val round = gameState.round
     val accused = gameState.accusedPlayer
     val lastSaved = gameState.lastSavedPlayerId
 
@@ -49,6 +51,8 @@ suspend fun validateIntent(
         is PlayerIntent.Kill -> when {
             !player.isAlive -> PhaseValidationResult.Error("Dead players cannot perform actions.")
             role != Role.GONDI -> PhaseValidationResult.Error("Only Gondi players can perform kills.")
+            player.lastAction?.round == round && player.lastAction?.type == ActionType.KILL
+                -> PhaseValidationResult.Error("You have already killed on this round.")
             phase != GamePhase.SLEEP -> PhaseValidationResult.Error("Kills can only occur during the Sleep phase.")
             intent.playerId == intent.targetId -> PhaseValidationResult.Error("You cannot target yourself.")
             !role.canActInSleep -> PhaseValidationResult.Error("${role.name} cannot act in the Sleep phase.")
@@ -58,6 +62,8 @@ suspend fun validateIntent(
         is PlayerIntent.Save -> when {
             !player.isAlive -> PhaseValidationResult.Error("Dead players cannot perform actions.")
             role != Role.DOCTOR -> PhaseValidationResult.Error("Only the Doctor can save players.")
+            player.lastAction?.round == round && player.lastAction?.type == ActionType.SAVE
+                -> PhaseValidationResult.Error("You have saved someone this round.")
             phase != GamePhase.SLEEP -> PhaseValidationResult.Error("Saves can only happen during the Sleep phase.")
             lastSaved == intent.targetId -> PhaseValidationResult.Error("You cannot save the same player twice in a row.")
             !role.canActInSleep -> PhaseValidationResult.Error("${role.name} cannot act in the Sleep phase.")
@@ -68,6 +74,9 @@ suspend fun validateIntent(
             !player.isAlive -> PhaseValidationResult.Error("Dead players cannot perform actions.")
             role != Role.DETECTIVE -> PhaseValidationResult.Error("Only the Detective can investigate players.")
             phase != GamePhase.SLEEP -> PhaseValidationResult.Error("Investigations can only occur during the Sleep phase.")
+            player.lastAction?.round == round && player.lastAction?.type == ActionType.INVESTIGATE
+                -> PhaseValidationResult.Error("You have already investigated this round.")
+            player.knownIdentities.any { it.playerId == intent.targetId } -> PhaseValidationResult.Error("You already investigated this player.")
             player.id == intent.targetId -> PhaseValidationResult.Error("You cannot investigate yourself.")
             players.none { it.id == intent.targetId && it.isAlive } -> PhaseValidationResult.Error("Target player is either dead or not found.")
             !role.canActInSleep -> PhaseValidationResult.Error("${role.name} cannot act in the Sleep phase.")
@@ -78,6 +87,8 @@ suspend fun validateIntent(
             !player.isAlive -> PhaseValidationResult.Error("Dead players cannot accuse.")
             role.canAccuse.not() -> PhaseValidationResult.Error("${role.name} cannot accuse.")
             !role.canVote -> PhaseValidationResult.Error("${role.name} cannot vote or accuse.")
+            gameState.accusedPlayer != null -> PhaseValidationResult.Error("An accusation is already in progress.")
+            gameState.second != null -> PhaseValidationResult.Error("A second is already in progress.")
             phase != GamePhase.TOWN_HALL -> PhaseValidationResult.Error("Accusations can only happen during the Town Hall phase.")
             player.id == intent.targetId -> PhaseValidationResult.Error("You cannot accuse yourself.")
             intent.playerId != player.id -> PhaseValidationResult.Error("Invalid player ID for accusation.")

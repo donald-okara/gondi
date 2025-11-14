@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import ke.don.components.profile.AdaptiveLogo
 import ke.don.resources.Resources
 import ke.don.resources.Values
 import ke.don.resources.isCompact
@@ -78,9 +79,7 @@ fun TopBarToken(
             navigationIcon = {
                 when (navigationIcon) {
                     NavigationIcon.None -> {
-                        Image(
-                            painter = painterResource(Resources.Images.LOGO),
-                            contentDescription = "App Icon",
+                        AdaptiveLogo(
                             modifier = Modifier.size(24.dp),
                         )
                     }

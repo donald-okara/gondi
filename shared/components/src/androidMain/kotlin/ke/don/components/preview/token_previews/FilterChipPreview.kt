@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import ke.don.components.button.FilterDropdownChip
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
+import ke.don.domain.datastore.Theme
 
 /**
  * Displays a preview of the FilterDropdownChip demonstrating selection, label display, and clearing behavior.
@@ -41,9 +42,9 @@ import ke.don.components.preview.DevicePreviews
 @DevicePreviews
 @Composable
 fun FilterDropdownChipPreview(
-    @PreviewParameter(DarkModeProvider::class) isDarkTheme: Boolean,
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
-    DevicePreviewContainer(isDarkTheme) {
+    DevicePreviewContainer(theme) {
         var selected by remember { mutableStateOf<String?>(null) }
 
         Surface(

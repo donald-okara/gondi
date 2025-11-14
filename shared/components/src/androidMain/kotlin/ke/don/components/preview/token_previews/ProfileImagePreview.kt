@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 import ke.don.components.profile.ProfileImageToken
+import ke.don.domain.datastore.Theme
 import ke.don.domain.table.AvatarBackground
 import ke.don.domain.table.Profile
 
@@ -35,10 +36,10 @@ val profiles = listOf(
 @DevicePreviews
 @Composable
 fun ProfilePreview(
-    @PreviewParameter(DarkModeProvider::class) isDarkTheme: Boolean,
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
     // <template>
-    DevicePreviewContainer(isDarkTheme = isDarkTheme) {
+    DevicePreviewContainer(theme = theme) {
         Column {
             FlowRow(
                 modifier = Modifier.width(500.dp),

@@ -28,9 +28,10 @@ data class Player(
     @SerialName("last_action") val lastAction: PlayerAction? = null,
     @SerialName("known_identities") val knownIdentities: List<KnownIdentity> = emptyList(),
 ) {
-    fun toKnownIdentity(): KnownIdentity = KnownIdentity(
+    fun toKnownIdentity(round: Long): KnownIdentity = KnownIdentity(
         playerId = id,
         role = role ?: error("Role cannot be null"),
+        round = round
     )
 }
 
@@ -38,4 +39,5 @@ data class Player(
 data class KnownIdentity(
     val playerId: String,
     val role: Role,
+    val round: Long = 0L
 )

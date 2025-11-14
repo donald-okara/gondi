@@ -94,19 +94,21 @@ class DefaultModeratorEngineTest : BaseGameTest() {
 
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.TOWN_HALL))
 
-        gameEngine.reduce(gameState.id, PlayerIntent.Accuse(accuser.id, gondi.id))
-        gameEngine.reduce(gameState.id, PlayerIntent.Second(seconder.id, gondi.id))
+        val gameFirst = db.getGameState(gameState.id).firstOrNull()
+
+        gameEngine.reduce(gameState.id, PlayerIntent.Accuse(accuser.id, gameFirst?.round ?: error("Round cannot be null"),gondi.id))
+        gameEngine.reduce(gameState.id, PlayerIntent.Second(seconder.id, gameFirst.round, gondi.id))
 
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.COURT))
 
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player3.id, Vote(voterId = player3.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player4.id, Vote(voterId = player4.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player5.id, Vote(voterId = player5.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player6.id, Vote(voterId = player6.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player7.id, Vote(voterId = player7.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player8.id, Vote(voterId = player8.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player9.id, Vote(voterId = player9.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player10.id, Vote(voterId = player10.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player3.id,gameFirst.round ,Vote(voterId = player3.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player4.id, gameFirst.round, Vote(voterId = player4.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player5.id, gameFirst.round, Vote(voterId = player5.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player6.id, gameFirst.round, Vote(voterId = player6.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player7.id, gameFirst.round, Vote(voterId = player7.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player8.id, gameFirst.round, Vote(voterId = player8.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player9.id, gameFirst.round, Vote(voterId = player9.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player10.id, gameFirst.round, Vote(voterId = player10.id, targetId = player2.id, isGuilty = isGuilty)))
 
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.SLEEP))
 
@@ -135,19 +137,20 @@ class DefaultModeratorEngineTest : BaseGameTest() {
 
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.TOWN_HALL))
 
-        gameEngine.reduce(gameState.id, PlayerIntent.Accuse(accuser.id, gondi.id))
-        gameEngine.reduce(gameState.id, PlayerIntent.Second(seconder.id, gondi.id))
+        val gameFirst = db.getGameState(gameState.id).firstOrNull()
+        gameEngine.reduce(gameState.id, PlayerIntent.Accuse(accuser.id, gameFirst?.round ?: error("Round cannot be null"), gondi.id))
+        gameEngine.reduce(gameState.id, PlayerIntent.Second(seconder.id, gameFirst.round,gondi.id))
 
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.COURT))
 
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player3.id, Vote(voterId = player3.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player4.id, Vote(voterId = player4.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player5.id, Vote(voterId = player5.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player6.id, Vote(voterId = player6.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player7.id, Vote(voterId = player7.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player8.id, Vote(voterId = player8.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player9.id, Vote(voterId = player9.id, targetId = player2.id, isGuilty = isGuilty)))
-        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player10.id, Vote(voterId = player10.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player3.id, gameFirst.round, Vote(voterId = player3.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player4.id, gameFirst.round, Vote(voterId = player4.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player5.id, gameFirst.round, Vote(voterId = player5.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player6.id, gameFirst.round, Vote(voterId = player6.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player7.id, gameFirst.round, Vote(voterId = player7.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player8.id, gameFirst.round, Vote(voterId = player8.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player9.id, gameFirst.round, Vote(voterId = player9.id, targetId = player2.id, isGuilty = isGuilty)))
+        gameEngine.reduce(gameState.id, PlayerIntent.Vote(player10.id, gameFirst.round, Vote(voterId = player10.id, targetId = player2.id, isGuilty = isGuilty)))
 
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.SLEEP))
 
@@ -199,10 +202,12 @@ class DefaultModeratorEngineTest : BaseGameTest() {
 
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.SLEEP))
 
-        gameEngine.reduce(gameState.id, PlayerIntent.Kill(gondi.id, target.id))
-        gameEngine.reduce(gameState.id, PlayerIntent.Kill(gondi2.id, target2.id))
+        val gameFirst = db.getGameState(gameState.id).firstOrNull()
 
-        gameEngine.reduce(gameState.id, PlayerIntent.Save(doctor.id, target2.id))
+        gameEngine.reduce(gameState.id, PlayerIntent.Kill(gondi.id, gameFirst?.round ?: error("Round cannot be null"), target.id))
+        gameEngine.reduce(gameState.id, PlayerIntent.Kill(gondi2.id, gameFirst.round,target2.id))
+
+        gameEngine.reduce(gameState.id, PlayerIntent.Save(doctor.id, gameFirst.round, target2.id))
 
         val gameAsleep = db.getGameState(gameState.id).firstOrNull()
 
@@ -318,10 +323,11 @@ class DefaultModeratorEngineTest : BaseGameTest() {
 
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.SLEEP))
 
-        gameEngine.reduce(gameState.id, PlayerIntent.Kill(gondi.id, target.id))
-        gameEngine.reduce(gameState.id, PlayerIntent.Kill(gondi2.id, target2.id))
+        val gameFirst = db.getGameState(gameState.id).firstOrNull()
+        gameEngine.reduce(gameState.id, PlayerIntent.Kill(gondi.id, gameFirst?.round ?: error("Round cannot be null"), target.id))
+        gameEngine.reduce(gameState.id, PlayerIntent.Kill(gondi2.id, gameFirst.round, target2.id))
 
-        gameEngine.reduce(gameState.id, PlayerIntent.Save(doctor.id, target2.id))
+        gameEngine.reduce(gameState.id, PlayerIntent.Save(doctor.id, gameFirst.round, target2.id))
 
         val gameAsleep = db.getGameState(gameState.id).firstOrNull()
 

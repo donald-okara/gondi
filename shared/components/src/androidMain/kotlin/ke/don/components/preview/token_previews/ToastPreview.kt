@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import ke.don.components.card.ToastShowcase
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
+import ke.don.domain.datastore.Theme
 
 /**
  * Renders the toast showcase inside a device-and-theme preview container.
@@ -23,11 +24,9 @@ import ke.don.components.preview.DevicePreviews
 @DevicePreviews
 @Composable
 fun ToastPreview(
-    @PreviewParameter(DarkModeProvider::class) isDarkTheme: Boolean,
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
-    DevicePreviewContainer(
-        isDarkTheme,
-    ) {
+    DevicePreviewContainer( theme ) {
         ToastShowcase()
     }
 }

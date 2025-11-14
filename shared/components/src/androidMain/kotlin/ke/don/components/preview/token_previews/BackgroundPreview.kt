@@ -17,6 +17,7 @@ import ke.don.components.background.GradientBackground
 import ke.don.components.button.ButtonShowcase
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
+import ke.don.domain.datastore.Theme
 
 /**
  * Displays a device-themed preview showing a full-size gradient background with a button showcase.
@@ -29,9 +30,9 @@ import ke.don.components.preview.DevicePreviews
 @DevicePreviews
 @Composable
 fun BackgroundPreview(
-    @PreviewParameter(DarkModeProvider::class) isDarkTheme: Boolean,
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
-    DevicePreviewContainer(isDarkTheme) {
+    DevicePreviewContainer(theme) {
         GradientBackground(
             modifier = Modifier.fillMaxSize(),
         ) {

@@ -21,20 +21,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.stack.StackEvent
 import cafe.adriel.voyager.navigator.Navigator
 import ke.don.authentication.screens.AuthenticationScreen
 import ke.don.components.card.Toast
 import ke.don.design.theme.AppTheme
+import ke.don.domain.datastore.Theme
 import ke.don.koffee.annotations.ExperimentalKoffeeApi
 import ke.don.koffee.model.KoffeeDefaults
 import ke.don.koffee.model.ToastAnimation
 import ke.don.koffee.model.ToastPosition
 import ke.don.koffee.ui.KoffeeBar
+import ke.don.local.datastore.ThemeRepository
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.getKoin
 
 /**
  * Root composable that applies the app theme and hosts the UI with a configured KoffeeBar for toasts.
@@ -47,7 +53,15 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 @Preview
 fun App() {
-    AppTheme {
+    val koin = getKoin()
+    val themeRepository = koin.get<ThemeRepository>()
+    val theme by themeRepository.theme.collectAsState(
+        initial = Theme.System,
+    )
+
+    AppTheme(
+        theme = theme ?: Theme.System,
+    ) {
         val koffeeConfig = KoffeeDefaults.config.copy(
             layout = { Toast(data = it) },
             position = ToastPosition.BottomEnd,
