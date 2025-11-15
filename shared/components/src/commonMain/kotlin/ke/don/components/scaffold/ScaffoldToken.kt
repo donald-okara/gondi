@@ -90,7 +90,7 @@ fun ScaffoldToken(
     railHeader: @Composable (ColumnScope.() -> Unit)? = null,
     railFooter: @Composable (ColumnScope.() -> Unit)? = null,
     drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-    contentAlignment: Alignment = Alignment.TopStart,
+    contentAlignment: Alignment = Alignment.TopCenter,
     content: @Composable (isCompact: Boolean) -> Unit,
 ) {
     val isCompact by remember { derivedStateOf { isCompact() } }
@@ -102,34 +102,14 @@ fun ScaffoldToken(
         railFooter,
         content,
     ) {
-        {
-                padding ->
+        { padding ->
             Box(
                 modifier = Modifier
                     .padding(padding)
                     .fillMaxSize(),
                 contentAlignment = contentAlignment,
             ) {
-                Row(
-                    modifier = Modifier
-                        .animateContentSize()
-                        .fillMaxSize(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-                ) {
-                    if (!isCompact && (navigationRailContent != null || railHeader != null || railFooter != null)) {
-                        NavigationRailToken(
-                            modifier = Modifier.padding(Values.compactScreenPadding),
-                            content = navigationRailContent,
-                            header = railHeader,
-                            footer = railFooter,
-                            expanded = drawerState.isOpen,
-                        )
-                        VerticalDivider()
-                    }
-
-                    content(isCompact)
-                }
+                content(isCompact)
             }
         }
     }
