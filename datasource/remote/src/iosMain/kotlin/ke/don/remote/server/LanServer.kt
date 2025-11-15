@@ -24,7 +24,10 @@ class LanServer(
         TODO("Not yet implemented")
     }
 
-    override suspend fun handleModeratorCommand(command: ModeratorCommand) {
+    override suspend fun handleModeratorCommand(
+        gameId: String,
+        command: ModeratorCommand,
+    ) {
         TODO("Not yet implemented")
     }
 }

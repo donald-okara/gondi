@@ -14,6 +14,7 @@ import gondi.shared.resources.generated.resources.app_icon
 import gondi.shared.resources.generated.resources.google_logo
 import gondi.shared.resources.generated.resources.roboto_regular
 import gondi.shared.resources.generated.resources.roboto_semibold
+import gondi.shared.resources.generated.resources.s24_frame
 
 object Resources {
     object Font {
@@ -24,5 +25,6 @@ object Resources {
     object Images {
         val LOGO = Res.drawable.app_icon
         val GOOGLE_LOGO = Res.drawable.google_logo
+        val MOBILE_FRAME = Res.drawable.s24_frame
     }
 }
