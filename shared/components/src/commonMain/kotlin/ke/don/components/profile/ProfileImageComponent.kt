@@ -29,16 +29,54 @@ import ke.don.resources.painter
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
+fun ProfileImageToken(
+    modifier: Modifier = Modifier,
+    profile: Profile,
+    onClick: (() -> Unit)? = null,
+    isHero: Boolean,
+    isSelected: Boolean = false,
+) {
+    ProfileBackground(
+        isHero = isHero,
+        onClick = onClick,
+        color = profile.background.color(),
+        isSelected = isSelected,
+    ) {
+        profile.avatar?.let {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Image(
+                    painter = painterResource(it.painter()),
+                    contentDescription = "Profile Image",
+                    modifier = modifier
+                        .padding(if (isHero) 8.dp else 2.dp)
+                        .fillMaxSize(),
+                )
+            }
+        } ?: InitialsToken(
+            profile = profile,
+            isHero = isHero,
+            modifier = modifier,
+        )
+    }
+}
+
+@Composable
 fun ProfileBackground(
     modifier: Modifier = Modifier,
     color: Color,
     isHero: Boolean = true,
+    isSelected: Boolean = false,
     onClick: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
+    val baseSize = if (isHero) 96.dp else 32.dp
+    val targetSize = if (isSelected) baseSize * 1.1f else baseSize
     val animatedSize by animateDpAsState(
-        targetValue = if (isHero) 96.dp else 32.dp,
-        label = "size",
+        targetValue = targetSize,
+        label = "animatedSize",
     )
 
     if (onClick != null) {
@@ -60,38 +98,5 @@ fun ProfileBackground(
         ) {
             content.invoke()
         }
-    }
-}
-
-@Composable
-fun ProfileImageToken(
-    modifier: Modifier = Modifier,
-    profile: Profile,
-    onClick: (() -> Unit)? = null,
-    isHero: Boolean,
-) {
-    ProfileBackground(
-        isHero = isHero,
-        onClick = onClick,
-        color = profile.background.color(),
-    ) {
-        profile.avatar?.let {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Image(
-                    painter = painterResource(it.painter()),
-                    contentDescription = "Profile Image",
-                    modifier = modifier
-                        .padding(if (isHero) 8.dp else 2.dp)
-                        .fillMaxSize(),
-                )
-            }
-        } ?: InitialsToken(
-            profile = profile,
-            isHero = isHero,
-            modifier = modifier,
-        )
     }
 }
