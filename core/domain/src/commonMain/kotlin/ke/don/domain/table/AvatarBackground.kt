@@ -14,64 +14,62 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class AvatarBackground {
+
     // GREENS
-    @SerialName("green_emerald")
-    GREEN_EMERALD, // #00E676
-
-    @SerialName("green_minty")
-    GREEN_MINTY, // #1DE9B6
-
-    @SerialName("green_neon")
-    GREEN_NEON, // #69F0AE
-
-    @SerialName("green_leafy")
-    GREEN_LEAFY, // #00C853
+    @SerialName("green_emerald") GREEN_EMERALD,
+    @SerialName("green_minty")   GREEN_MINTY,
+    @SerialName("green_neon")    GREEN_NEON,
+    @SerialName("green_leafy")   GREEN_LEAFY,
 
     // YELLOWS
-    @SerialName("yellow_bright")
-    YELLOW_BRIGHT, // #FFEA00
-
-    @SerialName("yellow_sunny")
-    YELLOW_SUNNY, // #FFEB3B
-
-    @SerialName("yellow_banana")
-    YELLOW_BANANA, // #FFF176
-
-    @SerialName("yellow_golden")
-    YELLOW_GOLDEN, // #FFD600
+    @SerialName("yellow_bright")  YELLOW_BRIGHT,
+    @SerialName("yellow_sunny")   YELLOW_SUNNY,
+    @SerialName("yellow_banana")  YELLOW_BANANA,
+    @SerialName("yellow_golden")  YELLOW_GOLDEN,
 
     // PURPLES
-    @SerialName("purple_electric")
-    PURPLE_ELECTRIC, // #D500F9
-
-    @SerialName("purple_orchid")
-    PURPLE_ORCHID, // #E040FB
-
-    @SerialName("purple_lilac")
-    PURPLE_LILAC, // #B388FF
-
-    @SerialName("purple_amethyst")
-    PURPLE_AMETHYST, // #7C4DFF
+    @SerialName("purple_electric")  PURPLE_ELECTRIC,
+    @SerialName("purple_orchid")    PURPLE_ORCHID,
+    @SerialName("purple_lilac")     PURPLE_LILAC,
+    @SerialName("purple_amethyst")  PURPLE_AMETHYST,
 
     // EXTRAS
-    @SerialName("cyan_bright")
-    CYAN_BRIGHT, // #18FFFF
+    @SerialName("cyan_bright")   CYAN_BRIGHT,
+    @SerialName("pink_hot")      PINK_HOT,
+    @SerialName("orange_coral")  ORANGE_CORAL,
 
-    @SerialName("pink_hot")
-    PINK_HOT, // #FF4081
-
-    @SerialName("orange_coral")
-    ORANGE_CORAL, // #FF6E40
-
-    ;
+    @SerialName("unknown")
+    UNKNOWN;
 
     companion object {
-        fun fromValue(value: String?): AvatarBackground? {
-            return try {
-                if (value == null) null else AvatarBackground.valueOf(value)
-            } catch (e: IllegalArgumentException) {
-                null
-            }
-        }
+
+        private val map = mapOf(
+            "green_emerald" to GREEN_EMERALD,
+            "green_minty"   to GREEN_MINTY,
+            "green_neon"    to GREEN_NEON,
+            "green_leafy"   to GREEN_LEAFY,
+
+            "yellow_bright"  to YELLOW_BRIGHT,
+            "yellow_sunny"   to YELLOW_SUNNY,
+            "yellow_banana"  to YELLOW_BANANA,
+            "yellow_golden"  to YELLOW_GOLDEN,
+
+            "purple_electric" to PURPLE_ELECTRIC,
+            "purple_orchid"   to PURPLE_ORCHID,
+            "purple_lilac"     to PURPLE_LILAC,
+            "purple_amethyst"  to PURPLE_AMETHYST,
+
+            "cyan_bright"   to CYAN_BRIGHT,
+            "pink_hot"      to PINK_HOT,
+            "orange_coral"  to ORANGE_CORAL,
+
+            "unknown"       to UNKNOWN,
+        )
+
+        fun fromValue(value: String?): AvatarBackground =
+            if (value == null) UNKNOWN else map[value] ?: UNKNOWN
+
+        val entriesFiltered = entries.minus(UNKNOWN)
     }
 }
+

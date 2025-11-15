@@ -9,6 +9,7 @@
  */
 package ke.don.components.profile
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -22,6 +23,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import ke.don.domain.table.Profile
 import ke.don.resources.color
@@ -35,23 +39,27 @@ fun ProfileImageToken(
     onClick: (() -> Unit)? = null,
     isHero: Boolean,
     isSelected: Boolean = false,
+    heroSize: Dp = 96.dp,
+    iconSize: Dp = 32.dp,
 ) {
     ProfileBackground(
         isHero = isHero,
         onClick = onClick,
         color = profile.background.color(),
         isSelected = isSelected,
+        heroSize = heroSize,
+        iconSize = iconSize
     ) {
-        profile.avatar?.let {
+        profile.avatar?.let{
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
                 Image(
-                    painter = painterResource(it.painter()),
+                    painter = painterResource(profile.avatar!!.painter()),
                     contentDescription = "Profile Image",
                     modifier = modifier
-                        .padding(if (isHero) 8.dp else 2.dp)
+                        .padding(2.dp)
                         .fillMaxSize(),
                 )
             }
@@ -59,9 +67,11 @@ fun ProfileImageToken(
             profile = profile,
             isHero = isHero,
             modifier = modifier,
+            isSelected = isSelected
         )
     }
 }
+
 
 @Composable
 fun ProfileBackground(
@@ -70,18 +80,24 @@ fun ProfileBackground(
     isHero: Boolean = true,
     isSelected: Boolean = false,
     onClick: (() -> Unit)? = null,
+    heroSize: Dp = 96.dp,
+    iconSize: Dp = 32.dp,
     content: @Composable () -> Unit,
 ) {
-    val baseSize = if (isHero) 96.dp else 32.dp
-    val targetSize = if (isSelected) baseSize * 1.1f else baseSize
+    val baseSize = if (isHero) heroSize else iconSize
+    val targetSize = if (isSelected) baseSize * 1.5f else baseSize
     val animatedSize by animateDpAsState(
         targetValue = targetSize,
         label = "animatedSize",
     )
+    val animatedColor by animateColorAsState(
+        targetValue = color,
+        label = "animatedColor",
+    )
 
     if (onClick != null) {
         Surface(
-            color = color,
+            color = animatedColor,
             shape = MaterialTheme.shapes.medium,
             onClick = onClick,
             tonalElevation = if (isHero) 3.dp else 1.dp,
@@ -91,7 +107,7 @@ fun ProfileBackground(
         }
     } else {
         Surface(
-            color = color,
+            color = animatedColor,
             shape = MaterialTheme.shapes.medium,
             tonalElevation = if (isHero) 3.dp else 1.dp,
             modifier = modifier.size(animatedSize),

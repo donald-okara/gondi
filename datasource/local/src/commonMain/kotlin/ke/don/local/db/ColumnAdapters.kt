@@ -37,7 +37,7 @@ val roleAdapter = object : ColumnAdapter<Role, String> {
 
 val avatarAdapter = object : ColumnAdapter<Avatar, String> {
     override fun decode(databaseValue: String) = runCatching {
-        Avatar.valueOf(databaseValue)
+        Avatar.fromValue(databaseValue)
     }.getOrElse {
         throw IllegalStateException("Invalid avatar value in database: $databaseValue", it)
     }
@@ -46,7 +46,7 @@ val avatarAdapter = object : ColumnAdapter<Avatar, String> {
 
 val backgroundAdapter = object : ColumnAdapter<AvatarBackground, String> {
     override fun decode(databaseValue: String) = runCatching {
-        AvatarBackground.valueOf(databaseValue)
+        AvatarBackground.fromValue(databaseValue)
     }.getOrElse {
         throw IllegalStateException("Invalid background value in database: $databaseValue", it)
     }
