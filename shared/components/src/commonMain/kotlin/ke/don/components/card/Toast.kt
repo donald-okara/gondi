@@ -176,7 +176,6 @@ fun ToastActionRow(
             ButtonToken(
                 modifier = Modifier.defaultMinSize(minHeight = buttonHeight),
                 buttonType = ComponentType.Neutral,
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                 onClick = action.onClick,
             ) {
                 Text(action.label, style = buttonTextStyle)
@@ -187,7 +186,6 @@ fun ToastActionRow(
             ButtonToken(
                 modifier = Modifier.defaultMinSize(minHeight = buttonHeight),
                 buttonType = type,
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                 onClick = action.onClick,
             ) {
                 Text(action.label, style = buttonTextStyle)

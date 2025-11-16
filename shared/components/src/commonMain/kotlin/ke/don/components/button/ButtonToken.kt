@@ -11,7 +11,6 @@ package ke.don.components.button
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -20,7 +19,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import ke.don.resources.Values
+import ke.don.design.theme.PaddingOption
+import ke.don.design.theme.SpacingType
+import ke.don.design.theme.spacing
+import ke.don.design.theme.spacingPaddingValues
 
 /**
  * Renders a configurable Material Button whose appearance is driven by the provided ComponentType and that delegates inner content rendering to ButtonContentSwitcher.
@@ -44,10 +46,12 @@ fun ButtonToken(
     buttonType: ComponentType,
     enabled: Boolean = true,
     loading: Boolean = false,
-    shape: Shape = MaterialTheme.shapes.medium,
+    shape: Shape = MaterialTheme.shapes.extraLarge,
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
     border: BorderStroke? = if (buttonType == ComponentType.Outlined) ButtonDefaults.outlinedButtonBorder() else null,
-    contentPadding: PaddingValues = Values.buttonPaddingValues,
+    paddingType: SpacingType = SpacingType.Default,
+    verticalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.small),
+    horizontalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.medium),
     interactionSource: MutableInteractionSource? = null,
     content: @Composable (RowScope.() -> Unit),
 ) {
@@ -59,7 +63,11 @@ fun ButtonToken(
         colors = buttonType.animatedButtonColors(),
         elevation = elevation,
         border = border,
-        contentPadding = contentPadding,
+        contentPadding = spacingPaddingValues(
+            type = paddingType,
+            vertical = verticalPadding,
+            horizontal = horizontalPadding,
+        ),
         interactionSource = interactionSource,
     ) {
         ButtonContentSwitcher(
