@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class DefaultModeratorEngineTest : BaseGameTest() {
     val logger = Logger("DefaultModeratorEngineTest")
@@ -220,7 +221,7 @@ class DefaultModeratorEngineTest : BaseGameTest() {
     }
 
     /**
-     * REMOVE PLAYER, REVEAL DEATHS, START GAME
+     * REMOVE PLAYER, START GAME
      *
      * * These commands directly call [db] methods that have been
      * tested in other classes. We will skip them
@@ -230,6 +231,21 @@ class DefaultModeratorEngineTest : BaseGameTest() {
      * GAME OVER
      *
      */
+
+    @Test
+    fun revealDeath_success() = runTest {
+        val moderatorEngine = DefaultModeratorEngine(db)
+
+        val moderator = player1
+        moderatorEngine.handle(gameState.id, ModeratorCommand.CreateGame(gameState.id, gameState, moderator))
+        moderatorEngine.handle(gameState.id, ModeratorCommand.RevealDeaths(gameState.id))
+
+        val game = db.getGameState(gameState.id).firstOrNull()
+
+        assertNotNull(game)
+        assertTrue(game.revealEliminatedPlayer)
+    }
+
     @Test
     fun testGameOver_success() = runTest {
         val moderatorEngine = DefaultModeratorEngine(db)
@@ -255,12 +271,12 @@ class DefaultModeratorEngineTest : BaseGameTest() {
         db.batchUpdatePlayerRole(batchUpdateRoles)
         moderatorEngine.handle(gameState.id, ModeratorCommand.CreateGame(gameState.id, gameState, moderator))
         db.transaction {
-            db.updateAliveStatus(false, player2.id)
-            db.updateAliveStatus(false, player3.id)
-            db.updateAliveStatus(false, player4.id)
-            db.updateAliveStatus(false, player5.id)
-            db.updateAliveStatus(false, player6.id)
-            db.updateAliveStatus(false, player7.id)
+            db.updateAliveStatus(false, player2.id, gameState.round)
+            db.updateAliveStatus(false, player3.id, gameState.round)
+            db.updateAliveStatus(false, player4.id, gameState.round)
+            db.updateAliveStatus(false, player5.id, gameState.round)
+            db.updateAliveStatus(false, player6.id, gameState.round)
+            db.updateAliveStatus(false, player7.id, gameState.round)
         }
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.SLEEP))
 
@@ -280,8 +296,8 @@ class DefaultModeratorEngineTest : BaseGameTest() {
         db.batchUpdatePlayerRole(batchUpdateRoles)
         moderatorEngine.handle(gameState.id, ModeratorCommand.CreateGame(gameState.id, gameState, moderator))
         db.transaction {
-            db.updateAliveStatus(false, player9.id)
-            db.updateAliveStatus(false, player10.id)
+            db.updateAliveStatus(false, player9.id, gameState.round)
+            db.updateAliveStatus(false, player10.id, gameState.round)
         }
         moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.SLEEP))
 
