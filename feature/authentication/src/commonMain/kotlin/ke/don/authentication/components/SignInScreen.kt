@@ -39,12 +39,12 @@ import ke.don.components.button.ComponentType
 import ke.don.components.card.CardToken
 import ke.don.components.card.CardType
 import ke.don.components.profile.AdaptiveLogo
+import ke.don.design.theme.SpacingType
+import ke.don.design.theme.spacing
 import ke.don.domain.result.isLoading
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
 import ke.don.resources.Resources
-import ke.don.resources.Values
-import ke.don.resources.isCompact
 import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -60,7 +60,7 @@ fun SignInScreen(
     CardToken(
         cardType = CardType.Outlined,
         modifier = modifier
-            .padding(if (isCompact()) Values.compactScreenPadding else Values.expandedScreenPadding)
+            .spacing(SpacingType.Small)
             .width(420.dp)
             .wrapContentHeight(),
     ) {

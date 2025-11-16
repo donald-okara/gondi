@@ -1,6 +1,5 @@
 package ke.don.profile
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,27 +13,31 @@ import ke.don.components.preview.DeviceFramePreview
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 import ke.don.components.preview.token_previews.ThemeProvider
-import ke.don.components.scaffold.ScaffoldToken
 import ke.don.domain.datastore.Theme
+import ke.don.domain.table.Profile
 import ke.don.profile.model.EditProfileEvent
 import ke.don.profile.model.EditProfileState
-import ke.don.profile.screens.EditProfileScreenContent
+import ke.don.profile.screens.EditContent
+import ke.don.profile.screens.ProfileOnBoardingContent
 import ke.don.resources.Resources
 
 @OptIn(ExperimentalMaterial3Api::class)
-@DevicePreviews
 @Composable
-fun EditProfilePreview(
-    @PreviewParameter (ThemeProvider::class) theme: Theme
-) {
+fun EditProfileShowcase(
+    modifier: Modifier = Modifier,
+    theme: Theme
+){
     DevicePreviewContainer(theme) {
-
         var state by remember {
-            mutableStateOf(EditProfileState())
+            mutableStateOf(EditProfileState(
+                editProfile = Profile(
+                    username = "Timmy"
+                )
+            ))
         }
 
         fun handleEvent(event: EditProfileEvent) {
-            when(event){
+            when (event) {
                 is EditProfileEvent.OnAvatarChanged -> {
                     state = state.copy(
                         editProfile = state.editProfile.copy(
@@ -42,6 +45,7 @@ fun EditProfilePreview(
                         )
                     )
                 }
+
                 is EditProfileEvent.OnBackgroundChanged -> {
                     state = state.copy(
                         editProfile = state.editProfile.copy(
@@ -49,21 +53,33 @@ fun EditProfilePreview(
                         )
                     )
                 }
+
                 EditProfileEvent.OnSaveProfile -> TODO()
-                is EditProfileEvent.OnUsernameChanged -> TODO()
+                is EditProfileEvent.OnUsernameChanged -> {
+                    state = state.copy(
+                        editProfile = state.editProfile.copy(
+                            username = event.username
+                        )
+                    )
+                }
             }
         }
 
-        ScaffoldToken(
-            topBar = null,
-        ) {
-            EditProfileScreenContent(
-                state = state,
-                onEvent = ::handleEvent
-            )
-        }
-
+        ProfileOnBoardingContent(
+            modifier = modifier,
+            state = state,
+            handleEvent = ::handleEvent
+        )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@DevicePreviews
+@Composable
+fun EditProfilePreview(
+    @PreviewParameter (ThemeProvider::class) theme: Theme
+) {
+    EditProfileShowcase(theme = theme)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,45 +95,6 @@ fun EditProfileMobilePreview(
     DeviceFramePreview(
         frame = Resources.Images.MOBILE_FRAME,
     ){
-        DevicePreviewContainer(theme) {
-
-            var state by remember {
-                mutableStateOf(EditProfileState())
-            }
-
-            fun handleEvent(event: EditProfileEvent) {
-                when (event) {
-                    is EditProfileEvent.OnAvatarChanged -> {
-                        state = state.copy(
-                            editProfile = state.editProfile.copy(
-                                avatar = event.avatar
-                            )
-                        )
-                    }
-
-                    is EditProfileEvent.OnBackgroundChanged -> {
-                        state = state.copy(
-                            editProfile = state.editProfile.copy(
-                                background = event.background
-                            )
-                        )
-                    }
-
-                    EditProfileEvent.OnSaveProfile -> TODO()
-                    is EditProfileEvent.OnUsernameChanged -> TODO()
-                }
-            }
-
-            ScaffoldToken(
-                modifier = Modifier.fillMaxSize(),
-                topBar = null,
-            ) {
-                EditProfileScreenContent(
-                    state = state,
-                    onEvent = ::handleEvent
-                )
-            }
-
-        }
+        EditProfileShowcase(theme = theme)
     }
 }
