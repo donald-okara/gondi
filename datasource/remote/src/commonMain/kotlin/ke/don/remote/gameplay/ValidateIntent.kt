@@ -39,6 +39,7 @@ suspend fun validateIntent(
         if (!players.all { it.role == null || it.role == Role.MODERATOR }) {
             return PhaseValidationResult.Error("Some players already have roles. Joining is only allowed before role assignment.")
         }
+        if (gameState.lockJoin) return PhaseValidationResult.Error("The game has been locked for joining.")
         return PhaseValidationResult.Success
     }
 

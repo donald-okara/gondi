@@ -119,6 +119,7 @@ val GameStateEntity.toGameState: GameState get() = GameState(
     accusedPlayer = this.accused_player?.let { playerActionAdapter.decode(it) },
     revealEliminatedPlayer = booleanAdapter.decode(this.reveal_eliminated_player),
     winners = this.winners?.let { factionAdapter.decode(it) },
+    lockJoin = booleanAdapter.decode(this.lock_join)
 )
 
 val GameState.toGameStateEntity: GameStateEntity get() = GameStateEntity(
@@ -132,6 +133,7 @@ val GameState.toGameStateEntity: GameStateEntity get() = GameStateEntity(
     reveal_eliminated_player = booleanAdapter.encode(this.revealEliminatedPlayer),
     second = this.second?.let { playerActionAdapter.encode(it) },
     winners = this.winners?.let { factionAdapter.encode(it) },
+    lock_join = booleanAdapter.encode(this.lockJoin)
 )
 
 val PlayerEntity.toPlayer: Player get() = Player(
