@@ -318,11 +318,11 @@ class LocalDatabaseTest {
         )
         db.insertOrReplacePlayer(player)
 
-        db.updateAliveStatus(false, "p1")
+        db.updateAliveStatus(false, "p1", 1L)
         val fetched = db.getPlayerById("p1").first()
         assertFalse(fetched?.isAlive == true)
 
-        db.updateAliveStatus(true, "p1")
+        db.updateAliveStatus(true, "p1", 1L)
         val fetchedAgain = db.getPlayerById("p1").first()
         assertTrue(fetchedAgain?.isAlive == true)
     }

@@ -21,7 +21,6 @@ import ke.don.domain.state.Vote
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlin.collections.map
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 class LocalDatabase(
@@ -64,7 +63,10 @@ class LocalDatabase(
         gameState.toGameStateEntity.last_saved_player_id,
         gameState.toGameStateEntity.accused_player,
         gameState.toGameStateEntity.reveal_eliminated_player,
+        gameState.toGameStateEntity.lock_join,
     )
+
+    fun lockJoin(lock: Boolean, id: String) = stateQueries.lockJoin(booleanAdapter.encode(lock), id)
 
     fun killAction(playerAction: PlayerAction) = database.transaction {
         val originalPendingKills = stateQueries.getFirstGameState()
@@ -129,16 +131,18 @@ class LocalDatabase(
         timeOfDeath = player.toPlayerEntity.time_of_death,
     )
 
-    fun updateAliveStatus(isAlive: Boolean, id: String) = playersQueries.updateAliveStatus(booleanAdapter.encode(isAlive), id)
+    fun updateAliveStatus(isAlive: Boolean, id: String, round: Long) {
+        playersQueries.updateAliveStatus(booleanAdapter.encode(isAlive), id)
+        playersQueries.updateTimeOfDeath(
+            if (isAlive) null else round,
+            id,
+        )
+    }
 
     @OptIn(ExperimentalTime::class)
-    fun updateAliveStatus(isAlive: Boolean, ids: List<String>) = database.transaction {
+    fun updateAliveStatus(isAlive: Boolean, ids: List<String>, round: Long) = database.transaction {
         ids.forEach { id ->
-            playersQueries.updateAliveStatus(booleanAdapter.encode(isAlive), id)
-            playersQueries.updateTimeOfDeath(
-                if (isAlive) null else Clock.System.now().toEpochMilliseconds(),
-                id,
-            )
+            updateAliveStatus(isAlive, id, round)
         }
     }
     fun updatePendingKills(pendingKills: List<String>) = stateQueries.updatePendingKills(pendingKillsAdapter.encode(pendingKills))

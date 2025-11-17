@@ -38,6 +38,10 @@ class DefaultModeratorEngine(
                 }
             }
 
+            is ModeratorCommand.LockJoin -> {
+                db.lockJoin(command.lock, command.gameId)
+            }
+
             is ModeratorCommand.AssignRole -> db.updatePlayerRole(command.role, command.playerId)
 
             is ModeratorCommand.AssignRoleBatch -> db.batchUpdatePlayerRole(command.players)
@@ -46,7 +50,7 @@ class DefaultModeratorEngine(
                 handlePhaseAdvance(command, currentGame, players, currentRound)
             }
 
-            is ModeratorCommand.RemovePlayer -> db.updateAliveStatus(false, command.playerId)
+            is ModeratorCommand.RemovePlayer -> db.updateAliveStatus(false, command.playerId, currentRound ?: error("Current round cannot be null"))
 
             is ModeratorCommand.ResetGame -> db.transaction {
                 db.clearGameState()
@@ -62,6 +66,7 @@ class DefaultModeratorEngine(
             }
 
             is ModeratorCommand.RevealDeaths -> game?.let {
+                db.toggleRevealFlag(false, it.id)
                 db.toggleRevealFlag(true, it.id)
             }
 
@@ -107,7 +112,7 @@ class DefaultModeratorEngine(
         db.transaction {
             if (isGuilty) {
                 game.accusedPlayer?.targetId?.let {
-                    db.updateAliveStatus(false, it)
+                    db.updateAliveStatus(false, it, round)
                 }
             }
 
@@ -165,7 +170,7 @@ class DefaultModeratorEngine(
         db.transaction {
             val toEliminate = pendingKills.filterNot { it == lastSaved }
             if (toEliminate.isNotEmpty()) {
-                db.updateAliveStatus(isAlive = false, ids = toEliminate)
+                db.updateAliveStatus(isAlive = false, ids = toEliminate, round)
             }
             db.updatePhase(phase, round, gameId)
         }

@@ -25,6 +25,7 @@ constructor(
     val phase: GamePhase = GamePhase.LOBBY,
     val round: Long = 0L,
     val winners: Faction? = null,
+    @SerialName("lock_join") val lockJoin: Boolean = false,
     @SerialName("pending_kills") val pendingKills: List<String> = emptyList(),
     @SerialName("last_saved_player_id") val lastSavedPlayerId: String? = null,
     @SerialName("accused_player_id") val accusedPlayer: PlayerAction? = null, // Accuser to accused

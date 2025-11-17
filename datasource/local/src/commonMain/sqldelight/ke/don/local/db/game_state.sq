@@ -4,6 +4,7 @@ CREATE TABLE gameStateEntity (
     phase TEXT NOT NULL DEFAULT 0,                               -- e.g., "SLEEP", "TOWN_HALL", "COURT"
     round INTEGER NOT NULL DEFAULT 1,
     pending_kills TEXT,                                -- e.g., ["id1", "id2"]
+    lock_join INTEGER NOT NULL DEFAULT 0,
     last_saved_player_id TEXT,
     accused_player TEXT,
     second TEXT,
@@ -22,8 +23,11 @@ SELECT * FROM gameStateEntity
 LIMIT 1;
 
 insertOrReplaceGameState:
-INSERT OR REPLACE INTO gameStateEntity(id, name, phase, round, pending_kills, last_saved_player_id, accused_player, reveal_eliminated_player)
-VALUES (:id, :name, :phase, :round, :pending_kills, :last_saved_player_id, :accused_player_id, :reveal_eliminated_player);
+INSERT OR REPLACE INTO gameStateEntity(id, name, phase, round, pending_kills, last_saved_player_id, accused_player, reveal_eliminated_player, lock_join)
+VALUES (:id, :name, :phase, :round, :pending_kills, :last_saved_player_id, :accused_player_id, :reveal_eliminated_player, :lockJoin);
+
+lockJoin:
+UPDATE gameStateEntity SET lock_join = :lockJoin WHERE id = :id;
 
 updateWinners:
 UPDATE gameStateEntity SET winners = :winners WHERE id = :id;
