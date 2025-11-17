@@ -26,6 +26,6 @@ jobs:
         run: |
           echo "${{ secrets.LOCAL_PROPERTIES }}" > local.properties
 
-      - name: 🧪 Run JVM tests
-        run: ./gradlew clean build jvmTest --stacktrace
+      - name: Run JVM tests
+        run: ./gradlew jvmTest
 
