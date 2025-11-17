@@ -107,6 +107,31 @@ class DefaultGameEngineTest : BaseGameTest() {
         assertNull(fetched)
     }
 
+    @Test
+    fun testJoinGame_errorWhenLocked() = runTest {
+        val engine = DefaultGameEngine(db)
+
+        val newPlayer = Player(
+            id = "playerTest",
+            name = "Johnny Test",
+            role = null,
+            avatar = Avatar.Katherine,
+            timeOfDeath = null,
+            background = AvatarBackground.GREEN_EMERALD,
+            isAlive = true,
+            lastAction = null,
+            knownIdentities = emptyList(),
+        )
+
+        db.updatePlayerRole(Role.MODERATOR, player1.id)
+        db.lockJoin(true, gameState.id)
+
+        executeValidated(engine, PlayerIntent.Join(newPlayer.id, newPlayer))
+
+        val fetched = db.getPlayerById(newPlayer.id).first()
+        assertNull(fetched)
+    }
+
     /**
      * KILL
      */
