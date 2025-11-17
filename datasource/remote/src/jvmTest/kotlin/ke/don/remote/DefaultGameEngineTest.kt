@@ -101,7 +101,7 @@ class DefaultGameEngineTest : BaseGameTest() {
         db.updatePlayerRole(Role.MODERATOR, player1.id)
         db.lockJoin(true, gameState.id)
 
-        executeValidated(engine, PlayerIntent.Join(newPlayer.id, newPlayer))
+        executeValidated(engine, PlayerIntent.Join(newPlayer.id, gameState.round, newPlayer))
 
         val fetched = db.getPlayerById(newPlayer.id).first()
         assertNull(fetched)
