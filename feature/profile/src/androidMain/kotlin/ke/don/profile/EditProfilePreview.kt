@@ -16,11 +16,11 @@ import ke.don.domain.table.Profile
 import ke.don.profile.model.EditProfileEvent
 import ke.don.profile.model.EditProfileState
 import ke.don.profile.screens.EditScreenContent
-import ke.don.profile.screens.ProfileOnBoardingContent
+import ke.don.profile.screens.OnBoardingContent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OnboardingProfileShowcase(
+fun OnboardingShowcase(
     modifier: Modifier = Modifier,
     theme: Theme
 ){
@@ -62,7 +62,7 @@ fun OnboardingProfileShowcase(
             }
         }
 
-        ProfileOnBoardingContent(
+        OnBoardingContent(
             modifier = modifier,
             state = state,
             handleEvent = ::handleEvent
@@ -125,17 +125,17 @@ fun EditProfileShowcase(
 @OptIn(ExperimentalMaterial3Api::class)
 @DevicePreviews
 @Composable
-fun OnBoardingProfilePreview(
+fun OnBoardingPreview(
     @PreviewParameter (ThemeProvider::class) theme: Theme
 ) {
-    OnboardingProfileShowcase(theme = theme)
+    OnboardingShowcase(theme = theme)
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @DevicePreviews
 @Composable
-fun EditProfileScreenPreview(
+fun EditProfilePreview(
     @PreviewParameter (ThemeProvider::class) theme: Theme
 ) {
     EditProfileShowcase(theme = theme)

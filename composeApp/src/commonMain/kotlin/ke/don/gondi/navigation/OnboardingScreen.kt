@@ -9,7 +9,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import ke.don.profile.model.EditProfileModel
 import ke.don.profile.screens.EditScreenContent
-import ke.don.profile.screens.ProfileOnBoardingContent
+import ke.don.profile.screens.OnBoardingContent
 
 class OnboardingScreen: Screen {
     @Composable
@@ -20,7 +20,7 @@ class OnboardingScreen: Screen {
 
         val navigator = LocalNavigator.currentOrThrow
 
-        ProfileOnBoardingContent(
+        OnBoardingContent(
             state = state,
             handleEvent = handleEvent,
             navigateToMain = { navigator.replaceAll(HomeScreen()) },

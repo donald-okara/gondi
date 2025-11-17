@@ -18,14 +18,13 @@ import androidx.compose.ui.unit.dp
 import ke.don.components.indicator.ProgressBar
 import ke.don.components.scaffold.NavigationIcon
 import ke.don.components.scaffold.ScaffoldToken
-import ke.don.design.theme.spacing
 import ke.don.profile.model.EditProfileEvent
 import ke.don.profile.model.EditProfileState
 import ke.don.resources.color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileOnBoardingContent(
+fun OnBoardingContent(
     modifier: Modifier = Modifier,
     state: EditProfileState,
     handleEvent: (EditProfileEvent) -> Unit,
