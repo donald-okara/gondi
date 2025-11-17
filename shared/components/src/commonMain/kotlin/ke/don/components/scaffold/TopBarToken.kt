@@ -12,6 +12,7 @@ package ke.don.components.scaffold
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ke.don.components.profile.AdaptiveLogo
+import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.resources.isCompact
 
@@ -63,7 +65,6 @@ fun TopBarToken(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = MaterialTheme.spacing.small),
     ) {
         TopAppBar(
             title = {
@@ -71,8 +72,9 @@ fun TopBarToken(
                     Text(
                         text = it,
                         maxLines = 1,
-                        style = MaterialTheme.typography.bodyMedium,
                         overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .padding(Theme.spacing.small)
                     )
                 }
             },
@@ -80,7 +82,9 @@ fun TopBarToken(
                 when (navigationIcon) {
                     NavigationIcon.None -> {
                         AdaptiveLogo(
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier
+                                .padding(Theme.spacing.small)
+                                .size(24.dp),
                         )
                     }
                     is NavigationIcon.Back ->
@@ -89,6 +93,7 @@ fun TopBarToken(
                             contentDescription = "Back",
                             modifier = Modifier
                                 .clip(CircleShape)
+                                .padding(Theme.spacing.small)
                                 .clickable{
                                     navigationIcon.navigateBack()
                                 }
@@ -100,6 +105,7 @@ fun TopBarToken(
                             contentDescription = "Menu",
                             modifier = Modifier
                                 .clip(CircleShape)
+                                .padding(Theme.spacing.small)
                                 .clickable{
                                     navigationIcon.toggleDrawer()
                                 }
@@ -107,7 +113,12 @@ fun TopBarToken(
                 }
             },
             actions = {
-                actions()
+                Row(
+                    modifier = Modifier
+                        .padding(Theme.spacing.small)
+                ) {
+                    actions()
+                }
             },
             scrollBehavior = scrollBehavior,
         )

@@ -28,21 +28,22 @@ import ke.don.resources.color
 fun ProfileOnBoardingContent(
     modifier: Modifier = Modifier,
     state: EditProfileState,
-    handleEvent: (EditProfileEvent) -> Unit
+    handleEvent: (EditProfileEvent) -> Unit,
+    navigateToMain: () -> Unit = {},
 ) {
     var step by remember {
-        mutableStateOf(Steps.Profile)
+        mutableStateOf(Steps.Rules)
     }
 
     ScaffoldToken(
         modifier = modifier,
-        navigationIcon = NavigationIcon.Back {},
+        navigationIcon = NavigationIcon.Back(navigateToMain),
         scrollState = rememberScrollState()
     ) {
         Text(
             step.description,
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold
         )
 
@@ -54,23 +55,39 @@ fun ProfileOnBoardingContent(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            "Step ${step.ordinal + 1} of 2",
+            "Step ${step.ordinal + 1} of ${Steps.entries.size}",
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         ProgressBar(
-            progress = (step.ordinal + 1) / 2f,
-            progressColor = if (step == Steps.Profile) state.editProfile.background.color() else MaterialTheme.colorScheme.primaryContainer
+            progress = (step.ordinal + 1) / 3f,
+            progressColor = if (step == Steps.Profile) state.editProfile.background.color() else MaterialTheme.colorScheme.primary
         )
         Spacer(modifier = Modifier.height(8.dp))
 
         AnimatedContent(targetState = step){ currentStep ->
             when(currentStep){
-                Steps.Rules -> {}
+                Steps.Rules -> RulesContent(
+                    next = {
+                        step = Steps.Phases
+                    }
+                )
+                Steps.Phases -> PhasesContent(
+                    next = {
+                        step = Steps.Profile
+                    },
+                    back = {
+                        step = Steps.Rules
+                    }
+                )
                 Steps.Profile -> EditContent(
                     state = state,
-                    onEvent = handleEvent
+                    onEvent = handleEvent,
+                    back = {
+                        step = Steps.Phases
+                    },
+                    onSave = navigateToMain
                 )
             }
         }
@@ -80,6 +97,7 @@ fun ProfileOnBoardingContent(
 private enum class Steps(
     val description: String
 ) {
-    Profile("Create Your Profile"),
     Rules("Understand The Rules"),
+    Phases("Understand The Game Phases"),
+    Profile("Create Your Profile"),
 }

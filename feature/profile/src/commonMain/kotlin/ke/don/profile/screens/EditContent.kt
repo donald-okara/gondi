@@ -2,7 +2,9 @@ package ke.don.profile.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -15,15 +17,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import ke.don.components.button.ButtonToken
+import ke.don.components.button.ComponentType
 import ke.don.components.scaffold.NavigationIcon
 import ke.don.components.scaffold.ScaffoldToken
 import ke.don.components.text_field.TextFieldToken
+import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.design.theme.spacingPaddingValues
 import ke.don.profile.components.SelectAvatarComponent
 import ke.don.profile.components.SelectBackgroundComponent
 import ke.don.profile.model.EditProfileEvent
 import ke.don.profile.model.EditProfileState
+import ke.don.utils.result.isLoading
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,6 +37,8 @@ fun EditContent(
     modifier: Modifier = Modifier,
     state: EditProfileState,
     onEvent: (EditProfileEvent) -> Unit,
+    back: (() -> Unit)? = null,
+    onSave: () -> Unit = {}
 ) {
     Column(
         modifier = modifier,
@@ -79,5 +87,37 @@ fun EditContent(
                 onEvent(EditProfileEvent.OnBackgroundChanged(it))
             }
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Theme.spacing.medium, Alignment.End),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            back?.let {
+                ButtonToken(
+                    buttonType = ComponentType.Neutral,
+                    onClick = it
+                ) {
+                    Text("Back to phases")
+                }
+            }
+
+
+            ButtonToken(
+                buttonType = ComponentType.Primary,
+                loading = state.saveStatus.isLoading,
+                enabled = !state.saveStatus.isLoading &&
+                        state.editProfile.username.isNotBlank() &&
+                        state.editProfile != state.fetchedProfile &&
+                        state.editProfile.avatar != null
+                ,
+                onClick = { onEvent(EditProfileEvent.OnSaveProfile(onSave)) }
+            ) {
+                Text("Finish")
+            }
+        }
     }
+
 }

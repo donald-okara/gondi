@@ -11,6 +11,7 @@ package ke.don.components.button
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -46,12 +47,10 @@ fun ButtonToken(
     buttonType: ComponentType,
     enabled: Boolean = true,
     loading: Boolean = false,
-    shape: Shape = MaterialTheme.shapes.extraLarge,
+    shape: Shape = MaterialTheme.shapes.medium,
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
     border: BorderStroke? = if (buttonType == ComponentType.Outlined) ButtonDefaults.outlinedButtonBorder() else null,
-    paddingType: SpacingType = SpacingType.Default,
-    verticalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.small),
-    horizontalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.medium),
+    paddingValues: PaddingValues = ButtonDefaults.ContentPadding,
     interactionSource: MutableInteractionSource? = null,
     content: @Composable (RowScope.() -> Unit),
 ) {
@@ -63,11 +62,7 @@ fun ButtonToken(
         colors = buttonType.animatedButtonColors(),
         elevation = elevation,
         border = border,
-        contentPadding = spacingPaddingValues(
-            type = paddingType,
-            vertical = verticalPadding,
-            horizontal = horizontalPadding,
-        ),
+        contentPadding = paddingValues,
         interactionSource = interactionSource,
     ) {
         ButtonContentSwitcher(

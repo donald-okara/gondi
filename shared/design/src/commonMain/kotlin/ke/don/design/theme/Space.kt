@@ -15,8 +15,10 @@ data object SpacingDefaults {
     internal const val EXTRA_SMALL = 4
     internal const val SMALL = 8
     internal const val MEDIUM = 16
-    internal const val LARGE = 32
-    internal const val SCREEN_SIZE = 720
+    internal const val LARGE = 24
+    internal const val EXTRA_LARGE = 40
+    internal const val SMALL_SCREEN_SIZE = 420
+    internal const val MEDIUM_SCREEN_SIZE = 720
     internal const val DEFAULT = SMALL
 }
 
@@ -27,7 +29,9 @@ data class Spacing(
     val small: Dp = SpacingDefaults.SMALL.dp,
     val medium: Dp = SpacingDefaults.MEDIUM.dp,
     val large: Dp = SpacingDefaults.LARGE.dp,
-    val screenSize: Dp = SpacingDefaults.SCREEN_SIZE.dp,
+    val extraLarge: Dp = SpacingDefaults.EXTRA_LARGE.dp,
+    val smallScreenSize: Dp = SpacingDefaults.SMALL_SCREEN_SIZE.dp,
+    val largeScreenSize: Dp = SpacingDefaults.MEDIUM_SCREEN_SIZE.dp,
 )
 
 enum class SpacingType {
@@ -36,6 +40,7 @@ enum class SpacingType {
     Small,
     Medium,
     Large,
+    ExtraLarge,
     Default,
 }
 
@@ -46,6 +51,7 @@ private fun Spacing.resolve(type: SpacingType): Dp = when (type) {
     SpacingType.Small -> small
     SpacingType.Medium -> medium
     SpacingType.Large -> large
+    SpacingType.ExtraLarge -> extraLarge
     SpacingType.Default -> default
 }
 

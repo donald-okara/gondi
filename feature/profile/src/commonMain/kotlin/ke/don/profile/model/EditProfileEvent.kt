@@ -10,5 +10,5 @@ sealed interface EditProfileEvent {
 
     data class OnBackgroundChanged(val background: AvatarBackground) : EditProfileEvent
 
-    object OnSaveProfile : EditProfileEvent
+    data class OnSaveProfile(val onSaved: () -> Unit) : EditProfileEvent
 }

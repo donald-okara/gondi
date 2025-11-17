@@ -11,7 +11,9 @@ package ke.don.components.icon
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
@@ -54,9 +56,7 @@ fun IconToken(
     contentDescription: String? = null,
     enabled: Boolean = true,
     size: Dp = 24.dp,
-    paddingType: SpacingType = SpacingType.Default,
-    verticalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.small),
-    horizontalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.medium),
+    paddingValues: PaddingValues = ButtonDefaults.ContentPadding,
     colors: IconButtonColors = buttonType.animatedIconColors(),
     content: (@Composable () -> Unit)? = null,
 ) {
@@ -79,9 +79,7 @@ fun IconToken(
             onClick = onClick,
             enabled = enabled,
             buttonType = buttonType,
-            paddingType = paddingType,
-            verticalPadding = verticalPadding,
-            horizontalPadding = horizontalPadding
+            paddingValues = paddingValues
         ) {
             content?.invoke() ?: animatedIcon()
         }

@@ -19,19 +19,13 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.contentColorFor
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -39,9 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import ke.don.design.theme.PaddingOption
-import ke.don.design.theme.SpacingType
 import ke.don.design.theme.spacing
 import ke.don.design.theme.spacingPaddingValues
 import ke.don.resources.isCompact
@@ -157,7 +149,7 @@ fun ScaffoldToken(
                                 horizontal = horizontalPadding,
                             )
                         )
-                        .width(MaterialTheme.spacing.screenSize),
+                        .width(MaterialTheme.spacing.largeScreenSize),
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small, Alignment.Top)
                 ) {

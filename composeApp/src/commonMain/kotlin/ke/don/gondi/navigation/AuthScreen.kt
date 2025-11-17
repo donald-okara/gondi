@@ -45,9 +45,7 @@ class AuthScreen : Screen {
         LaunchedEffect(state.profile) {
             state.profile?.let { profile ->
                 if (profile.avatar == null) {
-                    Matcha.info(
-                        title = "Simulate navigation to edit profile",
-                    )
+                    navigator.push(OnboardingScreen())
                 } else {
                     navigator.replaceAll(HomeScreen())
                 }

@@ -48,6 +48,9 @@ fun DevicePreviewContainer(
 }
 
 
+/**
+ * Credit https://www.webmobilefirst.com/en/mockups/samsung-galaxy-s24-ultra-2024/
+ */
 @Composable
 fun DeviceFramePreview(
     frame: DrawableResource,

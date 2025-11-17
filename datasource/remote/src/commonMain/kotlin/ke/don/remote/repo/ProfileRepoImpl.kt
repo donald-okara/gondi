@@ -32,6 +32,7 @@ class ProfileRepoImpl(
         if (it is Result.Success) {
             profileStore.setProfile(it.data)
         }
+        logger.info(it.toString())
     }
 
     override suspend fun logOut() = apiClient.logOut().also {

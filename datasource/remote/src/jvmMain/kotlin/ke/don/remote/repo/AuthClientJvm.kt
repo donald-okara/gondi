@@ -18,8 +18,8 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import ke.don.domain.repo.AuthClient
-import ke.don.domain.result.NetworkError
-import ke.don.domain.result.Result
+import ke.don.utils.result.NetworkError
+import ke.don.utils.result.Result
 import ke.don.remote.api.SupabaseConfig.supabase
 import ke.don.utils.Logger
 import kotlinx.coroutines.launch
@@ -51,8 +51,6 @@ class AuthClientJvm : AuthClient {
                 )
             }
         } catch (e: Exception) {
-            logger.error("❌ Error during sign-in: $e", e)
-            e.printStackTrace()
             Result.error(
                 NetworkError(
                     message = "Failed to sign in with Google",

@@ -105,7 +105,7 @@ fun ProfileSyncScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
     ){
         Box(
-            modifier = Modifier.width(MaterialTheme.spacing.screenSize),
+            modifier = Modifier.width(MaterialTheme.spacing.largeScreenSize),
             contentAlignment = Alignment.Center
         ){
             FancyLoadingIndicator(loading = true)

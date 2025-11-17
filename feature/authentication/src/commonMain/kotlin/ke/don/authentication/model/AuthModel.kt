@@ -16,7 +16,6 @@ import io.github.jan.supabase.auth.status.SessionStatus
 import ke.don.components.helpers.Matcha
 import ke.don.domain.repo.AuthClient
 import ke.don.domain.repo.ProfileRepository
-import ke.don.domain.result.onSuccess
 import ke.don.koffee.model.ToastDuration
 import ke.don.remote.api.SupabaseConfig.supabase
 import ke.don.utils.Logger

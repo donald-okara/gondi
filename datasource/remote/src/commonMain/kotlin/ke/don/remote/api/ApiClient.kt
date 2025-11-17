@@ -26,7 +26,9 @@ class ApiClient {
     }
 
     suspend fun updateProfile(profile: Profile): Result<Profile, NetworkError> = runCatchingNetwork {
-        supabase.from("profiles").upsert(profile).toDomainSingleResult<Profile>()
+        supabase.from("profiles").upsert(profile) {
+            select()
+        }.toDomainSingleResult<Profile>()
     }
 
     suspend fun logOut() {

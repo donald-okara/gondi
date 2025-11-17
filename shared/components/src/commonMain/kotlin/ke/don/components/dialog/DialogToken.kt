@@ -36,8 +36,7 @@ fun DialogToken(
     ) {
         Surface(
             modifier = modifier
-                .wrapContentSize()
-                .padding(16.dp),
+                .wrapContentSize(),
             shape = MaterialTheme.shapes.medium,
         ) {
             content()

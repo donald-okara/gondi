@@ -9,8 +9,8 @@
  */
 package ke.don.authentication.model
 
-import ke.don.domain.result.ResultStatus
 import ke.don.domain.table.Profile
+import ke.don.utils.result.ResultStatus
 
 data class AuthState(
     val initiallyAuthenticated: Boolean = true,

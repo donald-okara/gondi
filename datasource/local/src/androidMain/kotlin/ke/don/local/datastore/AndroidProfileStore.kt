@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 
-private val Context.dataStore by preferencesDataStore(name = "app_prefs")
+private val Context.dataStore by preferencesDataStore(name = "profile_prefs")
 
 class AndroidProfileStore(private val context: Context) : ProfileStore {
     private val ds = context.dataStore
