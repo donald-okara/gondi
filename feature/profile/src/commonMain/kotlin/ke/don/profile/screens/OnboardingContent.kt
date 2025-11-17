@@ -63,10 +63,10 @@ fun OnBoardingContent(
                     Steps.Profile -> EditContent(
                         state = state,
                         onEvent = handleEvent,
+                        onSave = navigateToMain,
                         back = {
                             step = Steps.Phases
-                        },
-                        onSave = navigateToMain
+                        }
                     )
                 }
             }
@@ -116,7 +116,7 @@ fun OnBoardingContent(
 private enum class Steps(
     val description: String
 ) {
-    Rules("Understand The Rules"),
-    Phases("Understand The Game Phases"),
-    Profile("Create Your Profile"),
+    Rules("First, The Rules"),
+    Phases("Next, The Game Phases"),
+    Profile("Finally, Your Profile"),
 }

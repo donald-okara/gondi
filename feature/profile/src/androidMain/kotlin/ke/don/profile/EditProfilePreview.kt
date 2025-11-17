@@ -7,7 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import ke.don.components.preview.DeviceFramePreview
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 import ke.don.components.preview.token_previews.ThemeProvider
@@ -17,6 +19,7 @@ import ke.don.profile.model.EditProfileEvent
 import ke.don.profile.model.EditProfileState
 import ke.don.profile.screens.EditScreenContent
 import ke.don.profile.screens.OnBoardingContent
+import ke.don.resources.Resources
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -141,19 +144,19 @@ fun EditProfilePreview(
     EditProfileShowcase(theme = theme)
 }
 
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Preview(
-//    name = "Mobile",
-//    group = "Devices",
-//    device = "spec:width=411dp,height=890dp,dpi=420", // typical phone
-//)
-//@Composable
-//fun EditProfileMobilePreview(
-//    @PreviewParameter (ThemeProvider::class) theme: Theme
-//){
-//    DeviceFramePreview(
-//        frame = Resources.Images.MOBILE_FRAME,
-//    ){
-//        EditProfileShowcase(theme = theme)
-//    }
-//}
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(
+    name = "Mobile",
+    group = "Devices",
+    device = "spec:width=411dp,height=890dp,dpi=420", // typical phone
+)
+@Composable
+fun EditProfileMobilePreview(
+    @PreviewParameter (ThemeProvider::class) theme: Theme
+){
+    DeviceFramePreview(
+        frame = Resources.Images.MOBILE_FRAME,
+    ){
+        OnboardingShowcase(theme = theme)
+    }
+}

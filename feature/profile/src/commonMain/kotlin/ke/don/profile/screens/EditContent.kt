@@ -40,6 +40,8 @@ fun EditContent(
     back: (() -> Unit)? = null,
     onSave: () -> Unit = {}
 ) {
+    val maxLength = 12
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.Start,
@@ -55,6 +57,10 @@ fun EditContent(
             text = state.editProfile.username,
             label = "Username",
             isRequired = true,
+            showLength = true,
+            maxLength = maxLength,
+            isError = state.editProfile.username.length > maxLength,
+            errorMessage = "Username cannot be longer than $maxLength characters",
             onValueChange = {
                 onEvent(EditProfileEvent.OnUsernameChanged(it))
             }
@@ -111,7 +117,8 @@ fun EditContent(
                 enabled = !state.saveStatus.isLoading &&
                         state.editProfile.username.isNotBlank() &&
                         state.editProfile != state.fetchedProfile &&
-                        state.editProfile.avatar != null
+                        state.editProfile.avatar != null &&
+                        state.editProfile.username.length < maxLength
                 ,
                 onClick = { onEvent(EditProfileEvent.OnSaveProfile(onSave)) }
             ) {
