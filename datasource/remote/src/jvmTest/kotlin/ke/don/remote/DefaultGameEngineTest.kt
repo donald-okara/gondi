@@ -92,6 +92,7 @@ class DefaultGameEngineTest : BaseGameTest() {
             knownIdentities = emptyList(),
         )
 
+        db.updatePlayerRole(Role.MODERATOR, player1.id)
         db.lockJoin(true, gameState.id)
 
         executeValidated(engine, PlayerIntent.Join(newPlayer.id, newPlayer))
