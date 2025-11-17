@@ -1,6 +1,10 @@
 package ke.don.profile.screens
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
@@ -34,17 +38,57 @@ fun OnBoardingContent(
         mutableStateOf(Steps.Rules)
     }
 
+    val content: @Composable () -> Unit = remember(
+        step,
+        state,
+        handleEvent,
+        navigateToMain
+    ){
+        @Composable {
+            AnimatedContent(targetState = step){ currentStep ->
+                when(currentStep){
+                    Steps.Rules -> RulesContent(
+                        next = {
+                            step = Steps.Phases
+                        }
+                    )
+                    Steps.Phases -> PhasesContent(
+                        next = {
+                            step = Steps.Profile
+                        },
+                        back = {
+                            step = Steps.Rules
+                        }
+                    )
+                    Steps.Profile -> EditContent(
+                        state = state,
+                        onEvent = handleEvent,
+                        back = {
+                            step = Steps.Phases
+                        },
+                        onSave = navigateToMain
+                    )
+                }
+            }
+        }
+    }
+
     ScaffoldToken(
         modifier = modifier,
         navigationIcon = NavigationIcon.Back(navigateToMain),
         scrollState = rememberScrollState()
     ) {
-        Text(
-            step.description,
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.Bold
-        )
+        AnimatedContent(
+            targetState = step.description,
+            transitionSpec = { slideInVertically { it } togetherWith  slideOutVertically { -it } }
+        ) { description ->
+            Text(
+                description,
+                style = MaterialTheme.typography.headlineLarge,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
         Text(
             "Welcome, let's get you ready to play",
@@ -65,31 +109,7 @@ fun OnBoardingContent(
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        AnimatedContent(targetState = step){ currentStep ->
-            when(currentStep){
-                Steps.Rules -> RulesContent(
-                    next = {
-                        step = Steps.Phases
-                    }
-                )
-                Steps.Phases -> PhasesContent(
-                    next = {
-                        step = Steps.Profile
-                    },
-                    back = {
-                        step = Steps.Rules
-                    }
-                )
-                Steps.Profile -> EditContent(
-                    state = state,
-                    onEvent = handleEvent,
-                    back = {
-                        step = Steps.Phases
-                    },
-                    onSave = navigateToMain
-                )
-            }
-        }
+        content()
     }
 }
 
