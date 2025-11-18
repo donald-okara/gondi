@@ -9,6 +9,8 @@
  */
 package ke.don.components.scaffold
 
+import androidx.compose.animation.core.StartOffset
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +21,12 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
@@ -37,6 +44,7 @@ import ke.don.design.theme.PaddingOption
 import ke.don.design.theme.spacing
 import ke.don.design.theme.spacingPaddingValues
 import ke.don.resources.isCompact
+import kotlin.math.roundToInt
 
 /**
  * Renders a responsive scaffold that adapts between compact (modal drawer) and expanded (navigation rail) layouts,
@@ -58,6 +66,8 @@ import ke.don.resources.isCompact
  * @param contentAlignment Alignment for the main content within the scaffold.
  * @param content Main content composable; receives `isCompact: Boolean` where `true` indicates compact layout mode.
  */
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScaffoldToken(
@@ -102,6 +112,92 @@ fun ScaffoldToken(
         content = content,
     )
 }
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@Composable
+fun ScaffoldToken(
+    modifier: Modifier = Modifier,
+    title: String? = null,
+    navigationIcon: NavigationIcon = NavigationIcon.None,
+    actions: @Composable RowScope.() -> Unit = {},
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+    topBar: (@Composable () -> Unit)? = {
+        TopBarToken(
+            title = title,
+            navigationIcon = navigationIcon,
+            actions = actions,
+            scrollBehavior = scrollBehavior
+        )
+    },
+    floatingActionButton: @Composable () -> Unit = {},
+    floatingActionButtonPosition: FabPosition = FabPosition.End,
+    containerColor: Color = MaterialTheme.colorScheme.background,
+    contentColor: Color = contentColorFor(containerColor),
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
+    listOffset: Int? = null,
+    pullRefreshState: PullRefreshState,
+    lazyListState: LazyListState = rememberLazyListState(),
+    verticalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.medium),
+    horizontalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.small),
+    contentAlignment: Alignment = Alignment.TopCenter,
+    content: LazyListScope.(isCompact: Boolean) -> Unit
+) {
+    val isCompact = isCompact()
+
+    val animatedOffset by animateIntAsState(
+        targetValue = when {
+            isRefreshing -> 124
+            pullRefreshState.progress in 0f..1f ->
+                (124 * pullRefreshState.progress).roundToInt()
+
+            pullRefreshState.progress > 1f ->
+                124 + (((pullRefreshState.progress - 1f) * 0.1f) * 100).roundToInt()
+
+            else -> 0
+        },
+        label = "offsetAnim"
+    )
+
+    val effectiveOffset = listOffset ?: animatedOffset
+
+    val mainContent: @Composable (PaddingValues) -> Unit = remember(
+        isCompact,
+        effectiveOffset,
+        lazyListState,
+        pullRefreshState,
+        isRefreshing,
+    ) {
+        { padding ->
+            RefreshLazyColumn(
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize(),
+                isRefreshing = isRefreshing,
+                onRefresh = onRefresh,
+                lazyListState = lazyListState,
+                listOffSet = effectiveOffset,
+                verticalPadding = verticalPadding,
+                pullRefreshState = pullRefreshState,
+                horizontalPadding = horizontalPadding,
+                contentAlignment = contentAlignment,
+            ) {
+                content(isCompact)
+            }
+        }
+    }
+
+    Scaffold(
+        modifier = modifier,
+        topBar = { topBar?.invoke() },
+        floatingActionButton = floatingActionButton,
+        floatingActionButtonPosition = floatingActionButtonPosition,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        content = mainContent
+    )
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

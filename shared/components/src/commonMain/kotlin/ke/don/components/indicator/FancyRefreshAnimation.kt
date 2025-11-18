@@ -20,6 +20,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshState
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import ke.don.domain.table.AvatarBackground
 import ke.don.resources.color
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FancyLoadingIndicator(
     loading: Boolean,
@@ -47,9 +53,7 @@ fun FancyLoadingIndicator(
     ) {
         FancyRefreshAnimation(
             modifier = modifier,
-            isRefreshing = { true },
-            willRefresh = { true },
-            offsetProgress = { 1f },
+            isRefreshing = true,
         )
     }
 }
@@ -66,17 +70,19 @@ fun FancyLoadingIndicator(
  *
  * @param modifier The modifier to be applied to the container of the animation.
  * @param isRefreshing A lambda that returns `true` when the refresh process is active, `false` otherwise.
- * @param willRefresh A lambda that returns `true` when the pull distance has passed the refresh threshold, `false` otherwise.
- * @param offsetProgress A lambda that returns the current pull-to-refresh progress as a float between 0.0 and 1.0.
+ * @param state The state that keeps track of distance pulled
  *
  * Credit goes to https://www.sinasamaki.com/  for the component
  */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FancyRefreshAnimation(
     modifier: Modifier = Modifier,
-    isRefreshing: () -> Boolean,
-    willRefresh: () -> Boolean,
-    offsetProgress: () -> Float,
+    isRefreshing: Boolean,
+    state: PullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = {}
+    ),
 ) {
     val colorA = AvatarBackground.PURPLE_LILAC.color()
     val colorB = AvatarBackground.GREEN_EMERALD.color()
@@ -88,90 +94,31 @@ fun FancyRefreshAnimation(
             .height(80.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(
+        @Composable
+        fun item(
+            color: Color,
+            alignment: Alignment
+        ) = Box(
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(1f),
-            contentAlignment = Alignment.TopCenter,
+            contentAlignment = alignment
         ) {
             CircleWithRing(
-                modifier = Modifier
-                    .size(30.dp),
-                isRefreshing = isRefreshing(),
-                willRefresh = willRefresh(),
-                offsetProgress = offsetProgress(),
+                modifier = Modifier.size(30.dp),
+                isRefreshing = isRefreshing,
+                willRefresh = isRefreshing || state.progress >= 1f,
+                offsetProgress = if (isRefreshing) 1f else state.progress,
                 shape = RoundedCornerShape(10.dp),
-                color = colorA,
+                color = color,
             )
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f),
-            contentAlignment = Alignment.BottomCenter,
-        ) {
-            CircleWithRing(
-                modifier = Modifier
-                    .size(30.dp),
-                isRefreshing = isRefreshing(),
-                willRefresh = willRefresh(),
-                offsetProgress = offsetProgress(),
-                shape = RoundedCornerShape(10.dp),
-                color = colorB,
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f),
-            contentAlignment = Alignment.Center,
-        ) {
-            CircleWithRing(
-                modifier = Modifier
-                    .size(30.dp),
-                isRefreshing = isRefreshing(),
-                willRefresh = willRefresh(),
-                offsetProgress = offsetProgress(),
-                shape = RoundedCornerShape(10.dp),
-                color = colorC,
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f),
-            contentAlignment = Alignment.BottomCenter,
-        ) {
-            CircleWithRing(
-                modifier = Modifier
-                    .size(30.dp),
-                isRefreshing = isRefreshing(),
-                willRefresh = willRefresh(),
-                offsetProgress = offsetProgress(),
-                shape = RoundedCornerShape(10.dp),
-                color = colorB,
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f),
-            contentAlignment = Alignment.TopCenter,
-        ) {
-            CircleWithRing(
-                modifier = Modifier
-                    .size(30.dp),
-                isRefreshing = isRefreshing(),
-                willRefresh = willRefresh(),
-                offsetProgress = offsetProgress(),
-                shape = RoundedCornerShape(10.dp),
-                color = colorA,
-            )
-        }
+        item(colorA, Alignment.TopCenter)
+        item(colorB, Alignment.BottomCenter)
+        item(colorC, Alignment.Center)
+        item(colorB, Alignment.BottomCenter)
+        item(colorA, Alignment.TopCenter)
     }
 }
 
@@ -227,5 +174,19 @@ fun CircleWithRing(
                 .background(color = color)
                 .fillMaxSize(),
         )
+    }
+}
+
+@Composable
+private fun rememberStaticPullToRefreshState(): PullToRefreshState {
+    return remember {
+        object : PullToRefreshState {
+            override val distanceFraction: Float = 1f   // fully pulled
+            override val isAnimating: Boolean = false
+
+            override suspend fun animateToThreshold() {}
+            override suspend fun animateToHidden() {}
+            override suspend fun snapTo(targetValue: Float) {}
+        }
     }
 }
