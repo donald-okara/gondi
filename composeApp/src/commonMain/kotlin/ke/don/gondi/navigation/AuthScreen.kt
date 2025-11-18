@@ -26,7 +26,6 @@ import ke.don.authentication.model.AuthEvent
 import ke.don.authentication.model.AuthModel
 import ke.don.authentication.model.StartupPhase
 import ke.don.authentication.screens.AuthScreenContent
-import ke.don.components.helpers.Matcha
 import ke.don.components.helpers.ObserveAsEvent
 import ke.don.koffee.domain.Koffee
 

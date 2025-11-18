@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.gondi.navigation
 
 import androidx.compose.runtime.Composable
@@ -11,7 +20,7 @@ import ke.don.profile.model.EditProfileModel
 import ke.don.profile.screens.EditScreenContent
 import ke.don.profile.screens.OnBoardingContent
 
-class OnboardingScreen: Screen {
+class OnboardingScreen : Screen {
     @Composable
     override fun Content() {
         val editProfileModel = koinScreenModel<EditProfileModel>()
@@ -28,7 +37,7 @@ class OnboardingScreen: Screen {
     }
 }
 
-class EditProfileScreen: Screen {
+class EditProfileScreen : Screen {
     @Composable
     override fun Content() {
         val editProfileModel = koinScreenModel<EditProfileModel>()

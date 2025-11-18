@@ -10,7 +10,6 @@
 package ke.don.components.profile
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import ke.don.domain.table.Profile
 import ke.don.resources.color
 import ke.don.resources.onColorWithOverlay
@@ -32,13 +30,12 @@ fun InitialsToken(
     profile: Profile,
     isHero: Boolean = false,
     modifier: Modifier = Modifier,
-    isSelected: Boolean
+    isSelected: Boolean,
 ) {
     val scale by animateFloatAsState(
         targetValue = if (isSelected) 2f else 1f,
-        label = "Initials scale"
+        label = "Initials scale",
     )
-
 
     val baseTextStyle = if (isHero) {
         MaterialTheme.typography.headlineMedium

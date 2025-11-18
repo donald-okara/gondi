@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.design.theme
 
 import androidx.compose.foundation.layout.PaddingValues
@@ -55,7 +64,6 @@ private fun Spacing.resolve(type: SpacingType): Dp = when (type) {
     SpacingType.Default -> default
 }
 
-
 val LocalSpacing = compositionLocalOf { Spacing() }
 
 typealias Theme = MaterialTheme
@@ -65,7 +73,7 @@ val Theme.spacing: Spacing
     @ReadOnlyComposable
     get() = LocalSpacing.current
 
-sealed interface PaddingOption{
+sealed interface PaddingOption {
     object None : PaddingOption
     object Default : PaddingOption
     class Custom(val padding: Dp) : PaddingOption
@@ -74,7 +82,7 @@ sealed interface PaddingOption{
 @Composable
 private fun resolvePadding(
     option: PaddingOption,
-    default: Dp
+    default: Dp,
 ): Dp = when (option) {
     PaddingOption.None -> 0.dp
     PaddingOption.Default -> default
@@ -85,7 +93,7 @@ private fun resolvePadding(
 fun Modifier.spacing(
     type: SpacingType = SpacingType.Default,
     vertical: PaddingOption = PaddingOption.Default,
-    horizontal: PaddingOption = PaddingOption.Default
+    horizontal: PaddingOption = PaddingOption.Default,
 ): Modifier {
     val base = Theme.spacing.resolve(type)
 
@@ -93,7 +101,7 @@ fun Modifier.spacing(
         top = resolvePadding(vertical, base),
         bottom = resolvePadding(vertical, base),
         start = resolvePadding(horizontal, base),
-        end = resolvePadding(horizontal, base)
+        end = resolvePadding(horizontal, base),
     )
 }
 
@@ -101,7 +109,7 @@ fun Modifier.spacing(
 fun spacingPaddingValues(
     type: SpacingType = SpacingType.Default,
     vertical: PaddingOption = PaddingOption.Default,
-    horizontal: PaddingOption = PaddingOption.Default
+    horizontal: PaddingOption = PaddingOption.Default,
 ): PaddingValues {
     val base = Theme.spacing.resolve(type)
 
@@ -109,6 +117,6 @@ fun spacingPaddingValues(
         top = resolvePadding(vertical, base),
         bottom = resolvePadding(vertical, base),
         start = resolvePadding(horizontal, base),
-        end = resolvePadding(horizontal, base)
+        end = resolvePadding(horizontal, base),
     )
 }

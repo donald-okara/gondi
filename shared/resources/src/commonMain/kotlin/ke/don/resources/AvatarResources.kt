@@ -56,7 +56,7 @@ fun AvatarBackground.color(): Color {
         AvatarBackground.CYAN_BRIGHT -> Color(0xFF18FFFF)
         AvatarBackground.PINK_HOT -> Color(0xFFFF4081)
         AvatarBackground.ORANGE_CORAL -> Color(0xFFFF6E40)
-        else ->  Color(0xFF00E676)
+        else -> Color(0xFF00E676)
     }
 }
 
@@ -105,10 +105,9 @@ fun Avatar.url(): String {
         Avatar.Riley -> "https://api.dicebear.com/9.x/adventurer/svg?seed=Riley&features=birthmark,mustache&hair=long01,long02,long04,long05,long06,long07,long09,long10,long11,long12,long14,long15,long16,long17,long18,long19,long21,long22,long23,long24,long25,long26,short01,short02,short03,short04,short05,short06,short07,short08,short09,short10,short11,short12,short13,short14,short15,short16,short17,short18,short19"
         Avatar.Ryker -> "https://api.dicebear.com/9.x/adventurer/svg?seed=Ryker&hair=long02,long03,long05,long07,long09,long10,long13,long14,long15,long21,long22,long23,long24,long25,long26,short01,short02,short03,short04,short05,short06,short07,short08,short09,short10,short11,short12,short13,short14,short15,short16,short17,short18,short19,long16&hairColor=0e0e0e,562306,796a45,85c2c6,ab2a18,b9a05f,cb6820,dba3be,e5d7a3,592454"
         Avatar.Sawyer -> "https://api.dicebear.com/9.x/adventurer/svg?seed=Sawyer&hair=long02,long03,long05,long07,long09,long10,long13,long14,long15,long21,long22,long23,long24,long25,long26,short01,short02,short03,short04,short05,short06,short07,short08,short09,short10,short11,short12,short13,short14,short15,short16,short17,short18,short19,long16&hairColor=0e0e0e,562306,796a45,85c2c6,ab2a18,b9a05f,cb6820,dba3be,e5d7a3,592454"
-        else  -> "https://api.dicebear.com/9.x/adventurer/svg?seed=Aidan&hair=long02,long03,long05,long07,long09,long10,long13,long14,long15,long21,long22,long23,long24,long25,long26,short01,short02,short03,short04,short05,short06,short07,short08,short09,short10,short11,short12,short13,short14,short15,short16,short17,short18,short19,long16&hairColor=0e0e0e,562306,796a45,85c2c6,ab2a18,b9a05f,cb6820,dba3be,e5d7a3,592454"
+        else -> "https://api.dicebear.com/9.x/adventurer/svg?seed=Aidan&hair=long02,long03,long05,long07,long09,long10,long13,long14,long15,long21,long22,long23,long24,long25,long26,short01,short02,short03,short04,short05,short06,short07,short08,short09,short10,short11,short12,short13,short14,short15,short16,short17,short18,short19,long16&hairColor=0e0e0e,562306,796a45,85c2c6,ab2a18,b9a05f,cb6820,dba3be,e5d7a3,592454"
     }
 }
-
 
 fun Color.onColor(): Color {
     return if (this.luminance() > 0.5f) Color.Black else Color.White

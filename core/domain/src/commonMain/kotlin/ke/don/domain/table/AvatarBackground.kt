@@ -16,54 +16,82 @@ import kotlinx.serialization.Serializable
 enum class AvatarBackground {
 
     // GREENS
-    @SerialName("green_emerald") GREEN_EMERALD,
-    @SerialName("green_minty")   GREEN_MINTY,
-    @SerialName("green_neon")    GREEN_NEON,
-    @SerialName("green_leafy")   GREEN_LEAFY,
+    @SerialName("green_emerald")
+    GREEN_EMERALD,
+
+    @SerialName("green_minty")
+    GREEN_MINTY,
+
+    @SerialName("green_neon")
+    GREEN_NEON,
+
+    @SerialName("green_leafy")
+    GREEN_LEAFY,
 
     // YELLOWS
-    @SerialName("yellow_bright")  YELLOW_BRIGHT,
-    @SerialName("yellow_sunny")   YELLOW_SUNNY,
-    @SerialName("yellow_banana")  YELLOW_BANANA,
-    @SerialName("yellow_golden")  YELLOW_GOLDEN,
+    @SerialName("yellow_bright")
+    YELLOW_BRIGHT,
+
+    @SerialName("yellow_sunny")
+    YELLOW_SUNNY,
+
+    @SerialName("yellow_banana")
+    YELLOW_BANANA,
+
+    @SerialName("yellow_golden")
+    YELLOW_GOLDEN,
 
     // PURPLES
-    @SerialName("purple_electric")  PURPLE_ELECTRIC,
-    @SerialName("purple_orchid")    PURPLE_ORCHID,
-    @SerialName("purple_lilac")     PURPLE_LILAC,
-    @SerialName("purple_amethyst")  PURPLE_AMETHYST,
+    @SerialName("purple_electric")
+    PURPLE_ELECTRIC,
+
+    @SerialName("purple_orchid")
+    PURPLE_ORCHID,
+
+    @SerialName("purple_lilac")
+    PURPLE_LILAC,
+
+    @SerialName("purple_amethyst")
+    PURPLE_AMETHYST,
 
     // EXTRAS
-    @SerialName("cyan_bright")   CYAN_BRIGHT,
-    @SerialName("pink_hot")      PINK_HOT,
-    @SerialName("orange_coral")  ORANGE_CORAL,
+    @SerialName("cyan_bright")
+    CYAN_BRIGHT,
+
+    @SerialName("pink_hot")
+    PINK_HOT,
+
+    @SerialName("orange_coral")
+    ORANGE_CORAL,
 
     @SerialName("unknown")
-    UNKNOWN;
+    UNKNOWN,
+
+    ;
 
     companion object {
 
         private val map = mapOf(
             "green_emerald" to GREEN_EMERALD,
-            "green_minty"   to GREEN_MINTY,
-            "green_neon"    to GREEN_NEON,
-            "green_leafy"   to GREEN_LEAFY,
+            "green_minty" to GREEN_MINTY,
+            "green_neon" to GREEN_NEON,
+            "green_leafy" to GREEN_LEAFY,
 
-            "yellow_bright"  to YELLOW_BRIGHT,
-            "yellow_sunny"   to YELLOW_SUNNY,
-            "yellow_banana"  to YELLOW_BANANA,
-            "yellow_golden"  to YELLOW_GOLDEN,
+            "yellow_bright" to YELLOW_BRIGHT,
+            "yellow_sunny" to YELLOW_SUNNY,
+            "yellow_banana" to YELLOW_BANANA,
+            "yellow_golden" to YELLOW_GOLDEN,
 
             "purple_electric" to PURPLE_ELECTRIC,
-            "purple_orchid"   to PURPLE_ORCHID,
-            "purple_lilac"     to PURPLE_LILAC,
-            "purple_amethyst"  to PURPLE_AMETHYST,
+            "purple_orchid" to PURPLE_ORCHID,
+            "purple_lilac" to PURPLE_LILAC,
+            "purple_amethyst" to PURPLE_AMETHYST,
 
-            "cyan_bright"   to CYAN_BRIGHT,
-            "pink_hot"      to PINK_HOT,
-            "orange_coral"  to ORANGE_CORAL,
+            "cyan_bright" to CYAN_BRIGHT,
+            "pink_hot" to PINK_HOT,
+            "orange_coral" to ORANGE_CORAL,
 
-            "unknown"       to UNKNOWN,
+            "unknown" to UNKNOWN,
         )
 
         fun fromValue(value: String?): AvatarBackground =
@@ -72,4 +100,3 @@ enum class AvatarBackground {
         val entriesFiltered = entries.minus(UNKNOWN)
     }
 }
-

@@ -12,8 +12,8 @@ package ke.don.components.scaffold
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -147,11 +147,11 @@ fun ScaffoldToken(
                             spacingPaddingValues(
                                 vertical = verticalPadding,
                                 horizontal = horizontalPadding,
-                            )
+                            ),
                         )
                         .width(MaterialTheme.spacing.largeScreenSize),
                     horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small, Alignment.Top)
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small, Alignment.Top),
                 ) {
                     content(isCompact)
                 }

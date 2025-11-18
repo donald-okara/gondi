@@ -23,9 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import ke.don.domain.table.Profile
 import ke.don.resources.color
@@ -48,9 +46,9 @@ fun ProfileImageToken(
         color = profile.background.color(),
         isSelected = isSelected,
         heroSize = heroSize,
-        iconSize = iconSize
+        iconSize = iconSize,
     ) {
-        profile.avatar?.let{
+        profile.avatar?.let {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
@@ -67,11 +65,10 @@ fun ProfileImageToken(
             profile = profile,
             isHero = isHero,
             modifier = modifier,
-            isSelected = isSelected
+            isSelected = isSelected,
         )
     }
 }
-
 
 @Composable
 fun ProfileBackground(

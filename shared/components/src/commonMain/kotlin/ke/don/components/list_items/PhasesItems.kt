@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.list_items
 
 import androidx.compose.foundation.background
@@ -19,8 +28,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
@@ -57,8 +66,8 @@ fun GamePhases() {
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("Detective: ") }
                         append("Chooses one player to investigate their alignment.")
-                    }
-                )
+                    },
+                ),
             )
 
             // --- Phase 2: Day Phase ---
@@ -73,10 +82,12 @@ fun GamePhases() {
                     },
                     buildAnnotatedString {
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) { append("Court: ") }
-                        append("All living players vote to eliminate one suspect. A player is eliminated if they receive the majority of votes." +
-                                "\nThe voted out player will be eliminated in the next sleep phase")
-                    }
-                )
+                        append(
+                            "All living players vote to eliminate one suspect. A player is eliminated if they receive the majority of votes." +
+                                "\nThe voted out player will be eliminated in the next sleep phase",
+                        )
+                    },
+                ),
             )
 
             // --- Cycle Repeats ---
@@ -86,12 +97,12 @@ fun GamePhases() {
                         imageVector = Icons.Default.Repeat, // replace with your icon
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.secondary,
-                        modifier = Modifier.size(Theme.spacing.large)
+                        modifier = Modifier.size(Theme.spacing.large),
                     )
                     Text(
                         text = "Cycle Repeats",
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = MaterialTheme.colorScheme.onBackground,
                     )
                 }
 
@@ -101,7 +112,7 @@ fun GamePhases() {
                     text = "The game alternates between Night and Day phases until one of the winning conditions is met.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                    modifier = Modifier.padding(start = Theme.spacing.extraLarge)
+                    modifier = Modifier.padding(start = Theme.spacing.extraLarge),
                 )
             }
         }
@@ -113,7 +124,7 @@ private fun PhaseItem(
     number: String,
     title: String,
     description: String,
-    bullets: List<AnnotatedString>
+    bullets: List<AnnotatedString>,
 ) {
     Column {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Theme.spacing.medium)) {
@@ -121,19 +132,19 @@ private fun PhaseItem(
                 modifier = Modifier
                     .size(Theme.spacing.large)
                     .background(MaterialTheme.colorScheme.primary, shape = CircleShape),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = number,
                     color = MaterialTheme.colorScheme.onPrimary,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
 
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onBackground,
             )
         }
 
@@ -144,7 +155,7 @@ private fun PhaseItem(
                 text = description,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                modifier = Modifier.padding(bottom = Theme.spacing.extraSmall)
+                modifier = Modifier.padding(bottom = Theme.spacing.extraSmall),
             )
 
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -154,7 +165,7 @@ private fun PhaseItem(
                         Text(
                             text = bullet,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                         )
                     }
                 }

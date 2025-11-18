@@ -9,30 +9,63 @@
  */
 package ke.don.domain.table
 
-import ke.don.domain.table.AvatarBackground.UNKNOWN
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 enum class Avatar {
-    @SerialName("aidan") Aidan,
-    @SerialName("adrian") Adrian,
-    @SerialName("amaya") Amaya,
-    @SerialName("alexander") Alexander,
-    @SerialName("christian") Christian,
-    @SerialName("george") George,
-    @SerialName("jade") Jade,
-    @SerialName("jameson") Jameson,
-    @SerialName("jocelyn") Jocelyn,
-    @SerialName("katherine") Katherine,
-    @SerialName("leo") Leo,
-    @SerialName("mason") Mason,
-    @SerialName("nolan") Nolan,
-    @SerialName("riley") Riley,
-    @SerialName("ryker") Ryker,
-    @SerialName("sawyer") Sawyer,
+    @SerialName("aidan")
+    Aidan,
 
-    @SerialName("unknown") Unknown;
+    @SerialName("adrian")
+    Adrian,
+
+    @SerialName("amaya")
+    Amaya,
+
+    @SerialName("alexander")
+    Alexander,
+
+    @SerialName("christian")
+    Christian,
+
+    @SerialName("george")
+    George,
+
+    @SerialName("jade")
+    Jade,
+
+    @SerialName("jameson")
+    Jameson,
+
+    @SerialName("jocelyn")
+    Jocelyn,
+
+    @SerialName("katherine")
+    Katherine,
+
+    @SerialName("leo")
+    Leo,
+
+    @SerialName("mason")
+    Mason,
+
+    @SerialName("nolan")
+    Nolan,
+
+    @SerialName("riley")
+    Riley,
+
+    @SerialName("ryker")
+    Ryker,
+
+    @SerialName("sawyer")
+    Sawyer,
+
+    @SerialName("unknown")
+    Unknown,
+
+    ;
 
     companion object {
 

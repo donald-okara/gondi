@@ -95,9 +95,14 @@ fun TextFieldToken(
     )
 
     val iconColor by animateColorAsState(
-        targetValue = if (enabled && !isError) colorScheme.primary else colorScheme.onSurfaceVariant.copy(
-            alpha = 0.6f
-        ), label = "Icon Color Animation"
+        targetValue = if (enabled && !isError) {
+            colorScheme.primary
+        } else {
+            colorScheme.onSurfaceVariant.copy(
+                alpha = 0.6f,
+            )
+        },
+        label = "Icon Color Animation",
     )
 
     Column(

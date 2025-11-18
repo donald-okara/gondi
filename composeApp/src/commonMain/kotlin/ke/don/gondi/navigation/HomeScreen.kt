@@ -10,14 +10,11 @@
 package ke.don.gondi.navigation
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ListItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,7 +34,6 @@ import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.profile.ProfileImageToken
 import ke.don.components.scaffold.ScaffoldToken
-import ke.don.design.theme.spacing
 import ke.don.domain.datastore.Theme
 import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.domain.gameplay.server.LanDiscovery
@@ -49,7 +45,6 @@ import ke.don.domain.table.AvatarBackground
 import ke.don.domain.table.Profile
 import ke.don.local.datastore.ProfileStore
 import ke.don.local.datastore.ThemeRepository
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
 import kotlin.uuid.ExperimentalUuidApi

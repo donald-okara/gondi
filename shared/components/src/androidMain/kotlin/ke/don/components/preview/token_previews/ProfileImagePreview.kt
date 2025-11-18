@@ -84,7 +84,7 @@ fun ProfilePreview(
                             ),
                             modifier = Modifier.animateBounds(this@LookaheadScope),
                             isSelected = it == selectedColor,
-                            onClick = {selectedColor = it},
+                            onClick = { selectedColor = it },
                             isHero = false,
                         )
                     }

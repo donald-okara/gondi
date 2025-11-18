@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.preview.token_previews
 
 import androidx.compose.foundation.layout.Box
@@ -22,14 +31,12 @@ fun RolesPreview(
         Box {
             RolesList(
                 modifier = Modifier.padding(
-                    MaterialTheme.spacing.medium
-                )
+                    MaterialTheme.spacing.medium,
+                ),
             )
         }
-
     }
 }
-
 
 @DevicePreviews
 @Composable
@@ -40,6 +47,5 @@ fun PhasesPreview(
         Box {
             GamePhases()
         }
-
     }
 }

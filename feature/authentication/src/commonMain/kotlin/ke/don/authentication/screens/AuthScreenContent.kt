@@ -97,21 +97,21 @@ fun AuthScreenContent(
 
 @Composable
 fun ProfileSyncScreen(
-    modifier: Modifier = Modifier
-){
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
-    ){
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+    ) {
         Box(
             modifier = Modifier.width(MaterialTheme.spacing.largeScreenSize),
-            contentAlignment = Alignment.Center
-        ){
+            contentAlignment = Alignment.Center,
+        ) {
             FancyLoadingIndicator(loading = true)
         }
         Text(
-           "Have a coffee as we sync your profile"
+            "Have a coffee as we sync your profile",
         )
     }
 }

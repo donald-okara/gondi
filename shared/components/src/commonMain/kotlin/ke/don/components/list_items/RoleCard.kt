@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.list_items
 
 import androidx.compose.foundation.layout.Arrangement
@@ -9,14 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,13 +66,13 @@ fun RolesList(modifier: Modifier = Modifier) {
 
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(spacing),
-            verticalArrangement = Arrangement.spacedBy(spacing)
+            verticalArrangement = Arrangement.spacedBy(spacing),
         ) {
             Role.entries.forEach { role ->
                 RoleCard(
                     role = role,
                     modifier = Modifier.width(itemWidth),
-                    onClick = {showDialog = role}
+                    onClick = { showDialog = role },
                 )
             }
         }
@@ -92,28 +94,28 @@ fun RoleDialog(
 ) {
     DialogToken(
         modifier = modifier,
-        onDismissRequest = dismiss
-    ){
+        onDismissRequest = dismiss,
+    ) {
         Column(
             modifier = Modifier
                 .padding(MaterialTheme.spacing.medium)
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small, Alignment.CenterVertically),
-            horizontalAlignment = Alignment.Start
+            horizontalAlignment = Alignment.Start,
         ) {
             AdaptiveIcon(
                 painterResource = role.icon,
                 contentDescription = null,
                 logoColor = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
-                    .size(64.dp)
+                    .size(64.dp),
             )
 
             Text(
                 text = role.name,
                 style = MaterialTheme.typography.titleMedium,
                 color = Theme.colorScheme.primary,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
             )
 
             Text(
@@ -126,7 +128,7 @@ fun RoleDialog(
 
             role.instructions.forEach {
                 RoleInstructionItem(
-                    instruction = it
+                    instruction = it,
                 )
             }
         }
@@ -136,34 +138,34 @@ fun RoleDialog(
 @Composable
 private fun RoleInstructionItem(
     modifier: Modifier = Modifier,
-    instruction: RoleInstruction
+    instruction: RoleInstruction,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = MaterialTheme.spacing.small),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-        verticalAlignment = Alignment.Top
+        verticalAlignment = Alignment.Top,
     ) {
         IconToken(
             buttonType = ComponentType.Neutral,
             imageVector = instruction.icon,
             paddingValues = spacingPaddingValues(
-                type = SpacingType.Small
+                type = SpacingType.Small,
             ),
-            onClick = {}
+            onClick = {},
         )
 
         Column(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
             horizontalAlignment = Alignment.Start,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Text(
                 text = instruction.title,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
             )
             Text(
                 text = instruction.description,
@@ -174,7 +176,6 @@ private fun RoleInstructionItem(
     }
 }
 
-
 @Composable
 fun RoleCard(
     modifier: Modifier = Modifier,
@@ -183,8 +184,8 @@ fun RoleCard(
 ) {
     CardToken(
         cardType = CardType.Solid,
-        onClick = onClick
-    ){
+        onClick = onClick,
+    ) {
         Column(
             modifier = modifier
                 .padding(
@@ -192,19 +193,19 @@ fun RoleCard(
                         type = SpacingType.Medium,
                         vertical = PaddingOption.Default,
                         horizontal = PaddingOption.Custom(
-                            MaterialTheme.spacing.small
-                        )
-                    )
+                            MaterialTheme.spacing.small,
+                        ),
+                    ),
                 ),
             verticalArrangement = Arrangement.spacedBy(
                 MaterialTheme.spacing.medium,
-                Alignment.CenterVertically
+                Alignment.CenterVertically,
             ),
-            horizontalAlignment = Alignment.Start
+            horizontalAlignment = Alignment.Start,
         ) {
             TitleRow(
                 icon = role.icon,
-                title = role.name
+                title = role.name,
             )
 
             Text(
@@ -212,7 +213,7 @@ fun RoleCard(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
@@ -227,23 +228,22 @@ private fun TitleRow(
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.Start),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         AdaptiveIcon(
             painterResource = icon,
             contentDescription = null,
             logoColor = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(
-                MaterialTheme.spacing.large
-            )
+                MaterialTheme.spacing.large,
+            ),
         )
 
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
-
     }
 }

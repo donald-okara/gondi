@@ -63,6 +63,5 @@ object Resources {
             val ANNOUNCE = Icons.Outlined.Campaign
             val NEUTRAL = Icons.Outlined.Sports
         }
-
     }
 }

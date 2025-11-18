@@ -22,10 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -64,7 +61,7 @@ fun TopBarToken(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         TopAppBar(
             title = {
@@ -74,7 +71,7 @@ fun TopBarToken(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
-                            .padding(Theme.spacing.small)
+                            .padding(Theme.spacing.small),
                     )
                 }
             },
@@ -94,10 +91,10 @@ fun TopBarToken(
                             modifier = Modifier
                                 .clip(CircleShape)
                                 .padding(Theme.spacing.small)
-                                .clickable{
+                                .clickable {
                                     navigationIcon.navigateBack()
-                                }
-                            )
+                                },
+                        )
 
                     is NavigationIcon.Burger ->
                         Icon(
@@ -106,16 +103,16 @@ fun TopBarToken(
                             modifier = Modifier
                                 .clip(CircleShape)
                                 .padding(Theme.spacing.small)
-                                .clickable{
+                                .clickable {
                                     navigationIcon.toggleDrawer()
-                                }
+                                },
                         )
                 }
             },
             actions = {
                 Row(
                     modifier = Modifier
-                        .padding(Theme.spacing.small)
+                        .padding(Theme.spacing.small),
                 ) {
                     actions()
                 }

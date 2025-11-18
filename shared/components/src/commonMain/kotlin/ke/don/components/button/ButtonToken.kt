@@ -20,10 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import ke.don.design.theme.PaddingOption
-import ke.don.design.theme.SpacingType
-import ke.don.design.theme.spacing
-import ke.don.design.theme.spacingPaddingValues
 
 /**
  * Renders a configurable Material Button whose appearance is driven by the provided ComponentType and that delegates inner content rendering to ButtonContentSwitcher.

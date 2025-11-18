@@ -1,10 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.profile.screens
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.animation.with
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
@@ -42,15 +50,15 @@ fun OnBoardingContent(
         step,
         state,
         handleEvent,
-        navigateToMain
-    ){
+        navigateToMain,
+    ) {
         @Composable {
-            AnimatedContent(targetState = step){ currentStep ->
-                when(currentStep){
+            AnimatedContent(targetState = step) { currentStep ->
+                when (currentStep) {
                     Steps.Rules -> RulesContent(
                         next = {
                             step = Steps.Phases
-                        }
+                        },
                     )
                     Steps.Phases -> PhasesContent(
                         next = {
@@ -58,7 +66,7 @@ fun OnBoardingContent(
                         },
                         back = {
                             step = Steps.Rules
-                        }
+                        },
                     )
                     Steps.Profile -> EditContent(
                         state = state,
@@ -66,7 +74,7 @@ fun OnBoardingContent(
                         onSave = navigateToMain,
                         back = {
                             step = Steps.Phases
-                        }
+                        },
                     )
                 }
             }
@@ -76,17 +84,17 @@ fun OnBoardingContent(
     ScaffoldToken(
         modifier = modifier,
         navigationIcon = NavigationIcon.Back(navigateToMain),
-        scrollState = rememberScrollState()
+        scrollState = rememberScrollState(),
     ) {
         AnimatedContent(
             targetState = step.description,
-            transitionSpec = { slideInVertically { it } togetherWith  slideOutVertically { -it } }
+            transitionSpec = { slideInVertically { it } togetherWith slideOutVertically { -it } },
         ) { description ->
             Text(
                 description,
                 style = MaterialTheme.typography.headlineLarge,
                 color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
         }
 
@@ -100,12 +108,12 @@ fun OnBoardingContent(
         Text(
             "Step ${step.ordinal + 1} of ${Steps.entries.size}",
             style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         ProgressBar(
             progress = (step.ordinal + 1) / 3f,
-            progressColor = if (step == Steps.Profile) state.editProfile.background.color() else MaterialTheme.colorScheme.primary
+            progressColor = if (step == Steps.Profile) state.editProfile.background.color() else MaterialTheme.colorScheme.primary,
         )
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -114,7 +122,7 @@ fun OnBoardingContent(
 }
 
 private enum class Steps(
-    val description: String
+    val description: String,
 ) {
     Rules("First, The Rules"),
     Phases("Next, The Game Phases"),

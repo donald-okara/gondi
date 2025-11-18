@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.profile.model
 
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -21,8 +30,8 @@ import kotlinx.coroutines.launch
 
 class EditProfileModel(
     private val repository: ProfileRepository,
-    private val profileStore: ProfileStore
-): ScreenModel {
+    private val profileStore: ProfileStore,
+) : ScreenModel {
     private val _uiState = MutableStateFlow(EditProfileState())
     val uiState = _uiState.asStateFlow()
 
@@ -41,26 +50,26 @@ class EditProfileModel(
         }
     }
 
-    fun getProfile(){
+    fun getProfile() {
         screenModelScope.launch {
             val profile = profileStore.profileFlow.first()
             profile?.let { editProfile ->
                 _uiState.update {
                     it.copy(
                         fetchedProfile = editProfile,
-                        editProfile = editProfile
+                        editProfile = editProfile,
                     )
                 }
             }
         }
     }
 
-    fun updateAvatar(avatar: Avatar){
+    fun updateAvatar(avatar: Avatar) {
         _uiState.update {
             it.copy(
                 editProfile = it.editProfile.copy(
-                    avatar = avatar
-                )
+                    avatar = avatar,
+                ),
             )
         }
     }
@@ -69,8 +78,8 @@ class EditProfileModel(
         _uiState.update {
             it.copy(
                 editProfile = it.editProfile.copy(
-                    username = username
-                )
+                    username = username,
+                ),
             )
         }
     }
@@ -79,8 +88,8 @@ class EditProfileModel(
         _uiState.update {
             it.copy(
                 editProfile = it.editProfile.copy(
-                    background = background
-                )
+                    background = background,
+                ),
             )
         }
     }
@@ -89,23 +98,23 @@ class EditProfileModel(
         screenModelScope.launch {
             _uiState.update {
                 it.copy(
-                    saveStatus = ResultStatus.Loading
+                    saveStatus = ResultStatus.Loading,
                 )
             }
 
-            repository.updateProfile(uiState.value.editProfile).onSuccess{ result ->
+            repository.updateProfile(uiState.value.editProfile).onSuccess { result ->
                 _uiState.update {
                     it.copy(
                         saveStatus = ResultStatus.Success(result),
                         editProfile = result,
-                        fetchedProfile = result
+                        fetchedProfile = result,
                     )
                 }
                 onSaved()
             }.onFailure { error ->
                 _uiState.update {
                     it.copy(
-                        saveStatus = ResultStatus.Error(error.message ?: "Unknown error")
+                        saveStatus = ResultStatus.Error(error.message ?: "Unknown error"),
                     )
                 }
 
@@ -113,7 +122,7 @@ class EditProfileModel(
                     title = error.category.errorTitle,
                     message = error.message ?: "Unknown error",
                     retryAction = { saveProfile(onSaved) },
-                    duration = ToastDuration.Indefinite
+                    duration = ToastDuration.Indefinite,
                 )
             }
         }

@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.indicator
 
 import androidx.compose.animation.AnimatedVisibility
@@ -26,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import ke.don.domain.table.AvatarBackground
 import ke.don.resources.color
 
-
 @Composable
 fun FancyLoadingIndicator(
     loading: Boolean,
@@ -45,7 +53,6 @@ fun FancyLoadingIndicator(
         )
     }
 }
-
 
 /**
  * A visually engaging refresh indicator that can be used with pull-to-refresh implementations.
@@ -79,13 +86,13 @@ fun FancyRefreshAnimation(
         modifier = modifier
             .padding(16.dp)
             .height(80.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(1f), contentAlignment = Alignment.TopCenter
+                .weight(1f),
+            contentAlignment = Alignment.TopCenter,
         ) {
             CircleWithRing(
                 modifier = Modifier
@@ -101,7 +108,8 @@ fun FancyRefreshAnimation(
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(1f), contentAlignment = Alignment.BottomCenter
+                .weight(1f),
+            contentAlignment = Alignment.BottomCenter,
         ) {
             CircleWithRing(
                 modifier = Modifier
@@ -117,7 +125,8 @@ fun FancyRefreshAnimation(
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(1f), contentAlignment = Alignment.Center
+                .weight(1f),
+            contentAlignment = Alignment.Center,
         ) {
             CircleWithRing(
                 modifier = Modifier
@@ -133,7 +142,8 @@ fun FancyRefreshAnimation(
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(1f), contentAlignment = Alignment.BottomCenter
+                .weight(1f),
+            contentAlignment = Alignment.BottomCenter,
         ) {
             CircleWithRing(
                 modifier = Modifier
@@ -149,7 +159,8 @@ fun FancyRefreshAnimation(
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(1f), contentAlignment = Alignment.TopCenter
+                .weight(1f),
+            contentAlignment = Alignment.TopCenter,
         ) {
             CircleWithRing(
                 modifier = Modifier
@@ -161,9 +172,7 @@ fun FancyRefreshAnimation(
                 color = colorA,
             )
         }
-
     }
-
 }
 
 @Composable
@@ -175,12 +184,11 @@ fun CircleWithRing(
     shape: Shape = CircleShape,
     color: Color = Color.Yellow,
 ) {
-
     val scale by animateFloatAsState(
         targetValue = if (willRefresh) 1f else .8f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioHighBouncy,
-        )
+        ),
     )
     val rotateTransition = rememberInfiniteTransition()
 
@@ -191,7 +199,7 @@ fun CircleWithRing(
             animationSpec = infiniteRepeatable(
                 animation = tween(1000, easing = FastOutSlowInEasing),
                 repeatMode = RepeatMode.Reverse,
-            )
+            ),
         )
         else -> remember { mutableStateOf(45f) }
     }
@@ -205,9 +213,9 @@ fun CircleWithRing(
                 .border(
                     width = 15.dp * (1f - offsetProgress),
                     shape = shape,
-                    color = color
+                    color = color,
                 )
-                .fillMaxSize()
+                .fillMaxSize(),
         )
 
         Box(
@@ -217,7 +225,7 @@ fun CircleWithRing(
                 .scale(offsetProgress)
                 .clip(shape)
                 .background(color = color)
-                .fillMaxSize()
+                .fillMaxSize(),
         )
     }
 }

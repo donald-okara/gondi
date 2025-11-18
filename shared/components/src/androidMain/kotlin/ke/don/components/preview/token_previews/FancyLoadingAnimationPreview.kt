@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.preview.token_previews
 
 import androidx.compose.foundation.layout.Column
@@ -25,11 +34,11 @@ import ke.don.components.preview.DevicePreviews
 import ke.don.domain.datastore.Theme
 import kotlinx.coroutines.delay
 
-//@DevicePreviews
-//@Composable
-//fun FilterChipPreview(
+// @DevicePreviews
+// @Composable
+// fun FilterChipPreview(
 //    @PreviewParameter(ThemeProvider::class) theme: Theme,
-//){
+// ){
 //    DevicePreviewContainer(theme) {
 //        FancyRefreshAnimation(
 //            isRefreshing = { true },
@@ -38,7 +47,7 @@ import kotlinx.coroutines.delay
 //        )
 //    }
 //
-//}
+// }
 
 @DevicePreviews
 @Composable
@@ -68,10 +77,10 @@ fun FancyRefreshAnimationInteractivePreview(
         }
     }
 
-    DevicePreviewContainer(theme){
+    DevicePreviewContainer(theme) {
         Column(
             modifier = Modifier.fillMaxWidth().padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             FancyRefreshAnimation(
                 isRefreshing = { isRefreshing },
@@ -82,7 +91,7 @@ fun FancyRefreshAnimationInteractivePreview(
             Spacer(Modifier.height(20.dp))
 
             Button(
-                onClick = { if (!isRefreshing) isRefreshing = true }
+                onClick = { if (!isRefreshing) isRefreshing = true },
             ) {
                 Text(if (isRefreshing) "Refreshing…" else "Trigger Refresh")
             }
@@ -115,10 +124,10 @@ fun FancyLoadingAnimationInteractivePreview(
         }
     }
 
-    DevicePreviewContainer(theme){
+    DevicePreviewContainer(theme) {
         Column(
             modifier = Modifier.fillMaxWidth().padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             FancyLoadingIndicator(
                 loading = isLoading,
@@ -127,7 +136,7 @@ fun FancyLoadingAnimationInteractivePreview(
             Spacer(Modifier.height(20.dp))
 
             Button(
-                onClick = { if (!isLoading) isLoading = true }
+                onClick = { if (!isLoading) isLoading = true },
             ) {
                 Text(if (isLoading) "Refreshing…" else "Trigger Refresh")
             }

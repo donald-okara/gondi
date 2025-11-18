@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.profile
 
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,15 +34,17 @@ import ke.don.resources.Resources
 @Composable
 fun OnboardingShowcase(
     modifier: Modifier = Modifier,
-    theme: Theme
-){
+    theme: Theme,
+) {
     DevicePreviewContainer(theme) {
         var state by remember {
-            mutableStateOf(EditProfileState(
-                editProfile = Profile(
-                    username = "Timmy"
-                )
-            ))
+            mutableStateOf(
+                EditProfileState(
+                    editProfile = Profile(
+                        username = "Timmy",
+                    ),
+                ),
+            )
         }
 
         fun handleEvent(event: EditProfileEvent) {
@@ -41,16 +52,16 @@ fun OnboardingShowcase(
                 is EditProfileEvent.OnAvatarChanged -> {
                     state = state.copy(
                         editProfile = state.editProfile.copy(
-                            avatar = event.avatar
-                        )
+                            avatar = event.avatar,
+                        ),
                     )
                 }
 
                 is EditProfileEvent.OnBackgroundChanged -> {
                     state = state.copy(
                         editProfile = state.editProfile.copy(
-                            background = event.background
-                        )
+                            background = event.background,
+                        ),
                     )
                 }
 
@@ -58,8 +69,8 @@ fun OnboardingShowcase(
                 is EditProfileEvent.OnUsernameChanged -> {
                     state = state.copy(
                         editProfile = state.editProfile.copy(
-                            username = event.username
-                        )
+                            username = event.username,
+                        ),
                     )
                 }
             }
@@ -68,7 +79,7 @@ fun OnboardingShowcase(
         OnBoardingContent(
             modifier = modifier,
             state = state,
-            handleEvent = ::handleEvent
+            handleEvent = ::handleEvent,
         )
     }
 }
@@ -77,15 +88,17 @@ fun OnboardingShowcase(
 @Composable
 fun EditProfileShowcase(
     modifier: Modifier = Modifier,
-    theme: Theme
-){
+    theme: Theme,
+) {
     DevicePreviewContainer(theme) {
         var state by remember {
-            mutableStateOf(EditProfileState(
-                editProfile = Profile(
-                    username = "Timmy"
-                )
-            ))
+            mutableStateOf(
+                EditProfileState(
+                    editProfile = Profile(
+                        username = "Timmy",
+                    ),
+                ),
+            )
         }
 
         fun handleEvent(event: EditProfileEvent) {
@@ -93,16 +106,16 @@ fun EditProfileShowcase(
                 is EditProfileEvent.OnAvatarChanged -> {
                     state = state.copy(
                         editProfile = state.editProfile.copy(
-                            avatar = event.avatar
-                        )
+                            avatar = event.avatar,
+                        ),
                     )
                 }
 
                 is EditProfileEvent.OnBackgroundChanged -> {
                     state = state.copy(
                         editProfile = state.editProfile.copy(
-                            background = event.background
-                        )
+                            background = event.background,
+                        ),
                     )
                 }
 
@@ -110,8 +123,8 @@ fun EditProfileShowcase(
                 is EditProfileEvent.OnUsernameChanged -> {
                     state = state.copy(
                         editProfile = state.editProfile.copy(
-                            username = event.username
-                        )
+                            username = event.username,
+                        ),
                     )
                 }
             }
@@ -120,7 +133,7 @@ fun EditProfileShowcase(
         EditScreenContent(
             modifier = modifier,
             state = state,
-            onEvent = ::handleEvent
+            onEvent = ::handleEvent,
         )
     }
 }
@@ -129,17 +142,16 @@ fun EditProfileShowcase(
 @DevicePreviews
 @Composable
 fun OnBoardingPreview(
-    @PreviewParameter (ThemeProvider::class) theme: Theme
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
     OnboardingShowcase(theme = theme)
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @DevicePreviews
 @Composable
 fun EditProfilePreview(
-    @PreviewParameter (ThemeProvider::class) theme: Theme
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
     EditProfileShowcase(theme = theme)
 }
@@ -152,11 +164,11 @@ fun EditProfilePreview(
 )
 @Composable
 fun EditProfileMobilePreview(
-    @PreviewParameter (ThemeProvider::class) theme: Theme
-){
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
+) {
     DeviceFramePreview(
         frame = Resources.Images.MOBILE_FRAME,
-    ){
+    ) {
         OnboardingShowcase(theme = theme)
     }
 }

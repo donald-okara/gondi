@@ -1,10 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.profile.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme
@@ -19,10 +27,8 @@ import ke.don.components.button.ComponentType
 import ke.don.components.list_items.CodeOfConductSection
 import ke.don.components.list_items.GamePhases
 import ke.don.components.list_items.RolesList
-import ke.don.components.text_field.TextFieldToken
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
-import ke.don.profile.model.EditProfileEvent
 
 @Composable
 fun RulesContent(
@@ -32,8 +38,8 @@ fun RulesContent(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.Top)
-    ){
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.Top),
+    ) {
         Text(
             text = "Game Objective",
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
@@ -53,8 +59,8 @@ fun RulesContent(
         ButtonToken(
             modifier = Modifier.align(Alignment.End),
             buttonType = ComponentType.Primary,
-            onClick = next
-        ){
+            onClick = next,
+        ) {
             Text("I understand")
         }
     }
@@ -64,12 +70,12 @@ fun RulesContent(
 fun PhasesContent(
     modifier: Modifier = Modifier,
     next: () -> Unit,
-    back: () -> Unit
+    back: () -> Unit,
 ) {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.Top)
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.Top),
     ) {
         GamePhases()
 
@@ -78,18 +84,18 @@ fun PhasesContent(
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(Theme.spacing.medium, Alignment.End),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             ButtonToken(
                 buttonType = ComponentType.Neutral,
-                onClick = back
+                onClick = back,
             ) {
                 Text("Back to rules")
             }
 
             ButtonToken(
                 buttonType = ComponentType.Primary,
-                onClick = next
+                onClick = next,
             ) {
                 Text("Set up profile")
             }

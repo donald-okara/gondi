@@ -28,7 +28,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             sharedThemeModule,
 
             authModule,
-            profileModule
+            profileModule,
         )
     }
 }

@@ -47,24 +47,23 @@ fun DevicePreviewContainer(
     }
 }
 
-
 /**
  * Credit https://www.webmobilefirst.com/en/mockups/samsung-galaxy-s24-ultra-2024/
  */
 @Composable
 fun DeviceFramePreview(
     frame: DrawableResource,
-    content: @Composable (() -> Unit)
+    content: @Composable (() -> Unit),
 ) {
     Box(
         modifier = Modifier
-            .aspectRatio(366f / 750f)
+            .aspectRatio(366f / 750f),
     ) {
         // UI clipped to screen area
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .padding(16.dp) // adjust to screen cutout
+                .padding(16.dp), // adjust to screen cutout
         ) {
             content()
         }

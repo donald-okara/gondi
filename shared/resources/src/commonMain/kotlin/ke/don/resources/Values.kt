@@ -12,9 +12,7 @@ package ke.don.resources
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 val LocalSharedScope = staticCompositionLocalOf<SharedTransitionScope> {

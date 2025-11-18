@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.list_items
 
 import androidx.compose.foundation.BorderStroke
@@ -44,22 +53,22 @@ fun CodeOfConductSection(
         border = BorderStroke(
             width = Theme.spacing.tiny,
             color = Theme.colorScheme.primary.copy(alpha = 0.5f),
-        )
+        ),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp)
+                .padding(24.dp),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Icon(
                     imageVector = Icons.Default.Gavel,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier.size(Theme.spacing.large)
+                    modifier = Modifier.size(Theme.spacing.large),
                 )
 
                 Spacer(Modifier.width(Theme.spacing.medium))
@@ -68,13 +77,13 @@ fun CodeOfConductSection(
                     Text(
                         text = "Code of Conduct",
                         style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
                     )
 
                     Text(
                         text = "For a fair and fun game, please keep these rules in mind.",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -93,35 +102,33 @@ fun CodeOfConductSection(
 
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(spacing),
-                    verticalArrangement = Arrangement.spacedBy(spacing)
+                    verticalArrangement = Arrangement.spacedBy(spacing),
                 ) {
                     ConductItem(
                         modifier = Modifier.width(itemWidth),
                         icon = Icons.Default.NoSim,
                         title = "No peeking!",
-                        description = "Keep your eyes on your own screen. What's on other players' phones is their secret."
+                        description = "Keep your eyes on your own screen. What's on other players' phones is their secret.",
                     )
 
                     ConductItem(
                         modifier = Modifier.width(itemWidth),
                         icon = Icons.Default.VisibilityOff,
                         title = "Keep it secret",
-                        description = "Your role is for your eyes only. Don't reveal your screen to others."
+                        description = "Your role is for your eyes only. Don't reveal your screen to others.",
                     )
 
                     ConductItem(
                         modifier = Modifier.width(itemWidth),
                         icon = Icons.Default.SentimentSatisfied,
                         title = "Play nice",
-                        description = "Good sportsmanship makes the game better for everyone. Let's all have a great time!"
+                        description = "Good sportsmanship makes the game better for everyone. Let's all have a great time!",
                     )
                 }
             }
-
         }
     }
 }
-
 
 @Composable
 private fun ConductItem(
@@ -133,25 +140,25 @@ private fun ConductItem(
     Row(
         horizontalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
         verticalAlignment = Alignment.Top,
-        modifier = modifier.fillMaxWidth(0.9f)
+        modifier = modifier.fillMaxWidth(0.9f),
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier.size(Theme.spacing.large)
+            modifier = Modifier.size(Theme.spacing.large),
         )
 
         Column {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }

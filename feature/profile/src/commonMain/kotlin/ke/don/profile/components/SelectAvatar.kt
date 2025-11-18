@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.profile.components
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -32,7 +41,7 @@ fun SelectAvatarComponent(
     selectedAvatar: Avatar?,
     selectedBackground: AvatarBackground,
 ) {
-    LookaheadScope{
+    LookaheadScope {
         FlowRow(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
@@ -49,7 +58,7 @@ fun SelectAvatarComponent(
                     onClick = { onAvatarSelected(avatar) },
                     isSelected = avatar == selectedAvatar,
                     isHero = true,
-                    heroSize = 64.dp
+                    heroSize = 64.dp,
                 )
             }
         }
@@ -61,9 +70,9 @@ fun SelectAvatarComponent(
 fun SelectBackgroundComponent(
     modifier: Modifier = Modifier,
     selectedBackground: AvatarBackground,
-    onBackgroundSelected: (AvatarBackground) -> Unit
+    onBackgroundSelected: (AvatarBackground) -> Unit,
 ) {
-    LookaheadScope{
+    LookaheadScope {
         FlowRow(
             modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
@@ -74,7 +83,7 @@ fun SelectBackgroundComponent(
                     modifier = Modifier.animateBounds(this@LookaheadScope),
                     background = background,
                     selected = background == selectedBackground,
-                    onClick = { onBackgroundSelected(background) }
+                    onClick = { onBackgroundSelected(background) },
                 )
             }
         }
@@ -86,8 +95,8 @@ fun BackgroundItem(
     modifier: Modifier = Modifier,
     background: AvatarBackground,
     selected: Boolean,
-    onClick: () -> Unit
-){
+    onClick: () -> Unit,
+) {
     val baseSize = 24.dp
     val targetSize = if (selected) baseSize * 1.1f else baseSize
     val animatedSize by animateDpAsState(
@@ -99,8 +108,8 @@ fun BackgroundItem(
             .size(animatedSize)
             .clip(CircleShape)
             .background(background.color())
-            .clickable{
+            .clickable {
                 onClick()
-            }
+            },
     )
 }

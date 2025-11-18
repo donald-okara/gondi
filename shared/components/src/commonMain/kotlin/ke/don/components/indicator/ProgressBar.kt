@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.indicator
 
 import androidx.compose.animation.animateColorAsState
@@ -24,11 +33,12 @@ fun ProgressBar(
     progress: Float,
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     progressColor: Color = MaterialTheme.colorScheme.primary,
-    height: Dp = MaterialTheme.spacing.small
+    height: Dp = MaterialTheme.spacing.small,
 ) {
     val animatedProgress by animateFloatAsState(
         targetValue = progress,
-        animationSpec = tween(durationMillis = 300), label = "progressAnimation"
+        animationSpec = tween(durationMillis = 300),
+        label = "progressAnimation",
     )
 
     val animatedProgressColor by animateColorAsState(
@@ -36,9 +46,10 @@ fun ProgressBar(
         label = "animatedColor",
     )
 
-    Canvas(modifier = modifier
-        .fillMaxWidth()
-        .height(12.dp)
+    Canvas(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(12.dp),
     ) {
         val barWidth = size.width
         val barHeight = height.toPx()
@@ -50,7 +61,7 @@ fun ProgressBar(
             color = backgroundColor,
             size = Size(barWidth, barHeight),
             cornerRadius = CornerRadius(radius, radius),
-            topLeft = Offset(0f, (size.height - barHeight) / 2)
+            topLeft = Offset(0f, (size.height - barHeight) / 2),
         )
 
         // Draw progress with rounded ends
@@ -59,7 +70,7 @@ fun ProgressBar(
                 color = animatedProgressColor,
                 size = Size(progressWidth, barHeight),
                 cornerRadius = CornerRadius(radius, radius),
-                topLeft = Offset(0f, (size.height - barHeight) / 2)
+                topLeft = Offset(0f, (size.height - barHeight) / 2),
             )
         }
     }
