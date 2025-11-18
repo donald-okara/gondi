@@ -175,19 +175,16 @@ fun RefreshLazyColumnPreview(
     var isRefreshing by remember { mutableStateOf(false) }
 
     // Simple PullToRefreshState with no-op animation
-    val pullState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = { isRefreshing = true },
-    )
+    val pullState = rememberPullToRefreshState()
 
     val cardRotation = rememberCardRotation(
         isRefreshing = isRefreshing,
-        pullProgress = pullState.progress
+        pullProgress = pullState.distanceFraction
     )
 
     val cardOffset = rememberOffset(
         isRefreshing = isRefreshing,
-        pullProgress = pullState.progress
+        pullProgress = pullState.distanceFraction
     )
 
     // Toggle refresh after 2 seconds (for demo)

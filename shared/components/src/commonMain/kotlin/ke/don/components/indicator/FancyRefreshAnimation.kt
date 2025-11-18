@@ -83,15 +83,11 @@ fun FancyLoadingIndicator(
  *
  * Credit goes to https://www.sinasamaki.com/  for the component
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FancyRefreshAnimation(
     modifier: Modifier = Modifier,
     isRefreshing: Boolean,
-    state: PullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = {}
-    ),
+    state: PullToRefreshState = rememberPullToRefreshState(),
 ) {
     val colorA = AvatarBackground.PURPLE_LILAC.color()
     val colorB = AvatarBackground.GREEN_EMERALD.color()
@@ -116,8 +112,8 @@ fun FancyRefreshAnimation(
             CircleWithRing(
                 modifier = Modifier.size(30.dp),
                 isRefreshing = isRefreshing,
-                willRefresh = isRefreshing || state.progress >= 1f,
-                offsetProgress = if (isRefreshing) 1f else state.progress,
+                willRefresh = isRefreshing || state.distanceFraction >= 1f,
+                offsetProgress = if (isRefreshing) 1f else state.distanceFraction,
                 shape = RoundedCornerShape(10.dp),
                 color = color,
             )
