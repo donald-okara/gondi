@@ -40,6 +40,15 @@ import androidx.compose.ui.unit.dp
 import ke.don.domain.table.AvatarBackground
 import ke.don.resources.color
 
+/**
+ * A composable that displays the [FancyRefreshAnimation] when the `loading` state is true.
+ * It uses [AnimatedVisibility] to provide a smooth fade-in/scale-in and fade-out/scale-out
+ * transition. This is useful for showing a loading indicator in the center of the screen
+ * or in place of content while data is being fetched, independent of a pull-to-refresh action.
+ *
+ * @param loading A boolean that determines whether the loading indicator is visible.
+ * @param modifier The modifier to be applied to the underlying [FancyRefreshAnimation].
+ */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FancyLoadingIndicator(
@@ -122,6 +131,28 @@ fun FancyRefreshAnimation(
     }
 }
 
+/**
+ * A composable that displays an animated shape, consisting of a central filled shape and an
+ * outer ring. The animations are driven by the state of a pull-to-refresh action.
+ *
+ * The animation has three key stages:
+ * 1.  **Pulling**: As the user pulls (`offsetProgress` increases), the central shape and outer ring
+ *     scale up from zero. The ring's border width decreases, creating an "opening" effect.
+ * 2.  **Threshold Reached**: When the pull distance is sufficient (`willRefresh` is true), the entire
+ *     component scales up with a bouncy spring animation to indicate it's ready to refresh.
+ * 3.  **Refreshing**: When `isRefreshing` is true, the central shape and outer ring start rotating
+ *     in opposite directions in an infinite loop, providing a loading indicator.
+ *
+ * @param modifier The modifier to be applied to the component.
+ * @param isRefreshing `true` if the content is currently refreshing, which triggers the infinite
+ *   rotation animation.
+ * @param willRefresh `true` if the pull-to-refresh threshold has been met, triggering the bouncy
+ *   scale-up animation.
+ * @param offsetProgress The progress of the pull action, typically a float from 0.0 to 1.0 (or more),
+ *   which controls the scale and border width of the shapes.
+ * @param shape The `Shape` to be used for both the central component and the outer ring.
+ * @param color The `Color` to be applied to the shape and ring.
+ */
 @Composable
 fun CircleWithRing(
     modifier: Modifier = Modifier,
@@ -174,19 +205,5 @@ fun CircleWithRing(
                 .background(color = color)
                 .fillMaxSize(),
         )
-    }
-}
-
-@Composable
-private fun rememberStaticPullToRefreshState(): PullToRefreshState {
-    return remember {
-        object : PullToRefreshState {
-            override val distanceFraction: Float = 1f   // fully pulled
-            override val isAnimating: Boolean = false
-
-            override suspend fun animateToThreshold() {}
-            override suspend fun animateToHidden() {}
-            override suspend fun snapTo(targetValue: Float) {}
-        }
     }
 }
