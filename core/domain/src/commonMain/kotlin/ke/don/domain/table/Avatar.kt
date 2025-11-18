@@ -69,29 +69,12 @@ enum class Avatar {
 
     companion object {
 
-        // mapping of serialName → enum
-        private val map = mapOf(
-            "aidan" to Aidan,
-            "adrian" to Adrian,
-            "amaya" to Amaya,
-            "alexander" to Alexander,
-            "christian" to Christian,
-            "george" to George,
-            "jade" to Jade,
-            "jameson" to Jameson,
-            "jocelyn" to Jocelyn,
-            "katherine" to Katherine,
-            "leo" to Leo,
-            "mason" to Mason,
-            "nolan" to Nolan,
-            "riley" to Riley,
-            "ryker" to Ryker,
-            "sawyer" to Sawyer,
-            "unknown" to Unknown,
-        )
-
         fun fromValue(value: String?): Avatar =
-            if (value == null) Unknown else map[value] ?: Unknown
+            try {
+                if (value == null) Unknown else valueOf(value)
+            } catch (e: Exception) {
+                Unknown
+            }
 
         val entriesFiltered = entries.minus(Unknown)
     }

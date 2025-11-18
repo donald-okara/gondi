@@ -62,8 +62,8 @@ fun EditContent(
             isRequired = true,
             showLength = true,
             maxLength = maxLength,
-            isError = state.editProfile.username.length > maxLength,
-            errorMessage = "Username cannot be longer than $maxLength characters",
+            isError = state.editProfile.username.length >= maxLength,
+            errorMessage = "Username must be less than $maxLength characters",
             onValueChange = {
                 onEvent(EditProfileEvent.OnUsernameChanged(it))
             },

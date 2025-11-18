@@ -21,7 +21,6 @@ class ProfileRepoImpl(
     private val apiClient: ApiClient,
     private val profileStore: ProfileStore,
 ) : ProfileRepository {
-    private val logger = Logger("ProfileRepo")
     override suspend fun getProfile(): Result<Profile, NetworkError> = apiClient.getProfile().also {
         if (it is Result.Success) {
             profileStore.setProfile(it.data)
@@ -32,7 +31,6 @@ class ProfileRepoImpl(
         if (it is Result.Success) {
             profileStore.setProfile(it.data)
         }
-        logger.info(it.toString())
     }
 
     override suspend fun logOut() = apiClient.logOut().also {

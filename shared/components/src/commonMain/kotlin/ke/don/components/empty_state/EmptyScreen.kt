@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
  * @param modifier Modifier applied to the root container.
  * @param title The primary title text shown prominently.
  * @param description Optional secondary text shown beneath the title.
- * @param icon Optional leading icon shown above the title. Defaults to `RoleIcons.Default.Info`.
+ * @param icon Optional leading icon shown above the title. Defaults to `Icons.Default.Info`.
  * @param action Optional composable slot rendered beneath the description for actions (e.g., a button).
  */
 @Composable

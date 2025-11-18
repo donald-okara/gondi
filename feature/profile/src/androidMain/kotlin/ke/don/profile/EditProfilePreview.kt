@@ -37,49 +37,12 @@ fun OnboardingShowcase(
     theme: Theme,
 ) {
     DevicePreviewContainer(theme) {
-        var state by remember {
-            mutableStateOf(
-                EditProfileState(
-                    editProfile = Profile(
-                        username = "Timmy",
-                    ),
-                ),
-            )
-        }
-
-        fun handleEvent(event: EditProfileEvent) {
-            when (event) {
-                is EditProfileEvent.OnAvatarChanged -> {
-                    state = state.copy(
-                        editProfile = state.editProfile.copy(
-                            avatar = event.avatar,
-                        ),
-                    )
-                }
-
-                is EditProfileEvent.OnBackgroundChanged -> {
-                    state = state.copy(
-                        editProfile = state.editProfile.copy(
-                            background = event.background,
-                        ),
-                    )
-                }
-
-                is EditProfileEvent.OnSaveProfile -> {}
-                is EditProfileEvent.OnUsernameChanged -> {
-                    state = state.copy(
-                        editProfile = state.editProfile.copy(
-                            username = event.username,
-                        ),
-                    )
-                }
-            }
-        }
+        val (state, handleEvent) = rememberEditProfileState()
 
         OnBoardingContent(
             modifier = modifier,
             state = state,
-            handleEvent = ::handleEvent,
+            handleEvent = handleEvent,
         )
     }
 }
@@ -91,51 +54,58 @@ fun EditProfileShowcase(
     theme: Theme,
 ) {
     DevicePreviewContainer(theme) {
-        var state by remember {
-            mutableStateOf(
-                EditProfileState(
-                    editProfile = Profile(
-                        username = "Timmy",
-                    ),
-                ),
-            )
-        }
-
-        fun handleEvent(event: EditProfileEvent) {
-            when (event) {
-                is EditProfileEvent.OnAvatarChanged -> {
-                    state = state.copy(
-                        editProfile = state.editProfile.copy(
-                            avatar = event.avatar,
-                        ),
-                    )
-                }
-
-                is EditProfileEvent.OnBackgroundChanged -> {
-                    state = state.copy(
-                        editProfile = state.editProfile.copy(
-                            background = event.background,
-                        ),
-                    )
-                }
-
-                is EditProfileEvent.OnSaveProfile -> {}
-                is EditProfileEvent.OnUsernameChanged -> {
-                    state = state.copy(
-                        editProfile = state.editProfile.copy(
-                            username = event.username,
-                        ),
-                    )
-                }
-            }
-        }
+        val (state, handleEvent) = rememberEditProfileState()
 
         EditScreenContent(
             modifier = modifier,
             state = state,
-            onEvent = ::handleEvent,
+            onEvent = handleEvent,
         )
     }
+}
+
+@Composable
+private fun rememberEditProfileState(): Pair<EditProfileState, (EditProfileEvent) -> Unit> {
+    var state by remember {
+        mutableStateOf(
+            EditProfileState(
+                editProfile = Profile(
+                    username = "Timmy",
+                ),
+            ),
+        )
+    }
+
+    fun handleEvent(event: EditProfileEvent) {
+        when (event) {
+            is EditProfileEvent.OnAvatarChanged -> {
+                state = state.copy(
+                    editProfile = state.editProfile.copy(
+                        avatar = event.avatar,
+                    ),
+                )
+            }
+
+            is EditProfileEvent.OnBackgroundChanged -> {
+                state = state.copy(
+                    editProfile = state.editProfile.copy(
+                        background = event.background,
+                    ),
+                )
+            }
+
+            is EditProfileEvent.OnSaveProfile -> {}
+            is EditProfileEvent.OnUsernameChanged -> {
+                state = state.copy(
+                    editProfile = state.editProfile.copy(
+                        username = event.username,
+                    ),
+                )
+            }
+        }
+    }
+
+    return state to ::handleEvent
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -156,6 +126,8 @@ fun EditProfilePreview(
     EditProfileShowcase(theme = theme)
 }
 
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(
     name = "Mobile",
@@ -163,7 +135,7 @@ fun EditProfilePreview(
     device = "spec:width=411dp,height=890dp,dpi=420", // typical phone
 )
 @Composable
-fun EditProfileMobilePreview(
+fun OnboardingMobilePreview(
     @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
     DeviceFramePreview(

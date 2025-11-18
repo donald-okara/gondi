@@ -71,31 +71,12 @@ enum class AvatarBackground {
 
     companion object {
 
-        private val map = mapOf(
-            "green_emerald" to GREEN_EMERALD,
-            "green_minty" to GREEN_MINTY,
-            "green_neon" to GREEN_NEON,
-            "green_leafy" to GREEN_LEAFY,
-
-            "yellow_bright" to YELLOW_BRIGHT,
-            "yellow_sunny" to YELLOW_SUNNY,
-            "yellow_banana" to YELLOW_BANANA,
-            "yellow_golden" to YELLOW_GOLDEN,
-
-            "purple_electric" to PURPLE_ELECTRIC,
-            "purple_orchid" to PURPLE_ORCHID,
-            "purple_lilac" to PURPLE_LILAC,
-            "purple_amethyst" to PURPLE_AMETHYST,
-
-            "cyan_bright" to CYAN_BRIGHT,
-            "pink_hot" to PINK_HOT,
-            "orange_coral" to ORANGE_CORAL,
-
-            "unknown" to UNKNOWN,
-        )
-
         fun fromValue(value: String?): AvatarBackground =
-            if (value == null) UNKNOWN else map[value] ?: UNKNOWN
+            try {
+                if (value == null) UNKNOWN else valueOf(value)
+            } catch (e: Exception) {
+                UNKNOWN
+            }
 
         val entriesFiltered = entries.minus(UNKNOWN)
     }
