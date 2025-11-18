@@ -126,8 +126,6 @@ fun EditProfilePreview(
     EditProfileShowcase(theme = theme)
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(
     name = "Mobile",

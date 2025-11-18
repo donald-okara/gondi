@@ -13,7 +13,6 @@ import ke.don.domain.repo.ProfileRepository
 import ke.don.domain.table.Profile
 import ke.don.local.datastore.ProfileStore
 import ke.don.remote.api.ApiClient
-import ke.don.utils.Logger
 import ke.don.utils.result.NetworkError
 import ke.don.utils.result.Result
 
