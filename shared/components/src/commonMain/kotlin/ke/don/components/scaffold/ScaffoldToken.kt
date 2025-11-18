@@ -9,7 +9,6 @@
  */
 package ke.don.components.scaffold
 
-import androidx.compose.animation.core.StartOffset
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
@@ -163,35 +162,22 @@ fun ScaffoldToken(
     contentColor: Color = contentColorFor(containerColor),
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    listOffset: Int? = null,
     pullRefreshState: PullRefreshState,
     lazyListState: LazyListState = rememberLazyListState(),
     verticalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.medium),
     horizontalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.small),
+    listOffset: Int = rememberOffset(
+        isRefreshing = isRefreshing,
+        pullProgress = pullRefreshState.progress
+    ),
     contentAlignment: Alignment = Alignment.TopCenter,
     content: LazyListScope.(isCompact: Boolean) -> Unit
 ) {
     val isCompact = isCompact()
 
-    val animatedOffset by animateIntAsState(
-        targetValue = when {
-            isRefreshing -> 124
-            pullRefreshState.progress in 0f..1f ->
-                (124 * pullRefreshState.progress).roundToInt()
-
-            pullRefreshState.progress > 1f ->
-                124 + (((pullRefreshState.progress - 1f) * 0.1f) * 100).roundToInt()
-
-            else -> 0
-        },
-        label = "offsetAnim"
-    )
-
-    val effectiveOffset = listOffset ?: animatedOffset
-
     val mainContent: @Composable (PaddingValues) -> Unit = remember(
         isCompact,
-        effectiveOffset,
+        listOffset,
         lazyListState,
         pullRefreshState,
         isRefreshing,
@@ -204,7 +190,7 @@ fun ScaffoldToken(
                 isRefreshing = isRefreshing,
                 onRefresh = onRefresh,
                 lazyListState = lazyListState,
-                listOffSet = effectiveOffset,
+                listOffSet = listOffset,
                 verticalPadding = verticalPadding,
                 pullRefreshState = pullRefreshState,
                 horizontalPadding = horizontalPadding,

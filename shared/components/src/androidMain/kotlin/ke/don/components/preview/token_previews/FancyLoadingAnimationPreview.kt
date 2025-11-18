@@ -46,6 +46,8 @@ import ke.don.components.indicator.FancyRefreshAnimation
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 import ke.don.components.scaffold.RefreshLazyColumn
+import ke.don.components.scaffold.rememberCardRotation
+import ke.don.components.scaffold.rememberOffset
 import ke.don.design.theme.PaddingOption
 import ke.don.design.theme.spacing
 import ke.don.domain.datastore.Theme
@@ -178,21 +180,14 @@ fun RefreshLazyColumnPreview(
         onRefresh = { isRefreshing = true },
     )
 
-    val cardRotation by animateFloatAsState(
-        targetValue = when {
-            isRefreshing || pullState.progress > 1f -> 5f
-            pullState.progress > 0f -> 5 * pullState.progress
-            else -> 0f
-        }, label = "cardRotation"
+    val cardRotation = rememberCardRotation(
+        isRefreshing = isRefreshing,
+        pullProgress = pullState.progress
     )
 
-    val cardOffset by animateIntAsState(
-        targetValue = when {
-            isRefreshing -> 124
-            pullState.progress in 0f..1f -> (124 * pullState.progress).roundToInt()
-            pullState.progress > 1f -> (124 + ((pullState.progress - 1f) * .1f) * 100).roundToInt()
-            else -> 0
-        }, label = "cardOffset"
+    val cardOffset = rememberOffset(
+        isRefreshing = isRefreshing,
+        pullProgress = pullState.progress
     )
 
     // Toggle refresh after 2 seconds (for demo)
