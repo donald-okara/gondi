@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import ke.don.resources.Values
 
 /**
  * Renders a configurable Material Button whose appearance is driven by the provided ComponentType and that delegates inner content rendering to ButtonContentSwitcher.
@@ -47,7 +46,7 @@ fun ButtonToken(
     shape: Shape = MaterialTheme.shapes.medium,
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
     border: BorderStroke? = if (buttonType == ComponentType.Outlined) ButtonDefaults.outlinedButtonBorder() else null,
-    contentPadding: PaddingValues = Values.buttonPaddingValues,
+    paddingValues: PaddingValues = ButtonDefaults.ContentPadding,
     interactionSource: MutableInteractionSource? = null,
     content: @Composable (RowScope.() -> Unit),
 ) {
@@ -59,7 +58,7 @@ fun ButtonToken(
         colors = buttonType.animatedButtonColors(),
         elevation = elevation,
         border = border,
-        contentPadding = contentPadding,
+        contentPadding = paddingValues,
         interactionSource = interactionSource,
     ) {
         ButtonContentSwitcher(

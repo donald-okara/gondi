@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
         }
         // Handle initial deeplink (cold start)
         intent?.let {
-            debugDeeplink(it)
             supabase.handleDeeplinks(it)
         }
     }
@@ -36,7 +35,6 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent) // ✅ ensures Activity’s intent updates
-        debugDeeplink(intent)
         supabase.handleDeeplinks(intent)
     }
 }

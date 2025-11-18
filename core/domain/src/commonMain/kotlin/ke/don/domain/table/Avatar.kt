@@ -10,7 +10,9 @@
 package ke.don.domain.table
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 enum class Avatar {
     @SerialName("aidan")
     Aidan,
@@ -21,11 +23,20 @@ enum class Avatar {
     @SerialName("amaya")
     Amaya,
 
+    @SerialName("alexander")
+    Alexander,
+
     @SerialName("christian")
     Christian,
 
     @SerialName("george")
     George,
+
+    @SerialName("jade")
+    Jade,
+
+    @SerialName("jameson")
+    Jameson,
 
     @SerialName("jocelyn")
     Jocelyn,
@@ -36,8 +47,14 @@ enum class Avatar {
     @SerialName("leo")
     Leo,
 
+    @SerialName("mason")
+    Mason,
+
     @SerialName("nolan")
     Nolan,
+
+    @SerialName("riley")
+    Riley,
 
     @SerialName("ryker")
     Ryker,
@@ -45,15 +62,20 @@ enum class Avatar {
     @SerialName("sawyer")
     Sawyer,
 
+    @SerialName("unknown")
+    Unknown,
+
     ;
 
     companion object {
-        fun fromValue(value: String?): Avatar? {
-            return try {
-                if (value == null) null else Avatar.valueOf(value)
-            } catch (e: IllegalArgumentException) {
-                null
+
+        fun fromValue(value: String?): Avatar =
+            try {
+                if (value == null) Unknown else valueOf(value)
+            } catch (e: Exception) {
+                Unknown
             }
-        }
+
+        val entriesFiltered = entries.minus(Unknown)
     }
 }

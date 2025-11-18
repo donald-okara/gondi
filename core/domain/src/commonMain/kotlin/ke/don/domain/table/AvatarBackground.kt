@@ -14,64 +14,70 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class AvatarBackground {
+
     // GREENS
     @SerialName("green_emerald")
-    GREEN_EMERALD, // #00E676
+    GREEN_EMERALD,
 
     @SerialName("green_minty")
-    GREEN_MINTY, // #1DE9B6
+    GREEN_MINTY,
 
     @SerialName("green_neon")
-    GREEN_NEON, // #69F0AE
+    GREEN_NEON,
 
     @SerialName("green_leafy")
-    GREEN_LEAFY, // #00C853
+    GREEN_LEAFY,
 
     // YELLOWS
     @SerialName("yellow_bright")
-    YELLOW_BRIGHT, // #FFEA00
+    YELLOW_BRIGHT,
 
     @SerialName("yellow_sunny")
-    YELLOW_SUNNY, // #FFEB3B
+    YELLOW_SUNNY,
 
     @SerialName("yellow_banana")
-    YELLOW_BANANA, // #FFF176
+    YELLOW_BANANA,
 
     @SerialName("yellow_golden")
-    YELLOW_GOLDEN, // #FFD600
+    YELLOW_GOLDEN,
 
     // PURPLES
     @SerialName("purple_electric")
-    PURPLE_ELECTRIC, // #D500F9
+    PURPLE_ELECTRIC,
 
     @SerialName("purple_orchid")
-    PURPLE_ORCHID, // #E040FB
+    PURPLE_ORCHID,
 
     @SerialName("purple_lilac")
-    PURPLE_LILAC, // #B388FF
+    PURPLE_LILAC,
 
     @SerialName("purple_amethyst")
-    PURPLE_AMETHYST, // #7C4DFF
+    PURPLE_AMETHYST,
 
     // EXTRAS
     @SerialName("cyan_bright")
-    CYAN_BRIGHT, // #18FFFF
+    CYAN_BRIGHT,
 
     @SerialName("pink_hot")
-    PINK_HOT, // #FF4081
+    PINK_HOT,
 
     @SerialName("orange_coral")
-    ORANGE_CORAL, // #FF6E40
+    ORANGE_CORAL,
+
+    @SerialName("unknown")
+    UNKNOWN,
 
     ;
 
     companion object {
-        fun fromValue(value: String?): AvatarBackground? {
-            return try {
-                if (value == null) null else AvatarBackground.valueOf(value)
-            } catch (e: IllegalArgumentException) {
-                null
+
+        fun fromValue(value: String?): AvatarBackground =
+            try {
+                if (value == null) UNKNOWN else valueOf(value)
+            } catch (e: Exception) {
+                UNKNOWN
             }
-        }
+
+        val entriesFiltered = entries.minus(UNKNOWN)
     }
 }

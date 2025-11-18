@@ -124,7 +124,7 @@ class LocalDatabaseTest {
 
         db.toggleRevealFlag(true, "current")
         var fetched = db.getGameState("current").first()
-        assertTrue(fetched?.revealEliminatedPlayer == true)
+        assertEquals(fetched?.revealEliminatedPlayer, true)
 
         db.toggleRevealFlag(false, "current")
         fetched = db.getGameState("current").first()

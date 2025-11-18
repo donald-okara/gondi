@@ -12,7 +12,6 @@ package ke.don.components.card
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -176,7 +175,6 @@ fun ToastActionRow(
             ButtonToken(
                 modifier = Modifier.defaultMinSize(minHeight = buttonHeight),
                 buttonType = ComponentType.Neutral,
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                 onClick = action.onClick,
             ) {
                 Text(action.label, style = buttonTextStyle)
@@ -187,7 +185,6 @@ fun ToastActionRow(
             ButtonToken(
                 modifier = Modifier.defaultMinSize(minHeight = buttonHeight),
                 buttonType = type,
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                 onClick = action.onClick,
             ) {
                 Text(action.label, style = buttonTextStyle)

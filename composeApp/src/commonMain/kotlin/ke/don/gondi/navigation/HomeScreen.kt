@@ -43,6 +43,7 @@ import ke.don.domain.repo.ProfileRepository
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.domain.table.Profile
+import ke.don.local.datastore.ProfileStore
 import ke.don.local.datastore.ThemeRepository
 import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
@@ -69,6 +70,15 @@ class HomeScreen : Screen {
             initial = Theme.System,
         )
         val profileRepository = koin.get<ProfileRepository>()
+        val profileStore = koin.get<ProfileStore>()
+
+        /**
+         * ALL THIS WILL BE GONE WHEN HOME IS IMPLEMENTED
+         */
+        val profile by profileStore.profileFlow.collectAsState(
+            initial = null,
+        )
+
         val navigator = LocalNavigator.currentOrThrow
 
         val coroutineScope = rememberCoroutineScope()
@@ -76,13 +86,13 @@ class HomeScreen : Screen {
         ScaffoldToken(
             title = "Gondi",
             actions = {
-                ProfileImageToken( // TODO: Temporary until profile is implemented
-                    isHero = false,
-                    profile = Profile(
-                        username = "Donald Isoe",
-                        avatar = Avatar.Leo,
-                    ),
-                )
+                profile?.let {
+                    ProfileImageToken(
+                        // TODO: Temporary until profile is implemented
+                        isHero = false,
+                        profile = it,
+                    )
+                }
             },
         ) {
             Column(

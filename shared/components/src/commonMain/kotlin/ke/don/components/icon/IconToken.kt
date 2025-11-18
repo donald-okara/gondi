@@ -13,6 +13,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.runtime.Composable
@@ -23,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.button.animatedIconColors
-import ke.don.resources.Values
 
 /**
  * Renders an icon that can be optionally interactive and animates between icons using a crossfade.
@@ -50,9 +50,9 @@ fun IconToken(
     imageVector: ImageVector,
     buttonType: ComponentType = ComponentType.Neutral,
     contentDescription: String? = null,
-    contentPaddingValues: PaddingValues = Values.buttonPaddingValues,
     enabled: Boolean = true,
     size: Dp = 24.dp,
+    paddingValues: PaddingValues = ButtonDefaults.ContentPadding,
     colors: IconButtonColors = buttonType.animatedIconColors(),
     content: (@Composable () -> Unit)? = null,
 ) {
@@ -75,7 +75,7 @@ fun IconToken(
             onClick = onClick,
             enabled = enabled,
             buttonType = buttonType,
-            contentPadding = contentPaddingValues,
+            paddingValues = paddingValues,
         ) {
             content?.invoke() ?: animatedIcon()
         }

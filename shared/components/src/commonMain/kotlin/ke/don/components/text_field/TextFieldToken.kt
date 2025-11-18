@@ -9,6 +9,8 @@
  */
 package ke.don.components.text_field
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,9 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -85,25 +85,25 @@ fun TextFieldToken(
     val colorScheme = MaterialTheme.colorScheme
     val typography = MaterialTheme.typography
 
-    val counterColor by remember(isError, nameLength, maxLength) {
-        derivedStateOf {
-            when {
-                isError -> colorScheme.error
-                maxLength > 0 && nameLength >= maxLength - 5 -> colorScheme.tertiary
-                else -> colorScheme.onSurfaceVariant
-            }
-        }
-    }
+    val counterColor by animateColorAsState(
+        targetValue = when {
+            isError -> colorScheme.error
+            maxLength > 0 && nameLength >= maxLength - 5 -> colorScheme.tertiary
+            else -> colorScheme.onSurfaceVariant
+        },
+        label = "Counter Color Animation",
+    )
 
-    val iconColor by remember(enabled, isError) {
-        derivedStateOf {
-            if (enabled && !isError) {
-                colorScheme.primary
-            } else {
-                colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-            }
-        }
-    }
+    val iconColor by animateColorAsState(
+        targetValue = if (enabled && !isError) {
+            colorScheme.primary
+        } else {
+            colorScheme.onSurfaceVariant.copy(
+                alpha = 0.6f,
+            )
+        },
+        label = "Icon Color Animation",
+    )
 
     Column(
         modifier = modifier,
@@ -144,16 +144,17 @@ fun TextFieldToken(
                 null
             },
             supportingText = {
-                when {
-                    isError && !errorMessage.isNullOrEmpty() -> {
+                AnimatedVisibility(visible = isError && !errorMessage.isNullOrEmpty()) {
+                    if (errorMessage != null) {
                         Text(
                             text = errorMessage,
                             style = typography.labelSmall,
                             color = colorScheme.error,
                         )
                     }
-
-                    !comment.isNullOrEmpty() -> {
+                }
+                AnimatedVisibility(visible = !isError && !comment.isNullOrEmpty()) {
+                    if (comment != null) {
                         Text(
                             text = comment,
                             style = typography.labelSmall,

@@ -12,10 +12,10 @@ package ke.don.remote.repo
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.Google
 import ke.don.domain.repo.AuthClient
-import ke.don.domain.result.NetworkError
-import ke.don.domain.result.Result
 import ke.don.remote.api.SupabaseConfig.supabase
 import ke.don.utils.Logger
+import ke.don.utils.result.NetworkError
+import ke.don.utils.result.Result
 
 class AuthClientAndroid : AuthClient {
     val logger = Logger("AuthClient")

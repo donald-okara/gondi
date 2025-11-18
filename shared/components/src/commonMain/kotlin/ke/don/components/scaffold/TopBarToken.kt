@@ -9,29 +9,31 @@
  */
 package ke.don.components.scaffold
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ke.don.components.profile.AdaptiveLogo
-import ke.don.resources.Values
+import ke.don.design.theme.Theme
+import ke.don.design.theme.spacing
 import ke.don.resources.isCompact
 
 /**
@@ -59,8 +61,7 @@ fun TopBarToken(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = if (isCompact) Values.compactScreenPadding else Values.expandedScreenPadding),
+            .fillMaxWidth(),
     ) {
         TopAppBar(
             title = {
@@ -68,8 +69,9 @@ fun TopBarToken(
                     Text(
                         text = it,
                         maxLines = 1,
-                        style = MaterialTheme.typography.bodyMedium,
                         overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .padding(Theme.spacing.small),
                     )
                 }
             },
@@ -77,22 +79,45 @@ fun TopBarToken(
                 when (navigationIcon) {
                     NavigationIcon.None -> {
                         AdaptiveLogo(
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier
+                                .padding(Theme.spacing.small)
+                                .size(24.dp),
                         )
                     }
-                    is NavigationIcon.Back -> IconButton(onClick = navigationIcon.navigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                    is NavigationIcon.Burger -> IconButton(onClick = navigationIcon.toggleDrawer) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menu")
-                    }
+                    is NavigationIcon.Back ->
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .padding(Theme.spacing.small)
+                                .clickable {
+                                    navigationIcon.navigateBack()
+                                },
+                        )
+
+                    is NavigationIcon.Burger ->
+                        Icon(
+                            Icons.Default.Menu,
+                            contentDescription = "Menu",
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .padding(Theme.spacing.small)
+                                .clickable {
+                                    navigationIcon.toggleDrawer()
+                                },
+                        )
                 }
             },
             actions = {
-                actions()
+                Row(
+                    modifier = Modifier
+                        .padding(Theme.spacing.small),
+                ) {
+                    actions()
+                }
             },
             scrollBehavior = scrollBehavior,
         )
-        HorizontalDivider()
     }
 }

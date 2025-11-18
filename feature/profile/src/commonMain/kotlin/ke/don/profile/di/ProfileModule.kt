@@ -7,17 +7,14 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.domain.result
+package ke.don.profile.di
 
-enum class ErrorCategory {
-    REQUEST_TIMEOUT,
-    UNAUTHORIZED,
-    CONFLICT,
-    TOO_MANY_REQUESTS,
-    NO_INTERNET,
-    PAYLOAD_TOO_LARGE,
-    SERVER,
-    SERIALIZATION,
-    DECODING,
-    UNKNOWN,
+import ke.don.profile.model.EditProfileModel
+import ke.don.remote.di.remoteDatasourceModule
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.module
+
+val profileModule = module {
+    includes(remoteDatasourceModule)
+    factoryOf(::EditProfileModel)
 }

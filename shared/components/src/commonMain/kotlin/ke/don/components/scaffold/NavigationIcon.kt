@@ -9,8 +9,8 @@
  */
 package ke.don.components.scaffold
 
-sealed class NavigationIcon {
-    object None : NavigationIcon()
-    class Back(val navigateBack: () -> Unit) : NavigationIcon()
-    class Burger(val toggleDrawer: () -> Unit) : NavigationIcon()
+sealed interface NavigationIcon {
+    object None : NavigationIcon
+    class Back(val navigateBack: () -> Unit) : NavigationIcon
+    class Burger(val toggleDrawer: () -> Unit) : NavigationIcon
 }

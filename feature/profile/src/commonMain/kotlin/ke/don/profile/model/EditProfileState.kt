@@ -7,11 +7,14 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.domain.result
+package ke.don.profile.model
 
-data class NetworkError(
-    val category: ErrorCategory = ErrorCategory.UNKNOWN,
-    val message: String? = null,
-    val code: Int? = null,
-    val debugMessage: String? = null, // optional, only for logs
-) : Error
+import ke.don.domain.table.Profile
+import ke.don.utils.result.ResultStatus
+
+data class EditProfileState(
+    val editProfile: Profile = Profile(),
+    val fetchedProfile: Profile = Profile(),
+
+    val saveStatus: ResultStatus<Profile> = ResultStatus.Idle,
+)

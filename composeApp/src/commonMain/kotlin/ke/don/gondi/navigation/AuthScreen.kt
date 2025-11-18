@@ -26,7 +26,6 @@ import ke.don.authentication.model.AuthEvent
 import ke.don.authentication.model.AuthModel
 import ke.don.authentication.model.StartupPhase
 import ke.don.authentication.screens.AuthScreenContent
-import ke.don.components.helpers.Matcha
 import ke.don.components.helpers.ObserveAsEvent
 import ke.don.koffee.domain.Koffee
 
@@ -45,9 +44,7 @@ class AuthScreen : Screen {
         LaunchedEffect(state.profile) {
             state.profile?.let { profile ->
                 if (profile.avatar == null) {
-                    Matcha.info(
-                        title = "Simulate navigation to edit profile",
-                    )
+                    navigator.push(OnboardingScreen())
                 } else {
                     navigator.replaceAll(HomeScreen())
                 }

@@ -17,13 +17,20 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import ke.don.authentication.components.SignInScreen
 import ke.don.authentication.components.SplashScreen
 import ke.don.authentication.model.AuthModel
@@ -31,6 +38,8 @@ import ke.don.authentication.model.AuthState
 import ke.don.authentication.model.StartupPhase
 import ke.don.components.background.GradientBackground
 import ke.don.components.empty_state.EmptyScreen
+import ke.don.components.indicator.FancyLoadingIndicator
+import ke.don.design.theme.spacing
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
 
@@ -43,7 +52,7 @@ fun AuthScreenContent(
     screenModel: AuthModel,
 ) {
     GradientBackground(
-        modifier = Modifier.Companion.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         accentColor = MaterialTheme.colorScheme.primaryContainer,
     ) {
         SharedTransitionLayout {
@@ -78,14 +87,31 @@ fun AuthScreenContent(
                             description = "Screen is in development",
                         )
 
-                        StartupPhase.Profile -> EmptyScreen(
-                            icon = Icons.Outlined.Lock,
-                            title = "Profile",
-                            description = "Screen is in development",
-                        )
+                        StartupPhase.Profile -> ProfileSyncScreen()
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ProfileSyncScreen(
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+    ) {
+        Box(
+            modifier = Modifier.width(MaterialTheme.spacing.largeScreenSize),
+            contentAlignment = Alignment.Center,
+        ) {
+            FancyLoadingIndicator(loading = true)
+        }
+        Text(
+            "Have a coffee as we sync your profile",
+        )
     }
 }
