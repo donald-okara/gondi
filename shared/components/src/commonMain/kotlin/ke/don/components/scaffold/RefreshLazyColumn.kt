@@ -22,6 +22,9 @@ import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.pullToRefresh
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -63,19 +66,15 @@ import kotlin.math.roundToInt
  * @param reverseLayout `true` to show items in reverse order, from bottom to top.
  * @param verticalArrangement The vertical arrangement of the `LazyColumn`'s children.
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RefreshLazyColumn(
     modifier: Modifier = Modifier,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    pullRefreshState: PullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = onRefresh,
-    ),
+    pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
     listOffSet: Int = rememberOffset(
         isRefreshing = isRefreshing,
-        pullProgress = pullRefreshState.progress
+        pullProgress = pullRefreshState.distanceFraction
     ),
     lazyListState: LazyListState = rememberLazyListState(),
     verticalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.medium),
@@ -94,7 +93,7 @@ fun RefreshLazyColumn(
         contentAlignment = contentAlignment,
         modifier = modifier
             .fillMaxSize()
-            .pullRefresh(state = pullRefreshState)
+            .pullToRefresh(state = pullRefreshState, isRefreshing = isRefreshing, onRefresh = onRefresh)
     ){
         LazyColumn(
             modifier = modifier.offset(
@@ -139,20 +138,19 @@ fun RefreshLazyColumn(
  *
  * @param modifier The modifier to be applied to the `FancyRefreshAnimation`.
  * @param isRefreshing A boolean indicating if the refresh operation is currently in progress.
- * @param state The [PullRefreshState] that controls and represents the pull-to-refresh state.
+ * @param state The [PullToRefreshState] that controls and represents the pull-to-refresh state.
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun RefreshHeader(
     modifier: Modifier = Modifier,
     isRefreshing: Boolean,
-    state: PullRefreshState
+    state: PullToRefreshState
 ) {
     val animatedOffset by animateDpAsState(
         targetValue = when {
             isRefreshing -> 150.dp
-            state.progress in 0f..1f -> (state.progress * 150).dp
-            state.progress > 1f -> (150 + (((state.progress - 1f) * .1f) * 150)).dp
+            state.distanceFraction in 0f..1f -> (state.distanceFraction * 150).dp
+            state.distanceFraction > 1f -> (150 + (((state.distanceFraction - 1f) * .1f) * 150)).dp
             else -> 0.dp
         }, label = "animatedOffset"
     )
@@ -238,7 +236,7 @@ private fun computeCardRotation(
  * The calculated offset is then animated using [animateIntAsState] to ensure smooth transitions.
  *
  * @param isRefreshing A boolean indicating if the content is currently being refreshed.
- * @param pullProgress A float representing the current pull progress, typically from a [PullRefreshState].
+ * @param pullProgress A float representing the current pull progress, typically from a [PullToRefreshState].
  * @return An animated integer value representing the calculated vertical offset.
  */
 @Composable

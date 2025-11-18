@@ -32,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.contentColorFor
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -140,7 +141,7 @@ fun ScaffoldToken(
  * used for custom animations or positioning.
  * @param pullRefreshState The state object that controls and observes the pull-to-refresh mechanism.
  */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScaffoldToken(
     modifier: Modifier = Modifier,
@@ -162,13 +163,13 @@ fun ScaffoldToken(
     contentColor: Color = contentColorFor(containerColor),
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    pullRefreshState: PullRefreshState,
+    pullRefreshState: PullToRefreshState,
     lazyListState: LazyListState = rememberLazyListState(),
     verticalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.medium),
     horizontalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.small),
     listOffset: Int = rememberOffset(
         isRefreshing = isRefreshing,
-        pullProgress = pullRefreshState.progress
+        pullProgress = pullRefreshState.distanceFraction
     ),
     contentAlignment: Alignment = Alignment.TopCenter,
     content: LazyListScope.(isCompact: Boolean) -> Unit
