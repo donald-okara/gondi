@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
+import ke.don.components.list_items.CodeOfConductSection
 import ke.don.components.list_items.GamePhases
 import ke.don.components.list_items.RolesList
 import ke.don.components.text_field.TextFieldToken
@@ -42,6 +43,8 @@ fun RulesContent(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
         )
+
+        CodeOfConductSection()
 
         RolesList()
 

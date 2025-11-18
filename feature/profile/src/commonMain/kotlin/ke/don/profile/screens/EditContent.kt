@@ -65,7 +65,7 @@ fun EditContent(
                 onEvent(EditProfileEvent.OnUsernameChanged(it))
             }
         )
-        Spacer(modifier = Modifier.height(8.dp))
+
         Text(
             text = "Choose Your Avatar",
             style = MaterialTheme.typography.titleMedium,
