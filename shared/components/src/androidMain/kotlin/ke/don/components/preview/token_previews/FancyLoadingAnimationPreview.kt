@@ -9,19 +9,13 @@
  */
 package ke.don.components.preview.token_previews
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -30,14 +24,11 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -46,28 +37,11 @@ import ke.don.components.indicator.FancyRefreshAnimation
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 import ke.don.components.scaffold.RefreshLazyColumn
-import ke.don.components.scaffold.rememberCardRotation
-import ke.don.components.scaffold.rememberOffset
+import ke.don.components.scaffold.cardCrunchEffects
 import ke.don.design.theme.PaddingOption
 import ke.don.design.theme.spacing
 import ke.don.domain.datastore.Theme
 import kotlinx.coroutines.delay
-import kotlin.math.roundToInt
-
-// @DevicePreviews
-// @Composable
-// fun FilterChipPreview(
-//    @PreviewParameter(ThemeProvider::class) theme: Theme,
-// ){
-//    DevicePreviewContainer(theme) {
-//        FancyRefreshAnimation(
-//            isRefreshing = { true },
-//            willRefresh = { true },
-//            offsetProgress = { 0f },
-//        )
-//    }
-//
-// }
 
 @OptIn(ExperimentalMaterialApi::class)
 @DevicePreviews
@@ -83,7 +57,7 @@ fun FancyRefreshAnimationInteractivePreview(
             // Animate progress up
             val duration = 400L
             val steps = 20
-            repeat(steps) { step ->
+            repeat(steps) {
                 delay(duration / steps)
             }
 
@@ -130,7 +104,7 @@ fun FancyLoadingAnimationInteractivePreview(
             // Animate progress up
             val duration = 400L
             val steps = 20
-            repeat(steps) { step ->
+            repeat(steps) {
                 delay(duration / steps)
             }
 
@@ -177,16 +151,6 @@ fun RefreshLazyColumnPreview(
     // Simple PullToRefreshState with no-op animation
     val pullState = rememberPullToRefreshState()
 
-    val cardRotation = rememberCardRotation(
-        isRefreshing = isRefreshing,
-        pullProgress = pullState.distanceFraction
-    )
-
-    val cardOffset = rememberOffset(
-        isRefreshing = isRefreshing,
-        pullProgress = pullState.distanceFraction
-    )
-
     // Toggle refresh after 2 seconds (for demo)
     LaunchedEffect(isRefreshing) {
         if (isRefreshing) {
@@ -200,7 +164,6 @@ fun RefreshLazyColumnPreview(
             isRefreshing = isRefreshing,
             onRefresh = { isRefreshing = true },
             pullRefreshState = pullState,
-            listOffSet = cardOffset,
             horizontalPadding = PaddingOption.Custom(MaterialTheme.spacing.small),
             verticalPadding = PaddingOption.Custom(MaterialTheme.spacing.medium),
         ) {
@@ -211,12 +174,11 @@ fun RefreshLazyColumnPreview(
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .graphicsLayer {
-                            rotationZ = cardRotation * if (index % 2 == 0) 1 else -1
-                            translationY = (cardOffset * ((5f - (index + 1)) / 5f)).dp
-                                .roundToPx()
-                                .toFloat()
-                        }
+                        .cardCrunchEffects(
+                            index = index,
+                            isRefreshing = isRefreshing,
+                            pullProgress = pullState.distanceFraction,
+                        )
                         .padding(8.dp),
                 ){
                     Text(

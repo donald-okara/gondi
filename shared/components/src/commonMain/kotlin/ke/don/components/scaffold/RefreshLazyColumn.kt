@@ -17,10 +17,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberOverscrollEffect
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshState
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.pullToRefresh
@@ -30,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ke.don.components.indicator.FancyRefreshAnimation
@@ -171,6 +168,42 @@ private fun RefreshHeader(
 }
 
 /**
+ * A `Modifier` that applies a visual "fanning out" effect to a list item during a pull-to-refresh gesture.
+ *
+ * This modifier uses `graphicsLayer` to apply rotation and vertical translation to a composable.
+ * The effects are synchronized with the pull progress, creating an animation where items appear
+ * to spread out like a deck of cards as the user pulls down.
+ *
+ * - The rotation (`rotationZ`) is determined by `rememberCardRotation` and applied differently to
+ *   even and odd-indexed items to create a fanning effect.
+ * - The vertical translation (`translationY`) is calculated based on `rememberOffset` and the item's
+ *   index, causing items further down the list to be pushed down more, enhancing the spread effect.
+ *
+ * @param index The index of the item in the list. This is used to alternate the rotation direction
+ *   and stagger the vertical offset.
+ * @param isRefreshing A boolean indicating if the refresh operation is currently in progress.
+ * @param pullProgress A float value representing the progress of the pull gesture, typically from 0.0 to 1.0.
+ * @return A `Modifier` with the applied `graphicsLayer` transformations.
+ */
+@Composable
+fun Modifier.cardCrunchEffects(
+    index: Int,
+    isRefreshing: Boolean,
+    pullProgress: Float
+): Modifier {
+    val rotation = rememberCardRotation(isRefreshing, pullProgress)
+    val offset = rememberOffset(isRefreshing, pullProgress)
+
+    return this.graphicsLayer {
+        rotationZ = rotation * if (index % 2 == 0) 1 else -1
+        translationY = (offset * ((5f - (index + 1)) / 5f))
+            .dp.roundToPx()
+            .toFloat()
+    }
+}
+
+
+/**
  * Remembers and animates the rotation of a card-like element in a pull-to-refresh animation.
  *
  * This composable function calculates the target rotation angle based on the pull progress
@@ -198,7 +231,6 @@ fun rememberCardRotation(
         label = "cardRotation"
     ).value
 }
-
 
 /**
  * Computes the rotation angle for a card-like element based on the refresh state and pull progress.
@@ -253,7 +285,6 @@ fun rememberOffset(
         label = "cardOffset"
     ).value
 }
-
 
 /**
  * Calculates the vertical offset of the refresh indicator card based on the pull progress
