@@ -11,15 +11,7 @@ package ke.don.local.misc
 
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
-import android.net.wifi.WifiNetworkSpecifier
-import android.os.Build
-import android.os.PatternMatcher
 import android.provider.Settings
-import androidx.annotation.RequiresApi
 
 class NetworkChooserAndroid(val context: Context) : NetworkChooser {
     override fun open() {
