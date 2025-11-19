@@ -30,7 +30,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
 
             authModule,
             profileModule,
-            homeModule
+            homeModule,
         )
     }
 }

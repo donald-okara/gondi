@@ -21,8 +21,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshState
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -102,12 +100,12 @@ fun FancyRefreshAnimation(
         @Composable
         fun item(
             color: Color,
-            alignment: Alignment
+            alignment: Alignment,
         ) = Box(
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(1f),
-            contentAlignment = alignment
+            contentAlignment = alignment,
         ) {
             CircleWithRing(
                 modifier = Modifier.size(30.dp),

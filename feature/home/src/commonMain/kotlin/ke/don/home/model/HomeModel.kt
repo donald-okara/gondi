@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.home.model
 
 import cafe.adriel.voyager.core.model.ScreenModel
@@ -16,8 +25,8 @@ import ke.don.utils.result.toReadStatus
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeModel(
@@ -25,8 +34,8 @@ class HomeModel(
     private val profileRepository: ProfileRepository,
     private val lanDiscovery: LanDiscovery,
     private val networkChooser: NetworkChooser,
-    private val themeRepository: ThemeRepository
-): ScreenModel {
+    private val themeRepository: ThemeRepository,
+) : ScreenModel {
     private val _uiState = MutableStateFlow(HomeState())
     val uiState = _uiState.asStateFlow()
 
@@ -34,35 +43,35 @@ class HomeModel(
         screenModelScope.launch {
             combine(
                 themeRepository.theme,
-                profileStore.profileFlow
+                profileStore.profileFlow,
             ) { theme, profile ->
                 _uiState.update { it.copy(theme = theme ?: Theme.System, profile = profile ?: Profile()) }
             }.collect {}
         }
     }
 
-    fun onEvent(intent: HomeIntentHandler){
-        when(intent){
+    fun onEvent(intent: HomeIntentHandler) {
+        when (intent) {
             is HomeIntentHandler.Refresh -> refresh()
             is HomeIntentHandler.DiscoverGames -> reloadFromEmpty()
             is HomeIntentHandler.ShowThemeModal -> _uiState.update { state ->
                 state.copy(
-                    showThemeModal = !state.showThemeModal
+                    showThemeModal = !state.showThemeModal,
                 )
             }
             is HomeIntentHandler.ShowLogoutModal -> _uiState.update { state ->
                 state.copy(
-                    showLogoutModal = !state.showLogoutModal
+                    showLogoutModal = !state.showLogoutModal,
                 )
             }
             is HomeIntentHandler.ShowProfileMenu -> _uiState.update { state ->
                 state.copy(
-                    showProfileMenu = !state.showProfileMenu
+                    showProfileMenu = !state.showProfileMenu,
                 )
             }
             is HomeIntentHandler.ShowMenu -> _uiState.update { state ->
                 state.copy(
-                    showMenu = !state.showMenu
+                    showMenu = !state.showMenu,
                 )
             }
             is HomeIntentHandler.ShowNetworkChooser -> networkChooser.open()
@@ -80,7 +89,7 @@ class HomeModel(
                 if (!_uiState.value.games.contains(games)) {
                     _uiState.update { state ->
                         state.copy(
-                            games = state.games + games
+                            games = state.games + games,
                         )
                     }
                 }
@@ -88,39 +97,27 @@ class HomeModel(
 
             _uiState.update { state ->
                 state.copy(
-                    readStatus = state.games.toReadStatus()
+                    readStatus = state.games.toReadStatus(),
                 )
             }
         } catch (e: Exception) {
             _uiState.update { state ->
                 state.copy(
-                    readStatus = ReadStatus.Error(e.message.toString())
+                    readStatus = ReadStatus.Error(e.message.toString()),
                 )
             }
             Matcha.showErrorToast(
                 message = e.message,
-                retryAction = { discoverGames() }
+                retryAction = { discoverGames() },
             )
         }
     }
 
-    fun refresh(){
-        screenModelScope.launch{
-            _uiState.update { state ->
-                state.copy(
-                    readStatus = ReadStatus.Refreshing
-                )
-            }
-            delay(1000)
-            discoverGames()
-        }
-    }
-
-    fun reloadFromEmpty(){
+    fun refresh() {
         screenModelScope.launch {
             _uiState.update { state ->
                 state.copy(
-                    readStatus = ReadStatus.Loading
+                    readStatus = ReadStatus.Refreshing,
                 )
             }
             delay(1000)
@@ -128,7 +125,19 @@ class HomeModel(
         }
     }
 
-    fun setTheme(theme: Theme){
+    fun reloadFromEmpty() {
+        screenModelScope.launch {
+            _uiState.update { state ->
+                state.copy(
+                    readStatus = ReadStatus.Loading,
+                )
+            }
+            delay(1000)
+            discoverGames()
+        }
+    }
+
+    fun setTheme(theme: Theme) {
         screenModelScope.launch {
             themeRepository.setTheme(theme)
         }
@@ -139,11 +148,10 @@ class HomeModel(
             profileRepository.logOut()
             _uiState.update {
                 it.copy(
-                    showLogoutModal = false
+                    showLogoutModal = false,
                 )
             }
             navigateToAuth()
         }
     }
-
 }

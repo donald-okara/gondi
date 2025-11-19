@@ -64,7 +64,7 @@ fun ButtonContentSwitcher(
         } else {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(Theme.spacing.small)
+                horizontalArrangement = Arrangement.spacedBy(Theme.spacing.small),
             ) {
                 content()
             }

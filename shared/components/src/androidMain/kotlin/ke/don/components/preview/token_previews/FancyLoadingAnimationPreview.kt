@@ -77,7 +77,7 @@ fun FancyRefreshAnimationInteractivePreview(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             FancyRefreshAnimation(
-                isRefreshing =  isRefreshing ,
+                isRefreshing = isRefreshing,
             )
 
             Spacer(Modifier.height(20.dp))
@@ -138,7 +138,6 @@ fun FancyLoadingAnimationInteractivePreview(
     }
 }
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @DevicePreviews
 @Composable
@@ -159,7 +158,7 @@ fun RefreshLazyColumnPreview(
         }
     }
 
-    DevicePreviewContainer(theme){
+    DevicePreviewContainer(theme) {
         RefreshLazyColumn(
             isRefreshing = isRefreshing,
             onRefresh = { isRefreshing = true },
@@ -180,16 +179,14 @@ fun RefreshLazyColumnPreview(
                             pullProgress = pullState.distanceFraction,
                         )
                         .padding(8.dp),
-                ){
+                ) {
                     Text(
                         "Item #$index",
                         modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
         }
     }
 }
-
-

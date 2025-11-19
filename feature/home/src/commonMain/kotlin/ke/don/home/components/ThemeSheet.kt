@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.home.components
 
 import androidx.compose.animation.Crossfade
@@ -12,7 +21,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.RadioButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
@@ -20,6 +28,7 @@ import androidx.compose.material.icons.filled.Style
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,29 +47,28 @@ fun ThemeSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onThemeChange: (Theme) -> Unit,
-    currentTheme: Theme
+    currentTheme: Theme,
 ) {
     BottomSheetToken(
         onDismissRequest = onDismissRequest,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(MaterialTheme.spacing.medium),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large)
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
         ) {
-
             // Header row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
+                horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
             ) {
                 Crossfade(
                     targetState = currentTheme,
                     animationSpec = tween(400),
-                    label = "theme_icon_animation"
+                    label = "theme_icon_animation",
                 ) { theme ->
                     val icon = when (theme) {
                         Theme.Dark -> Icons.Default.DarkMode
@@ -72,20 +80,20 @@ fun ThemeSheet(
                         imageVector = icon,
                         contentDescription = null,
                         modifier = Modifier.size(MaterialTheme.spacing.extraLarge),
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                 }
 
                 Text(
                     text = "Theme",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
             }
 
             Column(
                 verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Theme.entries.forEach { theme ->
                     val selected = theme == currentTheme
@@ -96,16 +104,17 @@ fun ThemeSheet(
                     }
 
                     val bg by animateColorAsState(
-                        targetValue = if (selected)
+                        targetValue = if (selected) {
                             MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
-                        else
-                            Color.Transparent,
-                        label = "theme_background"
+                        } else {
+                            Color.Transparent
+                        },
+                        label = "theme_background",
                     )
 
                     val scale by animateFloatAsState(
                         targetValue = if (selected) 1.02f else 1f,
-                        label = "theme_scale"
+                        label = "theme_scale",
                     )
 
                     Row(
@@ -120,17 +129,17 @@ fun ThemeSheet(
                                 this.scaleY = scale
                             },
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
                             text = label,
                             style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
                         )
 
                         RadioButton(
                             selected = selected,
-                            onClick = { onThemeChange(theme) }
+                            onClick = { onThemeChange(theme) },
                         )
                     }
                 }

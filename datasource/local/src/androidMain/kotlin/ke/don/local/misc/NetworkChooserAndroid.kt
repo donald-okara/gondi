@@ -9,6 +9,13 @@
  */
 package ke.don.local.misc
 
-interface NetworkChooser {
-    fun open()
+import android.content.Context
+import android.content.Intent
+import android.provider.Settings
+
+class NetworkChooserAndroid(val context: Context) : NetworkChooser {
+    override fun open() {
+        val intent = Intent(Settings.ACTION_WIRELESS_SETTINGS)
+        context.startActivity(intent)
+    }
 }

@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.scaffold
 
 import androidx.compose.animation.core.animateDpAsState
@@ -71,7 +80,7 @@ fun RefreshLazyColumn(
     pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
     listOffSet: Int = rememberOffset(
         isRefreshing = isRefreshing,
-        pullProgress = pullRefreshState.distanceFraction
+        pullProgress = pullRefreshState.distanceFraction,
     ),
     lazyListState: LazyListState = rememberLazyListState(),
     verticalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.medium),
@@ -84,30 +93,30 @@ fun RefreshLazyColumn(
     flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
     userScrollEnabled: Boolean = true,
     overscrollEffect: OverscrollEffect? = rememberOverscrollEffect(),
-    content: LazyListScope.() -> Unit
+    content: LazyListScope.() -> Unit,
 ) {
     Box(
         contentAlignment = contentAlignment,
         modifier = modifier
             .fillMaxSize()
-            .pullToRefresh(state = pullRefreshState, isRefreshing = isRefreshing, onRefresh = onRefresh)
-    ){
+            .pullToRefresh(state = pullRefreshState, isRefreshing = isRefreshing, onRefresh = onRefresh),
+    ) {
         LazyColumn(
             modifier = modifier.offset(
                 x = 0.dp,
-                y = listOffSet.dp
+                y = listOffSet.dp,
             ),
             state = lazyListState,
             contentPadding = spacingPaddingValues(
                 vertical = verticalPadding,
-                horizontal = horizontalPadding
+                horizontal = horizontalPadding,
             ),
             reverseLayout = reverseLayout,
             verticalArrangement = verticalArrangement,
             horizontalAlignment = horizontalAlignment,
             flingBehavior = flingBehavior,
             userScrollEnabled = userScrollEnabled,
-            overscrollEffect = overscrollEffect
+            overscrollEffect = overscrollEffect,
         ) {
             content()
         }
@@ -115,10 +124,9 @@ fun RefreshLazyColumn(
         RefreshHeader(
             modifier = Modifier.align(Alignment.TopCenter),
             isRefreshing = isRefreshing,
-            state = pullRefreshState
+            state = pullRefreshState,
         )
     }
-
 }
 
 /**
@@ -141,7 +149,7 @@ fun RefreshLazyColumn(
 private fun RefreshHeader(
     modifier: Modifier = Modifier,
     isRefreshing: Boolean,
-    state: PullToRefreshState
+    state: PullToRefreshState,
 ) {
     val animatedOffset by animateDpAsState(
         targetValue = when {
@@ -149,7 +157,8 @@ private fun RefreshHeader(
             state.distanceFraction in 0f..1f -> (state.distanceFraction * 150).dp
             state.distanceFraction > 1f -> (150 + (((state.distanceFraction - 1f) * .1f) * 150)).dp
             else -> 0.dp
-        }, label = "animatedOffset"
+        },
+        label = "animatedOffset",
     )
 
     Box(
@@ -157,12 +166,12 @@ private fun RefreshHeader(
             .fillMaxWidth()
             .height(150.dp)
             .offset(y = (-150).dp)
-            .offset { IntOffset(0, animatedOffset.roundToPx()) }
+            .offset { IntOffset(0, animatedOffset.roundToPx()) },
     ) {
         FancyRefreshAnimation(
             modifier = modifier,
             isRefreshing = isRefreshing,
-            state = state
+            state = state,
         )
     }
 }
@@ -189,7 +198,7 @@ private fun RefreshHeader(
 fun Modifier.cardCrunchEffects(
     index: Int,
     isRefreshing: Boolean,
-    pullProgress: Float
+    pullProgress: Float,
 ): Modifier {
     val rotation = rememberCardRotation(isRefreshing, pullProgress)
     val offset = rememberOffset(isRefreshing, pullProgress)
@@ -201,7 +210,6 @@ fun Modifier.cardCrunchEffects(
             .toFloat()
     }
 }
-
 
 /**
  * Remembers and animates the rotation of a card-like element in a pull-to-refresh animation.
@@ -220,7 +228,7 @@ fun Modifier.cardCrunchEffects(
 @Composable
 fun rememberCardRotation(
     isRefreshing: Boolean,
-    pullProgress: Float
+    pullProgress: Float,
 ): Float {
     val targetRotation = remember(isRefreshing, pullProgress) {
         computeCardRotation(isRefreshing, pullProgress)
@@ -228,7 +236,7 @@ fun rememberCardRotation(
 
     return animateFloatAsState(
         targetValue = targetRotation,
-        label = "cardRotation"
+        label = "cardRotation",
     ).value
 }
 
@@ -248,7 +256,7 @@ fun rememberCardRotation(
  */
 private fun computeCardRotation(
     isRefreshing: Boolean,
-    progress: Float
+    progress: Float,
 ): Float = when {
     isRefreshing || progress > 1f -> 5f
     progress > 0f -> 5f * progress
@@ -274,7 +282,7 @@ private fun computeCardRotation(
 @Composable
 fun rememberOffset(
     isRefreshing: Boolean,
-    pullProgress: Float
+    pullProgress: Float,
 ): Int {
     val targetOffset = remember(isRefreshing, pullProgress) {
         computeOffset(isRefreshing, pullProgress)
@@ -282,7 +290,7 @@ fun rememberOffset(
 
     return animateIntAsState(
         targetValue = targetOffset,
-        label = "cardOffset"
+        label = "cardOffset",
     ).value
 }
 
@@ -305,7 +313,7 @@ fun rememberOffset(
  */
 private fun computeOffset(
     isRefreshing: Boolean,
-    progress: Float
+    progress: Float,
 ): Int = when {
     isRefreshing ->
         124

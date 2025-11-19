@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.list_items
 
 import androidx.compose.foundation.layout.padding
@@ -5,11 +14,9 @@ import androidx.compose.material.Text
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -49,7 +56,7 @@ fun DropDownToken(
                 text = {
                     Text(
                         item.title,
-                        color = Theme.colorScheme.onSurface
+                        color = Theme.colorScheme.onSurface,
                     )
                 },
             )
@@ -57,7 +64,7 @@ fun DropDownToken(
 
         if (destructive.isNotEmpty() && normal.isNotEmpty()) {
             HorizontalDivider(
-                modifier = Modifier.padding(4.dp)
+                modifier = Modifier.padding(4.dp),
             )
         }
 
@@ -70,7 +77,7 @@ fun DropDownToken(
                 text = {
                     Text(
                         item.title,
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.error,
                     )
                 },
             )
@@ -78,10 +85,8 @@ fun DropDownToken(
     }
 }
 
-
 data class DropDownData(
     val title: String,
     val onClick: () -> Unit,
-    val destructive: Boolean = false
+    val destructive: Boolean = false,
 )
-
