@@ -196,11 +196,12 @@ private fun SuccessState(
         itemsIndexed(
             items = state.games,
             key = { _, game -> game.id },
-        ) { index, game  ->
+        ) { index, game ->
             GameRoomItem(
                 gameIdentity = game,
                 onClick = {
-                    onEvent(HomeIntentHandler.NavigateToGame(game.serviceHost to game.servicePort),
+                    onEvent(
+                        HomeIntentHandler.NavigateToGame(game.serviceHost to game.servicePort),
                     )
                 },
                 modifier = Modifier.cardCrunchEffects(
