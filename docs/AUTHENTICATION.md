@@ -47,3 +47,10 @@ For successful authentication, add the app's intent URLs — i.e., `localhost` f
 </p>
 
 Now your fork's authentication should be fully functional.
+
+### Edit*
+Also add this to your redirect urls
+
+```
+http://localhost:3000/auth-callback
+```
