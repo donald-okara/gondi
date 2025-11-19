@@ -9,23 +9,33 @@
  */
 package ke.don.local.misc
 
-class NetworkChooserJvm() : NetworkChooser {
+import java.io.IOException
+
+class NetworkChooserJvm : NetworkChooser {
     override fun open() {
-        // Attempt to launch the standard Wi-Fi connection dialog via NetworkManager
-        val commands = listOf(
-            "nm-connection-editor", // GUI editor (GNOME)
-            "nmcli device wifi list", // CLI fallback
-        )
+        try {
+            val os = System.getProperty("os.name").lowercase()
 
-        for (cmd in commands) {
-            try {
-                Runtime.getRuntime().exec(cmd)
-                return
-            } catch (e: Exception) {
-                // Try next
+            // Always return Array<String>
+            val command: Array<String> = when {
+                os.contains("linux") ->
+                    arrayOf("nm-connection-editor")
+
+                os.contains("mac") || os.contains("darwin") ->
+                    arrayOf("open", "/System/Library/PreferencePanes/Network.prefPane")
+
+                os.contains("win") ->
+                    arrayOf("control.exe", "ncpa.cpl")
+
+                else -> {
+                    println("Network settings not supported on $os")
+                    return
+                }
             }
-        }
 
-        println("No Wi-Fi picker available on this system")
+            Runtime.getRuntime().exec(command)
+        } catch (e: IOException) {
+            println("Failed to open network settings: ${e.message}")
+        }
     }
 }

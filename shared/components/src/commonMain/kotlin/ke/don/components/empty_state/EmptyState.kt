@@ -38,16 +38,20 @@ import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 
 /**
- * Displays a centered empty-state screen with an optional icon, title, description, and action slot.
+ * A composable that displays a styled message for empty or error states.
  *
- * The content is centered inside a full-size container with padding and uses Material theming for
- * typography and color. If `icon`, `description`, or `action` are `null`, their sections are omitted.
+ * It's designed to be visually distinct, using a colored surface with a border to draw attention.
+ * The component includes an optional icon, a prominent title, a description, and a slot for
+ * action buttons. The overall color scheme (e.g., primary for empty, error for error states)
+ * is determined by the `emptyType`.
  *
- * @param modifier Modifier applied to the root container.
- * @param title The primary title text shown prominently.
- * @param description Optional secondary text shown beneath the title.
- * @param icon Optional leading icon shown above the title. Defaults to `Icons.Default.Info`.
- * @param action Optional composable slot rendered beneath the description for actions (e.g., a button).
+ * Example usage:
+ * ```
+ * EmptyState(
+ *     title = "No Items Found",
+ *     description = "There are no items to display. Try adding one.",
+ *     icon = Icons.Default.Search,
+ *     action = {
  */
 @Composable
 fun EmptyState(

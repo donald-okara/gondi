@@ -14,13 +14,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Casino
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -153,7 +151,7 @@ fun HomeContent(
                     onEvent = onEvent,
                 )
                 ReadStatus.Loading -> LoadingState()
-                ReadStatus.Empty -> EmptyState(onEvent = onEvent)
+                ReadStatus.Empty -> HomeEmptyState(onEvent = onEvent)
                 else -> {}
             }
         }
@@ -163,7 +161,7 @@ fun HomeContent(
         ConfirmationDialogToken(
             icon = Icons.AutoMirrored.Filled.ExitToApp,
             title = "Log out",
-            message = "Are you sure you want to log out",
+            message = "Are you sure you want to log out?",
             dialogType = ComponentType.Warning,
             onConfirm = { onEvent(HomeIntentHandler.LogOut(navigateToAuth)) },
             onDismiss = { onEvent(HomeIntentHandler.ShowLogoutModal) },
@@ -240,7 +238,7 @@ private fun ErrorState(
 }
 
 @Composable
-private fun EmptyState(
+private fun HomeEmptyState(
     modifier: Modifier = Modifier,
     onEvent: (HomeIntentHandler) -> Unit,
 ) {
