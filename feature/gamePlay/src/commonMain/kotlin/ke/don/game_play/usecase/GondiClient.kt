@@ -16,6 +16,7 @@ import io.ktor.websocket.*
 import ke.don.components.helpers.Matcha
 import ke.don.domain.gameplay.PlayerIntent
 import ke.don.domain.gameplay.server.ClientUpdate
+import ke.don.domain.gameplay.server.ServerId
 import ke.don.domain.gameplay.server.ServerUpdate
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
@@ -47,9 +48,9 @@ class GondiClient() : ScreenModel {
 
     private var session: DefaultClientWebSocketSession? = null
 
-    suspend fun connect(host: String, port: Int) {
+    suspend fun connect(serverId: ServerId) {
         session?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnecting"))
-        screenModelScope.connectWithRetry(host, port)
+        screenModelScope.connectWithRetry(serverId.first, serverId.second)
     }
 
     fun sendIntent(intent: PlayerIntent) {

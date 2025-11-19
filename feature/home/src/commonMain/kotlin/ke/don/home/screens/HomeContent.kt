@@ -68,7 +68,7 @@ fun HomeContent(
     val menuItems = listOf(
         DropDownData(
             title = "Rules",
-            onClick = { onEvent(HomeIntentHandler.NavigateToEdit) }
+            onClick = { onEvent(HomeIntentHandler.NavigateToRules) }
         ),
         DropDownData(
             title = "Theme",
@@ -187,7 +187,12 @@ private fun SuccessState(
         items(state.games.size){ index ->
             GameRoomItem(
                 gameIdentity = state.games[index],
-                onClick = { onEvent(HomeIntentHandler.NavigateToGame(state.games[index].id)) },
+                onClick = {
+                    onEvent(
+                        HomeIntentHandler.NavigateToGame(state.games[index].serviceHost to
+                                state.games[index].servicePort)
+                    )
+                },
                 modifier = Modifier.cardCrunchEffects(
                     isRefreshing = state.readStatus.isRefreshing,
                     pullProgress = pullState.distanceFraction,
