@@ -37,7 +37,7 @@ import ke.don.authentication.model.AuthModel
 import ke.don.authentication.model.AuthState
 import ke.don.authentication.model.StartupPhase
 import ke.don.components.background.GradientBackground
-import ke.don.components.empty_state.EmptyScreen
+import ke.don.components.empty_state.EmptyState
 import ke.don.components.indicator.FancyLoadingIndicator
 import ke.don.design.theme.spacing
 import ke.don.resources.LocalSharedScope
@@ -81,7 +81,7 @@ fun AuthScreenContent(
                             onEvent = screenModel::handleAction,
                         )
 
-                        StartupPhase.Main -> EmptyScreen(
+                        StartupPhase.Main -> EmptyState(
                             icon = Icons.Outlined.Lock,
                             title = "Main",
                             description = "Screen is in development",
