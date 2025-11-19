@@ -52,7 +52,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun GameObjective(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,

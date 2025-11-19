@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.home.previews
 
 import androidx.compose.runtime.Composable
@@ -24,7 +33,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun HomeShowcase(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val games = listOf<GameIdentity>(
         GameIdentity(
@@ -32,21 +41,21 @@ fun HomeShowcase(
             gameName = "Cats vs Cucumbers",
             moderatorName = "General Whiskers",
             moderatorAvatar = Avatar.Alexander,
-            moderatorAvatarBackground = AvatarBackground.PURPLE_LILAC
+            moderatorAvatarBackground = AvatarBackground.PURPLE_LILAC,
         ),
         GameIdentity(
             id = "2",
             gameName = "Extreme Naptime Championship",
             moderatorName = "SleepyHead",
             moderatorAvatar = Avatar.Adrian,
-            moderatorAvatarBackground = AvatarBackground.GREEN_EMERALD
+            moderatorAvatarBackground = AvatarBackground.GREEN_EMERALD,
         ),
         GameIdentity(
             id = "3",
             gameName = "Who Stole My Sandwich?",
             moderatorName = "DetectiveNomNom",
             moderatorAvatar = Avatar.Amaya,
-            moderatorAvatarBackground = AvatarBackground.YELLOW_BANANA
+            moderatorAvatarBackground = AvatarBackground.YELLOW_BANANA,
         ),
         GameIdentity(
             id = "4",
@@ -54,14 +63,14 @@ fun HomeShowcase(
             gameName = "Synchronized Sighing",
             moderatorName = "DramaKing_42",
             moderatorAvatar = Avatar.Christian,
-            moderatorAvatarBackground = AvatarBackground.PURPLE_LILAC
-        )
+            moderatorAvatarBackground = AvatarBackground.PURPLE_LILAC,
+        ),
     )
 
     var readStatus by remember { mutableStateOf<ReadStatus>(ReadStatus.Success) }
 
     // Simulate pull progression when refreshing
-    LaunchedEffect(readStatus){
+    LaunchedEffect(readStatus) {
         when (readStatus) {
             is ReadStatus.Refreshing -> {
                 // Animate progress up
@@ -82,12 +91,12 @@ fun HomeShowcase(
     }
     var state by remember(
         games,
-        readStatus
+        readStatus,
     ) {
         mutableStateOf(HomeState(games = games, readStatus = readStatus, profile = Profile(username = "Don", background = AvatarBackground.PURPLE_LILAC, avatar = Avatar.Alexander)))
     }
     fun handleIntent(intent: HomeIntentHandler) {
-        when(intent){
+        when (intent) {
             is HomeIntentHandler.Refresh -> readStatus = ReadStatus.Refreshing
             else -> {}
         }
@@ -96,14 +105,14 @@ fun HomeShowcase(
     HomeContent(
         modifier = modifier,
         state = state,
-        onEvent = ::handleIntent
+        onEvent = ::handleIntent,
     )
 }
 
 @DevicePreviews
 @Composable
 fun HomeShowcasePreview(
-    @PreviewParameter(ThemeProvider::class) theme: Theme
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
-    DevicePreviewContainer(theme){ HomeShowcase() }
+    DevicePreviewContainer(theme) { HomeShowcase() }
 }

@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.scaffold
 
 import androidx.compose.animation.core.Animatable
@@ -47,8 +56,6 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
@@ -61,7 +68,6 @@ import kotlin.math.roundToInt
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DarkSideIndicatorSample() {
-
     var isRefreshing by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val pullRefreshState = rememberPullRefreshState(
@@ -72,22 +78,22 @@ fun DarkSideIndicatorSample() {
                 delay(5_000L)
                 isRefreshing = false
             }
-        }
+        },
     )
 
     Box(
         modifier = Modifier
             .background(Color(0xff000000))
-            .pullRefresh(state = pullRefreshState)
+            .pullRefresh(state = pullRefreshState),
     ) {
-
         val cardOffset by animateIntAsState(
             targetValue = when {
                 isRefreshing -> 250
                 pullRefreshState.progress in 0f..1f -> (250 * pullRefreshState.progress).roundToInt()
                 pullRefreshState.progress > 1f -> (250 + ((pullRefreshState.progress - 1f) * .1f) * 100).roundToInt()
                 else -> 0
-            }, label = "cardOffset"
+            },
+            label = "cardOffset",
         )
 
         val cardRotation by animateFloatAsState(
@@ -95,7 +101,8 @@ fun DarkSideIndicatorSample() {
                 isRefreshing || pullRefreshState.progress > 1f -> 5f
                 pullRefreshState.progress > 0f -> 5 * pullRefreshState.progress
                 else -> 0f
-            }, label = "cardRotation"
+            },
+            label = "cardRotation",
         )
 
         LazyColumn(Modifier.fillMaxSize()) {
@@ -115,9 +122,9 @@ fun DarkSideIndicatorSample() {
                         .shadow(
                             elevation = 10.dp,
                             shape = RoundedCornerShape(12.dp),
-                            spotColor = Color.Black
+                            spotColor = Color.Black,
                         )
-                        .background(Color.DarkGray, RoundedCornerShape(12.dp))
+                        .background(Color.DarkGray, RoundedCornerShape(12.dp)),
                 )
             }
         }
@@ -129,16 +136,16 @@ fun DarkSideIndicatorSample() {
 @Composable
 fun DarkSideIndicator(
     isRefreshing: Boolean,
-    pullRefreshState: PullRefreshState
+    pullRefreshState: PullRefreshState,
 ) {
-
     val animatedOffset by animateDpAsState(
         targetValue = when {
             isRefreshing -> 200.dp
             pullRefreshState.progress in 0f..1f -> (pullRefreshState.progress * 200).dp
             pullRefreshState.progress > 1f -> (200 + (((pullRefreshState.progress - 1f) * .1f) * 200)).dp
             else -> 0.dp
-        }, label = "animatedOffset"
+        },
+        label = "animatedOffset",
     )
 
     Box(
@@ -146,14 +153,13 @@ fun DarkSideIndicator(
             .fillMaxWidth()
             .height(200.dp)
             .offset(y = (-200).dp)
-            .offset { IntOffset(0, animatedOffset.roundToPx()) }
+            .offset { IntOffset(0, animatedOffset.roundToPx()) },
     ) {
         WhiteBeam(pullRefreshState, isRefreshing)
         RainbowRays(isRefreshing)
         GlowingTriangle(pullRefreshState, isRefreshing)
     }
 }
-
 
 @Composable
 fun RainbowRays(isRefreshing: Boolean) {
@@ -166,7 +172,8 @@ fun RainbowRays(isRefreshing: Boolean) {
         animationSpec = when {
             isRefreshing -> tween(2_000, easing = LinearEasing)
             else -> tween(300, easing = LinearEasing)
-        }, label = "rayLength"
+        },
+        label = "rayLength",
     )
 
     val phase = remember { Animatable(0f) }
@@ -177,7 +184,7 @@ fun RainbowRays(isRefreshing: Boolean) {
             while (true) {
                 phase.animateTo(
                     target.toFloat(),
-                    animationSpec = tween(3_000, easing = LinearEasing)
+                    animationSpec = tween(3_000, easing = LinearEasing),
                 )
                 target++
             }
@@ -218,16 +225,16 @@ fun RainbowRays(isRefreshing: Boolean) {
                     pathEffect = PathEffect.chainPathEffect(
                         PathEffect.dashPathEffect(
                             intervals = floatArrayOf(20f, 30f),
-                            phase = length * -phase.value
+                            phase = length * -phase.value,
                         ),
                         PathEffect.chainPathEffect(
                             PathEffect.dashPathEffect(
-                                intervals = floatArrayOf(length * rayLength, length)
+                                intervals = floatArrayOf(length * rayLength, length),
                             ),
                             PathEffect.cornerPathEffect(200f),
-                        )
-                    )
-                )
+                        ),
+                    ),
+                ),
             )
         }
     }
@@ -236,7 +243,6 @@ fun RainbowRays(isRefreshing: Boolean) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WhiteBeam(pullRefreshState: PullRefreshState, isRefreshing: Boolean) {
-
     val beamLength by animateFloatAsState(
         targetValue = when {
             isRefreshing -> 1f
@@ -263,10 +269,10 @@ fun WhiteBeam(pullRefreshState: PullRefreshState, isRefreshing: Boolean) {
                 pathEffect = PathEffect.dashPathEffect(
                     intervals = floatArrayOf(
                         linePathMeasure.length * beamLength,
-                        linePathMeasure.length
-                    )
-                )
-            )
+                        linePathMeasure.length,
+                    ),
+                ),
+            ),
         )
 
         drawPath(
@@ -277,10 +283,10 @@ fun WhiteBeam(pullRefreshState: PullRefreshState, isRefreshing: Boolean) {
                 pathEffect = PathEffect.dashPathEffect(
                     intervals = floatArrayOf(
                         linePathMeasure.length * beamLength,
-                        linePathMeasure.length
-                    )
-                )
-            )
+                        linePathMeasure.length,
+                    ),
+                ),
+            ),
         )
     }
 
@@ -303,7 +309,7 @@ fun WhiteBeam(pullRefreshState: PullRefreshState, isRefreshing: Boolean) {
     Canvas(
         modifier = Modifier
             .blur(beamGlow, BlurredEdgeTreatment.Unbounded)
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
         val line = Path()
         line.moveTo(0f, size.center.y + 50f)
@@ -321,10 +327,10 @@ fun WhiteBeam(pullRefreshState: PullRefreshState, isRefreshing: Boolean) {
                 pathEffect = PathEffect.dashPathEffect(
                     intervals = floatArrayOf(
                         linePathMeasure.length * beamLength,
-                        linePathMeasure.length
-                    )
-                )
-            )
+                        linePathMeasure.length,
+                    ),
+                ),
+            ),
         )
     }
 }
@@ -345,7 +351,7 @@ fun GlowingTriangle(pullRefreshState: PullRefreshState, isRefreshing: Boolean) {
         modifier = Modifier
             .clip(TriangleShape)
             .blur(4.dp)
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
         val triangle = size.createTrianglePath()
         drawPath(
@@ -358,7 +364,7 @@ fun GlowingTriangle(pullRefreshState: PullRefreshState, isRefreshing: Boolean) {
             color = Color.White,
             style = Stroke(
                 width = triangleGlow,
-            )
+            ),
         )
     }
 }
@@ -369,7 +375,7 @@ private class Triangle : Shape {
     override fun createOutline(
         size: Size,
         layoutDirection: LayoutDirection,
-        density: Density
+        density: Density,
     ): Outline = Outline.Generic(size.createTrianglePath())
 }
 

@@ -9,6 +9,8 @@
  */
 package ke.don.local.misc
 
-interface NetworkChooser {
-    fun open()
+class NetworkChooserJvm() : NetworkChooser {
+    override fun open() {
+        Runtime.getRuntime().exec("nm-connection-editor")
+    }
 }

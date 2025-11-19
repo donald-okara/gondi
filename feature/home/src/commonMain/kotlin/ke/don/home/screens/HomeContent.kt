@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.home.screens
 
 import androidx.compose.animation.AnimatedContent
@@ -6,14 +15,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Casino
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Toys
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -51,29 +58,29 @@ fun HomeContent(
     modifier: Modifier = Modifier,
     state: HomeState,
     onEvent: (HomeIntentHandler) -> Unit,
-    navigateToAuth: () -> Unit
+    navigateToAuth: () -> Unit,
 ) {
     val profileMenuItems = listOf(
         DropDownData(
             title = "Edit",
-            onClick = { onEvent(HomeIntentHandler.NavigateToEdit) }
+            onClick = { onEvent(HomeIntentHandler.NavigateToEdit) },
         ),
         DropDownData(
             title = "Log out",
             destructive = true,
-            onClick = { onEvent(HomeIntentHandler.ShowLogoutModal) }
-        )
+            onClick = { onEvent(HomeIntentHandler.ShowLogoutModal) },
+        ),
     )
 
     val menuItems = listOf(
         DropDownData(
             title = "Rules",
-            onClick = { onEvent(HomeIntentHandler.NavigateToRules) }
+            onClick = { onEvent(HomeIntentHandler.NavigateToRules) },
         ),
         DropDownData(
             title = "Theme",
-            onClick = { onEvent(HomeIntentHandler.ShowThemeModal) }
-        )
+            onClick = { onEvent(HomeIntentHandler.ShowThemeModal) },
+        ),
     )
 
     ScaffoldToken(
@@ -81,11 +88,11 @@ fun HomeContent(
         title = "Gondi",
         actions = {
             state.profile.let { profile ->
-                Box{
+                Box {
                     ProfileImageToken(
                         isHero = false,
                         profile = profile,
-                        onClick = {onEvent(HomeIntentHandler.ShowProfileMenu)},
+                        onClick = { onEvent(HomeIntentHandler.ShowProfileMenu) },
                     )
 
                     DropDownToken(
@@ -98,12 +105,12 @@ fun HomeContent(
         },
         floatingActionButton = {
             ButtonToken(
-                onClick = { onEvent(HomeIntentHandler.NavigateToNewGame)},
-                buttonType = ComponentType.Primary
-            ){
+                onClick = { onEvent(HomeIntentHandler.NavigateToNewGame) },
+                buttonType = ComponentType.Primary,
+            ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Add game"
+                    contentDescription = "Add game",
                 )
                 Text(text = "New Game")
             }
@@ -113,35 +120,36 @@ fun HomeContent(
                 IconToken(
                     imageVector = Icons.Default.Menu,
                     buttonType = ComponentType.Neutral,
-                    onClick = { onEvent(HomeIntentHandler.ShowMenu) }
+                    onClick = { onEvent(HomeIntentHandler.ShowMenu) },
                 )
 
                 DropDownToken(
                     items = menuItems,
                     expanded = state.showMenu,
-                    onDismiss = { onEvent(HomeIntentHandler.ShowMenu)}
+                    onDismiss = { onEvent(HomeIntentHandler.ShowMenu) },
                 )
             }
-        }
+        },
     ) {
         val displayStatus = when (state.readStatus) {
             is ReadStatus.Success,
-            is ReadStatus.Refreshing -> ReadStatus.Success
+            is ReadStatus.Refreshing,
+            -> ReadStatus.Success
             else -> state.readStatus
         }
 
         AnimatedContent(
             targetState = displayStatus,
-            label = "HomeContent"
+            label = "HomeContent",
         ) { status ->
             when (status) {
                 is ReadStatus.Success -> SuccessState(
                     state = state,
-                    onEvent = onEvent
+                    onEvent = onEvent,
                 )
                 is ReadStatus.Error -> ErrorState(
                     state = state,
-                    onEvent = onEvent
+                    onEvent = onEvent,
                 )
                 ReadStatus.Loading -> LoadingState()
                 ReadStatus.Empty -> EmptyState(onEvent = onEvent)
@@ -150,22 +158,22 @@ fun HomeContent(
         }
     }
 
-    if (state.showLogoutModal){
+    if (state.showLogoutModal) {
         ConfirmationDialogToken(
             icon = Icons.AutoMirrored.Filled.ExitToApp,
             title = "Log out",
             message = "Are you sure you want to log out",
             dialogType = ComponentType.Warning,
             onConfirm = { onEvent(HomeIntentHandler.LogOut(navigateToAuth)) },
-            onDismiss ={ onEvent(HomeIntentHandler.ShowLogoutModal) }
+            onDismiss = { onEvent(HomeIntentHandler.ShowLogoutModal) },
         )
     }
 
-    if (state.showThemeModal){
+    if (state.showThemeModal) {
         ThemeSheet(
             onDismissRequest = { onEvent(HomeIntentHandler.ShowThemeModal) },
             onThemeChange = { onEvent(HomeIntentHandler.SetTheme(it)) },
-            currentTheme = state.theme
+            currentTheme = state.theme,
         )
     }
 }
@@ -183,21 +191,23 @@ private fun SuccessState(
         pullRefreshState = pullState,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         onRefresh = { onEvent(HomeIntentHandler.Refresh) },
-    ){
-        items(state.games.size){ index ->
+    ) {
+        items(state.games.size) { index ->
             GameRoomItem(
                 gameIdentity = state.games[index],
                 onClick = {
                     onEvent(
-                        HomeIntentHandler.NavigateToGame(state.games[index].serviceHost to
-                                state.games[index].servicePort)
+                        HomeIntentHandler.NavigateToGame(
+                            state.games[index].serviceHost to
+                                state.games[index].servicePort,
+                        ),
                     )
                 },
                 modifier = Modifier.cardCrunchEffects(
                     isRefreshing = state.readStatus.isRefreshing,
                     pullProgress = pullState.distanceFraction,
-                    index = index
-                )
+                    index = index,
+                ),
             )
         }
     }
@@ -211,16 +221,16 @@ private fun ErrorState(
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         EmptyState(
             title = "Something went wrong",
             description = state.readStatus.message,
-            emptyType = EmptyType.Error
+            emptyType = EmptyType.Error,
         ) {
             ButtonToken(
                 onClick = { onEvent(HomeIntentHandler.DiscoverGames) },
-                buttonType = ComponentType.Primary
+                buttonType = ComponentType.Primary,
             ) {
                 Text(text = "Retry")
             }
@@ -235,34 +245,34 @@ private fun EmptyState(
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ){
+        contentAlignment = Alignment.Center,
+    ) {
         EmptyState(
             icon = Icons.Default.Casino,
             title = "Start a New Adventure?",
             description = "It looks a bit quiet around here. " +
-                    "There are currently no active games available to join." +
-                    " Why not check your network, or better yet, be the first to start one?",
-            emptyType = EmptyType.Empty
-        ){
+                "There are currently no active games available to join." +
+                " Why not check your network, or better yet, be the first to start one?",
+            emptyType = EmptyType.Empty,
+        ) {
             ButtonToken(
                 onClick = { onEvent(HomeIntentHandler.ShowNetworkChooser) },
-                buttonType = ComponentType.Inverse
-            ){
+                buttonType = ComponentType.Inverse,
+            ) {
                 Text(text = "Check Network")
             }
 
             ButtonToken(
                 onClick = { onEvent(HomeIntentHandler.DiscoverGames) },
-                buttonType = ComponentType.Inverse
-            ){
+                buttonType = ComponentType.Inverse,
+            ) {
                 Text(text = "Refresh Screen")
             }
 
             ButtonToken(
                 onClick = { onEvent(HomeIntentHandler.NavigateToNewGame) },
-                buttonType = ComponentType.Primary
-            ){
+                buttonType = ComponentType.Primary,
+            ) {
                 Text(text = "Create New Game")
             }
         }
@@ -271,12 +281,12 @@ private fun EmptyState(
 
 @Composable
 private fun LoadingState(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ){
+        contentAlignment = Alignment.Center,
+    ) {
         Box(
             modifier = Modifier.width(MaterialTheme.spacing.largeScreenSize),
             contentAlignment = Alignment.Center,

@@ -9,6 +9,12 @@
  */
 package ke.don.local.misc
 
-interface NetworkChooser {
-    fun open()
+import platform.Foundation.NSURL
+import platform.UIKit.UIApplication
+
+class NetworkChooserIos() : NetworkChooser {
+    override fun open() {
+        val url = NSURL(string = "App-Prefs:root=WIFI")
+        UIApplication.sharedApplication.openURL(url)
+    }
 }

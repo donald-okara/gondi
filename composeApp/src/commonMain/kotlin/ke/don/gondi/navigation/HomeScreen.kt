@@ -29,26 +29,26 @@ class HomeScreen : Screen {
         val state by homeModel.uiState.collectAsState()
         val onEvent = homeModel::onEvent
 
-        fun extendedOnEvent(intent: HomeIntentHandler){
-            when(intent){
+        fun extendedOnEvent(intent: HomeIntentHandler) {
+            when (intent) {
                 is HomeIntentHandler.NavigateToRules ->
                     navigator.push(RulesScreen())
                 is HomeIntentHandler.NavigateToNewGame ->
-                {}
+                    {}
                 is HomeIntentHandler.NavigateToGame ->
-                {}
+                    {}
                 is HomeIntentHandler.NavigateToEdit ->
                     navigator.push(EditProfileScreen())
                 else -> onEvent(intent)
             }
         }
-        LaunchedEffect(homeModel){
+        LaunchedEffect(homeModel) {
             onEvent(HomeIntentHandler.DiscoverGames)
         }
         HomeContent(
             state = state,
             onEvent = ::extendedOnEvent,
-            navigateToAuth = { navigator.push(AuthScreen()) }
+            navigateToAuth = { navigator.push(AuthScreen()) },
         )
     }
 }

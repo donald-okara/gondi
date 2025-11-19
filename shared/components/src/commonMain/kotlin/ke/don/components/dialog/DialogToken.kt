@@ -61,14 +61,14 @@ fun BottomSheetToken(
         skipPartiallyExpanded = true,
     ),
     content: @Composable () -> Unit,
-){
+) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         containerColor = containerColor,
         contentColor = contentColor,
         modifier = modifier.width(Theme.spacing.largeScreenSize),
-        sheetState = sheetState
-    ){
+        sheetState = sheetState,
+    ) {
         content()
     }
 }

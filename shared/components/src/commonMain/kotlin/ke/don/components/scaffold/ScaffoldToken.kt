@@ -9,7 +9,6 @@
  */
 package ke.don.components.scaffold
 
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,20 +19,13 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.contentColorFor
-import androidx.compose.material3.pulltorefresh.PullToRefreshState
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -45,8 +37,6 @@ import ke.don.design.theme.PaddingOption
 import ke.don.design.theme.spacing
 import ke.don.design.theme.spacingPaddingValues
 import ke.don.resources.isCompact
-import kotlin.math.roundToInt
-
 
 /**
  * A convenience overload of `ScaffoldToken` for vertically scrollable content.
@@ -117,7 +107,6 @@ fun ScaffoldToken(
         content = content,
     )
 }
-
 
 /**
  * A composable that provides a foundational layout structure, wrapping Material 3's `Scaffold`.
