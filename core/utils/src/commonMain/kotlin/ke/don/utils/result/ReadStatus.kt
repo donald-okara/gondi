@@ -12,6 +12,7 @@ package ke.don.utils.result
 // For long-lived screen data
 sealed interface ReadStatus {
     data object Loading : ReadStatus
+    data object Refreshing : ReadStatus
     data object Empty : ReadStatus
     data object Success : ReadStatus // no payload
     data class Error(val message: String) : ReadStatus
@@ -61,6 +62,9 @@ inline fun <T> ResultStatus<T>.onError(action: (String) -> Unit): ResultStatus<T
 
 val ReadStatus.isLoading: Boolean
     get() = this is ReadStatus.Loading
+
+val ReadStatus.isRefreshing: Boolean
+    get() = this is ReadStatus.Refreshing
 
 val ReadStatus.isSuccess: Boolean
     get() = this is ReadStatus.Success

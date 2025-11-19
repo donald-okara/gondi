@@ -7,12 +7,6 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.components.scaffold
+package ke.don.domain.gameplay.server
 
-import androidx.compose.runtime.Composable
-
-sealed interface NavigationIcon {
-    object None : NavigationIcon
-    class Back(val navigateBack: () -> Unit) : NavigationIcon
-    class Custom(val content: @Composable () -> Unit) : NavigationIcon
-}
+typealias ServerId = Pair<String, Int>

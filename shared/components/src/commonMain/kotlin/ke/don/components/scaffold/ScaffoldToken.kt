@@ -39,8 +39,10 @@ import ke.don.design.theme.spacingPaddingValues
 import ke.don.resources.isCompact
 
 /**
- * Renders a responsive scaffold that adapts between compact (modal drawer) and expanded (navigation rail) layouts,
- * and provides configurable top bar, floating action button, drawer, and navigation rail areas.
+ * A convenience overload of `ScaffoldToken` for vertically scrollable content.
+ *
+ * This overload accepts a `ScrollState` and applies a `verticalScroll` modifier to the underlying
+ * `Column` content, making the entire content area scrollable.
  *
  * The provided `content` composable receives a boolean flag indicating the current compact state so it can
  * adapt its UI.
@@ -54,7 +56,10 @@ import ke.don.resources.isCompact
  * @param floatingActionButton Optional FAB content.
  * @param floatingActionButtonPosition Position of the floating action button.
  * @param containerColor Background color of the scaffold.
+ * @param scrollState The `ScrollState` to be used for the vertical scroll behavior of the content.
  * @param contentColor Preferred content color for scaffold children.
+ * @param verticalPadding The vertical padding to be applied around the content.
+ * @param horizontalPadding The horizontal padding to be applied around the content.
  * @param contentAlignment Alignment for the main content within the scaffold.
  * @param content Main content composable; receives `isCompact: Boolean` where `true` indicates compact layout mode.
  */
@@ -103,6 +108,32 @@ fun ScaffoldToken(
     )
 }
 
+/**
+ * A composable that provides a foundational layout structure, wrapping Material 3's `Scaffold`.
+ * It standardizes the app's screen layout by providing a consistent top bar, content area, and
+ * floating action button configuration. The content is placed within a `Column` that is centered
+ * horizontally and constrained in width, suitable for large screens.
+ *
+ * This overload is for non-scrollable content. For scrollable or lazy-loading content,
+ * use the other overloads of `ScaffoldToken`.
+ *
+ * The `content` lambda receives a boolean `isCompact` which can be used to adapt the layout
+ * based on the available screen width.
+ *
+ * @param modifier The modifier to be applied to the main content `Column`.
+ * @param title An optional title string to be displayed in the default `TopBarToken`.
+ * @param navigationIcon Defines the navigation icon for the default `TopBarToken` (e.g., a back arrow or menu icon).
+ * @param actions A composable lambda for actions to be displayed at the end of the `TopBarToken`.
+ * @param scrollBehavior An optional `TopAppBarScrollBehavior` to coordinate scrolling between the top bar and content.
+ * @param topBar A custom composable for the top app bar. If null, no top bar is displayed. Defaults to `TopBarToken`.
+ * @param floatingActionButton A composable for the floating action button.
+ * @param floatingActionButtonPosition The position of the `floatingActionButton`.
+ * @param containerColor The background color for the `Scaffold`.
+ * @param contentColor The preferred color for content inside the `Scaffold`.
+ * @param verticalPadding The vertical padding to be applied around the main content `Column`.
+ * @param horizontalPadding The horizontal padding to be applied around the main content `Column`.
+ * @param contentAlignment The alignment of the main content `Column` within the `Scaffold`.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScaffoldToken(

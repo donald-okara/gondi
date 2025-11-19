@@ -20,6 +20,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +38,16 @@ import androidx.compose.ui.unit.dp
 import ke.don.domain.table.AvatarBackground
 import ke.don.resources.color
 
+/**
+ * A composable that displays the [FancyRefreshAnimation] when the `loading` state is true.
+ * It uses [AnimatedVisibility] to provide a smooth fade-in/scale-in and fade-out/scale-out
+ * transition. This is useful for showing a loading indicator in the center of the screen
+ * or in place of content while data is being fetched, independent of a pull-to-refresh action.
+ *
+ * @param loading A boolean that determines whether the loading indicator is visible.
+ * @param modifier The modifier to be applied to the underlying [FancyRefreshAnimation].
+ */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FancyLoadingIndicator(
     loading: Boolean,
@@ -47,9 +60,7 @@ fun FancyLoadingIndicator(
     ) {
         FancyRefreshAnimation(
             modifier = modifier,
-            isRefreshing = { true },
-            willRefresh = { true },
-            offsetProgress = { 1f },
+            isRefreshing = true,
         )
     }
 }
@@ -66,17 +77,15 @@ fun FancyLoadingIndicator(
  *
  * @param modifier The modifier to be applied to the container of the animation.
  * @param isRefreshing A lambda that returns `true` when the refresh process is active, `false` otherwise.
- * @param willRefresh A lambda that returns `true` when the pull distance has passed the refresh threshold, `false` otherwise.
- * @param offsetProgress A lambda that returns the current pull-to-refresh progress as a float between 0.0 and 1.0.
+ * @param state The state that keeps track of distance pulled
  *
  * Credit goes to https://www.sinasamaki.com/  for the component
  */
 @Composable
 fun FancyRefreshAnimation(
     modifier: Modifier = Modifier,
-    isRefreshing: () -> Boolean,
-    willRefresh: () -> Boolean,
-    offsetProgress: () -> Float,
+    isRefreshing: Boolean,
+    state: PullToRefreshState = rememberPullToRefreshState(),
 ) {
     val colorA = AvatarBackground.PURPLE_LILAC.color()
     val colorB = AvatarBackground.GREEN_EMERALD.color()
@@ -88,93 +97,56 @@ fun FancyRefreshAnimation(
             .height(80.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(
+        @Composable
+        fun item(
+            color: Color,
+            alignment: Alignment,
+        ) = Box(
             modifier = Modifier
                 .fillMaxHeight()
                 .weight(1f),
-            contentAlignment = Alignment.TopCenter,
+            contentAlignment = alignment,
         ) {
             CircleWithRing(
-                modifier = Modifier
-                    .size(30.dp),
-                isRefreshing = isRefreshing(),
-                willRefresh = willRefresh(),
-                offsetProgress = offsetProgress(),
+                modifier = Modifier.size(30.dp),
+                isRefreshing = isRefreshing,
+                willRefresh = isRefreshing || state.distanceFraction >= 1f,
+                offsetProgress = if (isRefreshing) 1f else state.distanceFraction,
                 shape = RoundedCornerShape(10.dp),
-                color = colorA,
+                color = color,
             )
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f),
-            contentAlignment = Alignment.BottomCenter,
-        ) {
-            CircleWithRing(
-                modifier = Modifier
-                    .size(30.dp),
-                isRefreshing = isRefreshing(),
-                willRefresh = willRefresh(),
-                offsetProgress = offsetProgress(),
-                shape = RoundedCornerShape(10.dp),
-                color = colorB,
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f),
-            contentAlignment = Alignment.Center,
-        ) {
-            CircleWithRing(
-                modifier = Modifier
-                    .size(30.dp),
-                isRefreshing = isRefreshing(),
-                willRefresh = willRefresh(),
-                offsetProgress = offsetProgress(),
-                shape = RoundedCornerShape(10.dp),
-                color = colorC,
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f),
-            contentAlignment = Alignment.BottomCenter,
-        ) {
-            CircleWithRing(
-                modifier = Modifier
-                    .size(30.dp),
-                isRefreshing = isRefreshing(),
-                willRefresh = willRefresh(),
-                offsetProgress = offsetProgress(),
-                shape = RoundedCornerShape(10.dp),
-                color = colorB,
-            )
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .weight(1f),
-            contentAlignment = Alignment.TopCenter,
-        ) {
-            CircleWithRing(
-                modifier = Modifier
-                    .size(30.dp),
-                isRefreshing = isRefreshing(),
-                willRefresh = willRefresh(),
-                offsetProgress = offsetProgress(),
-                shape = RoundedCornerShape(10.dp),
-                color = colorA,
-            )
-        }
+        item(colorA, Alignment.TopCenter)
+        item(colorB, Alignment.BottomCenter)
+        item(colorC, Alignment.Center)
+        item(colorB, Alignment.BottomCenter)
+        item(colorA, Alignment.TopCenter)
     }
 }
 
+/**
+ * A composable that displays an animated shape, consisting of a central filled shape and an
+ * outer ring. The animations are driven by the state of a pull-to-refresh action.
+ *
+ * The animation has three key stages:
+ * 1.  **Pulling**: As the user pulls (`offsetProgress` increases), the central shape and outer ring
+ *     scale up from zero. The ring's border width decreases, creating an "opening" effect.
+ * 2.  **Threshold Reached**: When the pull distance is sufficient (`willRefresh` is true), the entire
+ *     component scales up with a bouncy spring animation to indicate it's ready to refresh.
+ * 3.  **Refreshing**: When `isRefreshing` is true, the central shape and outer ring start rotating
+ *     in opposite directions in an infinite loop, providing a loading indicator.
+ *
+ * @param modifier The modifier to be applied to the component.
+ * @param isRefreshing `true` if the content is currently refreshing, which triggers the infinite
+ *   rotation animation.
+ * @param willRefresh `true` if the pull-to-refresh threshold has been met, triggering the bouncy
+ *   scale-up animation.
+ * @param offsetProgress The progress of the pull action, typically a float from 0.0 to 1.0 (or more),
+ *   which controls the scale and border width of the shapes.
+ * @param shape The `Shape` to be used for both the central component and the outer ring.
+ * @param color The `Color` to be applied to the shape and ring.
+ */
 @Composable
 fun CircleWithRing(
     modifier: Modifier = Modifier,

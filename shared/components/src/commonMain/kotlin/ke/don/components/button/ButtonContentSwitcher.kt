@@ -14,6 +14,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.LocalContentColor
@@ -26,6 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ke.don.components.indicator.LoadingDots
+import ke.don.design.theme.Theme
+import ke.don.design.theme.spacing
 
 /**
  * Displays either a loading indicator or the provided button content and animates transitions between them.
@@ -59,7 +62,10 @@ fun ButtonContentSwitcher(
                 dotSize = contentHeight ?: 20.dp,
             )
         } else {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Theme.spacing.small),
+            ) {
                 content()
             }
         }

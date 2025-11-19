@@ -7,12 +7,14 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.components.scaffold
+package ke.don.local.misc
 
-import androidx.compose.runtime.Composable
+import platform.Foundation.NSURL
+import platform.UIKit.UIApplication
 
-sealed interface NavigationIcon {
-    object None : NavigationIcon
-    class Back(val navigateBack: () -> Unit) : NavigationIcon
-    class Custom(val content: @Composable () -> Unit) : NavigationIcon
+class NetworkChooserIos() : NetworkChooser {
+    override fun open() {
+        val url = NSURL(string = "App-Prefs:root=WIFI")
+        UIApplication.sharedApplication.openURL(url)
+    }
 }

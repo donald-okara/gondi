@@ -7,12 +7,8 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.components.scaffold
+package ke.don.local.misc
 
-import androidx.compose.runtime.Composable
-
-sealed interface NavigationIcon {
-    object None : NavigationIcon
-    class Back(val navigateBack: () -> Unit) : NavigationIcon
-    class Custom(val content: @Composable () -> Unit) : NavigationIcon
+interface NetworkChooser {
+    fun open()
 }

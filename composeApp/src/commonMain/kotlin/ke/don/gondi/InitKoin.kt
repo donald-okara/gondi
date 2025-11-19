@@ -10,6 +10,7 @@
 package ke.don.gondi
 
 import ke.don.authentication.di.authModule
+import ke.don.home.di.homeModule
 import ke.don.local.di.localDatasourceModule
 import ke.don.local.di.sharedThemeModule
 import ke.don.profile.di.profileModule
@@ -29,6 +30,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
 
             authModule,
             profileModule,
+            homeModule,
         )
     }
 }

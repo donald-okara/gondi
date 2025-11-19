@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -44,7 +43,7 @@ import ke.don.resources.isCompact
  * Action content is shown inline on wide layouts and arranged in a FlowRow beneath the app bar on narrow layouts.
  *
  * @param title Optional title text; displayed only when layout width is wide enough.
- * @param navigationIcon Controls the navigation area; supports `NavigationIcon.None`, `NavigationIcon.Back`, and `NavigationIcon.Burger`.
+ * @param navigationIcon Controls the navigation area; supports `NavigationIcon.None`, `NavigationIcon.Back`, and `NavigationIcon.Custom`.
  * @param actions Composable slot for action content. Rendered inline in the app bar on wide screens or in a FlowRow on narrow screens.
  * @param isCompact When true, uses compact horizontal padding; otherwise uses expanded padding.
  * @param scrollBehavior Optional TopAppBarScrollBehavior to control app bar scrolling interactions.
@@ -96,17 +95,7 @@ fun TopBarToken(
                                 },
                         )
 
-                    is NavigationIcon.Burger ->
-                        Icon(
-                            Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .padding(Theme.spacing.small)
-                                .clickable {
-                                    navigationIcon.toggleDrawer()
-                                },
-                        )
+                    is NavigationIcon.Custom -> navigationIcon.content()
                 }
             },
             actions = {

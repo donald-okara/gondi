@@ -14,48 +14,42 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import ke.don.components.indicator.FancyLoadingIndicator
 import ke.don.components.indicator.FancyRefreshAnimation
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
+import ke.don.components.scaffold.RefreshLazyColumn
+import ke.don.components.scaffold.cardCrunchEffects
+import ke.don.design.theme.PaddingOption
+import ke.don.design.theme.spacing
 import ke.don.domain.datastore.Theme
 import kotlinx.coroutines.delay
 
-// @DevicePreviews
-// @Composable
-// fun FilterChipPreview(
-//    @PreviewParameter(ThemeProvider::class) theme: Theme,
-// ){
-//    DevicePreviewContainer(theme) {
-//        FancyRefreshAnimation(
-//            isRefreshing = { true },
-//            willRefresh = { true },
-//            offsetProgress = { 0f },
-//        )
-//    }
-//
-// }
-
+@OptIn(ExperimentalMaterialApi::class)
 @DevicePreviews
 @Composable
 fun FancyRefreshAnimationInteractivePreview(
     @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
     var isRefreshing by remember { mutableStateOf(false) }
-    var progress by remember { mutableFloatStateOf(0f) }
 
     // Simulate pull progression when refreshing
     if (isRefreshing) {
@@ -63,8 +57,7 @@ fun FancyRefreshAnimationInteractivePreview(
             // Animate progress up
             val duration = 400L
             val steps = 20
-            repeat(steps) { step ->
-                progress = (step + 1) / steps.toFloat()
+            repeat(steps) {
                 delay(duration / steps)
             }
 
@@ -73,19 +66,18 @@ fun FancyRefreshAnimationInteractivePreview(
 
             // Reset
             isRefreshing = false
-            progress = 0f
         }
     }
 
     DevicePreviewContainer(theme) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(24.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             FancyRefreshAnimation(
-                isRefreshing = { isRefreshing },
-                willRefresh = { progress >= 1f },
-                offsetProgress = { progress },
+                isRefreshing = isRefreshing,
             )
 
             Spacer(Modifier.height(20.dp))
@@ -112,7 +104,7 @@ fun FancyLoadingAnimationInteractivePreview(
             // Animate progress up
             val duration = 400L
             val steps = 20
-            repeat(steps) { step ->
+            repeat(steps) {
                 delay(duration / steps)
             }
 
@@ -126,7 +118,9 @@ fun FancyLoadingAnimationInteractivePreview(
 
     DevicePreviewContainer(theme) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(24.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             FancyLoadingIndicator(
@@ -138,7 +132,60 @@ fun FancyLoadingAnimationInteractivePreview(
             Button(
                 onClick = { if (!isLoading) isLoading = true },
             ) {
-                Text(if (isLoading) "Refreshing…" else "Trigger Refresh")
+                Text(if (isLoading) "Loading…" else "Trigger Loading")
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@DevicePreviews
+@Composable
+fun RefreshLazyColumnPreview(
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
+) {
+    // Simulated refreshing state
+    var isRefreshing by remember { mutableStateOf(false) }
+
+    // Simple PullToRefreshState with no-op animation
+    val pullState = rememberPullToRefreshState()
+
+    // Toggle refresh after 2 seconds (for demo)
+    LaunchedEffect(isRefreshing) {
+        if (isRefreshing) {
+            delay(2000)
+            isRefreshing = false
+        }
+    }
+
+    DevicePreviewContainer(theme) {
+        RefreshLazyColumn(
+            isRefreshing = isRefreshing,
+            onRefresh = { isRefreshing = true },
+            pullRefreshState = pullState,
+            horizontalPadding = PaddingOption.Custom(MaterialTheme.spacing.small),
+            verticalPadding = PaddingOption.Custom(MaterialTheme.spacing.medium),
+        ) {
+            items(10) { index ->
+                Surface(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .cardCrunchEffects(
+                            index = index,
+                            isRefreshing = isRefreshing,
+                            pullProgress = pullState.distanceFraction,
+                        )
+                        .padding(8.dp),
+                ) {
+                    Text(
+                        "Item #$index",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                    )
+                }
             }
         }
     }
