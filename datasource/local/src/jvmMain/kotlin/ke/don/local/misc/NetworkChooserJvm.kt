@@ -13,8 +13,8 @@ class NetworkChooserJvm() : NetworkChooser {
     override fun open() {
         // Attempt to launch the standard Wi-Fi connection dialog via NetworkManager
         val commands = listOf(
-            "nm-connection-editor",      // GUI editor (GNOME)
-            "nmcli device wifi list",    // CLI fallback
+            "nm-connection-editor", // GUI editor (GNOME)
+            "nmcli device wifi list", // CLI fallback
         )
 
         for (cmd in commands) {

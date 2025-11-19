@@ -106,7 +106,7 @@ fun HomeShowcase(
         modifier = modifier,
         state = state,
         onEvent = ::handleIntent,
-        navigateToAuth = {}
+        navigateToAuth = {},
     )
 }
 
