@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.list_items.CodeOfConductSection
+import ke.don.components.list_items.GameObjective
 import ke.don.components.list_items.GamePhases
 import ke.don.components.list_items.RolesList
 import ke.don.design.theme.Theme
@@ -40,15 +41,7 @@ fun RulesContent(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.Top),
     ) {
-        Text(
-            text = "Game Objective",
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-        )
-        Text(
-            "The game is a battle between two groups: the Villagers (the uninformed majority) and the Gondi (the informed minority). The Villagers win if they eliminate all Gondi members. The Gondi win when their numbers equal the number of Villagers.",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
+        GameObjective()
 
         CodeOfConductSection()
 

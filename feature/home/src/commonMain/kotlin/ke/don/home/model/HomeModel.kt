@@ -105,12 +105,15 @@ class HomeModel(
     }
 
     fun refresh(){
-        _uiState.update { state ->
-            state.copy(
-                readStatus = ReadStatus.Refreshing
-            )
+        screenModelScope.launch{
+            _uiState.update { state ->
+                state.copy(
+                    readStatus = ReadStatus.Refreshing
+                )
+            }
+            delay(1000)
+            discoverGames()
         }
-        discoverGames()
     }
 
     fun reloadFromEmpty(){
