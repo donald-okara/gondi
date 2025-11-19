@@ -69,13 +69,15 @@ This is where player identities dwell — each one bound to its auth user.
 ```sql
 -- Create profiles table
 create table public.profiles (
-  id uuid primary key references auth.users(id) on delete cascade,
-  username text unique,
-  full_name text,
-  avatar avatar null, -- nullable and no default
-  avatar_background avatar_background default 'green_emerald',
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
+  id uuid not null,
+  username text null,
+  avatar public.avatar null,
+  avatar_background public.avatar_background null default 'green_emerald'::avatar_background,
+  created_at timestamp with time zone null default now(),
+  updated_at timestamp with time zone null default now(),
+  constraint profiles_pkey primary key (id),
+  constraint profiles_username_key unique (username),
+  constraint profiles_id_fkey foreign KEY (id) references auth.users (id) on delete CASCADE
 );
 
 -- Enable RLS
@@ -108,12 +110,16 @@ for each row
 execute procedure moddatetime(updated_at);
 
 -- Auto-create profile when new user signs up
-create function public.handle_new_user()
+create or replace function public.handle_new_user()
 returns trigger as $$
 begin
   insert into public.profiles (id, username)
-  values (new.id, new.email)
+  values (
+    new.id,
+    split_part(new.email, '@', 1) -- take part before '@'
+  )
   on conflict (id) do nothing;
+
   return new;
 end;
 $$ language plpgsql security definer;
