@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
@@ -192,15 +193,14 @@ private fun SuccessState(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         onRefresh = { onEvent(HomeIntentHandler.Refresh) },
     ) {
-        items(state.games.size) { index ->
+        itemsIndexed(
+            items = state.games,
+            key = { _, game -> game.id },
+        ) { index, game  ->
             GameRoomItem(
-                gameIdentity = state.games[index],
+                gameIdentity = game,
                 onClick = {
-                    onEvent(
-                        HomeIntentHandler.NavigateToGame(
-                            state.games[index].serviceHost to
-                                state.games[index].servicePort,
-                        ),
+                    onEvent(HomeIntentHandler.NavigateToGame(game.serviceHost to game.servicePort),
                     )
                 },
                 modifier = Modifier.cardCrunchEffects(
