@@ -33,6 +33,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.contentColorFor
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -114,102 +115,6 @@ fun ScaffoldToken(
         horizontalPadding = horizontalPadding,
         contentAlignment = contentAlignment,
         content = content,
-    )
-}
-
-/**
- * An overload of `ScaffoldToken` that integrates a `LazyColumn` with pull-to-refresh functionality.
- *
- * This composable builds upon the standard `Scaffold` to provide a ready-made structure for
- * displaying a list of items that can be refreshed by the user. It wraps the content in a
- * `RefreshLazyColumn`, handling the pull-to-refresh state and UI automatically.
- *
- * @param modifier The modifier to be applied to the `Scaffold` element.
- * @param title An optional title string to be displayed in the default top bar.
- * @param navigationIcon The navigation icon configuration for the default top bar.
- * @param actions A composable lambda for actions to be displayed in the top bar's `RowScope`.
- * @param scrollBehavior An optional `TopAppBarScrollBehavior` to be applied to the default top bar,
- * allowing it to react to scroll events.
- * @param topBar A custom composable for the top app bar. If null, a default `TopBarToken` is used.
- * @param floatingActionButton A composable lambda for the floating action button.
- * @param floatingActionButtonPosition The position of the floating action button on the screen.
- * @param containerColor The background color for the `Scaffold` container.
- * @param contentColor The preferred color for content inside the `Scaffold`.
- * @param isRefreshing A boolean indicating if the refresh indicator should be displayed.
- * @param onRefresh A lambda to be invoked when a refresh is triggered by the user.
- * @param listOffset An optional integer to override the calculated vertical offset of the list content,
- * used for custom animations or positioning.
- * @param pullRefreshState The state object that controls and observes the pull-to-refresh mechanism.
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ScaffoldToken(
-    modifier: Modifier = Modifier,
-    title: String? = null,
-    navigationIcon: NavigationIcon = NavigationIcon.None,
-    actions: @Composable RowScope.() -> Unit = {},
-    scrollBehavior: TopAppBarScrollBehavior? = null,
-    topBar: (@Composable () -> Unit)? = {
-        TopBarToken(
-            title = title,
-            navigationIcon = navigationIcon,
-            actions = actions,
-            scrollBehavior = scrollBehavior
-        )
-    },
-    floatingActionButton: @Composable () -> Unit = {},
-    floatingActionButtonPosition: FabPosition = FabPosition.End,
-    containerColor: Color = MaterialTheme.colorScheme.background,
-    contentColor: Color = contentColorFor(containerColor),
-    isRefreshing: Boolean,
-    onRefresh: () -> Unit,
-    pullRefreshState: PullToRefreshState,
-    lazyListState: LazyListState = rememberLazyListState(),
-    verticalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.medium),
-    horizontalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.small),
-    listOffset: Int = rememberOffset(
-        isRefreshing = isRefreshing,
-        pullProgress = pullRefreshState.distanceFraction
-    ),
-    contentAlignment: Alignment = Alignment.TopCenter,
-    content: LazyListScope.(isCompact: Boolean) -> Unit
-) {
-    val isCompact = isCompact()
-
-    val mainContent: @Composable (PaddingValues) -> Unit = remember(
-        isCompact,
-        listOffset,
-        lazyListState,
-        pullRefreshState,
-        isRefreshing,
-    ) {
-        { padding ->
-            RefreshLazyColumn(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize(),
-                isRefreshing = isRefreshing,
-                onRefresh = onRefresh,
-                lazyListState = lazyListState,
-                listOffSet = listOffset,
-                verticalPadding = verticalPadding,
-                pullRefreshState = pullRefreshState,
-                horizontalPadding = horizontalPadding,
-                contentAlignment = contentAlignment,
-            ) {
-                content(isCompact)
-            }
-        }
-    }
-
-    Scaffold(
-        modifier = modifier,
-        topBar = { topBar?.invoke() },
-        floatingActionButton = floatingActionButton,
-        floatingActionButtonPosition = floatingActionButtonPosition,
-        containerColor = containerColor,
-        contentColor = contentColor,
-        content = mainContent
     )
 }
 

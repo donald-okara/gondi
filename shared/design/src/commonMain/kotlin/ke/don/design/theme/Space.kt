@@ -120,3 +120,16 @@ fun spacingPaddingValues(
         end = resolvePadding(horizontal, base),
     )
 }
+
+@Composable
+fun spacingPaddingValues(
+    vertical: Dp,
+    horizontal: Dp,
+): PaddingValues {
+    return PaddingValues(
+        top = vertical,
+        bottom = vertical,
+        start = horizontal,
+        end = horizontal,
+    )
+}

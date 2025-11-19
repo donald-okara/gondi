@@ -9,8 +9,10 @@
  */
 package ke.don.components.scaffold
 
+import androidx.compose.runtime.Composable
+
 sealed interface NavigationIcon {
     object None : NavigationIcon
     class Back(val navigateBack: () -> Unit) : NavigationIcon
-    class Burger(val toggleDrawer: () -> Unit) : NavigationIcon
+    class Custom(val content: @Composable () -> Unit) : NavigationIcon
 }
