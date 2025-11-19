@@ -16,11 +16,14 @@ class NetworkChooserJvm : NetworkChooser {
         try {
             val os = System.getProperty("os.name").lowercase()
 
-            // Always return Array<String>
-            val command: Array<String> = when {
-                os.contains("linux") ->
-                    arrayOf("nm-connection-editor")
+            // Linux executes differently → run & return early
+            if (os.contains("linux")) {
+                tryLinuxNetworkCommands()
+                return
+            }
 
+            // Non-Linux choose proper command
+            val command: Array<String> = when {
                 os.contains("mac") || os.contains("darwin") ->
                     arrayOf("open", "/System/Library/PreferencePanes/Network.prefPane")
 
@@ -28,7 +31,7 @@ class NetworkChooserJvm : NetworkChooser {
                     arrayOf("control.exe", "ncpa.cpl")
 
                 else -> {
-                    println("Network settings not supported on $os")
+                    println("Network settings not supported on: $os")
                     return
                 }
             }
@@ -37,5 +40,25 @@ class NetworkChooserJvm : NetworkChooser {
         } catch (e: IOException) {
             println("Failed to open network settings: ${e.message}")
         }
+    }
+
+    private fun tryLinuxNetworkCommands() {
+        val commands = listOf(
+            arrayOf("nm-connection-editor"),
+            arrayOf("gnome-control-center", "network"),
+            arrayOf("systemsettings5", "kcm_networkmanagement"),
+            arrayOf("nmtui"),
+        )
+
+        for (command in commands) {
+            try {
+                Runtime.getRuntime().exec(command)
+                return // success
+            } catch (_: IOException) {
+                // try next command
+            }
+        }
+
+        println("Failed to open network settings: No compatible Linux command found")
     }
 }
