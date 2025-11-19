@@ -11,6 +11,21 @@ package ke.don.local.misc
 
 class NetworkChooserJvm() : NetworkChooser {
     override fun open() {
-        Runtime.getRuntime().exec("nm-connection-editor")
+        // Attempt to launch the standard Wi-Fi connection dialog via NetworkManager
+        val commands = listOf(
+            "nm-connection-editor",      // GUI editor (GNOME)
+            "nmcli device wifi list",    // CLI fallback
+        )
+
+        for (cmd in commands) {
+            try {
+                Runtime.getRuntime().exec(cmd)
+                return
+            } catch (e: Exception) {
+                // Try next
+            }
+        }
+
+        println("No Wi-Fi picker available on this system")
     }
 }
