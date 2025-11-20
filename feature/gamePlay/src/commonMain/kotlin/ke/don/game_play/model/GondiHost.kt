@@ -38,7 +38,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.compareTo
 
 class GondiHost(
     private val server: LocalServer,
@@ -92,46 +91,42 @@ class GondiHost(
     }
 
     fun startServer() {
-        when (val validation = validateAssignments()) {
-            is ResultStatus.Success -> {
-                screenModelScope.launch {
-                    handleModeratorCommand(ModeratorCommand.ResetGame(moderatorState.value.newGame.id))
-                    val identity = GameIdentity(
-                        id = moderatorState.value.newGame.id,
-                        gameName = moderatorState.value.newGame.name,
-                        moderatorName = hostPlayer.first()?.name ?: error("Player is not present"),
-                        moderatorAvatar = hostPlayer.first()?.avatar ?: error("Player is not present"),
-                        moderatorAvatarBackground = hostPlayer.first()?.background ?: error("Player is not present"),
+        validateAssignments().onSuccess { result ->
+            screenModelScope.launch {
+                handleModeratorCommand(ModeratorCommand.ResetGame(moderatorState.value.newGame.id))
+                val identity = GameIdentity(
+                    id = moderatorState.value.newGame.id,
+                    gameName = moderatorState.value.newGame.name,
+                    moderatorName = hostPlayer.first()?.name ?: error("Player is not present"),
+                    moderatorAvatar = hostPlayer.first()?.avatar ?: error("Player is not present"),
+                    moderatorAvatarBackground = hostPlayer.first()?.background
+                        ?: error("Player is not present"),
+                )
+
+                server.start(identity)
+                hostPlayer.first()?.let {
+                    handleModeratorCommand(
+                        ModeratorCommand.CreateGame(
+                            moderatorState.value.newGame.id,
+                            moderatorState.value.newGame,
+                            it,
+                        ),
                     )
-
-                    server.start(identity)
-                    hostPlayer.first()?.let {
-                        handleModeratorCommand(
-                            ModeratorCommand.CreateGame(
-                                moderatorState.value.newGame.id,
-                                moderatorState.value.newGame,
-                                it,
-                            ),
-                        )
-                    } ?: error("Player is not present")
-                    _moderatorState.update {
-                        it.copy(createStatus = validation)
-                    }
-
-                    observeDatabase(identity.id)
-                }
-            }
-            is ResultStatus.Error -> {
+                } ?: error("Player is not present")
                 _moderatorState.update {
-                    it.copy(createStatus = validation)
+                    it.copy(createStatus = ResultStatus.Success(data = result))
                 }
-            }
 
-            else -> {}
+                observeDatabase(identity.id)
+            }
+        }.onFailure { error ->
+            _moderatorState.update {
+                it.copy(createStatus = ResultStatus.Error(error.message))
+            }
         }
     }
 
-    fun validateAssignments(): ResultStatus<Unit> {
+    fun validateAssignments(): Result<Unit, LocalError> {
         val assignments = moderatorState.value.assignment
         val totalPlayers = assignments.filterNot { it.first == Role.MODERATOR }.sumOf { it.second }
 
@@ -142,22 +137,51 @@ class GondiHost(
 
         // <10 players rule
         if (totalPlayers < 10 && (detectiveCount > 0 || accompliceCount > 0)) {
-            return ResultStatus.Error("Detective and Accomplice cannot exist in a game with less than 10 players")
+            return Result.Error(
+                LocalError(
+                    message = "Detective and Accomplice cannot exist in a game with less than 10 players",
+                    cause = "Detective"
+                )
+            )
         }
 
         // Max 1 Detective/Accomplice
         if (detectiveCount > 1 || accompliceCount > 1) {
-            return ResultStatus.Error("Only one Detective or Accomplice allowed")
+            return Result.Error(
+                LocalError(
+                    message = "Only one Detective or Accomplice allowed",
+                    cause = "Detective"
+                )
+            )
         }
 
         // Hard rules
-        if (doctorCount != 1) return ResultStatus.Error("There must be exactly 1 Doctor")
-        if (gondiCount != 2) return ResultStatus.Error("There must be exactly 2 Gondis")
+        if (doctorCount != 1)
+            return Result.Error(
+                LocalError(
+                    message = "There must be exactly 1 Doctor",
+                    cause = "Doctor"
+                )
+            )
+        ResultStatus.Error("There must be exactly 1 Doctor")
+        if (gondiCount != 2)
+            return Result.Error(
+                LocalError(
+                    message = "There must be exactly 2 Gondis",
+                    cause = "Gondi"
+                )
+            )
 
         // Minimum total players
-        if (totalPlayers < 4) return ResultStatus.Error("At least 4 players are required")
+        if (totalPlayers < 4)
+            return Result.Error(
+                LocalError(
+                    message = "At least 4 players are required",
+                    cause = "Gondi"
+                )
+            )
 
-        return ResultStatus.Success(Unit)
+        return Result.Success(Unit)
     }
 
     fun updateAssignment(assignment: RoleAssignment) {
