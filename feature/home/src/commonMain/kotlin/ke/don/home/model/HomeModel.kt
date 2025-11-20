@@ -41,6 +41,7 @@ class HomeModel(
 
     init {
         screenModelScope.launch {
+            profileRepository.getProfile()
             combine(
                 themeRepository.theme,
                 profileStore.profileFlow,

@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import ke.don.components.icon.IconToken
 import ke.don.components.profile.AdaptiveLogo
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
@@ -84,16 +86,12 @@ fun TopBarToken(
                         )
                     }
                     is NavigationIcon.Back ->
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
+                        IconToken(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .padding(Theme.spacing.small)
-                                .clickable {
-                                    navigationIcon.navigateBack()
-                                },
+                            onClick = navigationIcon.navigateBack
                         )
+
 
                     is NavigationIcon.Custom -> navigationIcon.content()
                 }

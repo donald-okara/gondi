@@ -16,17 +16,21 @@ import gondi.shared.resources.generated.resources.adrian
 import gondi.shared.resources.generated.resources.aidan
 import gondi.shared.resources.generated.resources.alexander
 import gondi.shared.resources.generated.resources.amaya
+import gondi.shared.resources.generated.resources.avery
 import gondi.shared.resources.generated.resources.christian
 import gondi.shared.resources.generated.resources.george
 import gondi.shared.resources.generated.resources.jade
 import gondi.shared.resources.generated.resources.jameson
 import gondi.shared.resources.generated.resources.jocelyn
 import gondi.shared.resources.generated.resources.katherine
+import gondi.shared.resources.generated.resources.kimberly
 import gondi.shared.resources.generated.resources.leo
+import gondi.shared.resources.generated.resources.maria
 import gondi.shared.resources.generated.resources.mason
 import gondi.shared.resources.generated.resources.nolan
 import gondi.shared.resources.generated.resources.riley
 import gondi.shared.resources.generated.resources.ryker
+import gondi.shared.resources.generated.resources.sarah
 import gondi.shared.resources.generated.resources.sawyer
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
@@ -71,17 +75,21 @@ fun Avatar.painter(): DrawableResource {
         Avatar.Aidan -> drawableRoute.aidan
         Avatar.Alexander -> drawableRoute.alexander
         Avatar.Amaya -> drawableRoute.amaya
+        Avatar.Avery -> drawableRoute.avery
         Avatar.Christian -> drawableRoute.christian
         Avatar.George -> drawableRoute.george
         Avatar.Jade -> drawableRoute.jade
         Avatar.Jameson -> drawableRoute.jameson
         Avatar.Jocelyn -> drawableRoute.jocelyn
         Avatar.Katherine -> drawableRoute.katherine
+        Avatar.Kimberly -> drawableRoute.kimberly
         Avatar.Leo -> drawableRoute.leo
+        Avatar.Maria -> drawableRoute.maria
         Avatar.Mason -> drawableRoute.mason
         Avatar.Nolan -> drawableRoute.nolan
         Avatar.Riley -> drawableRoute.riley
         Avatar.Ryker -> drawableRoute.ryker
+        Avatar.Sarah -> drawableRoute.sarah
         Avatar.Sawyer -> drawableRoute.sawyer
         else -> drawableRoute.adrian
     }

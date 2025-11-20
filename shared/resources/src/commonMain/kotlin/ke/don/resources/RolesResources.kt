@@ -28,8 +28,7 @@ val Role.instructions: List<RoleInstruction>
         )
         Role.DOCTOR -> listOf(
             RoleInstruction(Resources.Images.RoleIcons.NIGHT, "Night Action", "Each night, choose one player to protect from the Gondi attack."),
-            RoleInstruction(Resources.Images.RoleIcons.SELF, "Self-Preservation", "You can save yourself, but not on consecutive nights."),
-            RoleInstruction(Resources.Images.RoleIcons.INFO, "Deduction", "Use your knowledge of saved players to help identify the Gondi during the day."),
+            RoleInstruction(Resources.Images.RoleIcons.SHIELD, "Healer", "You can save yourself and others, but not the same person consecutive nights."),
         )
         Role.DETECTIVE -> listOf(
             RoleInstruction(Resources.Images.RoleIcons.NIGHT, "Night Action", "Each night, choose a player to investigate and learn their alignment (Gondi or not)."),
