@@ -45,11 +45,6 @@ fun CreateGameContent(
         verticalArrangement = Arrangement.spacedBy(Theme.spacing.small, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(
-            text = "Create Game",
-            style = Theme.typography.headlineLarge,
-            fontWeight = FontWeight.Bold,
-        )
         TextFieldToken(
             text = state.newGame.name,
             onValueChange = { onEvent(ModeratorHandler.UpdateRoomName(it)) },
