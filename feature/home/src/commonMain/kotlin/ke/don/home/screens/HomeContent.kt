@@ -185,10 +185,10 @@ private fun SuccessState(
 ) {
     val pullState = rememberPullToRefreshState()
     RefreshLazyColumn(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         isRefreshing = state.readStatus.isRefreshing,
         pullRefreshState = pullState,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.Top),
         onRefresh = { onEvent(HomeIntentHandler.Refresh) },
     ) {
         itemsIndexed(
