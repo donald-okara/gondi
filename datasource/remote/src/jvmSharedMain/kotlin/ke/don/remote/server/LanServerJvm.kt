@@ -63,6 +63,7 @@ class LanServerJvm(
     private val sessions = ConcurrentHashMap.newKeySet<DefaultWebSocketServerSession>()
 
     override suspend fun start(identity: GameIdentity) {
+        advertiser.stop()
         val host = getLocalIpAddress()
 
         server = embeddedServer(CIO, port = identity.servicePort, host = host) {

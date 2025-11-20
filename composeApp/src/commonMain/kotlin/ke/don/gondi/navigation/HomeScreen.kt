@@ -17,6 +17,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import ke.don.game_play.screens.MainModeratorContent
 import ke.don.home.model.HomeIntentHandler
 import ke.don.home.model.HomeModel
 import ke.don.home.screens.HomeContent
@@ -34,7 +35,7 @@ class HomeScreen : Screen {
                 is HomeIntentHandler.NavigateToRules ->
                     navigator.push(RulesScreen())
                 is HomeIntentHandler.NavigateToNewGame ->
-                    {}
+                    navigator.push(MainModeratorScreen())
                 is HomeIntentHandler.NavigateToGame ->
                     {}
                 is HomeIntentHandler.NavigateToEdit ->

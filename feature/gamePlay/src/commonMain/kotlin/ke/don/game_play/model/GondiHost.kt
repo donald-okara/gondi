@@ -20,6 +20,7 @@ import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.local.datastore.ProfileStore
 import ke.don.local.db.LocalDatabase
+import ke.don.utils.Logger
 import ke.don.utils.result.LocalError
 import ke.don.utils.result.Result
 import ke.don.utils.result.ResultStatus
@@ -37,12 +38,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.compareTo
 
 class GondiHost(
     private val server: LocalServer,
     private val database: LocalDatabase,
     private val profileStore: ProfileStore
 ) : ScreenModel {
+    private val logger = Logger("GondiHost")
     private val _gameState = MutableStateFlow<GameState?>(null)
     val gameState: StateFlow<GameState?> = _gameState
 
@@ -83,44 +86,95 @@ class GondiHost(
     ) {
         _moderatorState.update {
             it.copy(
-                newGame = it.newGame.copy(id = name),
+                newGame = it.newGame.copy(name = name),
             )
         }
     }
 
     fun startServer() {
-        screenModelScope.launch {
-            handleModeratorCommand(ModeratorCommand.ResetGame(moderatorState.value.newGame.id))
-            val identity = GameIdentity(
-                id = moderatorState.value.newGame.id,
-                gameName = moderatorState.value.newGame.name,
-                moderatorName = hostPlayer.first()?.name ?: error("Player is not present"),
-                moderatorAvatar = hostPlayer.first()?.avatar ?: error("Player is not present"),
-                moderatorAvatarBackground = hostPlayer.first()?.background
-                    ?: error("Player is not present"),
-            )
+        when (val validation = validateAssignments()) {
+            is ResultStatus.Success -> {
+                screenModelScope.launch {
+                    handleModeratorCommand(ModeratorCommand.ResetGame(moderatorState.value.newGame.id))
+                    val identity = GameIdentity(
+                        id = moderatorState.value.newGame.id,
+                        gameName = moderatorState.value.newGame.name,
+                        moderatorName = hostPlayer.first()?.name ?: error("Player is not present"),
+                        moderatorAvatar = hostPlayer.first()?.avatar ?: error("Player is not present"),
+                        moderatorAvatarBackground = hostPlayer.first()?.background ?: error("Player is not present"),
+                    )
 
-            server.start(identity)
-            hostPlayer.first()?.let {
-                handleModeratorCommand(
-                    ModeratorCommand.CreateGame(
-                        moderatorState.value.newGame.id,
-                        moderatorState.value.newGame,
-                        it,
-                    ),
-                )
+                    server.start(identity)
+                    hostPlayer.first()?.let {
+                        handleModeratorCommand(
+                            ModeratorCommand.CreateGame(
+                                moderatorState.value.newGame.id,
+                                moderatorState.value.newGame,
+                                it,
+                            ),
+                        )
+                    } ?: error("Player is not present")
+                    _moderatorState.update {
+                        it.copy(createStatus = validation)
+                    }
+
+                    observeDatabase(identity.id)
+                }
             }
-                ?: error("Player is not present")
+            is ResultStatus.Error -> {
+                _moderatorState.update {
+                    it.copy(createStatus = validation)
+                }
+            }
 
-            observeDatabase(identity.id)
+            else -> {}
         }
+    }
+
+    fun validateAssignments(): ResultStatus<Unit> {
+        val assignments = moderatorState.value.assignment
+        val totalPlayers = assignments.filterNot { it.first == Role.MODERATOR }.sumOf { it.second }
+
+        val doctorCount = assignments.firstOrNull { it.first == Role.DOCTOR }?.second ?: 0
+        val gondiCount = assignments.firstOrNull { it.first == Role.GONDI }?.second ?: 0
+        val detectiveCount = assignments.firstOrNull { it.first == Role.DETECTIVE }?.second ?: 0
+        val accompliceCount = assignments.firstOrNull { it.first == Role.ACCOMPLICE }?.second ?: 0
+
+        // <10 players rule
+        if (totalPlayers < 10 && (detectiveCount > 0 || accompliceCount > 0)) {
+            return ResultStatus.Error("Detective and Accomplice cannot exist in a game with less than 10 players")
+        }
+
+        // Max 1 Detective/Accomplice
+        if (detectiveCount > 1 || accompliceCount > 1) {
+            return ResultStatus.Error("Only one Detective or Accomplice allowed")
+        }
+
+        // Hard rules
+        if (doctorCount != 1) return ResultStatus.Error("There must be exactly 1 Doctor")
+        if (gondiCount != 2) return ResultStatus.Error("There must be exactly 2 Gondis")
+
+        // Minimum total players
+        if (totalPlayers < 4) return ResultStatus.Error("At least 4 players are required")
+
+        return ResultStatus.Success(Unit)
     }
 
     fun updateAssignment(assignment: RoleAssignment) {
         _moderatorState.update { current ->
             current.copy(
-                assignment = current.assignment
-                    .filterNot { it.first == assignment.first } + assignment
+                assignment = current.assignment.map { roleAssign ->
+                    when (roleAssign.first) {
+                        Role.DETECTIVE, Role.ACCOMPLICE -> {
+                            // If either is being updated, sync both to the same count
+                            if (assignment.first == Role.DETECTIVE || assignment.first == Role.ACCOMPLICE) {
+                                roleAssign.copy(second = assignment.second)
+                            } else roleAssign
+                        }
+                        assignment.first -> assignment
+                        else -> roleAssign
+                    }
+                }
             )
         }
     }
@@ -154,7 +208,6 @@ class GondiHost(
                 }
         }
     }
-
 
     private fun assignRolesToPlayers(
         players: List<Player>,
@@ -195,6 +248,7 @@ class GondiHost(
         return Result.success(result)
     }
 
+
     // Moderator actions
     fun onEvent(intent: ModeratorHandler){
         when(intent) {
@@ -222,12 +276,12 @@ class GondiHost(
             runCatching { database.clearPlayers() }.onFailure { it.printStackTrace() }
             runCatching { database.clearGameState() }.onFailure { it.printStackTrace() }
             runCatching { database.clearVotes() }.onFailure { it.printStackTrace() }
-            runCatching {
-                server.handleModeratorCommand(
-                    targetGameId,
-                    ModeratorCommand.ResetGame(targetGameId),
-                )
-            }.onFailure { it.printStackTrace() }
+//            runCatching {
+//                server.handleModeratorCommand(
+//                    targetGameId,
+//                    ModeratorCommand.ResetGame(targetGameId),
+//                )
+//            }.onFailure { it.printStackTrace() }
             runCatching { server.stop() }.onFailure { it.printStackTrace() }
         }
 

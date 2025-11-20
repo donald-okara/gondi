@@ -41,7 +41,9 @@ class FeatureModules(private val project: Project) {
     val auth get() = project.project(":feature:authentication")
     val home get() = project.project(":feature:home")
     val profile get() = project.project(":feature:profile")
-    val all get() = listOf(auth, home, profile)
+    val gamePlay get() = project.project(":feature:gamePlay")
+
+    val all get() = listOf(auth, home, profile, gamePlay)
 }
 
 val Project.sharedModules: SharedModules
