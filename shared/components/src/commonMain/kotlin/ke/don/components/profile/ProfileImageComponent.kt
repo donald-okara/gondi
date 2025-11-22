@@ -41,6 +41,7 @@ fun ProfileImageToken(
     iconSize: Dp = 32.dp,
 ) {
     ProfileBackground(
+        modifier = modifier,
         isHero = isHero,
         onClick = onClick,
         color = profile.background.color(),
@@ -56,7 +57,7 @@ fun ProfileImageToken(
                 Image(
                     painter = painterResource(profile.avatar!!.painter()),
                     contentDescription = "Profile Image",
-                    modifier = modifier
+                    modifier = Modifier
                         .padding(2.dp)
                         .fillMaxSize(),
                 )
@@ -64,7 +65,7 @@ fun ProfileImageToken(
         } ?: InitialsToken(
             profile = profile,
             isHero = isHero,
-            modifier = modifier,
+            modifier = Modifier,
             isSelected = isSelected,
         )
     }

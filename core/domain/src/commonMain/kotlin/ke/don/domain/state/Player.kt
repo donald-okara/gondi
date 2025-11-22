@@ -13,6 +13,7 @@ import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.gameplay.Role
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
+import ke.don.domain.table.Profile
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -32,6 +33,12 @@ data class Player(
         playerId = id,
         role = role ?: error("Role cannot be null"),
         round = round,
+    )
+
+    fun toProfile(): Profile = Profile(
+        username = name,
+        avatar = avatar,
+        background = background,
     )
 }
 
