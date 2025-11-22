@@ -59,7 +59,7 @@ compose.desktop {
     }
 }
 
-kotzilla  {
+kotzilla {
     versionName = "1.0" // add your app version name
     keyGeneration = KotzillaKeyGeneration.COMPOSE
     composeInstrumentation = true
