@@ -1,8 +1,10 @@
+import io.kotzilla.gradle.ext.KotzillaKeyGeneration
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     alias(libs.plugins.kotlinMultiplatformApplication)
     alias(libs.plugins.ktorSupabasePlugin)
+    alias(libs.plugins.kotzilla)
 }
 
 kotlin {
@@ -11,6 +13,12 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.activity.compose)
         }
+    }
+}
+
+compose {
+    resources {
+        publicResClass = true // generates Res.*
     }
 }
 
@@ -25,6 +33,12 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.bundles.voyager)
+        }
+        androidMain.dependencies {
+            implementation(libs.kotzilla.sdk.compose)
+        }
+        iosMain.dependencies {
+            implementation(libs.kotzilla.sdk.compose)
         }
     }
 }
@@ -43,4 +57,10 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+kotzilla  {
+    versionName = "1.0" // add your app version name
+    keyGeneration = KotzillaKeyGeneration.COMPOSE
+    composeInstrumentation = true
 }

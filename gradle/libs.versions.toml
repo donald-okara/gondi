@@ -33,6 +33,7 @@ sqlDelight = "2.1.0"
 spotless = "8.0.0"
 kover = "0.9.3"
 datastore = "1.1.7"
+kotzilla = "1.4.0"
 
 [libraries]
 jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
@@ -40,7 +41,6 @@ jmdns = { module = "org.jmdns:jmdns", version.ref = "jmdns" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { module = "junit:junit", version.ref = "junit" }
-
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
 androidx-testExt-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-testExt" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-espresso" }
@@ -103,6 +103,8 @@ voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voy
 androidx-datastore = { group = "androidx.datastore", name = "datastore", version.ref = "datastore" }
 androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
+kotzilla-sdk-compose = { group = "io.kotzilla", name = "kotzilla-sdk-compose", version.ref = "kotzilla" }
+
 [bundles]
 compose = [
     "androidx-lifecycle-runtimeCompose",
@@ -139,7 +141,7 @@ jetbrainsKotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrains
 sqlDelight = {id = "app.cash.sqldelight", version.ref = "sqlDelight"}
 spotless = {id = "com.diffplug.spotless", version.ref = "spotless"}
 kover ={id="org.jetbrains.kotlinx.kover", version.ref = "kover"}
-
+kotzilla = { id = "io.kotzilla.kotzilla-plugin", version.ref = "kotzilla" }
 
 # Custom app plugins
 composeMultiplatformPlugin = { id = "ke.don.gondi.composeMultiplatformPlugin", version = "unspecified" }

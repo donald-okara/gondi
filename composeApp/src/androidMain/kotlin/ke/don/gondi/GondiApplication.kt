@@ -10,6 +10,7 @@
 package ke.don.gondi
 
 import android.app.Application
+import io.kotzilla.sdk.analytics.koin.analytics
 import org.koin.android.ext.koin.androidContext
 
 class GondiApplication : Application() {
@@ -17,6 +18,7 @@ class GondiApplication : Application() {
         super.onCreate()
         initKoin {
             androidContext(this@GondiApplication)
+            analytics()
         }
     }
 }
