@@ -1,6 +1,11 @@
 package ke.don.components.indicator
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
@@ -40,11 +45,24 @@ fun GlowingSelectableSurface(
         label = "activationAnimation"
     )
 
+    // Animate a pulsing glow effect when selected.
+    val infiniteTransition = rememberInfiniteTransition(label = "infinite glow")
+    val pulseAnimation by infiniteTransition.animateFloat(
+        initialValue = 0.7f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1500),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "pulseAnimation"
+    )
+    val selectionGlow = if (selected) pulseAnimation else 1f
+
     val ambientColor = glowingColor.copy(alpha = lerp(0.3f, 0.7f, activationAnimation))
-    val spotColor = glowingColor.copy(alpha = lerp(0.4f, 1f, activationAnimation))
+    val spotColor = glowingColor.copy(alpha = lerp(0.4f, 1f, activationAnimation) * selectionGlow)
     val borderThickness = Theme.spacing.tiny * activationAnimation
-    val borderColor = glowingColor.copy(alpha = lerp(0.6f, 1f, activationAnimation))
-    val surfaceTint = lerp(0.0f, 0.3f, activationAnimation)
+    val borderColor = glowingColor.copy(alpha = lerp(0.6f, 1f, activationAnimation) * selectionGlow)
+    val surfaceTint = lerp(0.0f, 0.3f, activationAnimation) * selectionGlow
 
     val baseSurfaceColor = if (enabled) {
         MaterialTheme.colorScheme.surface

@@ -1,6 +1,5 @@
 package ke.don.game_play.moderator.di
 
-import ke.don.game_play.moderator.model.GondiClient
 import ke.don.game_play.moderator.model.GondiHost
 import ke.don.game_play.moderator.useCases.GameModeratorController
 import ke.don.game_play.moderator.useCases.GameServerManager
@@ -19,8 +18,10 @@ const val GAME_MODERATOR_SCOPE = "GAME_MODERATOR_SCOPE"
 
 val moderatorModule = module {
     includes(remoteDatasourceModule, serverModule, datastoreModule, sharedThemeModule)
-    singleOf(::GameModeratorController)
-    singleOf(::GameServerManager)
-    singleOf(::GameSessionState)
-    factoryOf(::GondiHost)
+    scope(named(GAME_MODERATOR_SCOPE)){
+        scopedOf(::GameModeratorController)
+        scopedOf(::GameServerManager)
+        scopedOf(::GameSessionState)
+        factoryOf(::GondiHost)
+    }
 }

@@ -34,54 +34,6 @@ import ke.don.domain.state.Player
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 
-@Preview
-@Composable
-fun GLowingPreview(
-    @PreviewParameter(ThemeProvider::class) theme: Theme,
-) {
-    DevicePreviewContainer(theme) {
-        AppTheme(theme) {
-            val colors = listOf(
-                MaterialTheme.colorScheme.primary to "Primary",
-                MaterialTheme.colorScheme.secondary to "Secondary",
-                MaterialTheme.colorScheme.tertiary to "Tertiary",
-                MaterialTheme.colorScheme.error to "Error",
-
-                AppTheme.extendedColors.info.color to "Info",
-                AppTheme.extendedColors.success.color to "Success",
-                AppTheme.extendedColors.warning.color to "Warning",
-            )
-            var selectedColor by remember { mutableStateOf(colors.first().first) }
-
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxSize()
-            ) {
-                FlowRow(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    colors.forEach { (color, label) ->
-                        GlowingSelectableSurface(
-                            selected = selectedColor == color,
-                            onClick = { selectedColor = color },
-                            glowingColor = color
-                        ) {
-                            Text(
-                                text = label,
-                                modifier = Modifier.padding(16.dp)
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 @DevicePreviews
 @Composable
 fun PlayersPreview(
@@ -89,6 +41,21 @@ fun PlayersPreview(
 ) {
     DevicePreviewContainer(theme) {
         AppTheme(theme) {
+            val players = remember {
+                List(Avatar.entries.size) { index ->
+                    Player(
+                        name = Avatar.entries[index].name,
+                        role = Role.entries[index % Role.entries.size],
+                        avatar = Avatar.entries[index],
+                        background = AvatarBackground.entries[index % AvatarBackground.entries.size],
+                        isAlive = true,
+                    )
+                }
+            }
+
+            val actionTypes = remember {
+                ActionType.entries
+            }
 
             var selectedColor by remember { mutableStateOf(ActionType.ACCUSE) }
 
@@ -104,18 +71,14 @@ fun PlayersPreview(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(ActionType.entries){ actionType ->
+                    items(actionTypes.size) { index ->
+                        val actionType = actionTypes[index]
                         PlayerItem(
                             actionType = actionType,
                             onClick = { selectedColor = actionType },
                             isSelected = selectedColor == actionType,
-                            player = Player(
-                                name = "Player Name",
-                                role = Role.ACCOMPLICE,
-                                avatar = Avatar.Alexander,
-                                background = AvatarBackground.PURPLE_LILAC,
-                                isAlive = true,
-                            )
+                            showRole = true,
+                            player = players[index % players.size]
                         )
                     }
                 }
