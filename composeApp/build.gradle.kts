@@ -4,7 +4,6 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     alias(libs.plugins.kotlinMultiplatformApplication)
     alias(libs.plugins.ktorSupabasePlugin)
-    alias(libs.plugins.kotzilla)
 }
 
 kotlin {
@@ -33,6 +32,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.bundles.voyager)
+            implementation(libs.ui.backhandler)
             implementation(libs.ui.backhandler)
         }
         androidMain.dependencies {
