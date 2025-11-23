@@ -24,13 +24,19 @@ import androidx.compose.material.icons.outlined.WbSunny
 import gondi.shared.resources.generated.resources.Res
 import gondi.shared.resources.generated.resources.accomplice
 import gondi.shared.resources.generated.resources.app_icon
+import gondi.shared.resources.generated.resources.dead
 import gondi.shared.resources.generated.resources.detective
 import gondi.shared.resources.generated.resources.doctor
 import gondi.shared.resources.generated.resources.google_logo
+import gondi.shared.resources.generated.resources.investigate
 import gondi.shared.resources.generated.resources.moderator
+import gondi.shared.resources.generated.resources.point
 import gondi.shared.resources.generated.resources.roboto_regular
 import gondi.shared.resources.generated.resources.roboto_semibold
 import gondi.shared.resources.generated.resources.s24_frame
+import gondi.shared.resources.generated.resources.shield
+import gondi.shared.resources.generated.resources.thumbs_down
+import gondi.shared.resources.generated.resources.thumbs_up
 import gondi.shared.resources.generated.resources.villager
 
 object Resources {
@@ -62,6 +68,15 @@ object Resources {
             val GUIDE = Icons.AutoMirrored.Outlined.FollowTheSigns
             val ANNOUNCE = Icons.Outlined.Campaign
             val NEUTRAL = Icons.Outlined.Sports
+        }
+
+        object ActionIcons {
+            val DEAD = Res.drawable.dead
+            val ACCUSE = Res.drawable.point
+            val INVESTIGATE = Res.drawable.investigate
+            val SAVE = Res.drawable.shield
+            val VOTE_INNOCENT = Res.drawable.thumbs_up
+            val VOTE_GUILTY = Res.drawable.thumbs_down
         }
     }
 }

@@ -1,21 +1,31 @@
 package ke.don.components.profile
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -23,74 +33,165 @@ import androidx.compose.ui.unit.dp
 import ke.don.components.indicator.GlowingSelectableSurface
 import ke.don.design.theme.AppTheme
 import ke.don.design.theme.Theme
-import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.Faction
-import ke.don.domain.gameplay.Role
 import ke.don.domain.state.Player
-import ke.don.domain.table.Profile
+import ke.don.resources.Resources
+import ke.don.resources.color
+import ke.don.resources.painter
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
+import androidx.compose.ui.graphics.ColorMatrix // <-- Add this import
+import androidx.compose.ui.graphics.RenderEffect // <-- Add this import
+import ke.don.design.theme.spacing
 
 @Composable
 fun PlayerItem(
     modifier: Modifier = Modifier,
     actionType: ActionType,
     onClick: () -> Unit,
-    showRole: Boolean = true,
+    showRole: Boolean = false,
     isSelected: Boolean,
-    player: Player
+    player: Player,
 ) {
+    // Animate alpha for the entire item if the player is not alive
+    val contentAlpha by animateFloatAsState(
+        targetValue = if (player.isAlive) 1.0f else 0.5f,
+        animationSpec = tween(300),
+        label = "playerAlpha"
+    )
+
+    val color by animateColorAsState(
+        targetValue = if (isSelected) actionType.color else player.background.color(),
+        animationSpec = tween(300),
+    )
     GlowingSelectableSurface(
-        modifier = modifier,
-        enabled = player.isAlive,
+        modifier = modifier.graphicsLayer { alpha = contentAlpha },
         onClick = onClick,
         selected = isSelected,
-        glowingColor = actionType.color,
+        enabled = player.isAlive,
+        glowingColor = color,
     ) {
         Column(
-            modifier = Modifier
-                .padding(Theme.spacing.medium)
-                .widthIn(min = 120.dp, max = 160.dp),
+            modifier = Modifier.padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Profile image with subtle border
-            ProfileImageToken(
-                profile = player.toProfile(),
-                isHero = true,
+            // Avatar Box
+            Box(
                 modifier = Modifier
-            )
+                    .size(96.dp)
+                    .clip(CircleShape)
+                    .background(player.background.color())
+            ) {
+                // Player Avatar or Initials
+                val imageAlpha =
+                    if (player.isAlive) 1f else 0.5f // Grayscale effect is handled by layer
+                val imageModifier = Modifier
+                    .fillMaxSize()
+                    .alpha(imageAlpha)
 
-            // Player name
+                player.avatar?.painter()?.let {
+                    Image(
+                        painter = painterResource(it),
+                        contentDescription = player.name,
+                        contentScale = ContentScale.Crop,
+                        modifier = imageModifier
+                    )
+                } ?: InitialsToken(
+                    modifier = imageModifier,
+                    profile = player.toProfile(),
+                    isHero = true,
+                    isSelected = false,
+                )
+
+                // Eliminated Overlay
+                if (!player.isAlive) {
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .background(Color.Black.copy(alpha = 0.6f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        // Using the skull icon from your HTML example
+                        Icon(
+                            painter = painterResource(Resources.Images.ActionIcons.DEAD),
+                            contentDescription = "Eliminated",
+                            tint = Color.Red.copy(alpha = 0.8f),
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
+                }
+
+//                // Action Icon Overlay (e.g., kill, save)
+//                if (isSelected && player.isAlive) {
+//                    actionType.painter?.let { painter ->
+//                        Icon(
+//                            painter = painterResource(painter),
+//                            contentDescription = actionType.name,
+//                            tint = actionType.color,
+//                            modifier = Modifier
+//                                .align(Alignment.Center)
+//                                .size(48.dp)
+//                        )
+//                    }
+//                }
+            }
+
+            // Player Name
             Text(
                 text = player.name,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
                 style = Theme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                color = Theme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
-                color = Theme.colorScheme.onSurface
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
 
-            // Role or status badge
-            if (!player.isAlive || (showRole && player.role != null)) {
-                val label = if (!player.isAlive) "DECEASED" else player.role?.name.orEmpty()
-                val badgeColor = if (!player.isAlive) Theme.colorScheme.error else player.role?.faction?.color ?: Theme.colorScheme.primary
-
-                Box(
-                    modifier = Modifier
-                        .background(badgeColor.copy(alpha = 0.1f), Theme.shapes.medium)
-                        .padding(horizontal = Theme.spacing.small, vertical = Theme.spacing.tiny)
-                ) {
+            AnimatedVisibility(
+                visible = player.isAlive.not()
+            ){
+                Surface(
+                    shape = MaterialTheme.shapes.medium,
+                    color = Theme.colorScheme.errorContainer,
+                    contentColor = Theme.colorScheme.onErrorContainer
+                ){
                     Text(
-                        text = label.uppercase(),
-                        style = Theme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
-                        color = badgeColor,
-                        textAlign = TextAlign.Center
+                        text = "Eliminated",
+                        style = Theme.typography.bodySmall,
+                        modifier = Modifier.padding(
+                            horizontal = MaterialTheme.spacing.extraSmall,
+                            vertical = MaterialTheme.spacing.tiny
+                        )
+                    )
+                }
+            }
+
+            player.role?.name?.let {
+                AnimatedVisibility(
+                    visible = showRole || player.isAlive.not()
+                ){
+                    Text(
+                        text = it,
+                        style = Theme.typography.bodySmall,
+                        color = player.role?.faction?.color ?: Theme.colorScheme.primary
                     )
                 }
             }
         }
     }
 }
+
+val ActionType.painter: DrawableResource?
+    get() = when(this){
+        ActionType.KILL ->Resources.Images.ActionIcons.DEAD
+        ActionType.ACCUSE, ActionType.SECOND -> Resources.Images.ActionIcons.ACCUSE
+        ActionType.SAVE -> Resources.Images.ActionIcons.SAVE
+        ActionType.VOTE_GUILTY -> Resources.Images.ActionIcons.VOTE_GUILTY
+        ActionType.INVESTIGATE -> Resources.Images.ActionIcons.INVESTIGATE
+        ActionType.VOTE_INNOCENT -> Resources.Images.ActionIcons.VOTE_INNOCENT
+        ActionType.NONE -> null
+    }
 
 val ActionType.color: Color
     @Composable get() = when(this){
