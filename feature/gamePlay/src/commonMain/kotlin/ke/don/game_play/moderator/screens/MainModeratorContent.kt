@@ -60,6 +60,7 @@ private fun ContentSwitcher(
         when (phase) {
             null -> {
                 CreateGameContent(
+                    modifier = modifier,
                     state = moderatorState,
                     onEvent = onEvent
                 )
