@@ -122,20 +122,6 @@ fun PlayerItem(
                         )
                     }
                 }
-
-//                // Action Icon Overlay (e.g., kill, save)
-//                if (isSelected && player.isAlive) {
-//                    actionType.painter?.let { painter ->
-//                        Icon(
-//                            painter = painterResource(painter),
-//                            contentDescription = actionType.name,
-//                            tint = actionType.color,
-//                            modifier = Modifier
-//                                .align(Alignment.Center)
-//                                .size(48.dp)
-//                        )
-//                    }
-//                }
             }
 
             // Player Name
@@ -166,22 +152,32 @@ fun PlayerItem(
                     )
                 }
             }
-
-            player.role?.name?.let {
-                AnimatedVisibility(
-                    visible = showRole || player.isAlive.not()
-                ){
-                    Text(
-                        text = it,
-                        style = Theme.typography.bodySmall,
-                        color = player.role?.faction?.color ?: Theme.colorScheme.primary
-                    )
-                }
+            AnimatedVisibility(
+                visible = showRole || player.isAlive.not()
+            ){
+                Text(
+                    text = player.role?.name ?: "Waiting",
+                    style = Theme.typography.bodySmall,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = player.role?.faction?.color ?: Theme.colorScheme.primary
+                )
             }
         }
     }
 }
 
+/**
+ * Maps an [ActionType] to a corresponding drawable resource for its icon.
+ * This is used to visually represent the action a player is performing or has performed.
+ *
+ * @return A [DrawableResource] representing the icon for the action, or `null` if the action
+ * has no associated icon (e.g., [ActionType.NONE]).
+ *
+ * NOTE: This property is not currently being used but it is handy to have around. shrinkResources is enabled
+ * for release builds.
+ */
 val ActionType.painter: DrawableResource?
     get() = when(this){
         ActionType.KILL ->Resources.Images.ActionIcons.DEAD
