@@ -1,4 +1,4 @@
-package ke.don.game_play.model
+package ke.don.game_play.moderator.model
 
 import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GameState
@@ -11,7 +11,6 @@ data class ModeratorState(
             Role.DOCTOR -> 1
             Role.GONDI -> 2
             Role.VILLAGER -> 4
-            Role.MODERATOR -> 1 // usually 1 moderator
             else -> 0
         }
     },

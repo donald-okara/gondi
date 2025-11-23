@@ -1,4 +1,4 @@
-package ke.don.game_play.components
+package ke.don.game_play.moderator.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
@@ -11,35 +11,27 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import ke.don.components.button.ComponentType
-import ke.don.components.empty_state.EmptyType
 import ke.don.components.icon.IconToken
 import ke.don.components.profile.AdaptiveIcon
-import ke.don.components.text.AnimatedCount
-import ke.don.design.theme.AppTheme
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.Role
-import ke.don.game_play.model.ModeratorHandler
-import ke.don.game_play.model.ModeratorState
-import ke.don.game_play.model.RoleAssignment
+import ke.don.game_play.moderator.model.ModeratorHandler
+import ke.don.game_play.moderator.model.ModeratorState
+import ke.don.game_play.moderator.model.RoleAssignment
 import ke.don.resources.icon
 import org.jetbrains.compose.resources.DrawableResource
 

@@ -25,6 +25,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.bundles.voyager)
+            implementation(libs.ui.backhandler)
         }
     }
 }

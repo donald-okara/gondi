@@ -1,4 +1,4 @@
-package ke.don.game_play.screens
+package ke.don.game_play.moderator.screens
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.ScrollState
@@ -12,8 +12,8 @@ import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
-import ke.don.game_play.model.ModeratorHandler
-import ke.don.game_play.model.ModeratorState
+import ke.don.game_play.moderator.model.ModeratorHandler
+import ke.don.game_play.moderator.model.ModeratorState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

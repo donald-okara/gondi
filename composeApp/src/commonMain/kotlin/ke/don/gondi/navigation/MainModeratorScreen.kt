@@ -3,12 +3,19 @@ package ke.don.gondi.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.backhandler.BackHandler
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import ke.don.game_play.model.GondiHost
-import ke.don.game_play.screens.MainModeratorContent
+import ke.don.game_play.moderator.di.GAME_MODERATOR_SCOPE
+import ke.don.game_play.moderator.model.GondiHost
+import ke.don.game_play.moderator.screens.MainModeratorContent
+import org.koin.compose.getKoin
+import org.koin.core.qualifier.named
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class MainModeratorScreen: Screen {
     @Composable

@@ -1,4 +1,4 @@
-package ke.don.game_play.model
+package ke.don.game_play.moderator.model
 
 import ke.don.domain.gameplay.ModeratorCommand
 
