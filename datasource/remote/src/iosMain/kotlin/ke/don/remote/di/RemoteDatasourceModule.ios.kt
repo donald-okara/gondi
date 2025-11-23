@@ -15,6 +15,7 @@ import ke.don.local.di.localDatasourceModule
 import ke.don.remote.repo.AuthClientIOS
 import ke.don.remote.server.LanServer
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -22,7 +23,7 @@ import org.koin.dsl.module
 actual val serverModule: Module
     get() = module {
         includes(localDatasourceModule)
-        singleOf(::LanServer).bind<LocalServer>()
+        factoryOf(::LanServer).bind<LocalServer>()
     }
 
 actual val authDatasourceModule: Module = module {

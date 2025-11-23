@@ -18,6 +18,7 @@ import ke.don.local.db.JVMDatabaseFactory
 import ke.don.local.misc.NetworkChooser
 import ke.don.local.misc.NetworkChooserJvm
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -25,7 +26,7 @@ import org.koin.dsl.module
 actual val databaseModule: Module
     get() = module {
         singleOf(::JVMDatabaseFactory).bind<DatabaseFactory>()
-        singleOf(::NetworkChooserJvm).bind<NetworkChooser>()
+        factoryOf(::NetworkChooserJvm).bind<NetworkChooser>()
     }
 actual val datastoreModule: Module
     get() = module {

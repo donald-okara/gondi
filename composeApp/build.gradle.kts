@@ -4,6 +4,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     alias(libs.plugins.kotlinMultiplatformApplication)
     alias(libs.plugins.ktorSupabasePlugin)
+    alias(libs.plugins.kotzilla)
 }
 
 kotlin {

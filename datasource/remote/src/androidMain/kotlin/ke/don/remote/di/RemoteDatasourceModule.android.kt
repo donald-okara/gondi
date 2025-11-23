@@ -19,6 +19,7 @@ import ke.don.remote.server.LanAdvertiserAndroid
 import ke.don.remote.server.LanDiscoveryAndroid
 import ke.don.remote.server.LanServerJvm
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -26,9 +27,9 @@ import org.koin.dsl.module
 actual val serverModule: Module
     get() = module {
         includes(localDatasourceModule)
-        singleOf(::LanServerJvm).bind<LocalServer>()
-        singleOf(::LanDiscoveryAndroid).bind<LanDiscovery>()
-        singleOf(::LanAdvertiserAndroid).bind<LanAdvertiser>()
+        factoryOf(::LanServerJvm).bind<LocalServer>()
+        factoryOf(::LanDiscoveryAndroid).bind<LanDiscovery>()
+        factoryOf(::LanAdvertiserAndroid).bind<LanAdvertiser>()
     }
 
 actual val authDatasourceModule: Module = module {
