@@ -33,6 +33,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.bundles.voyager)
+            implementation(libs.ui.backhandler)
         }
         androidMain.dependencies {
             implementation(libs.kotzilla.sdk.compose)

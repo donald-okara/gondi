@@ -1,4 +1,4 @@
-package ke.don.game_play.screens
+package ke.don.game_play.moderator.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,9 +22,9 @@ import ke.don.components.text_field.TextFieldToken
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.Role
-import ke.don.game_play.components.RoleConfigurationContainer
-import ke.don.game_play.model.ModeratorHandler
-import ke.don.game_play.model.ModeratorState
+import ke.don.game_play.moderator.components.RoleConfigurationContainer
+import ke.don.game_play.moderator.model.ModeratorHandler
+import ke.don.game_play.moderator.model.ModeratorState
 
 @Composable
 fun CreateGameContent(

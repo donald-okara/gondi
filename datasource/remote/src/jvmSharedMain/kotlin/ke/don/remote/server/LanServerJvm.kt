@@ -107,6 +107,10 @@ class LanServerJvm(
     override suspend fun stop() {
         advertiser.stop()
         server?.stop()
+        database.clearVotes()
+        database.clearGameState()
+        database.clearPlayers()
+        logger.debug("✅ LAN WebSocket server stopped")
     }
 
     override suspend fun handleModeratorCommand(gameId: String, command: ModeratorCommand) {
