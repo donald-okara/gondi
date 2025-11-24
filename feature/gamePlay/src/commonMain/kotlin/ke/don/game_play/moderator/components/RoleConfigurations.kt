@@ -19,6 +19,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -116,25 +118,35 @@ fun RoleConfigurationItem(
     onAssignmentChange: (RoleAssignment) -> Unit,
     totalPlayers: Int,
 ) {
-    // Determine max count for this role
-    val maxCount = when (roleAssignment.first) {
-        Role.DOCTOR -> 1
-        Role.GONDI -> 2
-        Role.DETECTIVE, Role.ACCOMPLICE -> if (totalPlayers < 8) 0 else 1
-        else -> 10
+    val maxCount by derivedStateOf {
+        when (roleAssignment.first) {
+            Role.DOCTOR -> 1
+            Role.GONDI -> 2
+            Role.DETECTIVE, Role.ACCOMPLICE -> if (totalPlayers < 8) 0 else 1
+            else -> 10
+        }
     }
 
-    val warningMessage = when (roleAssignment.first) {
-        Role.DETECTIVE, Role.ACCOMPLICE ->
-            if (totalPlayers < 10 && roleAssignment.second > 0) {
-                "Detective and Accomplice cannot exist in a game with less than 10 players"
-            } else if (roleAssignment.second > 1) {
-                "Only one Detective or Accomplice allowed"
-            } else null
-        else -> if (roleAssignment.second > maxCount) "Max allowed: $maxCount" else null
+    val warningMessage by derivedStateOf {
+        when (roleAssignment.first) {
+            Role.DETECTIVE, Role.ACCOMPLICE ->
+                if (totalPlayers < 10 && roleAssignment.second > 0) {
+                    "Detective and Accomplice cannot exist in a game with less than 10 players"
+                } else if (roleAssignment.second > 1) {
+                    "Only one Detective or Accomplice allowed"
+                } else null
+            else -> if (roleAssignment.second > maxCount) "Max allowed: $maxCount" else null
+        }
     }
 
-    val enableIncrement = roleAssignment.second < maxCount
+    val enableIncrement by derivedStateOf {
+        roleAssignment.second < maxCount
+    }
+    val enableDecrement by derivedStateOf {
+        val lowerLimit = if (roleAssignment.first == Role.GONDI)  1 else 0
+
+        roleAssignment.second > lowerLimit
+    }
 
     Column(
         modifier = modifier
@@ -146,6 +158,7 @@ fun RoleConfigurationItem(
             count = roleAssignment.second,
             modifier = modifier,
             enableIncrement = enableIncrement,
+            enableDecrement = enableDecrement,
             onIncrement = {
                 if (roleAssignment.second < maxCount) {
                     onAssignmentChange(roleAssignment.copy(second = roleAssignment.second + 1))
@@ -175,6 +188,7 @@ fun RoleConfigurationBase(
     label: String,
     count: Int,
     enableIncrement: Boolean,
+    enableDecrement: Boolean,
     onIncrement: () -> Unit,
     onDecrement: () -> Unit,
     modifier: Modifier = Modifier,
@@ -225,7 +239,7 @@ fun RoleConfigurationBase(
                 onClick = onDecrement,
                 imageVector = Icons.Default.Remove,
                 buttonType = ComponentType.Neutral,
-                enabled = count > 0
+                enabled = enableDecrement
             )
 
             Text(
