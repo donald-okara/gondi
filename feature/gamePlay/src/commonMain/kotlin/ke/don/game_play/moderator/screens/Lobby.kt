@@ -36,6 +36,7 @@ import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.ModeratorCommand
+import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.game_play.moderator.components.EmptySlot
@@ -52,7 +53,7 @@ fun LobbyContent(
     onEvent: (ModeratorHandler) -> Unit,
 ) {
     val availableSlots by derivedStateOf { moderatorState.assignment.sumOf { it.second } }
-    val playersSize by derivedStateOf{ players.filter { player -> player.isAlive }.size }
+    val playersSize by derivedStateOf{ players.filter { player -> player.isAlive && player.role != Role.MODERATOR}.size }
     LazyColumn(
         modifier = modifier
             .fillMaxSize(),
@@ -91,7 +92,7 @@ fun LobbyContent(
                         targetState = availableSlots
                     ) { slots ->
                         Text(
-                            text = if (slots > playersSize) "Start with $slots players" else "Start Game",
+                            text = if (slots > playersSize) "Start with $playersSize players" else "Start Game",
                             textAlign = TextAlign.Center,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.fillMaxWidth()

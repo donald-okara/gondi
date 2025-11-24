@@ -121,8 +121,6 @@ class LanServerJvm(
         val players = database.getAllPlayersSnapshot()
         broadcast(ServerUpdate.GameStateSnapshot(newState))
         broadcast(ServerUpdate.PlayersSnapshot(players))
-
-        logger.debug("Moderator command executed ✅ ($command)")
     }
 
     suspend fun DefaultWebSocketServerSession.sendJson(message: ClientUpdate) {

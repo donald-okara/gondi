@@ -22,7 +22,6 @@ class GameModeratorController(
             val newState = state.copy(
                 newGame = state.newGame.copy(name = name)
             )
-            println("Updated: ${newState.newGame.name}")
             newState
         }
     }
