@@ -48,7 +48,7 @@ import ke.don.game_play.shared.SharedLobby
 fun ModeratorLobby(
     modifier: Modifier = Modifier,
     gameState: GameState? = null,
-    hostPlayer: Player?,
+    myPlayerId: String? = null,
     players: List<Player>,
     onEvent: (ModeratorHandler) -> Unit,
 ) {
@@ -56,7 +56,7 @@ fun ModeratorLobby(
         modifier = modifier,
         isModerator = true,
         gameState = gameState,
-        myPlayerId = hostPlayer?.id,
+        myPlayerId = myPlayerId,
         players = players,
         startGame = {
             gameState?.id?.let {

@@ -91,7 +91,7 @@ private fun ContentSwitcher(
                     gameState = gameState,
                     players = players,
                     onEvent = onEvent,
-                    hostPlayer = hostPlayer
+                    myPlayerId = hostPlayer?.id
                 )
             }
             GamePhase.SLEEP -> {}
