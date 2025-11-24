@@ -23,9 +23,6 @@ import ke.don.game_play.moderator.screens.ModeratorLobby
 fun PlayersPreview(
     @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
-   val moderatorState = remember {
-       ModeratorState()
-   }
 
     val players = remember {
         listOf(
@@ -36,7 +33,7 @@ fun PlayersPreview(
             Player(id = "5", name = "Todd O'Connor", role = Role.VILLAGER, Avatar.Kimberly, background = AvatarBackground.ORANGE_CORAL),
             Player(id = "6", name = "Pat O'Neill", role = Role.VILLAGER, Avatar.George, background = AvatarBackground.PURPLE_AMETHYST),
             Player(id = "7", name = "Hans", role = Role.VILLAGER, Avatar.Jocelyn, background = AvatarBackground.GREEN_MINTY),
-            Player(id = "8", name = "Franz", role = Role.GONDI, Avatar.Jameson, background = AvatarBackground.YELLOW_GOLDEN)
+            Player(id = "8", name = "Franz", role = Role.MODERATOR, Avatar.Jameson, background = AvatarBackground.YELLOW_GOLDEN)
         )
     }
 
@@ -46,7 +43,6 @@ fun PlayersPreview(
             navigationIcon = NavigationIcon.Back {}
         ){
             ModeratorLobby(
-                moderatorState = moderatorState,
                 players = players,
                 onEvent = {}
             )

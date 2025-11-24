@@ -1,0 +1,13 @@
+CREATE TABLE gameStateEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    phase TEXT NOT NULL DEFAULT 0,
+    round INTEGER NOT NULL DEFAULT 1,
+    pending_kills TEXT,
+    lock_join INTEGER NOT NULL DEFAULT 0,
+    last_saved_player_id TEXT,
+    accused_player TEXT,
+    second TEXT,
+    winners TEXT,
+    reveal_eliminated_player INTEGER NOT NULL DEFAULT 0
+);

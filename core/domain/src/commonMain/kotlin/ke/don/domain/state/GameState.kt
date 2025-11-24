@@ -24,6 +24,7 @@ constructor(
     val name: String = "",
     val phase: GamePhase = GamePhase.LOBBY,
     val round: Long = 0L,
+    val availableSlots: Long = 0L,
     val winners: Faction? = null,
     @SerialName("lock_join") val lockJoin: Boolean = false,
     @SerialName("pending_kills") val pendingKills: List<String> = emptyList(),

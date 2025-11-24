@@ -250,7 +250,8 @@ private fun HomeEmptyState(
             icon = Icons.Default.Casino,
             title = "Start a New Adventure?",
             description = "It looks a bit quiet around here. " +
-                "There are currently no active games available to join." +
+                "There are currently no active games available to join. " +
+                "Games are only discoverable if you are on the same LAN. " +
                 " Why not check your network, or better yet, be the first to start one?",
             emptyType = EmptyType.Empty,
         ) {

@@ -8,6 +8,9 @@ sqldelight {
     databases {
         create("GondiDatabase") {
             packageName.set("ke.don.local.db")
+
+            schemaOutputDirectory = file("src/commonMain/sqldelight/databases")
+            migrationOutputDirectory = file("src/commonMain/sqldelight/migrations")
         }
     }
 }

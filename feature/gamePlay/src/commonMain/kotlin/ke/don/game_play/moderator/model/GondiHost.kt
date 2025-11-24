@@ -59,7 +59,7 @@ class GondiHost(
                 runCatching{
                     serverManager.startServer(
                         identity,
-                        moderatorState.value.newGame,
+                        moderatorState.value.newGame.copy(availableSlots = moderatorState.value.assignment.sumOf { it.second }.toLong()),
                         screenModelScope,
                         hostPlayer.first()!!
                     )

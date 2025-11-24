@@ -64,6 +64,7 @@ class LocalDatabase(
         gameState.toGameStateEntity.accused_player,
         gameState.toGameStateEntity.reveal_eliminated_player,
         gameState.toGameStateEntity.lock_join,
+        gameState.toGameStateEntity.available_slots,
     )
 
     fun lockJoin(lock: Boolean, id: String) = stateQueries.lockJoin(booleanAdapter.encode(lock), id)

@@ -85,7 +85,6 @@ private fun ContentSwitcher(
             GamePhase.LOBBY -> {
                 ModeratorLobby(
                     modifier = modifier,
-                    moderatorState = moderatorState,
                     gameState = gameState,
                     players = players,
                     onEvent = onEvent
