@@ -15,7 +15,7 @@ import ke.don.domain.state.Player
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.game_play.moderator.model.ModeratorState
-import ke.don.game_play.moderator.screens.LobbyContent
+import ke.don.game_play.moderator.screens.ModeratorLobby
 
 @OptIn(ExperimentalMaterial3Api::class)
 @DevicePreviews
@@ -45,7 +45,7 @@ fun PlayersPreview(
             title = "Lobby",
             navigationIcon = NavigationIcon.Back {}
         ){
-            LobbyContent(
+            ModeratorLobby(
                 moderatorState = moderatorState,
                 players = players,
                 onEvent = {}

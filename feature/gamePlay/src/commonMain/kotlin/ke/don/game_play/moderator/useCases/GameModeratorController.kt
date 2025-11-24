@@ -119,7 +119,7 @@ class GameModeratorController(
 
 
             // Refuse to start if players < 5
-            if (players.size < 5) {
+            if (players.size < PLAYER_LOWER_LIMIT) {
                 val message = "Not enough players to start the game: minimum 5 required, have ${players.size}"
                 session.updateModeratorState { state ->
                     state.copy(assignmentsStatus = ResultStatus.Error(message))
@@ -128,7 +128,7 @@ class GameModeratorController(
             }
 
             // Adjust assignments if players < 10: force detective and accomplice to 0
-            val adjustedAssignments = if (players.size < 10) {
+            val adjustedAssignments = if (players.size < PLAYER_DET_LIMIT) {
                 assignments.map { (role, count) ->
                     if (role == Role.DETECTIVE || role == Role.ACCOMPLICE) role to 0 else role to count
                 }
@@ -182,4 +182,7 @@ class GameModeratorController(
         }
     }
 }
+
+const val PLAYER_LOWER_LIMIT = 5
+const val PLAYER_DET_LIMIT = 10
 

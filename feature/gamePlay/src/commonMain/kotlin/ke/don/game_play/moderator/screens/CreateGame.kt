@@ -27,6 +27,7 @@ import ke.don.domain.gameplay.Role
 import ke.don.game_play.moderator.components.RoleConfigurationContainer
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
+import ke.don.utils.result.isLoading
 
 @Composable
 fun CreateGameContent(
@@ -86,7 +87,8 @@ fun CreateGameContent(
             modifier = modifier.fillMaxWidth(),
             onClick = { onEvent(ModeratorHandler.StartServer) },
             buttonType = ComponentType.Primary,
-            enabled = state.assignment.sumOf { it.second } > 0 && state.newGame.name.isNotBlank(),
+            loading = state.createStatus.isLoading,
+            enabled = state.assignment.sumOf { it.second } > 0 && state.newGame.name.isNotBlank() && state.createStatus.isLoading.not(),
         ){
             Text(
                 text = "Confirm and Start Game",

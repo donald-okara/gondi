@@ -16,9 +16,11 @@ import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.screens.MainModeratorContent
 import org.koin.compose.getKoin
 import org.koin.core.qualifier.named
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class MainModeratorScreen: Screen {
-    @OptIn(ExperimentalComposeUiApi::class)
+    @OptIn(ExperimentalComposeUiApi::class, ExperimentalUuidApi::class)
     @Composable
     override fun Content() {
         val koin = getKoin()
@@ -26,7 +28,7 @@ class MainModeratorScreen: Screen {
 
         val moderatorScope = remember(screen) {
             koin.createScope(
-                scopeId = GAME_MODERATOR_SCOPE,
+                scopeId = Uuid.random().toString(),
                 qualifier = named(GAME_MODERATOR_SCOPE)
             )
         }

@@ -3,7 +3,6 @@ package ke.don.game_play.moderator.screens
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
-import ke.don.components.empty_state.EmptyState
 import ke.don.components.profile.PlayerItem
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
@@ -42,10 +39,11 @@ import ke.don.domain.state.Player
 import ke.don.game_play.moderator.components.EmptySlot
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
+import ke.don.game_play.moderator.useCases.PLAYER_LOWER_LIMIT
 
 
 @Composable
-fun LobbyContent(
+fun ModeratorLobby(
     modifier: Modifier = Modifier,
     moderatorState: ModeratorState,
     gameState: GameState? = null,
@@ -54,17 +52,18 @@ fun LobbyContent(
 ) {
     val availableSlots by derivedStateOf { moderatorState.assignment.sumOf { it.second } }
     val playersSize by derivedStateOf{ players.filter { player -> player.isAlive && player.role != Role.MODERATOR}.size }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(24.dp),
+        verticalArrangement = Arrangement.spacedBy(Theme.spacing.large),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium)
             ) {
                 Text(
                     text = "Ready to Begin?",
@@ -74,9 +73,8 @@ fun LobbyContent(
 
                 ButtonToken(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    enabled = playersSize > 5,
+                        .fillMaxWidth(),
+                    enabled = playersSize > PLAYER_LOWER_LIMIT,
                     buttonType = ComponentType.Primary,
                     onClick = {
                         gameState?.id?.let {
@@ -149,9 +147,9 @@ fun LobbyContent(
                         .fillMaxWidth()
                         .heightIn(min = 200.dp, max = Theme.spacing.largeScreenSize),
                     columns = GridCells.Adaptive(130.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    contentPadding = PaddingValues(vertical = 8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
+                    verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
+                    contentPadding = PaddingValues(vertical = Theme.spacing.small)
                 ) {
                     items(players.sortedByDescending { player -> player.isAlive }, key = { it.id }) { player ->
                         PlayerItem(

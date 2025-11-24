@@ -43,6 +43,9 @@ class GondiHost(
     val moderatorState = session.moderatorState.asStateFlow()
 
     fun startServer() {
+        session.updateModeratorState {
+            it.copy(createStatus = ResultStatus.Loading)
+        }
         moderator.validateAssignments().onSuccess {
             screenModelScope.launch {
                 val identity = GameIdentity(
@@ -61,6 +64,9 @@ class GondiHost(
                         hostPlayer.first()!!
                     )
                     session.observe(identity.id, screenModelScope)
+                    session.updateModeratorState {
+                        it.copy(createStatus = ResultStatus.Success(Unit))
+                    }
                 }.onFailure { error ->
                     session.updateModeratorState {
                         it.copy(createStatus = ResultStatus.Error(error.message.toString()))
