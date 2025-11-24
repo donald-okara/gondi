@@ -1,7 +1,6 @@
 package ke.don.game_play.moderator.screens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +18,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
-import ke.don.components.empty_state.EmptyState
 import ke.don.components.text_field.TextFieldToken
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
