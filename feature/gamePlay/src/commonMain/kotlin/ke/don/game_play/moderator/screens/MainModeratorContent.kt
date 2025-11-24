@@ -24,6 +24,7 @@ fun MainModeratorContent(
     modifier: Modifier = Modifier,
     moderatorState: ModeratorState,
     gameState: GameState? = null,
+    hostPlayer: Player?,
     players: List<Player>,
     votes: List<Vote>,
     onEvent: (ModeratorHandler) -> Unit,
@@ -41,7 +42,8 @@ fun MainModeratorContent(
             gameState = gameState,
             players = players,
             votes = votes,
-            onEvent = onEvent
+            onEvent = onEvent,
+            hostPlayer = hostPlayer
         )
     }
 
@@ -67,6 +69,7 @@ private fun ContentSwitcher(
     moderatorState: ModeratorState,
     gameState: GameState? = null,
     players: List<Player>,
+    hostPlayer: Player?,
     votes: List<Vote>,
     onEvent: (ModeratorHandler) -> Unit
 ) {
@@ -87,7 +90,8 @@ private fun ContentSwitcher(
                     modifier = modifier,
                     gameState = gameState,
                     players = players,
-                    onEvent = onEvent
+                    onEvent = onEvent,
+                    hostPlayer = hostPlayer
                 )
             }
             GamePhase.SLEEP -> {}

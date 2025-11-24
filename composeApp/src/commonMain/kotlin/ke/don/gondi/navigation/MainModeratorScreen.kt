@@ -46,6 +46,9 @@ class MainModeratorScreen: Screen {
 
         val gameState by gondiHost.gameState.collectAsState()
         val players by gondiHost.players.collectAsState()
+        val hostPlayer by gondiHost.hostPlayer.collectAsState(
+            initial = null
+        )
         val votes by gondiHost.votes.collectAsState()
         val moderatorState by gondiHost.moderatorState.collectAsState()
 
@@ -64,7 +67,8 @@ class MainModeratorScreen: Screen {
             players = players,
             votes = votes,
             onEvent = onEvent,
-            onBack = navigator::pop
+            onBack = navigator::pop,
+            hostPlayer = hostPlayer
         )
     }
 }

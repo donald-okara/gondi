@@ -50,6 +50,7 @@ fun PlayerItem(
     modifier: Modifier = Modifier,
     actionType: ActionType,
     onClick: () -> Unit,
+    isMe: Boolean = false,
     showRole: Boolean = false,
     isSelected: Boolean,
     player: Player,
@@ -126,7 +127,7 @@ fun PlayerItem(
 
             // Player Name
             Text(
-                text = player.name,
+                text = if (isMe) "You" else player.name,
                 style = Theme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                 color = Theme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,

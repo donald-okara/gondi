@@ -45,6 +45,7 @@ fun SharedLobby(
     isModerator: Boolean,
     gameState: GameState? = null,
     players: List<Player>,
+    myPlayerId: String? = null,
     startGame: () -> Unit = {}
 ) {
     val nonModeratorPlayers = players.filter { it.role != Role.MODERATOR }
@@ -119,6 +120,7 @@ fun SharedLobby(
                         actionType = ActionType.NONE,
                         onClick = {},
                         isSelected = false,
+                        isMe = myPlayerId == moderator.id,
                         showRole = true,
                         player = it,
                         modifier = modifier.width(130.dp)
@@ -177,6 +179,7 @@ fun SharedLobby(
                             onClick = {},
                             isSelected = false, // TODO
                             showRole = true,
+                            isMe = myPlayerId == player.id,
                             player = player
                         )
                     }
