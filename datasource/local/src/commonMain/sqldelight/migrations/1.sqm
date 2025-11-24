@@ -11,3 +11,22 @@ CREATE TABLE gameStateEntity (
     winners TEXT,
     reveal_eliminated_player INTEGER NOT NULL DEFAULT 0
 );
+
+CREATE TABLE playerEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    avatar TEXT,
+    background TEXT,
+    role TEXT,
+    time_of_death INTEGER,
+    is_alive INTEGER NOT NULL DEFAULT 1,
+    known_identities TEXT,
+    last_action TEXT
+);
+
+CREATE TABLE voteEntity (
+    voter_id TEXT NOT NULL,
+    target_id TEXT NOT NULL,
+    is_guilty INTEGER NOT NULL,
+    PRIMARY KEY (voter_id)
+);
