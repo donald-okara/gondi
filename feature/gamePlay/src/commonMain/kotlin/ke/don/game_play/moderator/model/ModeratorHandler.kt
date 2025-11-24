@@ -7,5 +7,6 @@ sealed interface ModeratorHandler {
     class UpdateRoomName(val name: String): ModeratorHandler
     class HandleModeratorCommand(val intent: ModeratorCommand): ModeratorHandler
     object StartServer: ModeratorHandler
-    object AssignRoles: ModeratorHandler
+    object StartGame: ModeratorHandler
+    object ShowLeaveDialog: ModeratorHandler
 }

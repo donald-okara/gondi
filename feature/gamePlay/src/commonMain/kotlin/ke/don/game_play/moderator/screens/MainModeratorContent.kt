@@ -2,10 +2,14 @@ package ke.don.game_play.moderator.screens
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.ScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import ke.don.components.button.ComponentType
+import ke.don.components.dialog.ConfirmationDialogToken
 import ke.don.components.scaffold.NavigationIcon
 import ke.don.components.scaffold.ScaffoldToken
 import ke.don.domain.state.GamePhase
@@ -31,8 +35,8 @@ fun MainModeratorContent(
     ScaffoldToken(
         scrollState = scrollState,
         modifier = modifier,
-        navigationIcon = NavigationIcon.Back(onBack),
-        title = gameState?.phase?.let{ phase -> "Moderator $phase" } ?: "New game"
+        navigationIcon = NavigationIcon.Back { onEvent(ModeratorHandler.ShowLeaveDialog) },
+        title = gameState?.phase?.let{ phase -> "$phase for ${gameState.name}" } ?: "New game"
     ) {
         ContentSwitcher(
             moderatorState = moderatorState,
@@ -42,6 +46,21 @@ fun MainModeratorContent(
             onEvent = onEvent
         )
     }
+
+    if (moderatorState.showLeaveGame){
+        ConfirmationDialogToken(
+            icon = Icons.AutoMirrored.Filled.ExitToApp,
+            title = "Leave Game?",
+            message = "You are about to leave the game you should understand that:",
+            dialogType = ComponentType.Warning,
+            checklist = listOf(
+                "This game will be terminated and all progress will be lost."
+            ),
+            onConfirm = onBack,
+            onDismiss = { onEvent(ModeratorHandler.ShowLeaveDialog) },
+        )
+    }
+
 }
 
 @Composable
@@ -66,7 +85,13 @@ private fun ContentSwitcher(
                 )
             }
             GamePhase.LOBBY -> {
-                LobbyContent()
+                LobbyContent(
+                    modifier = modifier,
+                    moderatorState = moderatorState,
+                    gameState = gameState,
+                    players = players,
+                    onEvent = onEvent
+                )
             }
             GamePhase.SLEEP -> {}
             GamePhase.TOWN_HALL -> {}

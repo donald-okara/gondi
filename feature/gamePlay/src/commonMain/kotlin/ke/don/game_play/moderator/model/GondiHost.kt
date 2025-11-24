@@ -11,6 +11,8 @@ package ke.don.game_play.moderator.model
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import ke.don.components.helpers.Matcha
+import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.game_play.moderator.useCases.GameModeratorController
 import ke.don.game_play.moderator.useCases.GameServerManager
@@ -21,6 +23,7 @@ import ke.don.utils.result.onFailure
 import ke.don.utils.result.onSuccess
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class GondiHost(
@@ -62,23 +65,63 @@ class GondiHost(
                     session.updateModeratorState {
                         it.copy(createStatus = ResultStatus.Error(error.message.toString()))
                     }
+                    Matcha.showErrorToast(
+                        message = error.message.toString(),
+                        title = "Error",
+                        retryAction = { startServer() }
+                    )
                 }
             }
         }.onFailure { error ->
             session.updateModeratorState {
                 it.copy(createStatus = ResultStatus.Error(error.message))
             }
+            Matcha.showErrorToast(
+                message = error.message,
+                title = "Error",
+                retryAction = { startServer() }
+            )
         }
     }
 
-    // Moderator actions
     fun onEvent(intent: ModeratorHandler){
         when(intent) {
             is ModeratorHandler.UpdateAssignments -> moderator.updateAssignment(intent.assignment)
             is ModeratorHandler.HandleModeratorCommand -> moderator.handleCommand(intent.intent, screenModelScope)
             ModeratorHandler.StartServer -> startServer()
             is ModeratorHandler.UpdateRoomName -> moderator.updateRoomName(intent.name)
-            ModeratorHandler.AssignRoles -> moderator.assignRoles(screenModelScope)
+            ModeratorHandler.ShowLeaveDialog -> session.updateModeratorState {
+                it.copy(showLeaveGame = !it.showLeaveGame)
+            }
+            ModeratorHandler.StartGame -> {
+                startGame()
+            }
+        }
+    }
+
+    fun startGame(){
+        screenModelScope.launch {
+            // Wait for role assignment to complete
+            moderator.assignRoles().onSuccess {
+                // Wait for the players flow to reflect the changes from assignRoles
+                val updatedPlayers = players.first { list -> list.all { it.role != null || !it.isAlive } }
+                if (updatedPlayers.isNotEmpty()) {
+                    gameState.firstOrNull()?.let {
+                        moderator.handleCommand(
+                            ModeratorCommand.StartGame(it.id),
+                            screenModelScope
+                        )
+                    }
+                }
+            }.onFailure {
+                logger.error(it.message)
+                Matcha.showErrorToast(
+                    message = it.message,
+                    title = "Error",
+                    retryAction = {startGame()}
+                )
+            }
+
         }
     }
 

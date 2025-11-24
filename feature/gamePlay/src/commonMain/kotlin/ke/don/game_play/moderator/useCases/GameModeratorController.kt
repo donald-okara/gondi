@@ -111,38 +111,48 @@ class GameModeratorController(
         }
     }
 
-    fun assignRoles(scope: CoroutineScope) {
-        scope.launch{
+    suspend fun assignRoles(): Result<Unit, LocalError> {
+        try {
             val moderatorState = session.moderatorState.value
             val assignments = moderatorState.assignment
-            val players = session.players.value.filterNot { it.role == Role.MODERATOR }
+            val players =
+                session.players.value.filterNot { it.role == Role.MODERATOR && !it.isAlive }
 
-            val totalRequired = assignments.sumOf { it.second }
 
-            if (players.size < totalRequired) {
+            // Refuse to start if players < 5
+            if (players.size < 5) {
+                val message = "Not enough players to start the game: minimum 5 required, have ${players.size}"
                 session.updateModeratorState { state ->
-                    state.copy(
-                        assignmentsStatus = ResultStatus.Error(
-                            message = "Not enough players: need $totalRequired but have ${players.size}"
-                        )
-                    )
+                    state.copy(assignmentsStatus = ResultStatus.Error(message))
                 }
-                return@launch
+                return Result.Error(LocalError(message, "PlayerCount"))
             }
 
+            // Adjust assignments if players < 10: force detective and accomplice to 0
+            val adjustedAssignments = if (players.size < 10) {
+                assignments.map { (role, count) ->
+                    if (role == Role.DETECTIVE || role == Role.ACCOMPLICE) role to 0 else role to count
+                }
+            } else {
+                assignments
+            }
+
+            val totalAdjusted = adjustedAssignments.sumOf { it.second }
+
+            // Build role pool
             val rolePool = buildList(players.size) {
-                for ((role, count) in assignments) {
+                for ((role, count) in adjustedAssignments) {
                     repeat(count) { add(role) }
                 }
-                if (players.size > totalRequired) {
-                    repeat(players.size - totalRequired) { add(Role.VILLAGER) }
+                if (players.size > totalAdjusted) {
+                    repeat(players.size - totalAdjusted) { add(Role.VILLAGER) }
                 }
             }.shuffled()
 
-            val assigned = players
-                .shuffled()
-                .zip(rolePool)
-                .map { (player, role) -> player.copy(role = role) }
+            // Assign roles randomly
+            val assigned = players.shuffled().zip(rolePool).map { (player, role) ->
+                player.copy(role = role)
+            }
 
             val gameId = moderatorState.newGame.id
 
@@ -152,15 +162,16 @@ class GameModeratorController(
                 ModeratorCommand.AssignRoleBatch(gameId, assigned)
             )
 
-            session.updateModeratorState {
-                it.copy(assignmentsStatus = ResultStatus.Success(Unit))
-            }
+            session.updateModeratorState { it.copy(assignmentsStatus = ResultStatus.Success(Unit)) }
 
-            session.updateModeratorState { state ->
-                state.copy(
-                    assignmentsStatus = ResultStatus.Success(Unit)
+            return Result.Success(Unit)
+        } catch (e: Exception) {
+            return Result.Error(
+                LocalError(
+                    message = e.message ?: "Unknown error",
+                    cause = e.cause.toString()
                 )
-            }
+            )
         }
     }
 

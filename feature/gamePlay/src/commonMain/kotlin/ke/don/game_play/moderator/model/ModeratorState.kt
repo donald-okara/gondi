@@ -6,6 +6,7 @@ import ke.don.utils.result.ResultStatus
 
 data class ModeratorState(
     val newGame: GameState = GameState(),
+    val showLeaveGame: Boolean = false,
     val assignment: List<RoleAssignment> = Role.entries.map { role ->
         role to when(role) {
             Role.DOCTOR -> 1
