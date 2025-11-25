@@ -34,9 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
-import ke.don.design.theme.PaddingOption
 import ke.don.design.theme.spacing
-import ke.don.design.theme.spacingPaddingValues
 import ke.don.resources.isCompact
 
 /**
