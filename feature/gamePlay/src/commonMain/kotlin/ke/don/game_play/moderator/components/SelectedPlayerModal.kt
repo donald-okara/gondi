@@ -70,8 +70,6 @@ fun SelectedPlayerModal(
                 actionType = ActionType.NONE
             )
 
-            HorizontalDivider()
-
             ModalActions(
                 onRemoveClick = {
                     showRemoveDialog = true
@@ -82,6 +80,8 @@ fun SelectedPlayerModal(
                     showAssignDialog = true
                 }
             )
+
+            HorizontalDivider()
 
             AnimatedVisibility(
                 visible = showRemoveDialog
