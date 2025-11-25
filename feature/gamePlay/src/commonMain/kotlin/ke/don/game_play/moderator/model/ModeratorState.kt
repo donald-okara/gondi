@@ -18,6 +18,7 @@ data class ModeratorState(
     val assignmentsStatus: ResultStatus<Unit> = ResultStatus.Idle,
     val createStatus: ResultStatus<Unit> = ResultStatus.Idle,
     val showAssignRoles: Boolean = false,
+    val selectedPlayerId: String? = null
 )
 
 typealias RoleAssignment = Pair<Role, Int>

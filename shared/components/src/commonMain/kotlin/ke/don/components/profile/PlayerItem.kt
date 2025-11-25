@@ -49,7 +49,7 @@ import ke.don.design.theme.spacing
 fun PlayerItem(
     modifier: Modifier = Modifier,
     actionType: ActionType,
-    onClick: () -> Unit,
+    onClick: () -> Unit = {},
     isMe: Boolean = false,
     showRole: Boolean = false,
     isSelected: Boolean,

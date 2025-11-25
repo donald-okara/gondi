@@ -4,7 +4,6 @@ import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.Role
 import ke.don.domain.gameplay.server.LocalServer
 import ke.don.game_play.moderator.model.RoleAssignment
-import ke.don.game_play.moderator.useCases.GameSessionState
 import ke.don.utils.result.LocalError
 import ke.don.utils.result.Result
 import ke.don.utils.result.ResultStatus
@@ -110,60 +109,98 @@ class GameModeratorController(
         }
     }
 
+    fun selectPlayer(playerId: String? = null){
+        session.updateModeratorState { state ->
+            state.copy(selectedPlayerId = playerId)
+        }
+    }
+
     suspend fun assignRoles(): Result<Unit, LocalError> {
         try {
             val moderatorState = session.moderatorState.value
             val assignments = moderatorState.assignment
-            val players =
+
+            // All players except dead moderator
+            val totalPlayers =
                 session.players.value.filterNot { it.role == Role.MODERATOR && !it.isAlive }
 
+            // Players who need random assignment
+            val assignPlayers = totalPlayers.filter { it.role == null }
 
-            // Refuse to start if players < 5
-            if (players.size < PLAYER_LOWER_LIMIT) {
-                val message = "Not enough players to start the game: minimum 5 required, have ${players.size}"
+            // Enforce minimum player requirement
+            if (totalPlayers.size < PLAYER_LOWER_LIMIT) {
+                val message =
+                    "Not enough players to start the game: minimum 5 required, have ${totalPlayers.size}"
                 session.updateModeratorState { state ->
                     state.copy(assignmentsStatus = ResultStatus.Error(message))
                 }
                 return Result.Error(LocalError(message, "PlayerCount"))
             }
 
-            // Adjust assignments if players < 10: force detective and accomplice to 0
-            val adjustedAssignments = if (players.size < PLAYER_DET_LIMIT) {
-                assignments.map { (role, count) ->
-                    if (role == Role.DETECTIVE || role == Role.ACCOMPLICE) role to 0 else role to count
-                }
-            } else {
-                assignments
+            // ----------- NEW LOGIC: Deduct slots for pre-assigned roles -----------
+            val alreadyAssignedCounts = totalPlayers
+                .filter { it.role != null }
+                .groupingBy { it.role!! }
+                .eachCount()
+
+            val adjustedForExisting = assignments.map { (role, count) ->
+                val used = alreadyAssignedCounts[role] ?: 0
+                role to (count - used).coerceAtLeast(0)
             }
+            // -----------------------------------------------------------------------
+
+            // Adjust assignments if players < 10: force detective + accomplice = 0
+            val adjustedAssignments =
+                if (totalPlayers.size < PLAYER_DET_LIMIT) {
+                    adjustedForExisting.map { (role, count) ->
+                        if (role == Role.DETECTIVE || role == Role.ACCOMPLICE) {
+                            role to 0
+                        } else {
+                            role to count
+                        }
+                    }
+                } else {
+                    adjustedForExisting
+                }
 
             val totalAdjusted = adjustedAssignments.sumOf { it.second }
 
-            // Build role pool
-            val rolePool = buildList(players.size) {
+            // Build final role pool (remaining slots + villagers)
+            val rolePool = buildList(totalPlayers.size) {
                 for ((role, count) in adjustedAssignments) {
                     repeat(count) { add(role) }
                 }
-                if (players.size > totalAdjusted) {
-                    repeat(players.size - totalAdjusted) { add(Role.VILLAGER) }
+
+                // Fill remaining slots with Villagers
+                if (totalPlayers.size > totalAdjusted) {
+                    repeat(totalPlayers.size - totalAdjusted) { add(Role.VILLAGER) }
                 }
             }.shuffled()
 
-            // Assign roles randomly
-            val assigned = players.shuffled().zip(rolePool).map { (player, role) ->
+            // Assign roles ONLY to players without roles
+            val newlyAssigned = assignPlayers.shuffled().zip(rolePool).map { (player, role) ->
                 player.copy(role = role)
+            }
+
+            // Combine pre-assigned players + new assignments
+            val finalAssignments = totalPlayers.map { p ->
+                newlyAssigned.find { it.id == p.id } ?: p
             }
 
             val gameId = moderatorState.newGame.id
 
-            // Update game on server
+            // Send batch update to server
             server.handleModeratorCommand(
                 gameId,
-                ModeratorCommand.AssignRoleBatch(gameId, assigned)
+                ModeratorCommand.AssignRoleBatch(gameId, finalAssignments)
             )
 
-            session.updateModeratorState { it.copy(assignmentsStatus = ResultStatus.Success(Unit)) }
+            session.updateModeratorState {
+                it.copy(assignmentsStatus = ResultStatus.Success(Unit))
+            }
 
             return Result.Success(Unit)
+
         } catch (e: Exception) {
             return Result.Error(
                 LocalError(

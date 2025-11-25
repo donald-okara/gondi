@@ -90,6 +90,7 @@ private fun ContentSwitcher(
                     modifier = modifier,
                     gameState = gameState,
                     players = players,
+                    moderatorState = moderatorState,
                     onEvent = onEvent,
                     myPlayerId = hostPlayer?.id
                 )

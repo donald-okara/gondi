@@ -44,6 +44,7 @@ fun SharedLobby(
     modifier: Modifier = Modifier,
     isModerator: Boolean,
     gameState: GameState? = null,
+    onSelectPlayer: (String) -> Unit = {},
     players: List<Player>,
     myPlayerId: String? = null,
     startGame: () -> Unit = {}
@@ -118,7 +119,6 @@ fun SharedLobby(
                     )
                     PlayerItem(
                         actionType = ActionType.NONE,
-                        onClick = {},
                         isSelected = false,
                         isMe = myPlayerId == moderator.id,
                         showRole = true,
@@ -176,7 +176,9 @@ fun SharedLobby(
                     items(alivePlayers, key = { it.id }) { player ->
                         PlayerItem(
                             actionType = ActionType.NONE,
-                            onClick = {},
+                            onClick = {
+                                onSelectPlayer(player.id)
+                            },
                             isSelected = false, // TODO
                             showRole = true,
                             isMe = myPlayerId == player.id,

@@ -38,6 +38,7 @@ import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.game_play.moderator.components.EmptySlot
+import ke.don.game_play.moderator.components.SelectedPlayerModal
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.moderator.useCases.PLAYER_LOWER_LIMIT
@@ -49,15 +50,21 @@ fun ModeratorLobby(
     modifier: Modifier = Modifier,
     gameState: GameState? = null,
     myPlayerId: String? = null,
+    moderatorState: ModeratorState,
     players: List<Player>,
     onEvent: (ModeratorHandler) -> Unit,
 ) {
+    val selectedPlayer = players.find { it.id == moderatorState.selectedPlayerId }
+
     SharedLobby(
         modifier = modifier,
         isModerator = true,
         gameState = gameState,
         myPlayerId = myPlayerId,
         players = players,
+        onSelectPlayer = {
+            onEvent(ModeratorHandler.SelectPlayer(it))
+        },
         startGame = {
             gameState?.id?.let {
                 onEvent(
@@ -68,4 +75,23 @@ fun ModeratorLobby(
             }
         }
     )
+
+    if (selectedPlayer != null){
+        SelectedPlayerModal(
+            onDismissRequest = { onEvent(ModeratorHandler.SelectPlayer(null)) },
+            onAssignPlayer = {
+                onEvent(ModeratorHandler.HandleModeratorCommand(ModeratorCommand.AssignRole(gameState!!.id, selectedPlayer.id, it)))
+            },
+            onRemovePlayer = {
+                onEvent(
+                    ModeratorHandler.HandleModeratorCommand(
+                        ModeratorCommand.RemovePlayer(
+                            gameState!!.id, selectedPlayer.id
+                        )
+                    )
+                )
+            },
+            player = selectedPlayer
+        )
+    }
 }

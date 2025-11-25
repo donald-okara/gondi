@@ -23,7 +23,6 @@ import ke.don.game_play.moderator.screens.ModeratorLobby
 fun PlayersPreview(
     @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
-
     val players = remember {
         listOf(
             Player(id = "1", name = "Matt Foley", role = Role.VILLAGER, Avatar.Alexander, background = AvatarBackground.PURPLE_LILAC),
@@ -37,6 +36,10 @@ fun PlayersPreview(
         )
     }
 
+    val moderatorState = remember {
+        ModeratorState(selectedPlayerId = "3")
+    }
+
     DevicePreviewContainer(theme){
         ScaffoldToken(
             title = "Lobby",
@@ -44,6 +47,7 @@ fun PlayersPreview(
         ){
             ModeratorLobby(
                 players = players,
+                moderatorState = moderatorState,
                 onEvent = {}
             )
         }

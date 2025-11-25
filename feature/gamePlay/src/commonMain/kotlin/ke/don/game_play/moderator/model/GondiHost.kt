@@ -99,6 +99,7 @@ class GondiHost(
             ModeratorHandler.ShowLeaveDialog -> session.updateModeratorState {
                 it.copy(showLeaveGame = !it.showLeaveGame)
             }
+            is ModeratorHandler.SelectPlayer -> moderator.selectPlayer(intent.id)
             ModeratorHandler.StartGame -> {
                 startGame()
             }
