@@ -3,6 +3,7 @@ CREATE TABLE gameStateEntity (
     name TEXT NOT NULL,
     phase TEXT NOT NULL DEFAULT 0,                               -- e.g., "SLEEP", "TOWN_HALL", "COURT"
     round INTEGER NOT NULL DEFAULT 1,
+    available_slots INTEGER NOT NULL DEFAULT 1,
     pending_kills TEXT,                                -- e.g., ["id1", "id2"]
     lock_join INTEGER NOT NULL DEFAULT 0,
     last_saved_player_id TEXT,
@@ -23,8 +24,8 @@ SELECT * FROM gameStateEntity
 LIMIT 1;
 
 insertOrReplaceGameState:
-INSERT OR REPLACE INTO gameStateEntity(id, name, phase, round, pending_kills, last_saved_player_id, accused_player, reveal_eliminated_player, lock_join)
-VALUES (:id, :name, :phase, :round, :pending_kills, :last_saved_player_id, :accused_player_id, :reveal_eliminated_player, :lockJoin);
+INSERT OR REPLACE INTO gameStateEntity(id, name, phase, round, pending_kills, last_saved_player_id, accused_player, reveal_eliminated_player, lock_join, available_slots)
+VALUES (:id, :name, :phase, :round, :pending_kills, :last_saved_player_id, :accused_player_id, :reveal_eliminated_player, :lockJoin, :availableSlots);
 
 lockJoin:
 UPDATE gameStateEntity SET lock_join = :lockJoin WHERE id = :id;

@@ -63,6 +63,7 @@ class LanServerJvm(
     private val sessions = ConcurrentHashMap.newKeySet<DefaultWebSocketServerSession>()
 
     override suspend fun start(identity: GameIdentity) {
+        advertiser.stop()
         val host = getLocalIpAddress()
 
         server = embeddedServer(CIO, port = identity.servicePort, host = host) {
@@ -106,6 +107,10 @@ class LanServerJvm(
     override suspend fun stop() {
         advertiser.stop()
         server?.stop()
+        database.clearVotes()
+        database.clearGameState()
+        database.clearPlayers()
+        logger.debug("✅ LAN WebSocket server stopped")
     }
 
     override suspend fun handleModeratorCommand(gameId: String, command: ModeratorCommand) {
@@ -116,8 +121,6 @@ class LanServerJvm(
         val players = database.getAllPlayersSnapshot()
         broadcast(ServerUpdate.GameStateSnapshot(newState))
         broadcast(ServerUpdate.PlayersSnapshot(players))
-
-        logger.debug("Moderator command executed ✅ ($command)")
     }
 
     suspend fun DefaultWebSocketServerSession.sendJson(message: ClientUpdate) {

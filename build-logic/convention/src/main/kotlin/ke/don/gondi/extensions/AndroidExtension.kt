@@ -30,9 +30,19 @@ internal fun Project.configureKotlinAndroid(
     }
     buildTypes {
         getByName("release") {
-            isMinifyEnabled = false
+            if (this@apply is ApplicationExtension) {
+                isMinifyEnabled = true
+                isShrinkResources = true
+                proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+                )
+            } else {
+                isMinifyEnabled = false
+            }
         }
     }
+
     packaging {
         resources {
             excludes += "META-INF/INDEX.LIST"

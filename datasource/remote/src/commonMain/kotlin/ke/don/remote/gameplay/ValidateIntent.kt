@@ -32,15 +32,27 @@ suspend fun validateIntent(
 
     // Handle Join separately
     if (intent is PlayerIntent.Join) {
-        if (phase != GamePhase.LOBBY) return PhaseValidationResult.Error("Players can only join during the lobby phase.")
-        val moderators = players.count { it.role == Role.MODERATOR }
-        if (moderators == 0) return PhaseValidationResult.Error("No moderator assigned. The game requires one moderator to start.")
-        if (moderators > 1) return PhaseValidationResult.Error("Multiple moderators assigned. Only one moderator is allowed.")
-        if (!players.all { it.role == null || it.role == Role.MODERATOR }) {
-            return PhaseValidationResult.Error("Some players already have roles. Joining is only allowed before role assignment.")
+        return when {
+            phase != GamePhase.LOBBY ->
+                PhaseValidationResult.Error("Players can only join during the lobby phase.")
+
+            players.count { it.role == Role.MODERATOR } == 0 ->
+                PhaseValidationResult.Error("No moderator assigned. The game requires one moderator to start.")
+
+            players.count { it.role == Role.MODERATOR } > 1 ->
+                PhaseValidationResult.Error("Multiple moderators assigned. Only one moderator is allowed.")
+
+            !players.all { it.role == null || it.role == Role.MODERATOR } ->
+                PhaseValidationResult.Error("Some players already have roles. Joining is only allowed before role assignment.")
+
+            players.any { it.id == intent.player.id } ->
+                PhaseValidationResult.Error("Player already in game.")
+
+            gameState.lockJoin ->
+                PhaseValidationResult.Error("The game has been locked for joining.")
+
+            else -> PhaseValidationResult.Success
         }
-        if (gameState.lockJoin) return PhaseValidationResult.Error("The game has been locked for joining.")
-        return PhaseValidationResult.Success
     }
 
     // Fetch the player

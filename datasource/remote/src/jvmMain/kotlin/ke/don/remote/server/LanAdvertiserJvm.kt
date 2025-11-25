@@ -23,50 +23,54 @@ class LanAdvertiserJvm : LanAdvertiser {
     private var serviceInfo: ServiceInfo? = null
 
     override fun start(gameIdentity: GameIdentity) {
+        stop()
+
         try {
             val ip = InetAddress.getByName(gameIdentity.serviceHost)
-            jmdns = JmDNS.create(ip)
+            val fullType = gameIdentity.serviceType.ensureDot()
 
-            val fullType = if (gameIdentity.serviceType.endsWith(".")) {
-                gameIdentity.serviceType
-            } else {
-                "${gameIdentity.serviceType}."
-            }
-
-            // ✅ Create TXT record metadata
             val txtRecord = mapOf(
                 "id" to gameIdentity.id,
                 "mod_name" to gameIdentity.moderatorName,
                 "mod_avatar" to gameIdentity.moderatorAvatar?.name,
                 "background" to gameIdentity.moderatorAvatarBackground.name,
                 "gameName" to gameIdentity.gameName,
+                "ttl" to "5", // ⬅ forces fast expiry
             )
 
-            // ✅ Create advertised service
+            jmdns = JmDNS.create(ip)
             serviceInfo = ServiceInfo.create(
                 fullType,
                 gameIdentity.gameName,
                 gameIdentity.servicePort,
-                0, // weight
-                0, // priority
+                0,
+                0,
                 txtRecord,
             )
 
-            jmdns?.registerService(serviceInfo)
-            logger.info("📡 Advertised '${gameIdentity.gameName}' by ${gameIdentity.moderatorName} on ${ip.hostAddress}:${gameIdentity.servicePort}")
+            jmdns!!.registerService(serviceInfo)
+            logger.info("📡 Advertised '${gameIdentity.gameName}'")
         } catch (e: Exception) {
-            logger.error("💥 Failed to advertise service: ${e.message}")
+            logger.error("💥 JVM advertise error: $e")
         }
     }
 
     override fun stop() {
         try {
-            serviceInfo?.let { jmdns?.unregisterService(it) }
-        } catch (e: Exception) {
-            logger.error("⚠️ Failed to unregister service: ${e.message}")
-        } finally {
-            jmdns?.close()
-            logger.info("🛑 LAN Advertiser stopped")
+            jmdns?.apply {
+                serviceInfo?.let {
+                    unregisterService(it)
+                }
+
+                Thread.sleep(750) // required by mdns spec for goodbye propagation
+                close()
+            }
+        } catch (_: Exception) {} finally {
+            jmdns = null
+            serviceInfo = null
+            logger.info("🛑 JVM advertiser stopped cleanly")
         }
     }
 }
+
+private fun String.ensureDot() = if (endsWith(".")) this else "$this."

@@ -45,6 +45,7 @@ class LocalDatabaseTest {
             id = "current",
             phase = GamePhase.SLEEP,
             round = 1,
+            availableSlots = 6,
             pendingKills = listOf("p1", "p2"),
             lastSavedPlayerId = "p3",
             accusedPlayer = null,

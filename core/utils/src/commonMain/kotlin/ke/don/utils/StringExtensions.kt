@@ -20,3 +20,7 @@ fun String.getInitials(): String {
             ).uppercase()
     }
 }
+
+fun String.capitaliseFirst(): String {
+    return this.lowercase().replaceFirstChar { it.uppercase() }
+}

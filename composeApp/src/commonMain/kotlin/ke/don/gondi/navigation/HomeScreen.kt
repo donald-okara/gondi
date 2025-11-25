@@ -34,7 +34,7 @@ class HomeScreen : Screen {
                 is HomeIntentHandler.NavigateToRules ->
                     navigator.push(RulesScreen())
                 is HomeIntentHandler.NavigateToNewGame ->
-                    {}
+                    navigator.push(MainModeratorScreen())
                 is HomeIntentHandler.NavigateToGame ->
                     {}
                 is HomeIntentHandler.NavigateToEdit ->

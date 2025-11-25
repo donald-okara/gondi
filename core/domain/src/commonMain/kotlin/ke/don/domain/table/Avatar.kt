@@ -26,6 +26,9 @@ enum class Avatar {
     @SerialName("alexander")
     Alexander,
 
+    @SerialName("avery")
+    Avery,
+
     @SerialName("christian")
     Christian,
 
@@ -44,8 +47,14 @@ enum class Avatar {
     @SerialName("katherine")
     Katherine,
 
+    @SerialName("kimberly")
+    Kimberly,
+
     @SerialName("leo")
     Leo,
+
+    @SerialName("maria")
+    Maria,
 
     @SerialName("mason")
     Mason,
@@ -58,6 +67,9 @@ enum class Avatar {
 
     @SerialName("ryker")
     Ryker,
+
+    @SerialName("sarah")
+    Sarah,
 
     @SerialName("sawyer")
     Sawyer,
