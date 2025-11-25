@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import ke.don.design.theme.PaddingOption
 import ke.don.design.theme.spacing
 import ke.don.design.theme.spacingPaddingValues
@@ -84,8 +85,8 @@ fun ScaffoldToken(
     containerColor: Color = MaterialTheme.colorScheme.background,
     scrollState: ScrollState,
     contentColor: Color = contentColorFor(containerColor),
-    verticalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.medium),
-    horizontalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.small),
+    verticalPadding: Dp = MaterialTheme.spacing.medium,
+    horizontalPadding: Dp = MaterialTheme.spacing.medium,
     contentAlignment: Alignment = Alignment.TopCenter,
     content: @Composable ColumnScope.(isCompact: Boolean) -> Unit,
 ) {
@@ -154,8 +155,8 @@ fun ScaffoldToken(
     floatingActionButtonPosition: FabPosition = FabPosition.End,
     containerColor: Color = MaterialTheme.colorScheme.background,
     contentColor: Color = contentColorFor(containerColor),
-    verticalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.medium),
-    horizontalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.small),
+    verticalPadding: Dp = MaterialTheme.spacing.medium,
+    horizontalPadding: Dp = MaterialTheme.spacing.medium,
     contentAlignment: Alignment = Alignment.TopCenter,
     content: @Composable ColumnScope.(isCompact: Boolean) -> Unit,
 ) {
@@ -175,10 +176,8 @@ fun ScaffoldToken(
                 Column(
                     modifier = modifier
                         .padding(
-                            spacingPaddingValues(
-                                vertical = verticalPadding,
-                                horizontal = horizontalPadding,
-                            ),
+                            vertical = verticalPadding,
+                            horizontal = horizontalPadding,
                         )
                         .width(MaterialTheme.spacing.largeScreenSize),
                     horizontalAlignment = Alignment.Start,

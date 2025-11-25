@@ -9,6 +9,7 @@
  */
 package ke.don.components.scaffold
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
@@ -68,27 +69,31 @@ fun TopBarToken(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
-                            .padding(Theme.spacing.small),
+                            .padding(Theme.spacing.medium),
                     )
                 }
             },
             navigationIcon = {
-                when (navigationIcon) {
-                    NavigationIcon.None -> {
-                        AdaptiveLogo(
-                            modifier = Modifier
-                                .padding(Theme.spacing.small)
-                                .size(24.dp),
-                        )
-                    }
-                    is NavigationIcon.Back ->
-                        IconToken(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            onClick = navigationIcon.navigateBack,
-                        )
+                Box(
+                    modifier = Modifier.padding(Theme.spacing.small),
+                ) {
+                    when (navigationIcon) {
+                        NavigationIcon.None -> {
+                            AdaptiveLogo(
+                                modifier = Modifier
+                                    .size(24.dp),
+                            )
+                        }
 
-                    is NavigationIcon.Custom -> navigationIcon.content()
+                        is NavigationIcon.Back ->
+                            IconToken(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                                onClick = navigationIcon.navigateBack,
+                            )
+
+                        is NavigationIcon.Custom -> navigationIcon.content()
+                    }
                 }
             },
             actions = {

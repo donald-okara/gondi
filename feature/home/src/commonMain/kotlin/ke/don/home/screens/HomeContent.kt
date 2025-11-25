@@ -13,6 +13,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -42,6 +43,7 @@ import ke.don.components.scaffold.NavigationIcon
 import ke.don.components.scaffold.RefreshLazyColumn
 import ke.don.components.scaffold.ScaffoldToken
 import ke.don.components.scaffold.cardCrunchEffects
+import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.home.components.GameRoomItem
 import ke.don.home.components.ThemeSheet
@@ -115,11 +117,11 @@ fun HomeContent(
             }
         },
         navigationIcon = NavigationIcon.Custom {
-            Box {
+            Box{
                 IconToken(
                     imageVector = Icons.Default.Menu,
                     buttonType = ComponentType.Neutral,
-                    onClick = { onEvent(HomeIntentHandler.ShowMenu) },
+                    onClick = { onEvent(HomeIntentHandler.ShowMenu) }
                 )
 
                 DropDownToken(
