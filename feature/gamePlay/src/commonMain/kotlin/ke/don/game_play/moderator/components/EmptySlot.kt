@@ -41,7 +41,7 @@ fun EmptySlot(
         ),
     ) {
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize(),
             contentAlignment = Alignment.Center,
         ) {

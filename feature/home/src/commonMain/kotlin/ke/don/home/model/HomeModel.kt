@@ -21,6 +21,7 @@ import ke.don.local.datastore.ProfileStore
 import ke.don.local.datastore.ThemeRepository
 import ke.don.local.misc.NetworkChooser
 import ke.don.utils.result.ReadStatus
+import ke.don.utils.result.onFailure
 import ke.don.utils.result.toReadStatus
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,7 +42,11 @@ class HomeModel(
 
     init {
         screenModelScope.launch {
-            profileRepository.getProfile()
+            profileRepository.getProfile().onFailure { error ->
+                    Matcha.showErrorToast(
+                        message = error.message
+                    )
+                }
             combine(
                 themeRepository.theme,
                 profileStore.profileFlow,

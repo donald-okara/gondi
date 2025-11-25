@@ -48,34 +48,33 @@ class GondiHost(
         }
         moderator.validateAssignments().onSuccess {
             screenModelScope.launch {
+                val host = hostPlayer.first() ?: error("Player is not present")
+
                 val identity = GameIdentity(
                     id = moderatorState.value.newGame.id,
                     gameName = moderatorState.value.newGame.name,
-                    moderatorName = hostPlayer.first()?.name ?: error("Player is not present"),
-                    moderatorAvatar = hostPlayer.first()?.avatar ?: error("Player is not present"),
-                    moderatorAvatarBackground = hostPlayer.first()?.background
-                        ?: error("Player is not present"),
+                    moderatorName = host.name,
+                    moderatorAvatar = host.avatar ?: error("Player avatar is not present"),
+                    moderatorAvatarBackground = host.background,
                 )
-                runCatching {
-                    serverManager.startServer(
-                        identity,
-                        moderatorState.value.newGame.copy(availableSlots = moderatorState.value.assignment.sumOf { it.second }.toLong()),
-                        screenModelScope,
-                        hostPlayer.first()!!,
-                    )
-                    session.observe(identity.id, screenModelScope)
-                    session.updateModeratorState {
-                        it.copy(createStatus = ResultStatus.Success(Unit))
-                    }
-                }.onFailure { error ->
-                    session.updateModeratorState {
-                        it.copy(createStatus = ResultStatus.Error(error.message.toString()))
-                    }
+                serverManager.startServer(
+                    identity,
+                    moderatorState.value.newGame.copy(availableSlots = moderatorState.value.assignment.sumOf { it.second }.toLong()),
+                    host,
+                ).onFailure { error ->
                     Matcha.showErrorToast(
-                        message = error.message.toString(),
+                        message = error.message,
                         title = "Error",
                         retryAction = { startServer() },
                     )
+                    session.updateModeratorState { state ->
+                        state.copy(createStatus = ResultStatus.Error(error.message))
+                    }
+                }.onSuccess {
+                    session.updateModeratorState {
+                        it.copy(createStatus = ResultStatus.Success(Unit))
+                    }
+                    session.observe(identity.id, screenModelScope)
                 }
             }
         }.onFailure { error ->

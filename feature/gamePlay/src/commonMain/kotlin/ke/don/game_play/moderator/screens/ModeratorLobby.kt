@@ -54,17 +54,19 @@ fun ModeratorLobby(
         SelectedPlayerModal(
             onDismissRequest = { onEvent(ModeratorHandler.SelectPlayer(null)) },
             onAssignPlayer = {
-                onEvent(ModeratorHandler.HandleModeratorCommand(ModeratorCommand.AssignRole(gameState!!.id, selectedPlayer.id, it)))
+                gameState?.let { it1 -> onEvent(ModeratorHandler.HandleModeratorCommand(ModeratorCommand.AssignRole(it1.id, selectedPlayer.id, it))) }
             },
             onRemovePlayer = {
-                onEvent(
-                    ModeratorHandler.HandleModeratorCommand(
-                        ModeratorCommand.RemovePlayer(
-                            gameState!!.id,
-                            selectedPlayer.id,
+                gameState?.let {
+                    onEvent(
+                        ModeratorHandler.HandleModeratorCommand(
+                            ModeratorCommand.RemovePlayer(
+                                it.id,
+                                selectedPlayer.id,
+                            ),
                         ),
-                    ),
-                )
+                    )
+                }
             },
             player = selectedPlayer,
         )

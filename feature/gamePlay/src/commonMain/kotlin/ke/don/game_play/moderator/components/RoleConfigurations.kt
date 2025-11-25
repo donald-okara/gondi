@@ -43,6 +43,7 @@ import ke.don.domain.gameplay.Role
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.moderator.model.RoleAssignment
+import ke.don.game_play.moderator.useCases.PLAYER_DET_LIMIT
 import ke.don.resources.icon
 import org.jetbrains.compose.resources.DrawableResource
 
@@ -131,7 +132,7 @@ fun RoleConfigurationItem(
         when (roleAssignment.first) {
             Role.DOCTOR -> 1
             Role.GONDI -> 2
-            Role.DETECTIVE, Role.ACCOMPLICE -> if (totalPlayers < 8) 0 else 1
+            Role.DETECTIVE, Role.ACCOMPLICE -> if (totalPlayers < PLAYER_DET_LIMIT) 0 else 1
             else -> 10
         }
     }
@@ -139,8 +140,8 @@ fun RoleConfigurationItem(
     val warningMessage by derivedStateOf {
         when (roleAssignment.first) {
             Role.DETECTIVE, Role.ACCOMPLICE ->
-                if (totalPlayers < 10 && roleAssignment.second > 0) {
-                    "Detective and Accomplice cannot exist in a game with less than 10 players"
+                if (totalPlayers < PLAYER_DET_LIMIT && roleAssignment.second > 0) {
+                    "Detective and Accomplice cannot exist in a game with less than $PLAYER_DET_LIMIT players"
                 } else if (roleAssignment.second > 1) {
                     "Only one Detective or Accomplice allowed"
                 } else {

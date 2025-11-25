@@ -64,14 +64,9 @@ class GameSessionState(
     fun stopObserving() {
         dbObserveJob?.cancel()
 
-        val cleanupScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-        cleanupScope.launch {
-            moderatorState.update {
-                ModeratorState()
-            }
-            gameState.value = null
-            players.value = emptyList()
-            votes.value = emptyList()
-        }
+        moderatorState.update { ModeratorState() }
+        gameState.update { null }
+        players.update { emptyList() }
+        votes.update { emptyList() }
     }
 }

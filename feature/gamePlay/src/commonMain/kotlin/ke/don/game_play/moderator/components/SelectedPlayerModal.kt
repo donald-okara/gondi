@@ -165,7 +165,7 @@ private fun RemovePlayerConfirmation(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(text = "Are you sure you want to remove $playerName from the game?")
-        androidx.compose.foundation.layout.Row(
+        Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.End),
             verticalAlignment = Alignment.CenterVertically,

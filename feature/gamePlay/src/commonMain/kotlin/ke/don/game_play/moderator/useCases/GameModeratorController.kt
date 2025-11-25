@@ -87,10 +87,10 @@ class GameModeratorController(
         }
 
         // Minimum
-        if (totalPlayers < 4) {
+        if (totalPlayers < PLAYER_LOWER_LIMIT) {
             return Result.error(
                 LocalError(
-                    message = "At least 4 players are required",
+                    message = "At least $PLAYER_LOWER_LIMIT players are required",
                     cause = "PlayerCount",
                 ),
             )
@@ -175,14 +175,15 @@ class GameModeratorController(
             val totalAdjusted = adjustedAssignments.sumOf { it.second }
 
             // Build final role pool (remaining slots + villagers)
-            val rolePool = buildList(totalPlayers.size) {
+            val rolePool = buildList(assignPlayers.size) {
                 for ((role, count) in adjustedAssignments) {
                     repeat(count) { add(role) }
                 }
 
                 // Fill remaining slots with Villagers
-                if (totalPlayers.size > totalAdjusted) {
-                    repeat(totalPlayers.size - totalAdjusted) { add(Role.VILLAGER) }
+                val poolSize = size
+                if (assignPlayers.size > poolSize) {
+                    repeat(assignPlayers.size - poolSize) { add(Role.VILLAGER) }
                 }
             }.shuffled()
 
@@ -229,4 +230,4 @@ class GameModeratorController(
 }
 
 const val PLAYER_LOWER_LIMIT = 5
-const val PLAYER_DET_LIMIT = 10
+const val PLAYER_DET_LIMIT = 8
