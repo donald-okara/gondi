@@ -125,9 +125,6 @@ fun SharedLobby(
                     )
                     PlayerItem(
                         actionType = ActionType.NONE,
-                        onClick = {
-                            onSelectPlayer(moderator.id)
-                        },
                         isSelected = false,
                         isMe = myPlayerId == moderator.id,
                         showRole = true,

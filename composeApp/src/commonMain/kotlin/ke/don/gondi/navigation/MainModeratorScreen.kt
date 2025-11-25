@@ -41,14 +41,7 @@ class MainModeratorScreen : Screen {
                 qualifier = named(GAME_MODERATOR_SCOPE),
             )
         }
-
-        DisposableEffect(screen) {
-            onDispose {
-                if (moderatorScope.isNotClosed()) {
-                    moderatorScope.close()
-                }
-            }
-        }
+        val navigator = LocalNavigator.currentOrThrow
 
         val gondiHost = moderatorScope.get<GondiHost>()
 
@@ -60,11 +53,17 @@ class MainModeratorScreen : Screen {
         val votes by gondiHost.votes.collectAsState()
         val moderatorState by gondiHost.moderatorState.collectAsState()
 
-        val navigator = LocalNavigator.currentOrThrow
-
         val onEvent = gondiHost::onEvent
 
-        BackHandler(enabled = false) {
+        DisposableEffect(screen) {
+            onDispose {
+                if (moderatorScope.isNotClosed()) {
+                    moderatorScope.close()
+                }
+            }
+        }
+
+        BackHandler(enabled = true) {
             onEvent(ModeratorHandler.ShowLeaveDialog)
         }
 
