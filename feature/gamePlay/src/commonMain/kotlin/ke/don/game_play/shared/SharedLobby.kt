@@ -76,7 +76,6 @@ fun SharedLobby(
     }
 }
 
-
 @Composable
 fun LobbyHeader(
     modifier: Modifier = Modifier,
@@ -128,11 +127,11 @@ fun LobbyHeader(
 fun RoleLockWarning(
     modifier: Modifier = Modifier,
     nonModeratorPlayers: List<Player>,
-    isModerator: Boolean
+    isModerator: Boolean,
 ) {
     if (!isModerator) return
 
-    AnimatedVisibility(nonModeratorPlayers.any { it.role != null }){
+    AnimatedVisibility(nonModeratorPlayers.any { it.role != null }) {
         Text(
             text = "At least one player has a role. This locks everyone else out from joining the game",
             color = Theme.colorScheme.error,
@@ -242,4 +241,3 @@ fun PlayersGrid(
         }
     }
 }
-
