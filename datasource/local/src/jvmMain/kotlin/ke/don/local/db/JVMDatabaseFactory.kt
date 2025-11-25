@@ -13,7 +13,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import java.io.File
 
-class JVMDatabaseFactory: DatabaseFactory {
+class JVMDatabaseFactory : DatabaseFactory {
 
     private val dbFileName = "gondi.db"
 

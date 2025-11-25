@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.moderator.screens
 
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +44,7 @@ fun CreateGameContent(
 ) {
     val characterLimit = 20
 
-    val totalPlayers = remember (state.assignment) {
+    val totalPlayers = remember(state.assignment) {
         state.assignment.filterNot {
             it.first == Role.MODERATOR
         }.sumOf { it.second }
@@ -46,8 +55,8 @@ fun CreateGameContent(
             .verticalScroll(rememberScrollState())
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Theme.spacing.small, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         TextFieldToken(
             text = state.newGame.name,
             onValueChange = { onEvent(ModeratorHandler.UpdateRoomName(it)) },
@@ -62,7 +71,7 @@ fun CreateGameContent(
         RoleConfigurationContainer(
             state = state,
             onEvent = onEvent,
-            totalPlayers = totalPlayers
+            totalPlayers = totalPlayers,
         )
 
         Text(
@@ -72,11 +81,11 @@ fun CreateGameContent(
                 }
                 withStyle(
                     style = Theme.typography.headlineMedium.toSpanStyle()
-                        .copy(fontWeight = FontWeight.Bold)
+                        .copy(fontWeight = FontWeight.Bold),
                 ) {
                     append(totalPlayers.toString())
                 }
-            }
+            },
         )
 
         Spacer(modifier = Modifier.height(Theme.spacing.medium))
@@ -87,7 +96,7 @@ fun CreateGameContent(
             buttonType = ComponentType.Primary,
             loading = state.createStatus.isLoading,
             enabled = state.assignment.sumOf { it.second } > 0 && state.newGame.name.isNotBlank() && state.createStatus.isLoading.not(),
-        ){
+        ) {
             Text(
                 text = "Confirm and Start Game",
             )

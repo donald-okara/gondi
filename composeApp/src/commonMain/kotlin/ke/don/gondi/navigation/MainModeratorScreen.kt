@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.gondi.navigation
 
 import androidx.compose.runtime.Composable
@@ -19,7 +28,7 @@ import org.koin.core.qualifier.named
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-class MainModeratorScreen: Screen {
+class MainModeratorScreen : Screen {
     @OptIn(ExperimentalComposeUiApi::class, ExperimentalUuidApi::class)
     @Composable
     override fun Content() {
@@ -29,7 +38,7 @@ class MainModeratorScreen: Screen {
         val moderatorScope = remember(screen) {
             koin.createScope(
                 scopeId = Uuid.random().toString(),
-                qualifier = named(GAME_MODERATOR_SCOPE)
+                qualifier = named(GAME_MODERATOR_SCOPE),
             )
         }
 
@@ -41,13 +50,12 @@ class MainModeratorScreen: Screen {
             }
         }
 
-
         val gondiHost = moderatorScope.get<GondiHost>()
 
         val gameState by gondiHost.gameState.collectAsState()
         val players by gondiHost.players.collectAsState()
         val hostPlayer by gondiHost.hostPlayer.collectAsState(
-            initial = null
+            initial = null,
         )
         val votes by gondiHost.votes.collectAsState()
         val moderatorState by gondiHost.moderatorState.collectAsState()
@@ -55,7 +63,6 @@ class MainModeratorScreen: Screen {
         val navigator = LocalNavigator.currentOrThrow
 
         val onEvent = gondiHost::onEvent
-
 
         BackHandler(enabled = false) {
             onEvent(ModeratorHandler.ShowLeaveDialog)
@@ -68,7 +75,7 @@ class MainModeratorScreen: Screen {
             votes = votes,
             onEvent = onEvent,
             onBack = navigator::pop,
-            hostPlayer = hostPlayer
+            hostPlayer = hostPlayer,
         )
     }
 }

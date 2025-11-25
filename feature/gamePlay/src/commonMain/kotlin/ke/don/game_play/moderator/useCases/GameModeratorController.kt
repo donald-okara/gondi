@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.moderator.useCases
 
 import ke.don.domain.gameplay.ModeratorCommand
@@ -19,7 +28,7 @@ class GameModeratorController(
     fun updateRoomName(name: String) {
         session.updateModeratorState { state ->
             val newState = state.copy(
-                newGame = state.newGame.copy(name = name)
+                newGame = state.newGame.copy(name = name),
             )
             newState
         }
@@ -43,8 +52,8 @@ class GameModeratorController(
             return Result.error(
                 LocalError(
                     message = "Detective and Accomplice cannot exist in a game with less than 10 players",
-                    cause = "Detective/Accomplice"
-                )
+                    cause = "Detective/Accomplice",
+                ),
             )
         }
 
@@ -53,8 +62,8 @@ class GameModeratorController(
             return Result.error(
                 LocalError(
                     message = "Only one Detective or Accomplice allowed",
-                    cause = "Detective/Accomplice"
-                )
+                    cause = "Detective/Accomplice",
+                ),
             )
         }
 
@@ -63,8 +72,8 @@ class GameModeratorController(
             return Result.error(
                 LocalError(
                     message = "There must be exactly 1 Doctor",
-                    cause = "Doctor"
-                )
+                    cause = "Doctor",
+                ),
             )
         }
 
@@ -72,8 +81,8 @@ class GameModeratorController(
             return Result.error(
                 LocalError(
                     message = "There must be exactly 2 Gondis",
-                    cause = "Gondi"
-                )
+                    cause = "Gondi",
+                ),
             )
         }
 
@@ -82,8 +91,8 @@ class GameModeratorController(
             return Result.error(
                 LocalError(
                     message = "At least 4 players are required",
-                    cause = "PlayerCount"
-                )
+                    cause = "PlayerCount",
+                ),
             )
         }
 
@@ -109,7 +118,7 @@ class GameModeratorController(
         }
     }
 
-    fun selectPlayer(playerId: String? = null){
+    fun selectPlayer(playerId: String? = null) {
         session.updateModeratorState { state ->
             state.copy(selectedPlayerId = playerId)
         }
@@ -192,7 +201,7 @@ class GameModeratorController(
             // Send batch update to server
             server.handleModeratorCommand(
                 gameId,
-                ModeratorCommand.AssignRoleBatch(gameId, finalAssignments)
+                ModeratorCommand.AssignRoleBatch(gameId, finalAssignments),
             )
 
             session.updateModeratorState {
@@ -200,13 +209,12 @@ class GameModeratorController(
             }
 
             return Result.Success(Unit)
-
         } catch (e: Exception) {
             return Result.Error(
                 LocalError(
                     message = e.message ?: "Unknown error",
-                    cause = e.cause.toString()
-                )
+                    cause = e.cause.toString(),
+                ),
             )
         }
     }
@@ -222,4 +230,3 @@ class GameModeratorController(
 
 const val PLAYER_LOWER_LIMIT = 5
 const val PLAYER_DET_LIMIT = 10
-

@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.moderator.components
 
 import androidx.compose.animation.AnimatedVisibility
@@ -63,7 +72,7 @@ fun RoleConfigurationContainer(
         RoleConfigurationList(
             state = state,
             onEvent = onEvent,
-            totalPlayers = totalPlayers
+            totalPlayers = totalPlayers,
         )
     }
 }
@@ -88,13 +97,13 @@ fun RoleConfigurationList(
             text = "Player Roles Configuration",
             style = Theme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            color = Theme.colorScheme.onSurface
+            color = Theme.colorScheme.onSurface,
         )
         Text(
             text = "Set the number of players for each role",
             style = Theme.typography.bodySmall,
             fontWeight = FontWeight.Bold,
-            color = Theme.colorScheme.onSurfaceVariant
+            color = Theme.colorScheme.onSurfaceVariant,
         )
 
         HorizontalDivider()
@@ -105,7 +114,7 @@ fun RoleConfigurationList(
             RoleConfigurationItem(
                 roleAssignment = assignment,
                 onAssignmentChange = { onEvent(ModeratorHandler.UpdateAssignments(it)) },
-                totalPlayers = totalPlayers
+                totalPlayers = totalPlayers,
             )
         }
     }
@@ -134,7 +143,9 @@ fun RoleConfigurationItem(
                     "Detective and Accomplice cannot exist in a game with less than 10 players"
                 } else if (roleAssignment.second > 1) {
                     "Only one Detective or Accomplice allowed"
-                } else null
+                } else {
+                    null
+                }
             else -> if (roleAssignment.second > maxCount) "Max allowed: $maxCount" else null
         }
     }
@@ -143,7 +154,7 @@ fun RoleConfigurationItem(
         roleAssignment.second < maxCount
     }
     val enableDecrement by derivedStateOf {
-        val lowerLimit = if (roleAssignment.first == Role.GONDI)  1 else 0
+        val lowerLimit = if (roleAssignment.first == Role.GONDI) 1 else 0
 
         roleAssignment.second > lowerLimit
     }
@@ -151,7 +162,7 @@ fun RoleConfigurationItem(
     Column(
         modifier = modifier
             .fillMaxWidth(),
-    ){
+    ) {
         RoleConfigurationBase(
             icon = roleAssignment.first.icon,
             label = roleAssignment.first.name,
@@ -181,7 +192,6 @@ fun RoleConfigurationItem(
     }
 }
 
-
 @Composable
 fun RoleConfigurationBase(
     icon: DrawableResource,
@@ -198,17 +208,17 @@ fun RoleConfigurationBase(
             .padding(vertical = 16.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy( Theme.spacing.medium)
+            horizontalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
         ) {
             Box(
                 modifier = Modifier
-                    .size( Theme.spacing.extraLarge)
+                    .size(Theme.spacing.extraLarge)
                     .background(Theme.colorScheme.primary.copy(alpha = 0.1f), Theme.shapes.medium),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 AdaptiveIcon(
                     modifier = Modifier
@@ -216,7 +226,7 @@ fun RoleConfigurationBase(
                         .fillMaxSize(),
                     painterResource = icon,
                     contentDescription = null,
-                    logoColor = Theme.colorScheme.primary
+                    logoColor = Theme.colorScheme.primary,
                 )
             }
 
@@ -224,7 +234,7 @@ fun RoleConfigurationBase(
                 text = label,
                 style = Theme.typography.bodyLarge.copy(
                     color = Theme.colorScheme.onBackground,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
                 ),
                 maxLines = 1,
             )
@@ -233,21 +243,21 @@ fun RoleConfigurationBase(
         // Counter Buttons
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy( Theme.spacing.medium)
+            horizontalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
         ) {
             IconToken(
                 onClick = onDecrement,
                 imageVector = Icons.Default.Remove,
                 buttonType = ComponentType.Neutral,
-                enabled = enableDecrement
+                enabled = enableDecrement,
             )
 
             Text(
                 text = count.toString(),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Theme.colorScheme.onBackground
-                )
+                    color = Theme.colorScheme.onBackground,
+                ),
             )
 
             IconToken(

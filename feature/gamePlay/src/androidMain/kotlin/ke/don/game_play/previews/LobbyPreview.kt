@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.previews
 
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,7 +41,7 @@ fun PlayersPreview(
             Player(id = "5", name = "Todd O'Connor", role = Role.VILLAGER, Avatar.Kimberly, background = AvatarBackground.ORANGE_CORAL),
             Player(id = "6", name = "Pat O'Neill", role = Role.VILLAGER, Avatar.George, background = AvatarBackground.PURPLE_AMETHYST),
             Player(id = "7", name = "Hans", role = Role.VILLAGER, Avatar.Jocelyn, background = AvatarBackground.GREEN_MINTY),
-            Player(id = "8", name = "Franz", role = Role.MODERATOR, Avatar.Jameson, background = AvatarBackground.YELLOW_GOLDEN)
+            Player(id = "8", name = "Franz", role = Role.MODERATOR, Avatar.Jameson, background = AvatarBackground.YELLOW_GOLDEN),
         )
     }
 
@@ -40,15 +49,15 @@ fun PlayersPreview(
         ModeratorState(selectedPlayerId = "3")
     }
 
-    DevicePreviewContainer(theme){
+    DevicePreviewContainer(theme) {
         ScaffoldToken(
             title = "Lobby",
-            navigationIcon = NavigationIcon.Back {}
-        ){
+            navigationIcon = NavigationIcon.Back {},
+        ) {
             ModeratorLobby(
                 players = players,
                 moderatorState = moderatorState,
-                onEvent = {}
+                onEvent = {},
             )
         }
     }

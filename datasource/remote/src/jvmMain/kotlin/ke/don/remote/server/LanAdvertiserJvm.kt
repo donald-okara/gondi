@@ -17,7 +17,6 @@ import java.net.InetAddress
 import javax.jmdns.JmDNS
 import javax.jmdns.ServiceInfo
 
-
 class LanAdvertiserJvm : LanAdvertiser {
     private val logger = Logger("LanAdvertiser_JVM")
     private var jmdns: JmDNS? = null
@@ -66,8 +65,7 @@ class LanAdvertiserJvm : LanAdvertiser {
                 Thread.sleep(750) // required by mdns spec for goodbye propagation
                 close()
             }
-        } catch (_: Exception) {}
-        finally {
+        } catch (_: Exception) {} finally {
             jmdns = null
             serviceInfo = null
             logger.info("🛑 JVM advertiser stopped cleanly")

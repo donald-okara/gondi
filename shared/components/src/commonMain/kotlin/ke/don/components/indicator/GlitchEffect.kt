@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.indicator
 
 import androidx.compose.animation.core.Animatable
@@ -25,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.toRect
 import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -47,14 +55,12 @@ import kotlin.math.roundToInt
 import kotlin.random.Random
 import kotlin.random.nextInt
 
-
 @Composable
 fun Modifier.glitchEffect(
     visible: Boolean,
     glitchColors: List<Color> = listOf(Theme.colorScheme.primary),
     slices: Int = 20,
 ): Modifier {
-
     val end = remember { 20 }
     val graphicsLayer = rememberGraphicsLayer()
     val stepAnimatable = remember { Animatable(if (visible) 0f else end.toFloat()) }
@@ -72,7 +78,7 @@ fun Modifier.glitchEffect(
             ),
             block = {
                 step = this.value.roundToInt()
-            }
+            },
         )
     }
 
@@ -88,17 +94,19 @@ fun Modifier.glitchEffect(
         for (i in 0 until slices) {
             if (Random.nextInt(end) < step) continue
             translate(
-                left = if (Random.nextInt(5) < step)
+                left = if (Random.nextInt(5) < step) {
                     Random.nextInt(-20..20).toFloat() * intensity
-                else
+                } else {
                     0f
+                },
             ) {
                 scale(
                     scaleY = 1f,
-                    scaleX = if (Random.nextInt(10) < step)
+                    scaleX = if (Random.nextInt(10) < step) {
                         1f + (1f * Random.nextFloat() * intensity)
-                    else
+                    } else {
                         1f
+                    },
                 ) {
                     clipRect(
                         top = (i / slices.toFloat()) * size.height,
@@ -109,7 +117,7 @@ fun Modifier.glitchEffect(
                             if (Random.nextInt(5, 30) < step) {
                                 drawRect(
                                     color = glitchColors.random(),
-                                    blendMode = BlendMode.SrcAtop
+                                    blendMode = BlendMode.SrcAtop,
                                 )
                             }
                         }
@@ -122,7 +130,6 @@ fun Modifier.glitchEffect(
 
 @Composable
 fun GlitchVisibilityImpl() {
-
     var visible by remember { mutableStateOf(true) }
     var selected by remember { mutableStateOf(false) }
     val interaction = remember { MutableInteractionSource() }
@@ -142,7 +149,7 @@ fun GlitchVisibilityImpl() {
                 detectTapGestures(
                     onTap = {
                         visible = false
-                    }
+                    },
                 )
             }
             .pointerHoverIcon(PointerIcon.Hand)
@@ -159,28 +166,26 @@ fun GlitchVisibilityImpl() {
                 interactionSource = interaction,
                 onClick = {
                     selected = !selected
-                }
+                },
             )
-            .padding(horizontal = 32.dp, vertical = 16.dp)
+            .padding(horizontal = 32.dp, vertical = 16.dp),
     ) {
         Text(
             text = "Tap to Disappear",
-            color = Theme.colorScheme.primary
+            color = Theme.colorScheme.primary,
         )
     }
-
 }
 
 @Composable
 private fun Modifier.rings(
     ringColor: Color = Theme.colorScheme.primary,
     ringCount: Int = 6,
-    ringSpace: Dp = 2.dp
+    ringSpace: Dp = 2.dp,
 ): Modifier {
-
     val animatedRingSpace by animateDpAsState(
         targetValue = ringSpace,
-        animationSpec = tween()
+        animationSpec = tween(),
     )
 
     return (1..ringCount).map { index ->

@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.profile
 
 import androidx.compose.animation.AnimatedVisibility
@@ -33,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import ke.don.components.indicator.GlowingSelectableSurface
 import ke.don.design.theme.AppTheme
 import ke.don.design.theme.Theme
+import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.Faction
 import ke.don.domain.state.Player
@@ -41,9 +51,6 @@ import ke.don.resources.color
 import ke.don.resources.painter
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
-import androidx.compose.ui.graphics.ColorMatrix // <-- Add this import
-import androidx.compose.ui.graphics.RenderEffect // <-- Add this import
-import ke.don.design.theme.spacing
 
 @Composable
 fun PlayerItem(
@@ -59,7 +66,7 @@ fun PlayerItem(
     val contentAlpha by animateFloatAsState(
         targetValue = if (player.isAlive) 1.0f else 0.5f,
         animationSpec = tween(300),
-        label = "playerAlpha"
+        label = "playerAlpha",
     )
 
     val color by animateColorAsState(
@@ -76,14 +83,14 @@ fun PlayerItem(
         Column(
             modifier = Modifier.padding(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             // Avatar Box
             Box(
                 modifier = Modifier
                     .size(96.dp)
                     .clip(CircleShape)
-                    .background(player.background.color())
+                    .background(player.background.color()),
             ) {
                 // Player Avatar or Initials
                 val imageAlpha =
@@ -97,7 +104,7 @@ fun PlayerItem(
                         painter = painterResource(it),
                         contentDescription = player.name,
                         contentScale = ContentScale.Crop,
-                        modifier = imageModifier
+                        modifier = imageModifier,
                     )
                 } ?: InitialsToken(
                     modifier = imageModifier,
@@ -112,14 +119,14 @@ fun PlayerItem(
                         modifier = Modifier
                             .matchParentSize()
                             .background(Color.Black.copy(alpha = 0.6f)),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         // Using the skull icon from your HTML example
                         Icon(
                             painter = painterResource(Resources.Images.ActionIcons.DEAD),
                             contentDescription = "Eliminated",
                             tint = Color.Red.copy(alpha = 0.8f),
-                            modifier = Modifier.size(40.dp)
+                            modifier = Modifier.size(40.dp),
                         )
                     }
                 }
@@ -132,37 +139,37 @@ fun PlayerItem(
                 color = Theme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
 
             AnimatedVisibility(
-                visible = player.isAlive.not()
-            ){
+                visible = player.isAlive.not(),
+            ) {
                 Surface(
                     shape = MaterialTheme.shapes.medium,
                     color = Theme.colorScheme.errorContainer,
-                    contentColor = Theme.colorScheme.onErrorContainer
-                ){
+                    contentColor = Theme.colorScheme.onErrorContainer,
+                ) {
                     Text(
                         text = "Eliminated",
                         style = Theme.typography.bodySmall,
                         modifier = Modifier.padding(
                             horizontal = MaterialTheme.spacing.extraSmall,
-                            vertical = MaterialTheme.spacing.tiny
-                        )
+                            vertical = MaterialTheme.spacing.tiny,
+                        ),
                     )
                 }
             }
             AnimatedVisibility(
-                visible = showRole || player.isAlive.not()
-            ){
+                visible = showRole || player.isAlive.not(),
+            ) {
                 Text(
                     text = player.role?.name ?: "Waiting",
                     style = Theme.typography.bodySmall,
                     textAlign = TextAlign.Center,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = player.role?.faction?.color ?: Theme.colorScheme.primary
+                    color = player.role?.faction?.color ?: Theme.colorScheme.primary,
                 )
             }
         }
@@ -180,8 +187,8 @@ fun PlayerItem(
  * for release builds.
  */
 val ActionType.painter: DrawableResource?
-    get() = when(this){
-        ActionType.KILL ->Resources.Images.ActionIcons.DEAD
+    get() = when (this) {
+        ActionType.KILL -> Resources.Images.ActionIcons.DEAD
         ActionType.ACCUSE, ActionType.SECOND -> Resources.Images.ActionIcons.ACCUSE
         ActionType.SAVE -> Resources.Images.ActionIcons.SAVE
         ActionType.VOTE_GUILTY -> Resources.Images.ActionIcons.VOTE_GUILTY
@@ -191,17 +198,16 @@ val ActionType.painter: DrawableResource?
     }
 
 val ActionType.color: Color
-    @Composable get() = when(this){
+    @Composable get() = when (this) {
         ActionType.KILL, ActionType.ACCUSE, ActionType.VOTE_GUILTY -> Theme.colorScheme.error
         ActionType.SAVE, ActionType.VOTE_INNOCENT -> AppTheme.extendedColors.success.color
-        ActionType.SECOND , ActionType.INVESTIGATE -> AppTheme.extendedColors.warning.color
+        ActionType.SECOND, ActionType.INVESTIGATE -> AppTheme.extendedColors.warning.color
         ActionType.NONE -> Theme.colorScheme.primary
     }
 
 val Faction.color: Color
-    @Composable get() = when(this){
+    @Composable get() = when (this) {
         Faction.GONDI -> Theme.colorScheme.error
         Faction.VILLAGER -> AppTheme.extendedColors.success.color
         Faction.NEUTRAL -> Theme.colorScheme.secondary
     }
-

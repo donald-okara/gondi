@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 class GondiHost(
     private val session: GameSessionState,
     private val moderator: GameModeratorController,
-    private val serverManager: GameServerManager
+    private val serverManager: GameServerManager,
 ) : ScreenModel {
     private val logger = Logger("GondiHost")
     val gameState = session.gameState.asStateFlow()
@@ -56,12 +56,12 @@ class GondiHost(
                     moderatorAvatarBackground = hostPlayer.first()?.background
                         ?: error("Player is not present"),
                 )
-                runCatching{
+                runCatching {
                     serverManager.startServer(
                         identity,
                         moderatorState.value.newGame.copy(availableSlots = moderatorState.value.assignment.sumOf { it.second }.toLong()),
                         screenModelScope,
-                        hostPlayer.first()!!
+                        hostPlayer.first()!!,
                     )
                     session.observe(identity.id, screenModelScope)
                     session.updateModeratorState {
@@ -74,7 +74,7 @@ class GondiHost(
                     Matcha.showErrorToast(
                         message = error.message.toString(),
                         title = "Error",
-                        retryAction = { startServer() }
+                        retryAction = { startServer() },
                     )
                 }
             }
@@ -85,13 +85,13 @@ class GondiHost(
             Matcha.showErrorToast(
                 message = error.message,
                 title = "Error",
-                retryAction = { startServer() }
+                retryAction = { startServer() },
             )
         }
     }
 
-    fun onEvent(intent: ModeratorHandler){
-        when(intent) {
+    fun onEvent(intent: ModeratorHandler) {
+        when (intent) {
             is ModeratorHandler.UpdateAssignments -> moderator.updateAssignment(intent.assignment)
             is ModeratorHandler.HandleModeratorCommand -> moderator.handleCommand(intent.intent, screenModelScope)
             ModeratorHandler.StartServer -> startServer()
@@ -106,7 +106,7 @@ class GondiHost(
         }
     }
 
-    fun startGame(){
+    fun startGame() {
         screenModelScope.launch {
             // Wait for role assignment to complete
             moderator.assignRoles().onSuccess {
@@ -116,7 +116,7 @@ class GondiHost(
                     gameState.firstOrNull()?.let {
                         moderator.handleCommand(
                             ModeratorCommand.StartGame(it.id),
-                            screenModelScope
+                            screenModelScope,
                         )
                     }
                 }
@@ -125,10 +125,9 @@ class GondiHost(
                 Matcha.showErrorToast(
                     message = it.message,
                     title = "Error",
-                    retryAction = {startGame()}
+                    retryAction = { startGame() },
                 )
             }
-
         }
     }
 

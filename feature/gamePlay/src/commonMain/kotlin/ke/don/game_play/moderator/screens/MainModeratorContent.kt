@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.moderator.screens
 
 import androidx.compose.animation.AnimatedContent
@@ -28,14 +37,14 @@ fun MainModeratorContent(
     players: List<Player>,
     votes: List<Vote>,
     onEvent: (ModeratorHandler) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     ScaffoldToken(
         modifier = modifier,
         navigationIcon = NavigationIcon.Back { onEvent(ModeratorHandler.ShowLeaveDialog) },
         title = gameState?.phase?.let { phase ->
             "${phase.name.capitaliseFirst()} for ${gameState.name}"
-        } ?: "New game"
+        } ?: "New game",
     ) {
         ContentSwitcher(
             moderatorState = moderatorState,
@@ -43,24 +52,23 @@ fun MainModeratorContent(
             players = players,
             votes = votes,
             onEvent = onEvent,
-            hostPlayer = hostPlayer
+            hostPlayer = hostPlayer,
         )
     }
 
-    if (moderatorState.showLeaveGame){
+    if (moderatorState.showLeaveGame) {
         ConfirmationDialogToken(
             icon = Icons.AutoMirrored.Filled.ExitToApp,
             title = "Leave Game?",
             message = "You are about to leave the game you should understand that:",
             dialogType = ComponentType.Warning,
             checklist = listOf(
-                "This game will be terminated and all progress will be lost."
+                "This game will be terminated and all progress will be lost.",
             ),
             onConfirm = onBack,
             onDismiss = { onEvent(ModeratorHandler.ShowLeaveDialog) },
         )
     }
-
 }
 
 @Composable
@@ -71,18 +79,18 @@ private fun ContentSwitcher(
     players: List<Player>,
     hostPlayer: Player?,
     votes: List<Vote>,
-    onEvent: (ModeratorHandler) -> Unit
+    onEvent: (ModeratorHandler) -> Unit,
 ) {
     AnimatedContent(
         targetState = gameState?.phase,
-        label = "Game State"
+        label = "Game State",
     ) { phase ->
         when (phase) {
             null -> {
                 CreateGameContent(
                     modifier = modifier,
                     state = moderatorState,
-                    onEvent = onEvent
+                    onEvent = onEvent,
                 )
             }
             GamePhase.LOBBY -> {
@@ -92,7 +100,7 @@ private fun ContentSwitcher(
                     players = players,
                     moderatorState = moderatorState,
                     onEvent = onEvent,
-                    myPlayerId = hostPlayer?.id
+                    myPlayerId = hostPlayer?.id,
                 )
             }
             GamePhase.SLEEP -> {}

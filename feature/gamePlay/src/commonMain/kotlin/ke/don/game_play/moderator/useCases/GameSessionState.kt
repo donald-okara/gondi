@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.moderator.useCases
 
 import ke.don.domain.state.GameState
@@ -19,7 +28,7 @@ import kotlinx.coroutines.launch
 
 class GameSessionState(
     private val database: LocalDatabase,
-    private val profileStore: ProfileStore
+    private val profileStore: ProfileStore,
 ) {
     val gameState = MutableStateFlow<GameState?>(null)
     val players = MutableStateFlow<List<Player>>(emptyList())

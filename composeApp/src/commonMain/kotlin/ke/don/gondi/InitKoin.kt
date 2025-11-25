@@ -32,7 +32,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             authModule,
             profileModule,
             homeModule,
-            moderatorModule
+            moderatorModule,
         )
     }
 }

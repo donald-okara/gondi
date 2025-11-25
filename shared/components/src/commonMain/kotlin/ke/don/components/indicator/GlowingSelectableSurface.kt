@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.components.indicator
 
 import androidx.compose.animation.core.RepeatMode
@@ -32,7 +41,7 @@ fun GlowingSelectableSurface(
     modifier: Modifier = Modifier,
     glowingColor: Color = MaterialTheme.colorScheme.primary,
     shape: Shape = MaterialTheme.shapes.medium,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val interaction = remember { MutableInteractionSource() }
     val hovered by interaction.collectIsHoveredAsState()
@@ -42,7 +51,7 @@ fun GlowingSelectableSurface(
     // Animate a single float to drive all animations, promoting consistency.
     val activationAnimation by animateFloatAsState(
         targetValue = if (isActivated) 1f else 0f,
-        label = "activationAnimation"
+        label = "activationAnimation",
     )
 
     // Animate a pulsing glow effect when selected.
@@ -52,9 +61,9 @@ fun GlowingSelectableSurface(
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 1500),
-            repeatMode = RepeatMode.Reverse
+            repeatMode = RepeatMode.Reverse,
         ),
-        label = "pulseAnimation"
+        label = "pulseAnimation",
     )
     val selectionGlow = if (selected) pulseAnimation else 1f
 
@@ -72,14 +81,14 @@ fun GlowingSelectableSurface(
     val blendedSurfaceColor = baseSurfaceColor.copy(
         red = lerp(baseSurfaceColor.red, glowingColor.red, surfaceTint),
         green = lerp(baseSurfaceColor.green, glowingColor.green, surfaceTint),
-        blue = lerp(baseSurfaceColor.blue, glowingColor.blue, surfaceTint)
+        blue = lerp(baseSurfaceColor.blue, glowingColor.blue, surfaceTint),
     )
 
     val elevation = if (enabled) Theme.spacing.small else 0.dp
     val border = BorderStroke(
-            width = borderThickness,
-            color = borderColor
-        )
+        width = borderThickness,
+        color = borderColor,
+    )
 
     Surface(
         onClick = onClick,
@@ -90,7 +99,7 @@ fun GlowingSelectableSurface(
         contentColor = contentColorFor(blendedSurfaceColor),
         tonalElevation = elevation,
         border = border,
-        interactionSource = interaction
+        interactionSource = interaction,
     ) {
         content()
     }

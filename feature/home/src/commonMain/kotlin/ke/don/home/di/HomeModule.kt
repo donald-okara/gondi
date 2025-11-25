@@ -15,7 +15,6 @@ import ke.don.local.di.sharedThemeModule
 import ke.don.remote.di.remoteDatasourceModule
 import ke.don.remote.di.serverModule
 import org.koin.core.module.dsl.factoryOf
-import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val homeModule = module {

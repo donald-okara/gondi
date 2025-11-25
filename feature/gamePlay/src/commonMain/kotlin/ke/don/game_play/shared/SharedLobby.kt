@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.shared
 
 import androidx.compose.animation.AnimatedContent
@@ -30,13 +39,10 @@ import ke.don.components.profile.PlayerItem
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.ActionType
-import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.game_play.moderator.components.EmptySlot
-import ke.don.game_play.moderator.model.ModeratorHandler
-import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.moderator.useCases.PLAYER_LOWER_LIMIT
 
 @Composable
@@ -47,7 +53,7 @@ fun SharedLobby(
     onSelectPlayer: (String) -> Unit = {},
     players: List<Player>,
     myPlayerId: String? = null,
-    startGame: () -> Unit = {}
+    startGame: () -> Unit = {},
 ) {
     val nonModeratorPlayers = players.filter { it.role != Role.MODERATOR }
     val alivePlayers = nonModeratorPlayers.filter { it.isAlive }
@@ -59,19 +65,19 @@ fun SharedLobby(
         modifier = modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Theme.spacing.large),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         item {
-            if(isModerator){
+            if (isModerator) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium)
+                    verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
                 ) {
                     Text(
                         text = "Ready to Begin?",
                         style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier.align(Alignment.Start)
+                        modifier = Modifier.align(Alignment.Start),
                     )
 
                     ButtonToken(
@@ -79,17 +85,17 @@ fun SharedLobby(
                             .fillMaxWidth(),
                         enabled = playersSize > PLAYER_LOWER_LIMIT,
                         buttonType = ComponentType.Primary,
-                        onClick = startGame
+                        onClick = startGame,
 
                     ) {
                         AnimatedContent(
-                            targetState = availableSlots
+                            targetState = availableSlots,
                         ) { slots ->
                             Text(
                                 text = if (slots > playersSize) "Start with $playersSize players" else "Start Game",
                                 textAlign = TextAlign.Center,
                                 fontWeight = FontWeight.Bold,
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
                             )
                         }
                     }
@@ -98,7 +104,7 @@ fun SharedLobby(
                         Text(
                             text = "Waiting for more players...",
                             style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
                         )
                     }
                 }
@@ -110,12 +116,12 @@ fun SharedLobby(
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.spacedBy(Theme.spacing.small)
+                    verticalArrangement = Arrangement.spacedBy(Theme.spacing.small),
                 ) {
                     Text(
                         text = "Moderator",
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.align(Alignment.Start)
+                        modifier = Modifier.align(Alignment.Start),
                     )
                     PlayerItem(
                         actionType = ActionType.NONE,
@@ -126,7 +132,7 @@ fun SharedLobby(
                         isMe = myPlayerId == moderator.id,
                         showRole = true,
                         player = it,
-                        modifier = modifier.width(130.dp)
+                        modifier = modifier.width(130.dp),
                     )
                 }
             }
@@ -141,17 +147,17 @@ fun SharedLobby(
                         .padding(Theme.spacing.small)
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = "Players in Lobby",
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
                     )
 
                     Surface(
                         color = Theme.colorScheme.primary.copy(0.2f),
                         contentColor = Theme.colorScheme.primary,
-                        shape = MaterialTheme.shapes.medium
+                        shape = MaterialTheme.shapes.medium,
                     ) {
                         gameState?.let {
                             Text(
@@ -159,12 +165,11 @@ fun SharedLobby(
                                 style = MaterialTheme.typography.bodyMedium,
                                 modifier = Modifier.padding(
                                     horizontal = Theme.spacing.small,
-                                    vertical = Theme.spacing.extraSmall
-                                )
+                                    vertical = Theme.spacing.extraSmall,
+                                ),
                             )
                         }
                     }
-
                 }
 
                 LazyVerticalGrid(
@@ -174,7 +179,7 @@ fun SharedLobby(
                     columns = GridCells.Adaptive(130.dp),
                     horizontalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
                     verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
-                    contentPadding = PaddingValues(vertical = Theme.spacing.small)
+                    contentPadding = PaddingValues(vertical = Theme.spacing.small),
                 ) {
                     items(alivePlayers, key = { it.id }) { player ->
                         PlayerItem(
@@ -185,7 +190,7 @@ fun SharedLobby(
                             isSelected = false, // TODO
                             showRole = true,
                             isMe = myPlayerId == player.id,
-                            player = player
+                            player = player,
                         )
                     }
 
