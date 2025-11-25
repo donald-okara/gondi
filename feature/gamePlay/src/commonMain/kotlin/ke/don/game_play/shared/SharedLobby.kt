@@ -71,7 +71,7 @@ fun SharedLobby(
     ) {
         item { LobbyHeader(modifier = Modifier, playersSize, availableSlots.toInt(), startGame, isModerator) }
         item { RoleLockWarning(modifier = Modifier, nonModeratorPlayers, isModerator) }
-        item { ModeratorSection(moderator, myPlayerId, onSelectPlayer) }
+        item { ModeratorSection(moderator, myPlayerId) }
         item { PlayersGrid(alivePlayers, availableSlots.toInt(), myPlayerId, onSelectPlayer) }
     }
 }
@@ -146,7 +146,6 @@ fun RoleLockWarning(
 fun ModeratorSection(
     moderator: Player?,
     myPlayerId: String?,
-    onSelectPlayer: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     moderator?.let {
