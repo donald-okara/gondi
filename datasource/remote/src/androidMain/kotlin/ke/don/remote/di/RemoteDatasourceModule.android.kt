@@ -27,9 +27,9 @@ import org.koin.dsl.module
 actual val serverModule: Module
     get() = module {
         includes(localDatasourceModule)
-        factoryOf(::LanServerJvm).bind<LocalServer>()
-        factoryOf(::LanDiscoveryAndroid).bind<LanDiscovery>()
-        factoryOf(::LanAdvertiserAndroid).bind<LanAdvertiser>()
+        singleOf(::LanServerJvm).bind<LocalServer>()
+        singleOf(::LanDiscoveryAndroid).bind<LanDiscovery>()
+        singleOf(::LanAdvertiserAndroid).bind<LanAdvertiser>()
     }
 
 actual val authDatasourceModule: Module = module {
