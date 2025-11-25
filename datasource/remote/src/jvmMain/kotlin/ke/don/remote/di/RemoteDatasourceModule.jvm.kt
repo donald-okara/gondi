@@ -19,7 +19,6 @@ import ke.don.remote.server.LanAdvertiserJvm
 import ke.don.remote.server.LanDiscoveryJvm
 import ke.don.remote.server.LanServerJvm
 import org.koin.core.module.Module
-import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module

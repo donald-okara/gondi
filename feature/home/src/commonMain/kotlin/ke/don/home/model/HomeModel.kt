@@ -43,10 +43,10 @@ class HomeModel(
     init {
         screenModelScope.launch {
             profileRepository.getProfile().onFailure { error ->
-                    Matcha.showErrorToast(
-                        message = error.message
-                    )
-                }
+                Matcha.showErrorToast(
+                    message = error.message,
+                )
+            }
             combine(
                 themeRepository.theme,
                 profileStore.profileFlow,
