@@ -52,7 +52,7 @@ import ke.don.utils.capitaliseFirst
 fun SelectedPlayerModal(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onAssignPlayer: (Role) -> Unit,
+    onAssignPlayer: (Role?) -> Unit,
     onRemovePlayer: () -> Unit,
     player: Player,
 ) {
@@ -114,11 +114,9 @@ fun SelectedPlayerModal(
     }
 
     LaunchedEffect(selectedRole) {
-        selectedRole?.let {
-            if (it != player.role) {
-                onAssignPlayer(it)
-                onDismissRequest()
-            }
+        if (selectedRole != player.role) {
+            onAssignPlayer(selectedRole)
+            onDismissRequest()
         }
     }
 }
@@ -185,7 +183,7 @@ private fun RemovePlayerConfirmation(
 @Composable
 private fun AssignRoleContent(
     selectedRole: Role?,
-    onRoleSelected: (Role) -> Unit,
+    onRoleSelected: (Role?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -195,6 +193,10 @@ private fun AssignRoleContent(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Text(
+            text = "Assigning a role to this player would lock everyone else out from joining",
+            style = MaterialTheme.typography.titleMedium,
+        )
         FlowRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
@@ -207,13 +209,18 @@ private fun AssignRoleContent(
                     onRoleSelected = { onRoleSelected(role) },
                 )
             }
+            RoleChip(
+                role = null,
+                isSelected = selectedRole == null,
+                onRoleSelected = { onRoleSelected(null) },
+            )
         }
     }
 }
 
 @Composable
 private fun RoleChip(
-    role: Role,
+    role: Role?,
     isSelected: Boolean,
     onRoleSelected: () -> Unit,
     modifier: Modifier = Modifier,
@@ -238,7 +245,7 @@ private fun RoleChip(
         ),
     ) {
         Text(
-            text = role.name.capitaliseFirst(),
+            text = role?.name?.capitaliseFirst() ?: "None",
             modifier = Modifier.padding(MaterialTheme.spacing.small),
         )
     }

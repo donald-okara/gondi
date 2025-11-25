@@ -56,149 +56,190 @@ fun SharedLobby(
     startGame: () -> Unit = {},
 ) {
     val nonModeratorPlayers = players.filter { it.role != Role.MODERATOR }
-    val alivePlayers = nonModeratorPlayers.filter { it.isAlive }
+    val alivePlayers = nonModeratorPlayers
+        .filter { it.isAlive }
+        .sortedWith(compareByDescending { it.role != null })
+
     val playersSize = alivePlayers.size
     val moderator = players.find { it.role == Role.MODERATOR }
     val availableSlots = gameState?.availableSlots ?: 0
 
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Theme.spacing.large),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        item {
-            if (isModerator) {
-                Column(
+        item { LobbyHeader(modifier = Modifier, playersSize, availableSlots.toInt(), startGame, isModerator) }
+        item { RoleLockWarning(modifier = Modifier, nonModeratorPlayers, isModerator) }
+        item { ModeratorSection(moderator, myPlayerId, onSelectPlayer) }
+        item { PlayersGrid(alivePlayers, availableSlots.toInt(), myPlayerId, onSelectPlayer) }
+    }
+}
+
+
+@Composable
+fun LobbyHeader(
+    modifier: Modifier = Modifier,
+    playersSize: Int,
+    availableSlots: Int,
+    startGame: () -> Unit,
+    isModerator: Boolean,
+) {
+    if (!isModerator) return
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
+    ) {
+        Text(
+            text = "Ready to Begin?",
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.align(Alignment.Start),
+        )
+
+        ButtonToken(
+            modifier = Modifier.fillMaxWidth(),
+            enabled = playersSize > PLAYER_LOWER_LIMIT,
+            buttonType = ComponentType.Primary,
+            onClick = startGame,
+        ) {
+            AnimatedContent(targetState = availableSlots) { slots ->
+                Text(
+                    text = if (slots > playersSize) "Start with $playersSize players" else "Start Game",
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
-                ) {
-                    Text(
-                        text = "Ready to Begin?",
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier.align(Alignment.Start),
-                    )
-
-                    ButtonToken(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        enabled = playersSize > PLAYER_LOWER_LIMIT,
-                        buttonType = ComponentType.Primary,
-                        onClick = startGame,
-
-                    ) {
-                        AnimatedContent(
-                            targetState = availableSlots,
-                        ) { slots ->
-                            Text(
-                                text = if (slots > playersSize) "Start with $playersSize players" else "Start Game",
-                                textAlign = TextAlign.Center,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.fillMaxWidth(),
-                            )
-                        }
-                    }
-
-                    AnimatedVisibility(visible = availableSlots > playersSize) {
-                        Text(
-                            text = "Waiting for more players...",
-                            style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Center,
-                        )
-                    }
-                }
+                )
             }
         }
 
-        item {
-            moderator?.let {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.spacedBy(Theme.spacing.small),
-                ) {
-                    Text(
-                        text = "Moderator",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.align(Alignment.Start),
-                    )
-                    PlayerItem(
-                        actionType = ActionType.NONE,
-                        isSelected = false,
-                        isMe = myPlayerId == moderator.id,
-                        showRole = true,
-                        player = it,
-                        modifier = modifier.width(130.dp),
-                    )
-                }
-            }
+        AnimatedVisibility(visible = availableSlots > playersSize) {
+            Text(
+                text = "Waiting for more players...",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center,
+            )
         }
-        item {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
+    }
+}
+
+@Composable
+fun RoleLockWarning(
+    modifier: Modifier = Modifier,
+    nonModeratorPlayers: List<Player>,
+    isModerator: Boolean
+) {
+    if (!isModerator) return
+
+    AnimatedVisibility(nonModeratorPlayers.any { it.role != null }){
+        Text(
+            text = "At least one player has a role. This locks everyone else out from joining the game",
+            color = Theme.colorScheme.error,
+            style = MaterialTheme.typography.labelMedium,
+            modifier = modifier.fillMaxWidth(),
+            textAlign = TextAlign.Start,
+        )
+    }
+}
+
+@Composable
+fun ModeratorSection(
+    moderator: Player?,
+    myPlayerId: String?,
+    onSelectPlayer: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    moderator?.let {
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(Theme.spacing.small),
+        ) {
+            Text(
+                text = "Moderator",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.align(Alignment.Start),
+            )
+            PlayerItem(
+                actionType = ActionType.NONE,
+                isSelected = false,
+                isMe = myPlayerId == moderator.id,
+                showRole = true,
+                player = moderator,
+                modifier = modifier.width(130.dp),
+            )
+        }
+    }
+}
+
+@Composable
+fun PlayersGrid(
+    alivePlayers: List<Player>,
+    availableSlots: Int,
+    myPlayerId: String?,
+    onSelectPlayer: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val playersSize = alivePlayers.size
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(Theme.spacing.small)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "Players in Lobby",
+                style = MaterialTheme.typography.titleMedium,
+            )
+
+            Surface(
+                color = Theme.colorScheme.primary.copy(0.2f),
+                contentColor = Theme.colorScheme.primary,
+                shape = MaterialTheme.shapes.medium,
             ) {
-                Row(
-                    modifier = Modifier
-                        .padding(Theme.spacing.small)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = "Players in Lobby",
-                        style = MaterialTheme.typography.titleMedium,
-                    )
+                Text(
+                    text = "$playersSize/$availableSlots",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(
+                        horizontal = Theme.spacing.small,
+                        vertical = Theme.spacing.extraSmall,
+                    ),
+                )
+            }
+        }
 
-                    Surface(
-                        color = Theme.colorScheme.primary.copy(0.2f),
-                        contentColor = Theme.colorScheme.primary,
-                        shape = MaterialTheme.shapes.medium,
-                    ) {
-                        gameState?.let {
-                            Text(
-                                text = "$playersSize/${it.availableSlots}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.padding(
-                                    horizontal = Theme.spacing.small,
-                                    vertical = Theme.spacing.extraSmall,
-                                ),
-                            )
-                        }
-                    }
-                }
+        LazyVerticalGrid(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 200.dp, max = Theme.spacing.largeScreenSize),
+            columns = GridCells.Adaptive(130.dp),
+            horizontalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
+            verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
+            contentPadding = PaddingValues(vertical = Theme.spacing.small),
+        ) {
+            items(alivePlayers, key = { it.id }) { player ->
+                PlayerItem(
+                    actionType = ActionType.NONE,
+                    onClick = { onSelectPlayer(player.id) },
+                    isSelected = false,
+                    showRole = player.id == myPlayerId || player.role != null,
+                    isMe = myPlayerId == player.id,
+                    player = player,
+                )
+            }
 
-                LazyVerticalGrid(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 200.dp, max = Theme.spacing.largeScreenSize),
-                    columns = GridCells.Adaptive(130.dp),
-                    horizontalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
-                    verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
-                    contentPadding = PaddingValues(vertical = Theme.spacing.small),
-                ) {
-                    items(alivePlayers, key = { it.id }) { player ->
-                        PlayerItem(
-                            actionType = ActionType.NONE,
-                            onClick = {
-                                onSelectPlayer(player.id)
-                            },
-                            isSelected = false, // TODO
-                            showRole = true,
-                            isMe = myPlayerId == player.id,
-                            player = player,
-                        )
-                    }
-
-                    val emptySlotCount = availableSlots.minus(playersSize)
-                    if (emptySlotCount > 0) {
-                        items(emptySlotCount.toInt()) {
-                            EmptySlot()
-                        }
-                    }
-                }
+            val emptySlotCount = availableSlots - playersSize
+            if (emptySlotCount > 0) {
+                items(emptySlotCount) { EmptySlot() }
             }
         }
     }
 }
+

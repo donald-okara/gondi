@@ -151,7 +151,7 @@ class LocalDatabase(
 
     fun updateKnownIdentities(knownIdentities: List<KnownIdentity>, id: String) = playersQueries.updateKnownIdentities(knownIdentitiesAdapter.encode(knownIdentities), id)
 
-    fun updatePlayerRole(role: Role, id: String) = playersQueries.updatePlayerRole(roleAdapter.encode(role), id)
+    fun updatePlayerRole(role: Role?, id: String) = playersQueries.updatePlayerRole(role?.let { roleAdapter.encode(it) }, id)
 
     fun batchUpdatePlayerRole(players: List<Player>) = database.transaction {
         players.forEach { player ->
