@@ -10,6 +10,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.backhandler.BackHandler
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import ke.don.domain.gameplay.server.ServerId
@@ -32,15 +33,10 @@ class MainPlayerScreen(
         val koin = getKoin()
         val screen = this
 
-        val playerScope = remember(screen) {
-            koin.createScope(
-                scopeId = Uuid.random().toString(),
-                qualifier = named(GAME_PLAYER_SCOPE),
-            )
-        }
+
         val navigator = LocalNavigator.currentOrThrow
 
-        val gondiClient = playerScope.get<GondiClient>()
+        val gondiClient = koinScreenModel<GondiClient>()
 
         val gameState by gondiClient.gameState.collectAsState()
         val players by gondiClient.players.collectAsState()
@@ -54,16 +50,6 @@ class MainPlayerScreen(
 
         LaunchedEffect(serverId){
             onEvent(PlayerHandler.Connect(serverId = serverId))
-        }
-
-        DisposableEffect(screen) {
-
-            onDispose{
-                gondiClient.dispose()
-                if (playerScope.isNotClosed()) {
-                    playerScope.close()
-                }
-            }
         }
 
 

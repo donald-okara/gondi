@@ -17,6 +17,7 @@ import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.game_play.moderator.useCases.GameModeratorController
 import ke.don.game_play.moderator.useCases.GameServerManager
 import ke.don.game_play.moderator.useCases.GameSessionState
+import ke.don.game_play.player.di.GAME_PLAYER_SCOPE
 import ke.don.utils.Logger
 import ke.don.utils.result.ResultStatus
 import ke.don.utils.result.onFailure
@@ -25,12 +26,28 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import org.koin.core.Koin
+import org.koin.core.component.KoinScopeComponent
+import org.koin.core.qualifier.named
+import org.koin.core.scope.Scope
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class GondiHost(
-    private val session: GameSessionState,
-    private val moderator: GameModeratorController,
-    private val serverManager: GameServerManager,
-) : ScreenModel {
+    private val koin: Koin
+) : ScreenModel, KoinScopeComponent {
+    override val scope: Scope by lazy {
+        koin.createScope(
+            Uuid.random().toString(),
+            named(GAME_PLAYER_SCOPE)
+        )
+    }
+
+    private val session by lazy { scope.get<GameSessionState>() }
+    private val moderator by lazy { scope.get<GameModeratorController>() }
+    private val serverManager by lazy { scope.get<GameServerManager>() }
+
     private val logger = Logger("GondiHost")
     val gameState = session.gameState.asStateFlow()
 
@@ -130,10 +147,11 @@ class GondiHost(
         }
     }
 
-    fun dispose() {
+    override fun onDispose() {
         screenModelScope.launch{
             session.stopObserving()
             serverManager.stopServer()
         }
+        super.onDispose()
     }
 }

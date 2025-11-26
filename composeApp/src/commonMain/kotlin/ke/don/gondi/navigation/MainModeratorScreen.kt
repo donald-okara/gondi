@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.backhandler.BackHandler
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import ke.don.game_play.moderator.di.GAME_MODERATOR_SCOPE
@@ -32,18 +33,9 @@ class MainModeratorScreen : Screen {
     @OptIn(ExperimentalComposeUiApi::class, ExperimentalUuidApi::class)
     @Composable
     override fun Content() {
-        val koin = getKoin()
-        val screen = this
-
-        val moderatorScope = remember(screen) {
-            koin.createScope(
-                scopeId = Uuid.random().toString(),
-                qualifier = named(GAME_MODERATOR_SCOPE),
-            )
-        }
         val navigator = LocalNavigator.currentOrThrow
 
-        val gondiHost = moderatorScope.get<GondiHost>()
+        val gondiHost = koinScreenModel<GondiHost>()
 
         val gameState by gondiHost.gameState.collectAsState()
         val players by gondiHost.players.collectAsState()
@@ -54,15 +46,6 @@ class MainModeratorScreen : Screen {
         val moderatorState by gondiHost.moderatorState.collectAsState()
 
         val onEvent = gondiHost::onEvent
-
-        DisposableEffect(screen) {
-            onDispose {
-                gondiHost.dispose()
-                if (moderatorScope.isNotClosed()) {
-                    moderatorScope.close()
-                }
-            }
-        }
 
         BackHandler(enabled = true) {
             onEvent(ModeratorHandler.ShowLeaveDialog)

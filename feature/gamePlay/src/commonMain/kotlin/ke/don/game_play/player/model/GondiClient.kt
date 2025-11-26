@@ -7,21 +7,46 @@ import ke.don.components.helpers.Matcha
 import ke.don.domain.gameplay.PlayerIntent
 import ke.don.domain.gameplay.server.ClientUpdate
 import ke.don.domain.gameplay.server.ServerId
+import ke.don.game_play.player.di.GAME_PLAYER_SCOPE
 import ke.don.game_play.player.useCases.GameClientManager
 import ke.don.game_play.player.useCases.GameClientState
 import ke.don.game_play.player.useCases.GamePlayerController
 import ke.don.utils.Logger
 import ke.don.utils.result.onFailure
 import ke.don.utils.result.onSuccess
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import org.koin.core.Koin
+import org.koin.core.component.KoinScopeComponent
+import org.koin.core.component.createScope
+import org.koin.core.qualifier.named
+import org.koin.core.scope.Scope
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class GondiClient(
-    private val clientState: GameClientState,
-    private val clientManager: GameClientManager,
-    private val controller: GamePlayerController
-) : ScreenModel {
+    private val koin: Koin
+) : ScreenModel, KoinScopeComponent {
+
+    override val scope: Scope by lazy {
+        koin.createScope(
+            Uuid.random().toString(),
+            named(GAME_PLAYER_SCOPE)
+        )
+    }
+
+    private val clientState by lazy { scope.get<GameClientState>() }
+    private val clientManager by lazy { scope.get<GameClientManager>() }
+    private val controller by lazy { scope.get<GamePlayerController>() }
+
+
     val logger = Logger("GondiClient")
 
     val currentPlayer =  clientState.currentPlayer
@@ -35,7 +60,7 @@ class GondiClient(
         when(intent){
             is PlayerHandler.Connect -> connect(intent.serverId)
             is PlayerHandler.Send -> sendIntent(intent.message)
-            PlayerHandler.ShowLeaveDialog -> clientState.updatePlayerState { it.copy(showLeaveGame = true) }
+            PlayerHandler.ShowLeaveDialog -> clientState.updatePlayerState { it.copy(showLeaveGame = !it.showLeaveGame) }
         }
     }
 
@@ -61,10 +86,12 @@ class GondiClient(
         }
     }
 
-    fun dispose(){
-        screenModelScope.launch{
+    override fun onDispose(){
+        screenModelScope.launch(NonCancellable){
             clientManager.dispose()
             clientState.clearState()
+            scope.close()
         }
+        super.onDispose()
     }
 }

@@ -44,6 +44,8 @@ class GameClientManager(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private var pingJob: Job? = null
+    private var watchdogJob: Job? = null
+
 
     @Volatile
     private var lastPingMillis: Instant = Clock.System.now()
@@ -109,44 +111,49 @@ class GameClientManager(
     }
 
 
-    private suspend fun connectOnce(host: String, port: Int) {
-        session?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnecting"))
-        try {
-            val player = clientState.currentPlayer.first()
-                ?: error("Player must be loaded before connecting")
+    private fun connectOnce(host: String, port: Int) {
+        scope.launch{
+            session?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnecting"))
+            try {
+                val player = clientState.currentPlayer.first()
+                    ?: error("Player must be loaded before connecting")
 
-            ClientObject.client.webSocket("ws://$host:$port/game") {
-                session = this
-                logger.info("Connected ✅")
+                ClientObject.client.webSocket("ws://$host:$port/game") {
+                    session = this
+                    logger.info("Connected ✅")
 
-                startPing()
-                startWatchdog()
-                send(Frame.Text(Json.encodeToString(ClientUpdate.serializer(), ClientUpdate.GetGameState)))
-                logger.info(
-                    "Player: $player"
-                )
-                val joinMessage = ClientUpdate.PlayerIntentMsg(
-                    PlayerIntent.Join(
-                        playerId = player.id,
-                        round = 0,
-                        player = player
+                    startPing()
+                    startWatchdog()
+                    send(
+                        Frame.Text(
+                            Json.encodeToString(
+                                ClientUpdate.serializer(),
+                                ClientUpdate.GetGameState
+                            )
+                        )
                     )
-                )
+                    logger.info(
+                        "Player: $player"
+                    )
+                    val joinMessage = ClientUpdate.PlayerIntentMsg(
+                        PlayerIntent.Join(
+                            playerId = player.id,
+                            round = 0,
+                            player = player
+                        )
+                    )
 
-                send(Frame.Text(Json.encodeToString(ClientUpdate.serializer(),joinMessage )))
+                    send(Frame.Text(Json.encodeToString(ClientUpdate.serializer(), joinMessage)))
 
-                for (frame in incoming) {
-                    lastPingMillis = Clock.System.now()
-                    if (frame is Frame.Text) clientState.handleServerUpdate(frame.readText())
+                    for (frame in incoming) {
+                        lastPingMillis = Clock.System.now()
+                        if (frame is Frame.Text) clientState.handleServerUpdate(frame.readText())
+                    }
                 }
+            } catch (e: Exception) {
+                logger.error("Connection error: ${e.message}")
+                throw e // bubble up to retry
             }
-        } catch (e: Exception) {
-            logger.error("Connection error: ${e.message}")
-            throw e // bubble up to retry
-        } finally {
-            logger.info("Disconnected")
-            Matcha.error(title = "Disconnected", description = "Disconnected from server")
-            session = null
         }
     }
 
@@ -178,7 +185,7 @@ class GameClientManager(
 
     @OptIn(ExperimentalTime::class)
     private fun startWatchdog() {
-        scope.launch {
+        watchdogJob = scope.launch {
             while (isActive) {
                 delay(15_000)
 
@@ -197,11 +204,7 @@ class GameClientManager(
             "Disposing client manager"
         )
 
-        // Stop background jobs first
-        pingJob?.cancelAndJoin()
-        pingJob = null
-
-        val player = clientState.currentPlayer.first()
+       val player = clientState.currentPlayer.first()
             ?: error("Player must be loaded before connecting")
 
         val leaveMessage = ClientUpdate.PlayerIntentMsg(
@@ -221,7 +224,15 @@ class GameClientManager(
             } catch (e: Exception) {
                 logger.error("Failed to send leave message: ${e.message}")
             }
-        }
+        } ?: logger.debug("Session is null")
+
+
+
+        pingJob?.cancelAndJoin()
+        watchdogJob?.cancelAndJoin()
+
+        pingJob = null
+        watchdogJob = null
 
         // Close session after sending
         session?.close(CloseReason(CloseReason.Codes.NORMAL, "Disposed"))

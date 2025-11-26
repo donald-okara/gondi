@@ -17,10 +17,13 @@ const val GAME_PLAYER_SCOPE = "GAME_MODERATOR_SCOPE"
 
 val playerModule = module {
     includes(remoteDatasourceModule, gameplayDatasourceModule, datastoreModule)
-    scope(named(GAME_PLAYER_SCOPE)){
+
+    scope(named(GAME_PLAYER_SCOPE)) {
         scopedOf(::GamePlayerController)
         scopedOf(::GameClientState)
         scopedOf(::GameClientManager)
-        factoryOf(::GondiClient)
     }
+
+    factory { GondiClient(getKoin()) }
+
 }

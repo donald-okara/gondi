@@ -31,6 +31,7 @@ val moderatorModule = module {
         scopedOf(::GameModeratorController)
         scopedOf(::GameServerManager)
         scopedOf(::GameSessionState)
-        factoryOf(::GondiHost)
     }
+
+    factory{ GondiHost(getKoin()) }
 }
