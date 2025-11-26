@@ -211,6 +211,10 @@ class GameModeratorController(
 
             return Result.Success(Unit)
         } catch (e: Exception) {
+            session.updateModeratorState {
+                it.copy(assignmentsStatus = ResultStatus.Error(e.message ?: "Unknown error"))
+            }
+
             return Result.Error(
                 LocalError(
                     message = e.message ?: "Unknown error",

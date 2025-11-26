@@ -37,4 +37,7 @@ sealed class PlayerIntent {
 
     @Serializable
     data class Vote(override val playerId: String, override val round: Long, val vote: ke.don.domain.state.Vote) : PlayerIntent()
+
+    @Serializable
+    data class Leave(override val playerId: String, override val round: Long) : PlayerIntent()
 }

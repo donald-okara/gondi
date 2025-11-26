@@ -130,10 +130,10 @@ class GondiHost(
         }
     }
 
-    override fun onDispose() {
-        session.stopObserving()
-        serverManager.stopServer(screenModelScope)
-
-        super.onDispose()
+    fun dispose() {
+        screenModelScope.launch{
+            session.stopObserving()
+            serverManager.stopServer()
+        }
     }
 }

@@ -36,6 +36,7 @@ data class Player(
     )
 
     fun toProfile(): Profile = Profile(
+        id = id,
         username = name,
         avatar = avatar,
         background = background,

@@ -36,7 +36,7 @@ class HomeScreen : Screen {
                 is HomeIntentHandler.NavigateToNewGame ->
                     navigator.push(MainModeratorScreen())
                 is HomeIntentHandler.NavigateToGame ->
-                    {}
+                    navigator.push(MainPlayerScreen(intent.id))
                 is HomeIntentHandler.NavigateToEdit ->
                     navigator.push(EditProfileScreen())
                 else -> onEvent(intent)

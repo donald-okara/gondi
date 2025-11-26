@@ -21,30 +21,30 @@ class JVMDatabaseFactory : DatabaseFactory {
      * Creates a fresh database by deleting any existing file.
      * Use this temporarily for testing or resetting your DB.
      */
-//    override fun createDriver(): SqlDriver {
-//        val dbFile = File(dbFileName)
-//
-//        // Delete existing DB if it exists
-//        if (dbFile.exists()) {
-//            dbFile.delete()
-//        }
-//
-//        val driver = JdbcSqliteDriver("jdbc:sqlite:$dbFileName")
-//        GondiDatabase.Schema.create(driver) // Create schema from scratch
-//        return driver
-//    }
+    override fun createDriver(): SqlDriver {
+        val dbFile = File(dbFileName)
+
+        // Delete existing DB if it exists
+        if (dbFile.exists()) {
+            dbFile.delete()
+        }
+
+        val driver = JdbcSqliteDriver("jdbc:sqlite:$dbFileName")
+        GondiDatabase.Schema.create(driver) // Create schema from scratch
+        return driver
+    }
 
     /**
      * Normal driver: creates database only if it doesn't exist.
      */
-    override fun createDriver(): SqlDriver {
-        val dbFile = File(dbFileName)
-        val driver = JdbcSqliteDriver("jdbc:sqlite:$dbFileName")
-        if (!dbFile.exists()) {
-            GondiDatabase.Schema.create(driver)
-        }
-        return driver
-    }
+//    override fun createDriver(): SqlDriver {
+//        val dbFile = File(dbFileName)
+//        val driver = JdbcSqliteDriver("jdbc:sqlite:$dbFileName")
+//        if (!dbFile.exists()) {
+//            GondiDatabase.Schema.create(driver)
+//        }
+//        return driver
+//    }
 
     /**
      * In-memory driver for testing purposes.

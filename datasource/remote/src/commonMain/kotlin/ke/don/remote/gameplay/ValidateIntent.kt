@@ -55,6 +55,9 @@ suspend fun validateIntent(
         }
     }
 
+    if (intent is PlayerIntent.Leave){
+        return PhaseValidationResult.Success
+    }
     // Fetch the player
     val player = db.getPlayerById(intent.playerId).firstOrNull()
         ?: return PhaseValidationResult.Error("Player with ID ${intent.playerId} not found.")

@@ -57,6 +57,7 @@ class MainModeratorScreen : Screen {
 
         DisposableEffect(screen) {
             onDispose {
+                gondiHost.dispose()
                 if (moderatorScope.isNotClosed()) {
                     moderatorScope.close()
                 }

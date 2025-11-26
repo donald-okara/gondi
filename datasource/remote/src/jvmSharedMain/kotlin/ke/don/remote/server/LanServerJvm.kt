@@ -34,6 +34,7 @@ import ke.don.domain.gameplay.server.LocalServer
 import ke.don.domain.gameplay.server.PhaseValidationResult
 import ke.don.domain.gameplay.server.ServerUpdate
 import ke.don.domain.state.Player
+import ke.don.domain.state.Vote
 import ke.don.local.db.LocalDatabase
 import ke.don.remote.gameplay.validateIntent
 import ke.don.utils.Logger
@@ -119,8 +120,10 @@ class LanServerJvm(
         // After moderator actions, broadcast updates
         val newState = database.getGameState(gameId).firstOrNull()
         val players = database.getAllPlayersSnapshot()
+        val votes = database.getAllVotesSnapshot()
         broadcast(ServerUpdate.GameStateSnapshot(newState))
         broadcast(ServerUpdate.PlayersSnapshot(players))
+        broadcast(ServerUpdate.VotesSnapshot(votes))
     }
 
     suspend fun DefaultWebSocketServerSession.sendJson(message: ClientUpdate) {
@@ -137,7 +140,9 @@ class LanServerJvm(
             when (message) {
                 is ClientUpdate.PlayerIntentMsg -> {
                     when (val result = validateIntent(db = database, gameId = gameId, intent = message.intent)) {
-                        is PhaseValidationResult.Success -> gameEngine.reduce(gameId, message.intent)
+                        is PhaseValidationResult.Success -> gameEngine.reduce(gameId, message.intent).also {
+                            logger.debug(message.intent.toString())
+                        }
                         is PhaseValidationResult.Error ->
                             send(
                                 Json.encodeToString(
@@ -150,17 +155,21 @@ class LanServerJvm(
                     // 2️⃣ Broadcast updated state
                     val newState = database.getGameState(id = gameId).firstOrNull()
                     val players = database.getAllPlayersSnapshot()
+                    val votes = database.getAllVotesSnapshot()
+
                     broadcast(ServerUpdate.GameStateSnapshot(newState))
+                    broadcast(ServerUpdate.VotesSnapshot(votes))
                     broadcast(ServerUpdate.PlayersSnapshot(players))
 
-                    send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.Announcement("Intent processed ✅")))
                 }
                 is ClientUpdate.GetGameState -> {
                     val newState = database.getGameState(id = gameId).firstOrNull()
                     val players = database.getAllPlayersSnapshot()
+                    val votes = database.getAllVotesSnapshot()
 
                     send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.GameStateSnapshot(newState)))
                     send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.PlayersSnapshot(players)))
+                    send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.VotesSnapshot(votes)))
                 }
                 is ClientUpdate.Ping -> {
                     send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.LastPing(Clock.System.now().toEpochMilliseconds())))
@@ -179,3 +188,6 @@ class LanServerJvm(
 
 suspend fun LocalDatabase.getAllPlayersSnapshot(): List<Player> =
     getAllPlayers().firstOrNull() ?: emptyList()
+
+suspend fun LocalDatabase.getAllVotesSnapshot(): List<Vote> =
+    getAllVotes().firstOrNull() ?: emptyList()

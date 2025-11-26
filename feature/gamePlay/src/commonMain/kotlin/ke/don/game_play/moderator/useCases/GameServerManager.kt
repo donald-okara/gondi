@@ -40,11 +40,8 @@ class GameServerManager(
         }
     }
 
-    fun stopServer(
-        scope: CoroutineScope,
+    suspend fun stopServer(
     ) {
-        scope.launch {
-            runCatching { server.stop() }.onFailure { it.printStackTrace() }
-        }
+        runCatching { server.stop() }.onFailure { it.printStackTrace() }
     }
 }

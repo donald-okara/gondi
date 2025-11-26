@@ -50,7 +50,6 @@ import org.koin.compose.getKoin
 
 @OptIn(ExperimentalKoffeeApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
-@Preview
 fun App() {
     val koin = getKoin()
     val themeRepository = koin.get<ThemeRepository>()
