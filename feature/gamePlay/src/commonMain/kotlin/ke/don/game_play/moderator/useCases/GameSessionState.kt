@@ -22,7 +22,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.ExperimentalTime
@@ -37,7 +36,7 @@ class GameSessionState(
     val moderatorState = MutableStateFlow(ModeratorState())
     val profileSnapshot = profileStore.profileFlow
 
-    val hostPlayer : Flow<Player?> = combine(players, profileSnapshot) { allPlayers, profile ->
+    val hostPlayer: Flow<Player?> = combine(players, profileSnapshot) { allPlayers, profile ->
         allPlayers.firstOrNull { it.id == profile?.id }
     }
 

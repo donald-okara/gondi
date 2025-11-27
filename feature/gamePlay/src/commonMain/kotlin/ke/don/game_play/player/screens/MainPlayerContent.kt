@@ -77,7 +77,7 @@ fun MainPlayerContent(
             votes = votes,
             onEvent = onEvent,
             currentPlayer = currentPlayer,
-            onBack = onBack
+            onBack = onBack,
         )
     }
 
@@ -118,7 +118,7 @@ private fun ContentSwitcher(
     ) { (phase, connectionStatus) ->
         when (phase) {
             null -> {
-                when(connectionStatus){
+                when (connectionStatus) {
                     is ReadStatus.Error -> ErrorState(
                         error = connectionStatus.message,
                         leave = {
@@ -127,7 +127,7 @@ private fun ContentSwitcher(
                             } else {
                                 onEvent(PlayerHandler.ShowLeaveDialog)
                             }
-                        }
+                        },
                     )
                     else ->
                         LoadingState(
@@ -190,15 +190,15 @@ private fun ErrorState(
         contentAlignment = Alignment.Center,
     ) {
         EmptyState(
-            title=  "Something went wrong",
+            title = "Something went wrong",
             description = "$error. The game most likely doesn't exist anymore.",
             emptyType = EmptyType.Error,
             icon = Icons.AutoMirrored.Filled.ExitToApp,
-        ){
+        ) {
             ButtonToken(
                 buttonType = ComponentType.Error,
-                onClick = leave
-            ){
+                onClick = leave,
+            ) {
                 Text(
                     text = "Leave game",
                 )

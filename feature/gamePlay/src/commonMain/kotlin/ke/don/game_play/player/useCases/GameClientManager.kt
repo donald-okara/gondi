@@ -183,20 +183,17 @@ class GameClientManager(
                     val elapsed = Clock.System.now().minus(lastPingMillis)
                     logger.error("Ping failed: ${e.message}")
 
-                    if (elapsed > 1.minutes){
+                    if (elapsed > 1.minutes) {
                         Matcha.error("Connection lost", duration = ToastDuration.Indefinite)
                         clientState.updatePlayerState { it.copy(connectionStatus = ReadStatus.Error("Connection lost")) }
                         dispose()
-                    } else if ( elapsed > 30.seconds){
+                    } else if (elapsed > 30.seconds) {
                         Matcha.warning("Connection failed. Retrying...")
-
                     }
-
                 }
             }
         }
     }
-
 
     suspend fun dispose() {
         logger.info(

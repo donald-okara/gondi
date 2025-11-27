@@ -22,7 +22,6 @@ import ke.don.utils.Logger
 import ke.don.utils.result.ReadStatus
 import ke.don.utils.result.onFailure
 import kotlinx.coroutines.NonCancellable
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.core.Koin
 import org.koin.core.component.KoinScopeComponent

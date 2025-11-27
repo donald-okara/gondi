@@ -55,12 +55,11 @@ class MainPlayerScreen(
         }
 
         BackHandler(enabled = true) {
-            if (playerState.connectionStatus.isError){
+            if (playerState.connectionStatus.isError) {
                 navigator.pop()
             } else {
                 onEvent(PlayerHandler.ShowLeaveDialog)
             }
-
         }
 
         MainPlayerContent(
