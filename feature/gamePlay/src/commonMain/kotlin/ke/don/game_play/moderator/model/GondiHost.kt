@@ -62,14 +62,15 @@ class GondiHost(
     val moderatorState = session.moderatorState.asStateFlow()
 
     init {
-        serverManager.observeLocalAnnouncements {
-            Matcha.info(
-                title = "it",
-            )
-            session.updateModeratorState { state ->
-                state.copy(announcements = state.announcements + (it to Clock.System.now()))
+        screenModelScope.launch {
+            serverManager.announcements.collect { event ->
+                Matcha.info(event.message)
+                session.updateModeratorState {
+                    it.copy(announcements = it.announcements + (event.message to Clock.System.now()))
+                }
             }
         }
+
     }
 
     fun startServer() {
@@ -78,7 +79,7 @@ class GondiHost(
         }
         moderator.validateAssignments().onSuccess {
             screenModelScope.launch {
-                val host = hostPlayer.first() ?: error("Player is not present")
+                val host = session.profileSnapshot.first()?.toPlayer() ?: error("Player is not present")
 
                 val identity = GameIdentity(
                     id = moderatorState.value.newGame.id,

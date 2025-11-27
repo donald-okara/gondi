@@ -86,7 +86,7 @@ class LanServerJvm(
                 webSocket("/game") {
                     // Register this new client session
                     sessions += this
-                    send(json.encodeToString(ServerUpdate.serializer(), ServerUpdate.Announcement("Connected to Gondi server ✅")))
+                    send(json.encodeToString(ServerUpdate.serializer(), ServerUpdate.Announcement("Connected to ${identity.gameName}")))
 
                     try {
                         incoming.consumeEach { frame ->

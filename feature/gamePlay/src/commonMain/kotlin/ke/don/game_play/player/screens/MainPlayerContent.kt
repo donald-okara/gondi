@@ -23,8 +23,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.dialog.ConfirmationDialogToken
+import ke.don.components.empty_state.EmptyState
+import ke.don.components.empty_state.EmptyType
 import ke.don.components.indicator.FancyLoadingIndicator
 import ke.don.components.scaffold.NavigationIcon
 import ke.don.components.scaffold.ScaffoldToken
@@ -38,6 +41,8 @@ import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.model.PlayerState
 import ke.don.game_play.shared.RulesModal
 import ke.don.utils.capitaliseFirst
+import ke.don.utils.result.ReadStatus
+import ke.don.utils.result.isError
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,7 +58,14 @@ fun MainPlayerContent(
 ) {
     ScaffoldToken(
         modifier = modifier,
-        navigationIcon = NavigationIcon.Back { onEvent(PlayerHandler.ShowLeaveDialog) },
+        navigationIcon = NavigationIcon.Back {
+            if (playerState.connectionStatus.isError) {
+                onBack()
+            } else {
+                onEvent(PlayerHandler.ShowLeaveDialog)
+            }
+            onEvent(PlayerHandler.ShowLeaveDialog)
+        },
         title = gameState?.phase?.let { phase ->
             "${phase.name.capitaliseFirst()} for ${gameState.name}"
         } ?: "Connecting ...",
@@ -65,6 +77,7 @@ fun MainPlayerContent(
             votes = votes,
             onEvent = onEvent,
             currentPlayer = currentPlayer,
+            onBack = onBack
         )
     }
 
@@ -97,16 +110,30 @@ private fun ContentSwitcher(
     currentPlayer: Player?,
     votes: List<Vote>,
     onEvent: (PlayerHandler) -> Unit,
+    onBack: () -> Unit,
 ) {
     AnimatedContent(
-        targetState = gameState?.phase,
+        targetState = gameState?.phase to playerState.connectionStatus,
         label = "Game State",
-    ) { phase ->
+    ) { (phase, connectionStatus) ->
         when (phase) {
             null -> {
-                LoadingState(
-                    modifier = modifier,
-                )
+                when(connectionStatus){
+                    is ReadStatus.Error -> ErrorState(
+                        error = connectionStatus.message,
+                        leave = {
+                            if (playerState.connectionStatus.isError) {
+                                onBack()
+                            } else {
+                                onEvent(PlayerHandler.ShowLeaveDialog)
+                            }
+                        }
+                    )
+                    else ->
+                        LoadingState(
+                            modifier = modifier,
+                        )
+                }
             }
             GamePhase.LOBBY -> {
                 PlayerLobby(
@@ -146,6 +173,34 @@ private fun LoadingState(
                 Text(
                     text = "Connecting...",
                     style = MaterialTheme.typography.titleLarge,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ErrorState(
+    modifier: Modifier = Modifier,
+    error: String,
+    leave: () -> Unit,
+) {
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        EmptyState(
+            title=  "Something went wrong",
+            description = "$error. The game most likely doesn't exist anymore.",
+            emptyType = EmptyType.Error,
+            icon = Icons.AutoMirrored.Filled.ExitToApp,
+        ){
+            ButtonToken(
+                buttonType = ComponentType.Error,
+                onClick = leave
+            ){
+                Text(
+                    text = "Leave game",
                 )
             }
         }

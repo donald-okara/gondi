@@ -19,9 +19,12 @@ import ke.don.domain.state.Vote
 import ke.don.game_play.player.model.PlayerState
 import ke.don.local.datastore.ProfileStore
 import ke.don.utils.Logger
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.Json
@@ -43,7 +46,12 @@ class GameClientState(
     private val _playerState = MutableStateFlow(PlayerState())
     val playerState: StateFlow<PlayerState> = _playerState.asStateFlow()
 
-    val currentPlayer = profileStore.profileFlow.map { it?.toPlayer() }
+    val profileSnapshot = profileStore.profileFlow
+
+    val currentPlayer: Flow<Player?> = combine(players, profileSnapshot) { allPlayers, profile ->
+        allPlayers.firstOrNull { it.id == profile?.id }
+    }
+
 
     val logger = Logger("ClientState")
 

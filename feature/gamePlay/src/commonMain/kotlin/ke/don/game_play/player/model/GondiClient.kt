@@ -19,6 +19,7 @@ import ke.don.game_play.player.useCases.GameClientManager
 import ke.don.game_play.player.useCases.GameClientState
 import ke.don.game_play.player.useCases.GamePlayerController
 import ke.don.utils.Logger
+import ke.don.utils.result.ReadStatus
 import ke.don.utils.result.onFailure
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.first
@@ -66,11 +67,15 @@ class GondiClient(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     fun connect(serverId: ServerId) {
         screenModelScope.launch {
-            logger.info(
-                "Player: ${currentPlayer.first()?.name} connecting to ${serverId.first}:${serverId.second}",
-            )
+            clientState.updatePlayerState {
+                it.copy(
+                    connectionStatus = ReadStatus.Loading,
+                )
+            }
+
             clientManager.connect(serverId).onFailure { error ->
                 Matcha.showErrorToast(
                     title = "Connection failed",

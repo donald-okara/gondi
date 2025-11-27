@@ -19,6 +19,7 @@ import ke.don.components.helpers.Matcha
 import ke.don.domain.gameplay.PlayerIntent
 import ke.don.domain.gameplay.server.ClientUpdate
 import ke.don.domain.gameplay.server.ServerId
+import ke.don.koffee.model.ToastDuration
 import ke.don.remote.server.ClientObject
 import ke.don.utils.Logger
 import ke.don.utils.result.LocalError
@@ -40,6 +41,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlin.concurrent.Volatile
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -53,7 +55,6 @@ class GameClientManager(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private var pingJob: Job? = null
-    private var watchdogJob: Job? = null
 
     @Volatile
     private var lastPingMillis: Instant = Clock.System.now()
@@ -119,7 +120,7 @@ class GameClientManager(
         scope.launch {
             session?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnecting"))
             try {
-                val player = clientState.currentPlayer.first()
+                val player = clientState.profileSnapshot.first()?.toPlayer()
                     ?: error("Player must be loaded before connecting")
 
                 ClientObject.client.webSocket("ws://$host:$port/game") {
@@ -127,7 +128,6 @@ class GameClientManager(
                     logger.info("Connected ✅")
 
                     startPing()
-                    startWatchdog()
                     send(
                         Frame.Text(
                             Json.encodeToString(
@@ -156,7 +156,7 @@ class GameClientManager(
                 }
             } catch (e: Exception) {
                 logger.error("Connection error: ${e.message}")
-                throw e // bubble up to retry
+                clientState.updatePlayerState { it.copy(connectionStatus = ReadStatus.Error(e.message ?: "Unknown")) }
             }
         }
     }
@@ -180,27 +180,23 @@ class GameClientManager(
                 try {
                     session?.send(Frame.Text(Json.encodeToString(ClientUpdate.serializer(), ClientUpdate.Ping)))
                 } catch (e: Exception) {
+                    val elapsed = Clock.System.now().minus(lastPingMillis)
                     logger.error("Ping failed: ${e.message}")
+
+                    if (elapsed > 1.minutes){
+                        Matcha.error("Connection lost", duration = ToastDuration.Indefinite)
+                        clientState.updatePlayerState { it.copy(connectionStatus = ReadStatus.Error("Connection lost")) }
+                        dispose()
+                    } else if ( elapsed > 30.seconds){
+                        Matcha.warning("Connection failed. Retrying...")
+
+                    }
+
                 }
             }
         }
     }
 
-    @OptIn(ExperimentalTime::class)
-    private fun startWatchdog() {
-        watchdogJob = scope.launch {
-            while (isActive) {
-                delay(15_000)
-
-                val elapsed = Clock.System.now().minus(lastPingMillis)
-                if (elapsed > 20.seconds) {
-                    logger.error("⚠️ Server unresponsive. Reconnecting...")
-                    session?.close(CloseReason(CloseReason.Codes.GOING_AWAY, "Ping timeout"))
-                    return@launch
-                }
-            }
-        }
-    }
 
     suspend fun dispose() {
         logger.info(
@@ -208,7 +204,7 @@ class GameClientManager(
         )
 
         val player = clientState.currentPlayer.first()
-            ?: error("Player must be loaded before connecting")
+            ?: return
 
         val leaveMessage = ClientUpdate.PlayerIntentMsg(
             PlayerIntent.Leave(
@@ -230,10 +226,8 @@ class GameClientManager(
         } ?: logger.debug("Session is null")
 
         pingJob?.cancelAndJoin()
-        watchdogJob?.cancelAndJoin()
 
         pingJob = null
-        watchdogJob = null
 
         // Close session after sending
         session?.close(CloseReason(CloseReason.Codes.NORMAL, "Disposed"))

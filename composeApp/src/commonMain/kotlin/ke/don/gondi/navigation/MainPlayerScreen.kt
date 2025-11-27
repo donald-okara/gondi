@@ -23,6 +23,7 @@ import ke.don.domain.gameplay.server.ServerId
 import ke.don.game_play.player.model.GondiClient
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.screens.MainPlayerContent
+import ke.don.utils.result.isError
 import org.koin.compose.getKoin
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -54,7 +55,12 @@ class MainPlayerScreen(
         }
 
         BackHandler(enabled = true) {
-            onEvent(PlayerHandler.ShowLeaveDialog)
+            if (playerState.connectionStatus.isError){
+                navigator.pop()
+            } else {
+                onEvent(PlayerHandler.ShowLeaveDialog)
+            }
+
         }
 
         MainPlayerContent(
