@@ -106,7 +106,6 @@ class DefaultGameEngine(
                 )
                 logger.debug("Player dead: ${intent.playerId}")
             }
-
         }
     }
 }

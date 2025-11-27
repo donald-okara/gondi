@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.player.useCases
 
 import io.ktor.client.plugins.websocket.DefaultClientWebSocketSession
@@ -46,7 +55,6 @@ class GameClientManager(
     private var pingJob: Job? = null
     private var watchdogJob: Job? = null
 
-
     @Volatile
     private var lastPingMillis: Instant = Clock.System.now()
 
@@ -58,16 +66,13 @@ class GameClientManager(
         clientState.updatePlayerState { it.copy(connectionStatus = ReadStatus.Loading) }
 
         return connectWithRetry(serverId.first, serverId.second)
-
     }
-
 
     private suspend fun connectWithRetry(
         host: String,
         port: Int,
-        maxRetries: Int = 5
+        maxRetries: Int = 5,
     ): Result<Unit, LocalError> {
-
         var attempt = 0
 
         while (attempt < maxRetries) {
@@ -86,8 +91,8 @@ class GameClientManager(
                     return Result.Error(
                         LocalError(
                             message = e.message.toString(),
-                            cause = e.cause.toString()
-                        )
+                            cause = e.cause.toString(),
+                        ),
                     )
                 }
 
@@ -95,7 +100,7 @@ class GameClientManager(
 
                 Matcha.info(
                     title = "Connection failed. Attempting retry...",
-                    description = "Retrying..."
+                    description = "Retrying...",
                 )
 
                 delay((attempt * 2000L).coerceAtMost(10_000L))
@@ -105,14 +110,13 @@ class GameClientManager(
         return Result.Error(
             LocalError(
                 message = "Connection failed after $maxRetries attempts",
-                cause = "Unknown"
-            )
+                cause = "Unknown",
+            ),
         )
     }
 
-
     private fun connectOnce(host: String, port: Int) {
-        scope.launch{
+        scope.launch {
             session?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnecting"))
             try {
                 val player = clientState.currentPlayer.first()
@@ -128,19 +132,19 @@ class GameClientManager(
                         Frame.Text(
                             Json.encodeToString(
                                 ClientUpdate.serializer(),
-                                ClientUpdate.GetGameState
-                            )
-                        )
+                                ClientUpdate.GetGameState,
+                            ),
+                        ),
                     )
                     logger.info(
-                        "Player: $player"
+                        "Player: $player",
                     )
                     val joinMessage = ClientUpdate.PlayerIntentMsg(
                         PlayerIntent.Join(
                             playerId = player.id,
                             round = 0,
-                            player = player
-                        )
+                            player = player,
+                        ),
                     )
 
                     send(Frame.Text(Json.encodeToString(ClientUpdate.serializer(), joinMessage)))
@@ -162,9 +166,9 @@ class GameClientManager(
             Frame.Text(
                 Json.encodeToString(
                     ClientUpdate.serializer(),
-                    message
-                )
-            )
+                    message,
+                ),
+            ),
         )
             ?: logger.error("⚠️ Not connected to server")
     }
@@ -179,7 +183,6 @@ class GameClientManager(
                     logger.error("Ping failed: ${e.message}")
                 }
             }
-
         }
     }
 
@@ -201,17 +204,17 @@ class GameClientManager(
 
     suspend fun dispose() {
         logger.info(
-            "Disposing client manager"
+            "Disposing client manager",
         )
 
-       val player = clientState.currentPlayer.first()
+        val player = clientState.currentPlayer.first()
             ?: error("Player must be loaded before connecting")
 
         val leaveMessage = ClientUpdate.PlayerIntentMsg(
             PlayerIntent.Leave(
                 playerId = player.id,
                 round = 0,
-            )
+            ),
         )
 
         // Send leave safely
@@ -225,8 +228,6 @@ class GameClientManager(
                 logger.error("Failed to send leave message: ${e.message}")
             }
         } ?: logger.debug("Session is null")
-
-
 
         pingJob?.cancelAndJoin()
         watchdogJob?.cancelAndJoin()

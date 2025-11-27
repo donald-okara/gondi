@@ -14,11 +14,8 @@ import ke.don.game_play.moderator.useCases.GameModeratorController
 import ke.don.game_play.moderator.useCases.GameServerManager
 import ke.don.game_play.moderator.useCases.GameSessionState
 import ke.don.local.di.datastoreModule
-import ke.don.local.di.sharedThemeModule
 import ke.don.remote.di.gameplayDatasourceModule
 import ke.don.remote.di.remoteDatasourceModule
-import ke.don.remote.di.serverModule
-import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.scopedOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -33,5 +30,5 @@ val moderatorModule = module {
         scopedOf(::GameSessionState)
     }
 
-    factory{ GondiHost(getKoin()) }
+    factory { GondiHost(getKoin()) }
 }

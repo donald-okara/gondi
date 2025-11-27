@@ -38,7 +38,6 @@ import ke.don.koffee.ui.KoffeeBar
 import ke.don.local.datastore.ThemeRepository
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.getKoin
 
 /**

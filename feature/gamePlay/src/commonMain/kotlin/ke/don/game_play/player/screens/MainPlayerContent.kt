@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.player.screens
 
 import androidx.compose.animation.AnimatedContent
@@ -24,7 +33,6 @@ import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
-import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.player.components.PlayerLobby
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.model.PlayerState
@@ -60,7 +68,7 @@ fun MainPlayerContent(
         )
     }
 
-    if (playerState.showRulesModal){
+    if (playerState.showRulesModal) {
         RulesModal { onEvent(PlayerHandler.ShowRulesModal) }
     }
 
@@ -97,7 +105,7 @@ private fun ContentSwitcher(
         when (phase) {
             null -> {
                 LoadingState(
-                    modifier = modifier
+                    modifier = modifier,
                 )
             }
             GamePhase.LOBBY -> {
@@ -132,12 +140,12 @@ private fun LoadingState(
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.CenterVertically)
-            ){
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.CenterVertically),
+            ) {
                 FancyLoadingIndicator(loading = true)
                 Text(
                     text = "Connecting...",
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
                 )
             }
         }

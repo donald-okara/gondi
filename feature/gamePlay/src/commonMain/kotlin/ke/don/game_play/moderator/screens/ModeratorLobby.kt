@@ -54,7 +54,7 @@ fun ModeratorLobby(
         },
         onShowRules = {
             onEvent(ModeratorHandler.ShowRulesModal)
-        }
+        },
     )
 
     if (selectedPlayer != null) {

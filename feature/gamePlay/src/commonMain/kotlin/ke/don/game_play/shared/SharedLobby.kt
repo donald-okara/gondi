@@ -14,7 +14,6 @@ package ke.don.game_play.shared
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.animateBounds
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,7 +28,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items as gridItems
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoStories
 import androidx.compose.material3.MaterialTheme
@@ -40,7 +38,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.LookaheadScope
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -61,6 +58,7 @@ import ke.don.game_play.moderator.model.Announcement
 import ke.don.game_play.moderator.useCases.PLAYER_LOWER_LIMIT
 import ke.don.utils.toFormattedTime
 import kotlin.time.ExperimentalTime
+import androidx.compose.foundation.lazy.grid.items as gridItems
 
 @Composable
 fun SharedLobby(
@@ -94,7 +92,7 @@ fun SharedLobby(
                 playersSize,
                 availableSlots.toInt(),
                 startGame,
-                isModerator
+                isModerator,
             )
         }
         item { RoleLockWarning(modifier = Modifier, nonModeratorPlayers, isModerator) }
@@ -103,7 +101,7 @@ fun SharedLobby(
                 moderator,
                 myPlayerId,
                 announcements = announcements,
-                onShowRules = onShowRules
+                onShowRules = onShowRules,
             )
         }
         item { PlayersGrid(alivePlayers, availableSlots.toInt(), myPlayerId, onSelectPlayer) }
@@ -190,12 +188,12 @@ fun ModeratorSection(
     Surface(
         shape = Theme.shapes.large,
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium)
+            verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
         ) {
             ModeratorPanelHeader(onClick = onShowRules)
 
@@ -271,11 +269,11 @@ private fun AnnouncementSection(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(220.dp)
+                        .height(220.dp),
                 ) {
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(Theme.spacing.small),
-                        modifier = Modifier.matchParentSize()
+                        modifier = Modifier.matchParentSize(),
                     ) {
                         items(items.size, key = { it }) { index ->
                             val announcement = items[index]
@@ -283,7 +281,7 @@ private fun AnnouncementSection(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .animateItem(),
-                                announcement = announcement
+                                announcement = announcement,
                             )
                         }
                     }
@@ -298,11 +296,10 @@ private fun AnnouncementSection(
                                     0.3f to Color.Transparent,
                                     0.7f to Color.Transparent,
                                     0.9f to MaterialTheme.colorScheme.surface.copy(alpha = 0.15f),
-                                    1f to MaterialTheme.colorScheme.surface.copy(alpha = 0.3f)
-                                )
-                            )
+                                    1f to MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
+                                ),
+                            ),
                     )
-
                 }
             }
         }
@@ -319,25 +316,25 @@ private fun AnnouncementBubble(
         shape = Theme.shapes.medium,
         color = Theme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
         contentColor = Theme.colorScheme.onSurfaceVariant,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.Start,
-        ){
+        ) {
             Text(
                 text = announcement.first,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 2,
-                modifier = Modifier.padding(Theme.spacing.medium)
+                modifier = Modifier.padding(Theme.spacing.medium),
             )
             Row(
                 modifier = Modifier
                     .padding(
                         horizontal = Theme.spacing.medium,
-                        vertical = Theme.spacing.small
+                        vertical = Theme.spacing.small,
                     )
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -352,7 +349,6 @@ private fun AnnouncementBubble(
         }
     }
 }
-
 
 @Composable
 fun PlayersGrid(
@@ -378,7 +374,7 @@ fun PlayersGrid(
             Text(
                 text = "Players in Lobby",
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Surface(

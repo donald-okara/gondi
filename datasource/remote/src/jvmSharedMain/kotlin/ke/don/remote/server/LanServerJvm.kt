@@ -118,14 +118,14 @@ class LanServerJvm(
         database.clearPlayers()
         logger.debug("✅ LAN WebSocket server stopped")
     }
-    private suspend fun announce(message: String){
+    private suspend fun announce(message: String) {
         broadcast(ServerUpdate.Announcement(message))
         _localEvents.emit(ServerUpdate.Announcement(message))
     }
 
     override suspend fun handleModeratorCommand(gameId: String, command: ModeratorCommand) {
         moderatorEngine.handle(gameId, command).also {
-            when(command){
+            when (command) {
                 is ModeratorCommand.RemovePlayer -> {
                     val affectedPlayerId = command.playerId
 
@@ -151,8 +151,6 @@ class LanServerJvm(
     suspend fun DefaultWebSocketServerSession.sendJson(message: ClientUpdate) {
         send(json.encodeToString(message))
     }
-
-
 
     @OptIn(ExperimentalTime::class)
     private suspend fun DefaultWebSocketServerSession.handleClientMessage(
@@ -192,7 +190,6 @@ class LanServerJvm(
                                 val name = database.getAllPlayersSnapshot()
                                     .firstOrNull { it.id == affectedPlayerId }
                                     ?.name
-
 
                                 val verb = when (message.intent) {
                                     is PlayerIntent.Leave -> "left"
@@ -234,7 +231,6 @@ class LanServerJvm(
             send(encode(ServerUpdate.Error("Error: ${e.message}")))
         }
     }
-
 
     private suspend fun broadcast(update: ServerUpdate) {
         val text = Json.encodeToString(update)

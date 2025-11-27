@@ -52,8 +52,7 @@ class GameServerManager(
         }
     }
 
-    suspend fun stopServer(
-    ) {
+    suspend fun stopServer() {
         runCatching { server.stop() }.onFailure { it.printStackTrace() }
     }
 }

@@ -49,7 +49,6 @@ import ke.don.domain.state.Player
 import ke.don.resources.Resources
 import ke.don.resources.color
 import ke.don.resources.painter
-import kotlinx.serialization.EncodeDefault
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
@@ -73,10 +72,13 @@ fun PlayerItem(
 
     val color by animateColorAsState(
         targetValue =
-            if (isSelected) actionType.color(
+        if (isSelected) {
+            actionType.color(
                 default = player.background.color(),
             )
-            else player.background.color(),
+        } else {
+            player.background.color()
+        },
         animationSpec = tween(300),
     )
     GlowingSelectableSurface(
@@ -205,13 +207,13 @@ val ActionType.painter: DrawableResource?
 
 @Composable
 fun ActionType.color(
-    default: Color = Theme.colorScheme.primary
+    default: Color = Theme.colorScheme.primary,
 ): Color = when (this) {
-        ActionType.KILL, ActionType.ACCUSE, ActionType.VOTE_GUILTY -> Theme.colorScheme.error
-        ActionType.SAVE, ActionType.VOTE_INNOCENT -> AppTheme.extendedColors.success.color
-        ActionType.SECOND, ActionType.INVESTIGATE -> AppTheme.extendedColors.warning.color
-        ActionType.NONE -> default
-    }
+    ActionType.KILL, ActionType.ACCUSE, ActionType.VOTE_GUILTY -> Theme.colorScheme.error
+    ActionType.SAVE, ActionType.VOTE_INNOCENT -> AppTheme.extendedColors.success.color
+    ActionType.SECOND, ActionType.INVESTIGATE -> AppTheme.extendedColors.warning.color
+    ActionType.NONE -> default
+}
 
 val Faction.color: Color
     @Composable get() = when (this) {

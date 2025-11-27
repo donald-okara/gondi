@@ -37,12 +37,12 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 class GondiHost(
-    private val koin: Koin
+    private val koin: Koin,
 ) : ScreenModel, KoinScopeComponent {
     override val scope: Scope by lazy {
         koin.createScope(
             Uuid.random().toString(),
-            named(GAME_PLAYER_SCOPE)
+            named(GAME_PLAYER_SCOPE),
         )
     }
 
@@ -166,7 +166,7 @@ class GondiHost(
     }
 
     override fun onDispose() {
-        screenModelScope.launch{
+        screenModelScope.launch {
             session.stopObserving()
             serverManager.stopServer()
         }

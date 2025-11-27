@@ -1,12 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.gondi.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.backhandler.BackHandler
 import cafe.adriel.voyager.core.screen.Screen
@@ -14,25 +20,20 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import ke.don.domain.gameplay.server.ServerId
-import ke.don.game_play.player.di.GAME_PLAYER_SCOPE
 import ke.don.game_play.player.model.GondiClient
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.screens.MainPlayerContent
-import kotlinx.coroutines.launch
 import org.koin.compose.getKoin
-import org.koin.core.qualifier.named
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class MainPlayerScreen(
-    private val serverId: ServerId
+    private val serverId: ServerId,
 ) : Screen {
     @OptIn(ExperimentalComposeUiApi::class, ExperimentalUuidApi::class)
     @Composable
     override fun Content() {
         val koin = getKoin()
         val screen = this
-
 
         val navigator = LocalNavigator.currentOrThrow
 
@@ -48,10 +49,9 @@ class MainPlayerScreen(
 
         val onEvent = gondiClient::onEvent
 
-        LaunchedEffect(serverId){
+        LaunchedEffect(serverId) {
             onEvent(PlayerHandler.Connect(serverId = serverId))
         }
-
 
         BackHandler(enabled = true) {
             onEvent(PlayerHandler.ShowLeaveDialog)

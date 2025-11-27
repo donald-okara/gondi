@@ -47,4 +47,3 @@ fun Instant.toFormattedTime(): String {
         else -> "$days days ago"
     }
 }
-

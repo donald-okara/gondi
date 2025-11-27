@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 @file:OptIn(ExperimentalTime::class)
 
 package ke.don.game_play.player.useCases
@@ -57,7 +66,7 @@ class GameClientState(
                 logger.info("📣 ${update.message}")
                 Matcha.info(title = update.message)
                 _playerState.update {
-                    it.copy(announcements = it.announcements + (update.message to  Clock.System.now()))
+                    it.copy(announcements = it.announcements + (update.message to Clock.System.now()))
                 }
             }
             is ServerUpdate.LastPing -> _playerState.update { it.copy(lastPing = update.long) }
@@ -65,14 +74,14 @@ class GameClientState(
     }
 
     fun updatePlayerState(
-        transform: (PlayerState) -> PlayerState
-    ){
+        transform: (PlayerState) -> PlayerState,
+    ) {
         _playerState.update {
             transform(it)
         }
     }
 
-    fun clearState(){
+    fun clearState() {
         // Reset state
         _gameState.update {
             null

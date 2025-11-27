@@ -49,19 +49,19 @@ fun PlayersPreview(
 
     val moderatorState = remember {
         ModeratorState(
-            announcements = //emptyList()
-                listOf(
-                    "Matt Foley just joined" to Clock.System.now(),
-                    "Matt Foley just joined" to Clock.System.now(),
-                    "Matt Foley just joined" to Clock.System.now(),
-                    "Matt Foley just joined" to Clock.System.now(),
-                    "Matt Foley just joined" to Clock.System.now(),
-                    "Matt Foley just joined" to Clock.System.now(),
-                    "Matt Foley just joined" to Clock.System.now(),
-                    "Matt Foley just joined" to Clock.System.now(),
-                    "Matt Foley just joined" to Clock.System.now(),
-                    "Matt Foley just joined" to Clock.System.now(),
-                )
+            announcements = // emptyList()
+            listOf(
+                "Matt Foley just joined" to Clock.System.now(),
+                "Matt Foley just joined" to Clock.System.now(),
+                "Matt Foley just joined" to Clock.System.now(),
+                "Matt Foley just joined" to Clock.System.now(),
+                "Matt Foley just joined" to Clock.System.now(),
+                "Matt Foley just joined" to Clock.System.now(),
+                "Matt Foley just joined" to Clock.System.now(),
+                "Matt Foley just joined" to Clock.System.now(),
+                "Matt Foley just joined" to Clock.System.now(),
+                "Matt Foley just joined" to Clock.System.now(),
+            ),
         )
     }
 
