@@ -43,7 +43,7 @@ fun EditContent(
     back: (() -> Unit)? = null,
     onSave: () -> Unit = {},
 ) {
-    val maxLength = 12
+    val maxLength = 20
 
     Column(
         modifier = modifier,

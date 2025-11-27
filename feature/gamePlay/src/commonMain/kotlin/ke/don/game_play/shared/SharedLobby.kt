@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LookaheadScope
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
@@ -292,10 +293,12 @@ private fun AnnouncementSection(
                             .matchParentSize()
                             .background(
                                 Brush.verticalGradient(
-                                    0f to MaterialTheme.colorScheme.surface.copy(alpha = 0.15f),
-                                    0.1f to Color.Transparent,
-                                    0.9f to Color.Transparent,
-                                    1f to MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)
+                                    0f to MaterialTheme.colorScheme.surface.copy(alpha = 0.3f),
+                                    0.1f to MaterialTheme.colorScheme.surface.copy(alpha = 0.15f),
+                                    0.3f to Color.Transparent,
+                                    0.7f to Color.Transparent,
+                                    0.9f to MaterialTheme.colorScheme.surface.copy(alpha = 0.15f),
+                                    1f to MaterialTheme.colorScheme.surface.copy(alpha = 0.3f)
                                 )
                             )
                     )
@@ -325,6 +328,9 @@ private fun AnnouncementBubble(
             Text(
                 text = announcement.first,
                 style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2,
                 modifier = Modifier.padding(Theme.spacing.medium)
             )
             Row(
