@@ -158,8 +158,8 @@ class GameClientManager(
             clientState.updatePlayerState {
                 it.copy(
                     connectionStatus = ReadStatus.Error(
-                        e.message ?: "Unknown"
-                    )
+                        e.message ?: "Unknown",
+                    ),
                 )
             }
         }

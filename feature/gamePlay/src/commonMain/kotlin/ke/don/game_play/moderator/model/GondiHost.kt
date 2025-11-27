@@ -24,7 +24,6 @@ import ke.don.utils.result.onFailure
 import ke.don.utils.result.onSuccess
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import org.koin.core.Koin
 import org.koin.core.component.KoinScopeComponent
@@ -122,7 +121,7 @@ class GondiHost(
     fun onEvent(intent: ModeratorHandler) {
         when (intent) {
             is ModeratorHandler.UpdateAssignments -> moderator.updateAssignment(intent.assignment)
-            is ModeratorHandler.HandleModeratorCommand -> screenModelScope.launch{
+            is ModeratorHandler.HandleModeratorCommand -> screenModelScope.launch {
                 serverManager.handleCommand(intent.intent)
             }
             ModeratorHandler.StartServer -> startServer()
@@ -147,7 +146,7 @@ class GondiHost(
             moderator.assignRoles().onSuccess { players ->
                 gameState.value?.let {
                     serverManager.handleCommand(ModeratorCommand.AssignRoleBatch(it.id, players))
-                    serverManager.handleCommand( ModeratorCommand.StartGame(it.id))
+                    serverManager.handleCommand(ModeratorCommand.StartGame(it.id))
                 }
             }.onFailure { error ->
                 logger.error(error.message)
