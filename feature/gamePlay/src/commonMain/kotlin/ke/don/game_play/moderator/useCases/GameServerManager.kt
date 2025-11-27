@@ -20,6 +20,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 class GameServerManager(
     private val server: LocalServer,
@@ -44,6 +45,10 @@ class GameServerManager(
         } catch (e: Exception) {
             Result.error(LocalError(e.message ?: "Unknown error", e.cause.toString()))
         }
+    }
+
+    suspend fun handleCommand(cmd: ModeratorCommand) {
+        server.handleModeratorCommand(cmd.gameId, cmd)
     }
 
     suspend fun stopServer() {

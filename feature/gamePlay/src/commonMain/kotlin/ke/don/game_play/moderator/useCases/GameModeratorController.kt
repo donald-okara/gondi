@@ -12,6 +12,7 @@ package ke.don.game_play.moderator.useCases
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.Role
 import ke.don.domain.gameplay.server.LocalServer
+import ke.don.domain.state.Player
 import ke.don.game_play.moderator.model.RoleAssignment
 import ke.don.utils.result.LocalError
 import ke.don.utils.result.Result
@@ -23,7 +24,6 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 class GameModeratorController(
     private val session: GameSessionState,
-    private val server: LocalServer,
 ) {
     private val pairedRoles = setOf(Role.DETECTIVE, Role.ACCOMPLICE)
 
@@ -126,7 +126,7 @@ class GameModeratorController(
         }
     }
 
-    suspend fun assignRoles(): Result<Unit, LocalError> {
+    fun assignRoles(): Result<List<Player>, LocalError> {
         try {
             val moderatorState = session.moderatorState.value
             val assignments = moderatorState.assignment
@@ -148,7 +148,7 @@ class GameModeratorController(
                 return Result.Error(LocalError(message, "PlayerCount"))
             }
 
-            // ----------- NEW LOGIC: Deduct slots for pre-assigned roles -----------
+            // Deduct slots for pre-assigned roles
             val alreadyAssignedCounts = totalPlayers
                 .filter { it.role != null }
                 .groupingBy { it.role!! }
@@ -174,8 +174,6 @@ class GameModeratorController(
                     adjustedForExisting
                 }
 
-            val totalAdjusted = adjustedAssignments.sumOf { it.second }
-
             // Build final role pool (remaining slots + villagers)
             val rolePool = buildList(assignPlayers.size) {
                 for ((role, count) in adjustedAssignments) {
@@ -199,23 +197,8 @@ class GameModeratorController(
                 newlyAssigned.find { it.id == p.id } ?: p
             }
 
-            val gameId = moderatorState.newGame.id
-
-            // Send batch update to server
-            server.handleModeratorCommand(
-                gameId,
-                ModeratorCommand.AssignRoleBatch(gameId, finalAssignments),
-            )
-
-            session.updateModeratorState {
-                it.copy(assignmentsStatus = ResultStatus.Success(Unit))
-            }
-
-            return Result.Success(Unit)
+            return Result.Success(finalAssignments)
         } catch (e: Exception) {
-            session.updateModeratorState {
-                it.copy(assignmentsStatus = ResultStatus.Error(e.message ?: "Unknown error"))
-            }
 
             return Result.Error(
                 LocalError(
@@ -223,14 +206,6 @@ class GameModeratorController(
                     cause = e.cause.toString(),
                 ),
             )
-        }
-    }
-
-    fun handleCommand(cmd: ModeratorCommand, scope: CoroutineScope) {
-        scope.launch {
-            val currentGameId = session.gameState.value?.id ?: session.moderatorState.value.newGame.id
-
-            server.handleModeratorCommand(currentGameId, cmd)
         }
     }
 }

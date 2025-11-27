@@ -116,47 +116,51 @@ class GameClientManager(
         )
     }
 
-    private fun connectOnce(host: String, port: Int) {
-        scope.launch {
-            session?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnecting"))
-            try {
-                val player = clientState.profileSnapshot.first()?.toPlayer()
-                    ?: error("Player must be loaded before connecting")
+    private suspend fun connectOnce(host: String, port: Int) {
+        session?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnecting"))
+        try {
+            val player = clientState.profileSnapshot.first()?.toPlayer()
+                ?: error("Player must be loaded before connecting")
 
-                ClientObject.client.webSocket("ws://$host:$port/game") {
-                    session = this
-                    logger.info("Connected ✅")
+            ClientObject.client.webSocket("ws://$host:$port/game") {
+                session = this
+                logger.info("Connected ✅")
 
-                    startPing()
-                    send(
-                        Frame.Text(
-                            Json.encodeToString(
-                                ClientUpdate.serializer(),
-                                ClientUpdate.GetGameState,
-                            ),
+                startPing()
+                send(
+                    Frame.Text(
+                        Json.encodeToString(
+                            ClientUpdate.serializer(),
+                            ClientUpdate.GetGameState,
                         ),
-                    )
-                    logger.info(
-                        "Player: $player",
-                    )
-                    val joinMessage = ClientUpdate.PlayerIntentMsg(
-                        PlayerIntent.Join(
-                            playerId = player.id,
-                            round = 0,
-                            player = player,
-                        ),
-                    )
+                    ),
+                )
+                logger.info(
+                    "Player: $player",
+                )
+                val joinMessage = ClientUpdate.PlayerIntentMsg(
+                    PlayerIntent.Join(
+                        playerId = player.id,
+                        round = 0,
+                        player = player,
+                    ),
+                )
 
-                    send(Frame.Text(Json.encodeToString(ClientUpdate.serializer(), joinMessage)))
+                send(Frame.Text(Json.encodeToString(ClientUpdate.serializer(), joinMessage)))
 
-                    for (frame in incoming) {
-                        lastPingMillis = Clock.System.now()
-                        if (frame is Frame.Text) clientState.handleServerUpdate(frame.readText())
-                    }
+                for (frame in incoming) {
+                    lastPingMillis = Clock.System.now()
+                    if (frame is Frame.Text) clientState.handleServerUpdate(frame.readText())
                 }
-            } catch (e: Exception) {
-                logger.error("Connection error: ${e.message}")
-                clientState.updatePlayerState { it.copy(connectionStatus = ReadStatus.Error(e.message ?: "Unknown")) }
+            }
+        } catch (e: Exception) {
+            logger.error("Connection error: ${e.message}")
+            clientState.updatePlayerState {
+                it.copy(
+                    connectionStatus = ReadStatus.Error(
+                        e.message ?: "Unknown"
+                    )
+                )
             }
         }
     }

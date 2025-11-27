@@ -122,7 +122,9 @@ class GondiHost(
     fun onEvent(intent: ModeratorHandler) {
         when (intent) {
             is ModeratorHandler.UpdateAssignments -> moderator.updateAssignment(intent.assignment)
-            is ModeratorHandler.HandleModeratorCommand -> moderator.handleCommand(intent.intent, screenModelScope)
+            is ModeratorHandler.HandleModeratorCommand -> screenModelScope.launch{
+                serverManager.handleCommand(intent.intent)
+            }
             ModeratorHandler.StartServer -> startServer()
             is ModeratorHandler.UpdateRoomName -> moderator.updateRoomName(intent.name)
             ModeratorHandler.ShowLeaveDialog -> session.updateModeratorState {
@@ -142,22 +144,20 @@ class GondiHost(
 
     fun startGame() {
         screenModelScope.launch {
-            // Wait for role assignment to complete
-            moderator.assignRoles().onSuccess {
-                // Wait for the players flow to reflect the changes from assignRoles
-                val updatedPlayers = players.first { list -> list.all { it.role != null || !it.isAlive } }
-                if (updatedPlayers.isNotEmpty()) {
-                    gameState.firstOrNull()?.let {
-                        moderator.handleCommand(
-                            ModeratorCommand.StartGame(it.id),
-                            screenModelScope,
-                        )
-                    }
+            moderator.assignRoles().onSuccess { players ->
+                gameState.value?.let {
+                    serverManager.handleCommand(ModeratorCommand.AssignRoleBatch(it.id, players))
+                    serverManager.handleCommand( ModeratorCommand.StartGame(it.id))
                 }
-            }.onFailure {
-                logger.error(it.message)
+            }.onFailure { error ->
+                logger.error(error.message)
+                session.updateModeratorState {
+                    it.copy(
+                        assignmentsStatus = ResultStatus.Error(error.message),
+                    )
+                }
                 Matcha.showErrorToast(
-                    message = it.message,
+                    message = error.message,
                     title = "Error",
                     retryAction = { startGame() },
                 )
