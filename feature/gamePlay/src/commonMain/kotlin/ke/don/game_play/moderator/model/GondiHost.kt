@@ -168,6 +168,7 @@ class GondiHost(
         screenModelScope.launch {
             session.stopObserving()
             serverManager.stopServer()
+            scope.close()
         }
         super.onDispose()
     }
