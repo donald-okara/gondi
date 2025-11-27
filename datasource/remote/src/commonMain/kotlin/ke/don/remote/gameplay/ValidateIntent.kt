@@ -22,118 +22,116 @@ suspend fun validateIntent(
     gameId: String,
     intent: PlayerIntent,
 ): PhaseValidationResult {
-    val players = db.getAllPlayers().firstOrNull() ?: return PhaseValidationResult.Error("No players found.")
-    val gameState = db.getGameState(gameId).firstOrNull() ?: return PhaseValidationResult.Error("Game state not found.")
-    val votes = db.getAllVotes().firstOrNull() ?: return PhaseValidationResult.Error("No votes found.")
+    val players = db.getAllPlayers().firstOrNull() ?: return PhaseValidationResult.Error("No players are in the game yet.")
+    val gameState = db.getGameState(gameId).firstOrNull() ?: return PhaseValidationResult.Error("Game state could not be found.")
+    val votes = db.getAllVotes().firstOrNull() ?: return PhaseValidationResult.Error("There are no votes yet.")
     val phase = gameState.phase
     val round = gameState.round
     val accused = gameState.accusedPlayer
     val lastSaved = gameState.lastSavedPlayerId
 
-    // Handle Join separately
     if (intent is PlayerIntent.Join) {
         return when {
             phase != GamePhase.LOBBY ->
-                PhaseValidationResult.Error("Players can only join during the lobby phase.")
-
+                PhaseValidationResult.Error("You can only join while the game is in the lobby.")
             players.count { it.role == Role.MODERATOR } == 0 ->
-                PhaseValidationResult.Error("No moderator assigned. The game requires one moderator to start.")
-
+                PhaseValidationResult.Error("You cannot join — the game needs a moderator first.")
             players.count { it.role == Role.MODERATOR } > 1 ->
-                PhaseValidationResult.Error("Multiple moderators assigned. Only one moderator is allowed.")
-
+                PhaseValidationResult.Error("There are too many moderators. Only one is allowed.")
             !players.all { it.role == null || it.role == Role.MODERATOR } ->
-                PhaseValidationResult.Error("Some players already have roles. Joining is only allowed before role assignment.")
-
-            players.any { it.id == intent.player.id } ->
-                PhaseValidationResult.Error("Player already in game.")
-
+                PhaseValidationResult.Error("Some players already have roles. Joining is only allowed before roles are assigned.")
+            players.any { it.id == intent.player.id && it.isAlive.not()} ->
+                PhaseValidationResult.Error("You were eliminated or you left this game")
+            players.any { it.id == intent.player.id && it.isAlive} ->
+                PhaseValidationResult.Error("You're already in the game!")
             gameState.lockJoin ->
-                PhaseValidationResult.Error("The game has been locked for joining.")
-
+                PhaseValidationResult.Error("The game is locked for joining right now.")
             else -> PhaseValidationResult.Success
         }
     }
 
-    if (intent is PlayerIntent.Leave){
+    if (intent is PlayerIntent.Leave) {
         return PhaseValidationResult.Success
     }
-    // Fetch the player
+
     val player = db.getPlayerById(intent.playerId).firstOrNull()
-        ?: return PhaseValidationResult.Error("Player with ID ${intent.playerId} not found.")
-    val role = player.role ?: return PhaseValidationResult.Error("Player has no assigned role.")
+        ?: return PhaseValidationResult.Error("We couldn't find your player data.")
+    val role = player.role ?: return PhaseValidationResult.Error("You don't have a role assigned yet.")
 
     return when (intent) {
         is PlayerIntent.Kill -> when {
-            !player.isAlive -> PhaseValidationResult.Error("Dead players cannot perform actions.")
+            !player.isAlive -> PhaseValidationResult.Error("You can't perform actions because you are eliminated.")
             role != Role.GONDI -> PhaseValidationResult.Error("Only Gondi players can perform kills.")
-            player.lastAction?.round == round && player.lastAction?.type == ActionType.KILL
-            -> PhaseValidationResult.Error("You have already killed on this round.")
-            phase != GamePhase.SLEEP -> PhaseValidationResult.Error("Kills can only occur during the Sleep phase.")
-            intent.playerId == intent.targetId -> PhaseValidationResult.Error("You cannot target yourself.")
-            !role.canActInSleep -> PhaseValidationResult.Error("${role.name} cannot act in the Sleep phase.")
+            player.lastAction?.round == round && player.lastAction?.type == ActionType.KILL ->
+                PhaseValidationResult.Error("You've already made a kill this round.")
+            phase != GamePhase.SLEEP -> PhaseValidationResult.Error("You can only perform kills during the Sleep phase.")
+            intent.playerId == intent.targetId -> PhaseValidationResult.Error("You can't target yourself.")
+            !role.canActInSleep -> PhaseValidationResult.Error("Your role cannot act during the Sleep phase.")
             else -> PhaseValidationResult.Success
         }
 
         is PlayerIntent.Save -> when {
-            !player.isAlive -> PhaseValidationResult.Error("Dead players cannot perform actions.")
+            !player.isAlive -> PhaseValidationResult.Error("You can't perform actions because you are eliminated.")
             role != Role.DOCTOR -> PhaseValidationResult.Error("Only the Doctor can save players.")
-            player.lastAction?.round == round && player.lastAction?.type == ActionType.SAVE
-            -> PhaseValidationResult.Error("You have saved someone this round.")
-            phase != GamePhase.SLEEP -> PhaseValidationResult.Error("Saves can only happen during the Sleep phase.")
-            lastSaved == intent.targetId -> PhaseValidationResult.Error("You cannot save the same player twice in a row.")
-            !role.canActInSleep -> PhaseValidationResult.Error("${role.name} cannot act in the Sleep phase.")
+            player.lastAction?.round == round && player.lastAction?.type == ActionType.SAVE ->
+                PhaseValidationResult.Error("You've already saved someone this round.")
+            phase != GamePhase.SLEEP -> PhaseValidationResult.Error("You can only save during the Sleep phase.")
+            lastSaved == intent.targetId -> PhaseValidationResult.Error("You just saved this player. Pick someone else.")
+            !role.canActInSleep -> PhaseValidationResult.Error("Your role cannot act during the Sleep phase.")
             else -> PhaseValidationResult.Success
         }
 
         is PlayerIntent.Investigate -> when {
-            !player.isAlive -> PhaseValidationResult.Error("Dead players cannot perform actions.")
-            role != Role.DETECTIVE -> PhaseValidationResult.Error("Only the Detective can investigate players.")
-            phase != GamePhase.SLEEP -> PhaseValidationResult.Error("Investigations can only occur during the Sleep phase.")
-            player.lastAction?.round == round && player.lastAction?.type == ActionType.INVESTIGATE
-            -> PhaseValidationResult.Error("You have already investigated this round.")
-            player.knownIdentities.any { it.playerId == intent.targetId } -> PhaseValidationResult.Error("You already investigated this player.")
-            player.id == intent.targetId -> PhaseValidationResult.Error("You cannot investigate yourself.")
-            players.none { it.id == intent.targetId && it.isAlive } -> PhaseValidationResult.Error("Target player is either dead or not found.")
-            !role.canActInSleep -> PhaseValidationResult.Error("${role.name} cannot act in the Sleep phase.")
+            !player.isAlive -> PhaseValidationResult.Error("You can't investigate because you are eliminated.")
+            role != Role.DETECTIVE -> PhaseValidationResult.Error("Only the Detective can investigate.")
+            phase != GamePhase.SLEEP -> PhaseValidationResult.Error("Investigations are only allowed during the Sleep phase.")
+            player.lastAction?.round == round && player.lastAction?.type == ActionType.INVESTIGATE ->
+                PhaseValidationResult.Error("You've already investigated this round.")
+            player.knownIdentities.any { it.playerId == intent.targetId } ->
+                PhaseValidationResult.Error("You already investigated this player.")
+            player.id == intent.targetId -> PhaseValidationResult.Error("You can't investigate yourself.")
+            players.none { it.id == intent.targetId && it.isAlive } ->
+                PhaseValidationResult.Error("That player is either dead or not found.")
+            !role.canActInSleep -> PhaseValidationResult.Error("Your role cannot act during the Sleep phase.")
             else -> PhaseValidationResult.Success
         }
 
         is PlayerIntent.Accuse -> when {
-            !player.isAlive -> PhaseValidationResult.Error("Dead players cannot accuse.")
-            role.canAccuse.not() -> PhaseValidationResult.Error("${role.name} cannot accuse.")
-            !role.canVote -> PhaseValidationResult.Error("${role.name} cannot vote or accuse.")
-            gameState.accusedPlayer != null -> PhaseValidationResult.Error("An accusation is already in progress.")
+            !player.isAlive -> PhaseValidationResult.Error("You can't accuse because you are eliminated.")
+            role.canAccuse.not() -> PhaseValidationResult.Error("Your role cannot make accusations.")
+            !role.canVote -> PhaseValidationResult.Error("Your role cannot vote or accuse.")
+            gameState.accusedPlayer != null -> PhaseValidationResult.Error("Someone is already accused.")
             gameState.second != null -> PhaseValidationResult.Error("A second is already in progress.")
-            phase != GamePhase.TOWN_HALL -> PhaseValidationResult.Error("Accusations can only happen during the Town Hall phase.")
-            player.id == intent.targetId -> PhaseValidationResult.Error("You cannot accuse yourself.")
-            intent.playerId != player.id -> PhaseValidationResult.Error("Invalid player ID for accusation.")
+            phase != GamePhase.TOWN_HALL -> PhaseValidationResult.Error("You can only accuse during the Town Hall phase.")
+            player.id == intent.targetId -> PhaseValidationResult.Error("You can't accuse yourself.")
+            intent.playerId != player.id -> PhaseValidationResult.Error("This is not your turn to accuse.")
             else -> PhaseValidationResult.Success
         }
 
         is PlayerIntent.Second -> when {
-            !player.isAlive -> PhaseValidationResult.Error("Dead players cannot second accusations.")
-            role.canAccuse.not() -> PhaseValidationResult.Error("${role.name} cannot second accusations.")
-            !role.canVote -> PhaseValidationResult.Error("${role.name} cannot vote or second.")
-            phase != GamePhase.TOWN_HALL -> PhaseValidationResult.Error("Seconding can only happen during the Town Hall phase.")
-            accused?.targetId != intent.targetId -> PhaseValidationResult.Error("You can only second the currently accused player.")
-            intent.playerId == intent.targetId -> PhaseValidationResult.Error("You cannot second yourself.")
-            accused.playerId == intent.playerId -> PhaseValidationResult.Error("You cannot second your own accusation.")
+            !player.isAlive -> PhaseValidationResult.Error("You can't second an accusation because you are eliminated.")
+            role.canAccuse.not() -> PhaseValidationResult.Error("Your role cannot second accusations.")
+            !role.canVote -> PhaseValidationResult.Error("Your role cannot vote or second.")
+            phase != GamePhase.TOWN_HALL -> PhaseValidationResult.Error("You can only second during the Town Hall phase.")
+            accused?.targetId != intent.targetId -> PhaseValidationResult.Error("You can only second the current accused player.")
+            intent.playerId == intent.targetId -> PhaseValidationResult.Error("You can't second yourself.")
+            accused.playerId == intent.playerId -> PhaseValidationResult.Error("You can't second your own accusation.")
             else -> PhaseValidationResult.Success
         }
 
         is PlayerIntent.Vote -> when {
-            !player.isAlive -> PhaseValidationResult.Error("Dead players cannot vote.")
-            role.canVote.not() -> PhaseValidationResult.Error("${role.name} cannot vote.")
-            gameState.accusedPlayer?.targetId != intent.vote.targetId -> PhaseValidationResult.Error("Vote target does not match the current accused player.")
-            player.id == intent.vote.targetId -> PhaseValidationResult.Error("You cannot vote for yourself.")
-            phase != GamePhase.COURT -> PhaseValidationResult.Error("Voting is only allowed during the Court phase.")
-            intent.vote.voterId != player.id -> PhaseValidationResult.Error("Voter ID does not match the current player.")
-            votes.any { it.voterId == intent.vote.voterId } -> PhaseValidationResult.Error("You have already voted.")
-            votes.count { it.targetId == intent.vote.targetId } >= 2 -> PhaseValidationResult.Error("This player has already received the maximum number of votes.")
+            !player.isAlive -> PhaseValidationResult.Error("You can't vote because you are eliminated.")
+            role.canVote.not() -> PhaseValidationResult.Error("Your role cannot vote.")
+            gameState.accusedPlayer?.targetId != intent.vote.targetId ->
+                PhaseValidationResult.Error("The vote target doesn't match the current accused player.")
+            player.id == intent.vote.targetId -> PhaseValidationResult.Error("You can't vote for yourself.")
+            phase != GamePhase.COURT -> PhaseValidationResult.Error("Voting only happens during the Court phase.")
+            intent.vote.voterId != player.id -> PhaseValidationResult.Error("That's not your voter ID.")
+            votes.any { it.voterId == intent.vote.voterId } -> PhaseValidationResult.Error("You already voted.")
+            votes.count { it.targetId == intent.vote.targetId } >= 2 -> PhaseValidationResult.Error("This player has already reached the max votes.")
             else -> PhaseValidationResult.Success
         }
 
-        else -> PhaseValidationResult.Error("Unsupported player intent type.")
+        else -> PhaseValidationResult.Error("We can't handle this action type yet.")
     }
 }

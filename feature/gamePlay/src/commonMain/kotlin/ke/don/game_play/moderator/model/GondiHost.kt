@@ -64,8 +64,7 @@ class GondiHost(
     init {
         serverManager.observeLocalAnnouncements {
             Matcha.info(
-                description = it,
-                title = "Announcement",
+                title = "it",
             )
             session.updateModeratorState { state ->
                 state.copy(announcements = state.announcements + (it to Clock.System.now()))

@@ -47,15 +47,15 @@ class GameClientState(
             is ServerUpdate.VotesSnapshot -> _votes.value = update.votes
             is ServerUpdate.Error -> {
                 logger.error("❌ ${update.message}")
-                Matcha.error(title = "Error", description = update.message)
+                Matcha.error(title = update.message)
             }
             is ServerUpdate.Forbidden -> {
                 logger.warn("❌ ${update.message}")
-                Matcha.warning(title = "Forbidden", description = update.message)
+                Matcha.warning(title = update.message)
             }
             is ServerUpdate.Announcement -> {
                 logger.info("📣 ${update.message}")
-                Matcha.info(title = "Announcement", description = update.message)
+                Matcha.info(title = update.message)
                 _playerState.update {
                     it.copy(announcements = it.announcements + (update.message to  Clock.System.now()))
                 }

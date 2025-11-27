@@ -118,7 +118,7 @@ fun ToastComponent(
             ) {
                 Text(
                     text = data.title,
-                    maxLines = 1,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontWeight = FontWeight.SemiBold,
