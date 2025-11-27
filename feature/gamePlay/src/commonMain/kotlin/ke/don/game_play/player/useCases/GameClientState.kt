@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package ke.don.game_play.player.useCases
 
 import ke.don.components.helpers.Matcha
@@ -36,6 +38,7 @@ class GameClientState(
 
     val logger = Logger("ClientState")
 
+    @OptIn(ExperimentalTime::class)
     fun handleServerUpdate(json: String) {
         val update = Json.decodeFromString<ServerUpdate>(json)
         when (update) {
@@ -53,6 +56,9 @@ class GameClientState(
             is ServerUpdate.Announcement -> {
                 logger.info("📣 ${update.message}")
                 Matcha.info(title = "Announcement", description = update.message)
+                _playerState.update {
+                    it.copy(announcements = it.announcements + (update.message to  Clock.System.now()))
+                }
             }
             is ServerUpdate.LastPing -> _playerState.update { it.copy(lastPing = update.long) }
         }

@@ -7,6 +7,8 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
+@file:OptIn(ExperimentalTime::class)
+
 package ke.don.game_play.moderator.screens
 
 import androidx.compose.runtime.Composable
@@ -18,6 +20,7 @@ import ke.don.game_play.moderator.components.SelectedPlayerModal
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.shared.SharedLobby
+import kotlin.time.ExperimentalTime
 
 @Composable
 fun ModeratorLobby(
@@ -39,6 +42,7 @@ fun ModeratorLobby(
         onSelectPlayer = {
             onEvent(ModeratorHandler.SelectPlayer(it))
         },
+        announcements = moderatorState.announcements,
         startGame = {
             gameState?.id?.let {
                 onEvent(
@@ -48,6 +52,9 @@ fun ModeratorLobby(
                 )
             }
         },
+        onShowRules = {
+            onEvent(ModeratorHandler.ShowRulesModal)
+        }
     )
 
     if (selectedPlayer != null) {

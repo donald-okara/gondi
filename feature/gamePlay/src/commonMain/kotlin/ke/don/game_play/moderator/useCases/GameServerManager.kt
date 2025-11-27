@@ -26,6 +26,14 @@ class GameServerManager(
     private val server: LocalServer,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    fun observeLocalAnnouncements(onAnnouncement: (String) -> Unit) {
+        scope.launch {
+            server.localEvents.collect { announcement ->
+                onAnnouncement(announcement.message)
+            }
+        }
+    }
     suspend fun startServer(
         gameIdentity: GameIdentity,
         newGame: GameState,

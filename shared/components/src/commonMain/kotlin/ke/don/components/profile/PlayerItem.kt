@@ -49,6 +49,7 @@ import ke.don.domain.state.Player
 import ke.don.resources.Resources
 import ke.don.resources.color
 import ke.don.resources.painter
+import kotlinx.serialization.EncodeDefault
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
@@ -60,6 +61,7 @@ fun PlayerItem(
     isMe: Boolean = false,
     showRole: Boolean = false,
     isSelected: Boolean,
+    enabled: Boolean = false,
     player: Player,
 ) {
     // Animate alpha for the entire item if the player is not alive
@@ -70,14 +72,18 @@ fun PlayerItem(
     )
 
     val color by animateColorAsState(
-        targetValue = if (isSelected) actionType.color else player.background.color(),
+        targetValue =
+            if (isSelected) actionType.color(
+                default = player.background.color(),
+            )
+            else player.background.color(),
         animationSpec = tween(300),
     )
     GlowingSelectableSurface(
         modifier = modifier.graphicsLayer { alpha = contentAlpha },
         onClick = onClick,
         selected = isSelected,
-        enabled = player.isAlive,
+        enabled = player.isAlive && enabled,
         glowingColor = color,
     ) {
         Column(
@@ -197,12 +203,14 @@ val ActionType.painter: DrawableResource?
         ActionType.NONE -> null
     }
 
-val ActionType.color: Color
-    @Composable get() = when (this) {
+@Composable
+fun ActionType.color(
+    default: Color = Theme.colorScheme.primary
+): Color = when (this) {
         ActionType.KILL, ActionType.ACCUSE, ActionType.VOTE_GUILTY -> Theme.colorScheme.error
         ActionType.SAVE, ActionType.VOTE_INNOCENT -> AppTheme.extendedColors.success.color
         ActionType.SECOND, ActionType.INVESTIGATE -> AppTheme.extendedColors.warning.color
-        ActionType.NONE -> Theme.colorScheme.primary
+        ActionType.NONE -> default
     }
 
 val Faction.color: Color

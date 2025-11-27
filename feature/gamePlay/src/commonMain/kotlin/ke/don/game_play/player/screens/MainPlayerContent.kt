@@ -28,6 +28,7 @@ import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.player.components.PlayerLobby
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.model.PlayerState
+import ke.don.game_play.shared.RulesModal
 import ke.don.utils.capitaliseFirst
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,6 +58,10 @@ fun MainPlayerContent(
             onEvent = onEvent,
             currentPlayer = currentPlayer,
         )
+    }
+
+    if (playerState.showRulesModal){
+        RulesModal { onEvent(PlayerHandler.ShowRulesModal) }
     }
 
     if (playerState.showLeaveGame) {
@@ -100,7 +105,9 @@ private fun ContentSwitcher(
                     modifier = modifier,
                     players = players,
                     myPlayerId = currentPlayer?.id,
-                    gameState = gameState
+                    gameState = gameState,
+                    playerState = playerState,
+                    onEvent = onEvent,
                 )
             }
             GamePhase.SLEEP -> {}

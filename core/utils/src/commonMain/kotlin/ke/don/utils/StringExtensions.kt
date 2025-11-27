@@ -9,6 +9,10 @@
  */
 package ke.don.utils
 
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
+
 fun String.getInitials(): String {
     val words = this.trim().split("\\s+".toRegex())
     return when {
@@ -24,3 +28,23 @@ fun String.getInitials(): String {
 fun String.capitaliseFirst(): String {
     return this.lowercase().replaceFirstChar { it.uppercase() }
 }
+
+@OptIn(ExperimentalTime::class)
+fun Instant.toFormattedTime(): String {
+    val now = Clock.System.now()
+    val duration = now - this
+
+    val minutes = duration.inWholeMinutes
+    val hours = duration.inWholeHours
+    val days = duration.inWholeDays
+
+    return when {
+        minutes < 1 -> "Just now"
+        minutes < 60 -> "$minutes minute${if (minutes == 1L) "" else "s"} ago"
+        hours < 24 -> "$hours hour${if (hours == 1L) "" else "s"} ago"
+        // Cross-day handling
+        days == 1L -> "Yesterday"
+        else -> "$days days ago"
+    }
+}
+

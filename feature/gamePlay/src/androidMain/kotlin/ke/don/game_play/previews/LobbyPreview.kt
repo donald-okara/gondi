@@ -25,8 +25,10 @@ import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.moderator.screens.ModeratorLobby
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @DevicePreviews
 @Composable
 fun PlayersPreview(
@@ -46,7 +48,21 @@ fun PlayersPreview(
     }
 
     val moderatorState = remember {
-        ModeratorState(selectedPlayerId = "3")
+        ModeratorState(
+            announcements = //emptyList()
+                listOf(
+                    "Matt Foley just joined" to Clock.System.now(),
+                    "Matt Foley just joined" to Clock.System.now(),
+                    "Matt Foley just joined" to Clock.System.now(),
+                    "Matt Foley just joined" to Clock.System.now(),
+                    "Matt Foley just joined" to Clock.System.now(),
+                    "Matt Foley just joined" to Clock.System.now(),
+                    "Matt Foley just joined" to Clock.System.now(),
+                    "Matt Foley just joined" to Clock.System.now(),
+                    "Matt Foley just joined" to Clock.System.now(),
+                    "Matt Foley just joined" to Clock.System.now(),
+                )
+        )
     }
 
     DevicePreviewContainer(theme) {

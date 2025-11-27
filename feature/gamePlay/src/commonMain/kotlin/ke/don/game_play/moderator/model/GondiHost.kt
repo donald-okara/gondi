@@ -30,10 +30,12 @@ import org.koin.core.Koin
 import org.koin.core.component.KoinScopeComponent
 import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 class GondiHost(
     private val koin: Koin
 ) : ScreenModel, KoinScopeComponent {
@@ -58,6 +60,18 @@ class GondiHost(
     val votes = session.votes.asStateFlow()
 
     val moderatorState = session.moderatorState.asStateFlow()
+
+    init {
+        serverManager.observeLocalAnnouncements {
+            Matcha.info(
+                description = it,
+                title = "Announcement",
+            )
+            session.updateModeratorState { state ->
+                state.copy(announcements = state.announcements + (it to Clock.System.now()))
+            }
+        }
+    }
 
     fun startServer() {
         session.updateModeratorState {
@@ -118,6 +132,11 @@ class GondiHost(
             is ModeratorHandler.SelectPlayer -> moderator.selectPlayer(intent.id)
             ModeratorHandler.StartGame -> {
                 startGame()
+            }
+            ModeratorHandler.ShowRulesModal -> {
+                session.updateModeratorState {
+                    it.copy(showRulesModal = !it.showRulesModal)
+                }
             }
         }
     }

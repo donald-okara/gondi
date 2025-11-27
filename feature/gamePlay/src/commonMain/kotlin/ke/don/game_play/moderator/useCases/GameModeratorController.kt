@@ -18,7 +18,9 @@ import ke.don.utils.result.Result
 import ke.don.utils.result.ResultStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 class GameModeratorController(
     private val session: GameSessionState,
     private val server: LocalServer,

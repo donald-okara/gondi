@@ -27,6 +27,7 @@ import org.koin.core.component.KoinScopeComponent
 import org.koin.core.component.createScope
 import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
+import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -55,12 +56,13 @@ class GondiClient(
     val votes = clientState.votes
     val playerState = clientState.playerState
 
-
+    @OptIn(ExperimentalTime::class)
     fun onEvent(intent: PlayerHandler){
         when(intent){
             is PlayerHandler.Connect -> connect(intent.serverId)
             is PlayerHandler.Send -> sendIntent(intent.message)
             PlayerHandler.ShowLeaveDialog -> clientState.updatePlayerState { it.copy(showLeaveGame = !it.showLeaveGame) }
+            PlayerHandler.ShowRulesModal -> clientState.updatePlayerState { it.copy(showRulesModal = !it.showRulesModal)}
         }
     }
 

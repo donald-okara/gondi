@@ -7,34 +7,47 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
+@file:OptIn(ExperimentalTime::class)
+
 package ke.don.game_play.shared
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.animateBounds
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.items as gridItems
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AutoStories
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.LookaheadScope
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
+import ke.don.components.empty_state.EmptyState
+import ke.don.components.icon.IconToken
 import ke.don.components.profile.PlayerItem
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
@@ -43,7 +56,10 @@ import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.game_play.moderator.components.EmptySlot
+import ke.don.game_play.moderator.model.Announcement
 import ke.don.game_play.moderator.useCases.PLAYER_LOWER_LIMIT
+import ke.don.utils.toFormattedTime
+import kotlin.time.ExperimentalTime
 
 @Composable
 fun SharedLobby(
@@ -54,6 +70,8 @@ fun SharedLobby(
     players: List<Player>,
     myPlayerId: String? = null,
     startGame: () -> Unit = {},
+    announcements: List<Announcement> = emptyList(),
+    onShowRules: () -> Unit = {},
 ) {
     val nonModeratorPlayers = players.filter { it.role != Role.MODERATOR }
     val alivePlayers = nonModeratorPlayers
@@ -69,9 +87,24 @@ fun SharedLobby(
         verticalArrangement = Arrangement.spacedBy(Theme.spacing.large),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        item { LobbyHeader(modifier = Modifier, playersSize, availableSlots.toInt(), startGame, isModerator) }
+        item {
+            LobbyHeader(
+                modifier = Modifier,
+                playersSize,
+                availableSlots.toInt(),
+                startGame,
+                isModerator
+            )
+        }
         item { RoleLockWarning(modifier = Modifier, nonModeratorPlayers, isModerator) }
-        item { ModeratorSection(moderator, myPlayerId) }
+        item {
+            ModeratorSection(
+                moderator,
+                myPlayerId,
+                announcements = announcements,
+                onShowRules = onShowRules
+            )
+        }
         item { PlayersGrid(alivePlayers, availableSlots.toInt(), myPlayerId, onSelectPlayer) }
     }
 }
@@ -142,34 +175,178 @@ fun RoleLockWarning(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ModeratorSection(
     moderator: Player?,
     myPlayerId: String?,
     modifier: Modifier = Modifier,
+    announcements: List<Announcement> = emptyList(),
+    onShowRules: () -> Unit = {},
 ) {
-    moderator?.let {
+    if (moderator == null) return
+
+    Surface(
+        shape = Theme.shapes.large,
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
         Column(
-            modifier = modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(Theme.spacing.small),
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium)
         ) {
-            Text(
-                text = "Moderator",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.align(Alignment.Start),
-            )
-            PlayerItem(
-                actionType = ActionType.NONE,
-                isSelected = false,
-                isMe = myPlayerId == moderator.id,
-                showRole = true,
-                player = moderator,
-                modifier = modifier.width(130.dp),
-            )
+            ModeratorPanelHeader(onClick = onShowRules)
+
+            // Moderator info
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
+            ) {
+                PlayerItem(
+                    actionType = ActionType.NONE,
+                    isSelected = false,
+                    isMe = myPlayerId == moderator.id,
+                    showRole = true,
+                    enabled = false,
+                    player = moderator,
+                )
+                AnnouncementSection(announcements = announcements)
+            }
         }
     }
 }
+
+@Composable
+private fun ModeratorPanelHeader(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            "Moderator Panel",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+        )
+
+        IconToken(
+            imageVector = Icons.Outlined.AutoStories,
+            buttonType = ComponentType.Inverse,
+            onClick = onClick,
+        )
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+private fun AnnouncementSection(
+    announcements: List<Announcement>,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(Theme.spacing.small),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(
+            "Announcements",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.SemiBold,
+        )
+
+        AnimatedContent(
+            targetState = announcements,
+            modifier = Modifier.fillMaxWidth(),
+        ) { items ->
+            if (items.isEmpty()) {
+                EmptyState(
+                    title = "Nothing to see yet",
+                    description = "Announcements will show up here.",
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(220.dp)
+                ) {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(Theme.spacing.small),
+                        modifier = Modifier.matchParentSize()
+                    ) {
+                        items(items.size, key = { it }) { index ->
+                            val announcement = items[index]
+                            AnnouncementBubble(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .animateItem(),
+                                announcement = announcement
+                            )
+                        }
+                    }
+                    // Fade overlay for scrollable content
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize()
+                            .background(
+                                Brush.verticalGradient(
+                                    0f to MaterialTheme.colorScheme.surface.copy(alpha = 0.15f),
+                                    0.1f to Color.Transparent,
+                                    0.9f to Color.Transparent,
+                                    1f to MaterialTheme.colorScheme.surface.copy(alpha = 0.15f)
+                                )
+                            )
+                    )
+
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalTime::class)
+@Composable
+private fun AnnouncementBubble(
+    modifier: Modifier = Modifier,
+    announcement: Announcement,
+) {
+    Surface(
+        shape = Theme.shapes.medium,
+        color = Theme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
+        contentColor = Theme.colorScheme.onSurfaceVariant,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.Start,
+        ){
+            Text(
+                text = announcement.first,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(Theme.spacing.medium)
+            )
+            Row(
+                modifier = Modifier
+                    .padding(
+                        horizontal = Theme.spacing.medium,
+                        vertical = Theme.spacing.small
+                    )
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+            ) {
+                Text(
+                    text = announcement.second.toFormattedTime(),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+    }
+}
+
 
 @Composable
 fun PlayersGrid(
@@ -194,7 +371,8 @@ fun PlayersGrid(
         ) {
             Text(
                 text = "Players in Lobby",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
             )
 
             Surface(
@@ -222,7 +400,7 @@ fun PlayersGrid(
             verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
             contentPadding = PaddingValues(vertical = Theme.spacing.small),
         ) {
-            items(alivePlayers, key = { it.id }) { player ->
+            gridItems(alivePlayers, key = { it.id }) { player ->
                 PlayerItem(
                     actionType = ActionType.NONE,
                     onClick = { onSelectPlayer(player.id) },

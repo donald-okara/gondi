@@ -7,6 +7,8 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
+@file:OptIn(ExperimentalTime::class)
+
 package ke.don.game_play.moderator.useCases
 
 import ke.don.domain.state.GameState
@@ -22,6 +24,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.ExperimentalTime
 
 class GameSessionState(
     private val database: LocalDatabase,

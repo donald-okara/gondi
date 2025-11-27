@@ -27,6 +27,7 @@ import io.ktor.websocket.send
 import ke.don.domain.gameplay.GameEngine
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.ModeratorEngine
+import ke.don.domain.gameplay.PlayerIntent
 import ke.don.domain.gameplay.server.ClientUpdate
 import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.domain.gameplay.server.LanAdvertiser
@@ -39,6 +40,8 @@ import ke.don.local.db.LocalDatabase
 import ke.don.remote.gameplay.validateIntent
 import ke.don.utils.Logger
 import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.json.Json
 import java.util.concurrent.ConcurrentHashMap
@@ -52,6 +55,8 @@ class LanServerJvm(
     private val gameEngine: GameEngine,
     private val moderatorEngine: ModeratorEngine,
 ) : LocalServer {
+    private val _localEvents = MutableSharedFlow<ServerUpdate.Announcement>()
+    override val localEvents: SharedFlow<ServerUpdate.Announcement> = _localEvents
 
     private val logger = Logger("LanServer_JVM")
     private var server: EmbeddedServer<*, *>? = null
@@ -113,9 +118,26 @@ class LanServerJvm(
         database.clearPlayers()
         logger.debug("✅ LAN WebSocket server stopped")
     }
+    private suspend fun announce(message: String){
+        broadcast(ServerUpdate.Announcement(message))
+        _localEvents.emit(ServerUpdate.Announcement(message))
+    }
 
     override suspend fun handleModeratorCommand(gameId: String, command: ModeratorCommand) {
-        moderatorEngine.handle(gameId, command)
+        moderatorEngine.handle(gameId, command).also {
+            when(command){
+                is ModeratorCommand.RemovePlayer -> {
+                    val affectedPlayerId = command.playerId
+
+                    val name = database.getAllPlayersSnapshot()
+                        .firstOrNull { it.id == affectedPlayerId }
+                        ?.name
+                    val message = "$name has been kicked out of the game."
+                    announce(message)
+                }
+                else -> {}
+            }
+        }
 
         // After moderator actions, broadcast updates
         val newState = database.getGameState(gameId).firstOrNull()
@@ -130,55 +152,89 @@ class LanServerJvm(
         send(json.encodeToString(message))
     }
 
+
+
     @OptIn(ExperimentalTime::class)
     private suspend fun DefaultWebSocketServerSession.handleClientMessage(
         gameId: String,
         json: String,
     ) {
+        fun encode(update: ServerUpdate) =
+            Json.encodeToString(ServerUpdate.serializer(), update)
+
+        suspend fun broadcastSnapshots(gameId: String) {
+            val state = database.getGameState(gameId).firstOrNull()
+            val players = database.getAllPlayersSnapshot()
+            val votes = database.getAllVotesSnapshot()
+
+            broadcast(ServerUpdate.GameStateSnapshot(state))
+            broadcast(ServerUpdate.PlayersSnapshot(players))
+            broadcast(ServerUpdate.VotesSnapshot(votes))
+        }
+
         try {
             val message = this@LanServerJvm.json.decodeFromString<ClientUpdate>(json)
+
             when (message) {
                 is ClientUpdate.PlayerIntentMsg -> {
-                    when (val result = validateIntent(db = database, gameId = gameId, intent = message.intent)) {
-                        is PhaseValidationResult.Success -> gameEngine.reduce(gameId, message.intent).also {
-                            logger.debug(message.intent.toString())
+                    when (val result = validateIntent(database, gameId, message.intent)) {
+                        is PhaseValidationResult.Success -> {
+                            gameEngine.reduce(gameId, message.intent)
+
+                            // announcements only for join/leave
+                            val affectedPlayerId = when (val intent = message.intent) {
+                                is PlayerIntent.Leave -> intent.playerId
+                                is PlayerIntent.Join -> intent.playerId
+                                else -> null
+                            }
+
+                            if (affectedPlayerId != null) {
+                                val name = database.getAllPlayersSnapshot()
+                                    .firstOrNull { it.id == affectedPlayerId }
+                                    ?.name
+
+
+                                val verb = when (message.intent) {
+                                    is PlayerIntent.Leave -> "left"
+                                    is PlayerIntent.Join -> "joined"
+                                    else -> null
+                                }
+
+                                if (name != null && verb != null) {
+                                    val message = "$name has $verb the game."
+                                    announce(message)
+                                }
+                            }
+
+                            broadcastSnapshots(gameId)
                         }
-                        is PhaseValidationResult.Error ->
-                            send(
-                                Json.encodeToString(
-                                    ServerUpdate.serializer(),
-                                    ServerUpdate.Forbidden(result.message),
-                                ),
-                            )
+
+                        is PhaseValidationResult.Error -> {
+                            send(encode(ServerUpdate.Forbidden(result.message)))
+                        }
                     }
-
-                    // 2️⃣ Broadcast updated state
-                    val newState = database.getGameState(id = gameId).firstOrNull()
-                    val players = database.getAllPlayersSnapshot()
-                    val votes = database.getAllVotesSnapshot()
-
-                    broadcast(ServerUpdate.GameStateSnapshot(newState))
-                    broadcast(ServerUpdate.VotesSnapshot(votes))
-                    broadcast(ServerUpdate.PlayersSnapshot(players))
-
                 }
+
                 is ClientUpdate.GetGameState -> {
-                    val newState = database.getGameState(id = gameId).firstOrNull()
+                    val state = database.getGameState(gameId).firstOrNull()
                     val players = database.getAllPlayersSnapshot()
                     val votes = database.getAllVotesSnapshot()
 
-                    send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.GameStateSnapshot(newState)))
-                    send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.PlayersSnapshot(players)))
-                    send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.VotesSnapshot(votes)))
+                    send(encode(ServerUpdate.GameStateSnapshot(state)))
+                    send(encode(ServerUpdate.PlayersSnapshot(players)))
+                    send(encode(ServerUpdate.VotesSnapshot(votes)))
                 }
+
                 is ClientUpdate.Ping -> {
-                    send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.LastPing(Clock.System.now().toEpochMilliseconds())))
+                    val now = Clock.System.now().toEpochMilliseconds()
+                    send(encode(ServerUpdate.LastPing(now)))
                 }
             }
         } catch (e: Exception) {
-            send(Json.encodeToString(ServerUpdate.serializer(), ServerUpdate.Error("Error: ${e.message}")))
+            send(encode(ServerUpdate.Error("Error: ${e.message}")))
         }
     }
+
 
     private suspend fun broadcast(update: ServerUpdate) {
         val text = Json.encodeToString(update)
