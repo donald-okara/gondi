@@ -6,7 +6,7 @@
 
 <h1 align="center">Gondi</h1>
 
-Gondi is a rendition of the group game "Mafia" where there are 2 Gondis (Mafia members), one police officer, one accomplice, one detective, a doctor and the villagers
+Gondi is a rendition of the group game "Mafia" where there are 2 Gondis (Mafia members), one accomplice, one detective, a doctor and the villagers
 
 Consult the [setup guide](docs/GET_STARTED.md) on how to get started.
 
