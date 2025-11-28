@@ -18,14 +18,10 @@ import ke.don.game_play.moderator.di.GAME_MODERATOR_SCOPE
 import ke.don.game_play.moderator.useCases.GameModeratorController
 import ke.don.game_play.moderator.useCases.GameServerManager
 import ke.don.game_play.moderator.useCases.GameSessionState
-import ke.don.game_play.player.di.GAME_PLAYER_SCOPE
 import ke.don.utils.Logger
 import ke.don.utils.result.ResultStatus
 import ke.don.utils.result.onFailure
 import ke.don.utils.result.onSuccess
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -71,7 +67,8 @@ class GondiHost(
                 Matcha.info(event.message)
                 session.updateModeratorState {
                     val updated = it.announcements + (event.message to Clock.System.now())
-                    it.copy(announcements = updated.takeLast(MAX_ANNOUNCEMENTS))                }
+                    it.copy(announcements = updated.takeLast(MAX_ANNOUNCEMENTS))
+                }
             }
         }
     }
@@ -154,8 +151,8 @@ class GondiHost(
                         serverManager.handleCommand(
                             ModeratorCommand.AssignRoleBatch(
                                 it.id,
-                                players
-                            )
+                                players,
+                            ),
                         )
                         serverManager.handleCommand(ModeratorCommand.StartGame(it.id))
                     } catch (e: Exception) {

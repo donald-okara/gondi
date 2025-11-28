@@ -21,7 +21,6 @@ import ke.don.game_play.player.useCases.GamePlayerController
 import ke.don.utils.Logger
 import ke.don.utils.result.ReadStatus
 import ke.don.utils.result.onFailure
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.core.Koin
@@ -93,7 +92,7 @@ class GondiClient(
     }
 
     override fun onDispose() {
-        runBlocking{ clientManager.dispose() }
+        runBlocking { clientManager.dispose() }
         clientState.clearState()
         scope.close()
         super.onDispose()

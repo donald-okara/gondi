@@ -76,7 +76,6 @@ fun GameObjective(
 
 @Composable
 fun RolesList(modifier: Modifier = Modifier) {
-
     var showDialog by remember { mutableStateOf<Role?>(null) }
 
     LazyVerticalGrid(

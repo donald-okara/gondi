@@ -410,7 +410,7 @@ fun PlayersGrid(
                     showRole = player.id == myPlayerId || player.role != null,
                     isMe = myPlayerId == player.id,
                     player = player,
-                    enabled = true
+                    enabled = true,
                 )
             }
 

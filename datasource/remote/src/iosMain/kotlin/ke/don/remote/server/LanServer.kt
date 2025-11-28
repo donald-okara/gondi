@@ -15,7 +15,6 @@ import ke.don.domain.gameplay.server.LocalServer
 import ke.don.domain.gameplay.server.ServerUpdate
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.emptyFlow
 
 class LanServer(
     private val port: Int,
