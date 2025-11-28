@@ -16,6 +16,7 @@ import ke.don.domain.gameplay.server.ServerUpdate
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
+import ke.don.game_play.moderator.model.MAX_ANNOUNCEMENTS
 import ke.don.game_play.player.model.PlayerState
 import ke.don.local.datastore.ProfileStore
 import ke.don.utils.Logger
@@ -26,6 +27,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.serialization.json.Json
+import kotlin.collections.plus
+import kotlin.collections.takeLast
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -54,7 +57,12 @@ class GameClientState(
 
     @OptIn(ExperimentalTime::class)
     fun handleServerUpdate(json: String) {
-        val update = Json.decodeFromString<ServerUpdate>(json)
+        val update = try {
+            Json.decodeFromString<ServerUpdate>(json)
+        } catch (e: Exception) {
+            logger.error("Failed to decode server update: ${e.message}")
+            return
+        }
         when (update) {
             is ServerUpdate.GameStateSnapshot -> _gameState.value = update.state
             is ServerUpdate.PlayersSnapshot -> _players.value = update.players
@@ -71,7 +79,8 @@ class GameClientState(
                 logger.info("📣 ${update.message}")
                 Matcha.info(title = update.message)
                 _playerState.update {
-                    it.copy(announcements = it.announcements + (update.message to Clock.System.now()))
+                    val updated = it.announcements + (update.message to Clock.System.now())
+                    it.copy(announcements = updated.takeLast(MAX_ANNOUNCEMENTS))
                 }
             }
             is ServerUpdate.LastPing -> _playerState.update { it.copy(lastPing = update.long) }

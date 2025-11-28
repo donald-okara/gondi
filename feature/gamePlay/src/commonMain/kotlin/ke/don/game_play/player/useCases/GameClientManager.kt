@@ -33,6 +33,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
@@ -190,7 +191,7 @@ class GameClientManager(
                     if (elapsed > 1.minutes) {
                         Matcha.error("Connection lost", duration = ToastDuration.Indefinite)
                         clientState.updatePlayerState { it.copy(connectionStatus = ReadStatus.Error("Connection lost")) }
-                        dispose()
+                        break
                     } else if (elapsed > 30.seconds) {
                         Matcha.warning("Connection failed. Retrying...")
                     }
@@ -234,7 +235,8 @@ class GameClientManager(
         session?.close(CloseReason(CloseReason.Codes.NORMAL, "Disposed"))
         session = null
 
-        // Cancel all remaining jobs
-        scope.cancel()
+        // Cancel all remaining jobs in this scope
+        // Note: If reconnection is needed, recreate the scope or use job-based cancellation
+        scope.coroutineContext[Job]?.cancelChildren()
     }
 }

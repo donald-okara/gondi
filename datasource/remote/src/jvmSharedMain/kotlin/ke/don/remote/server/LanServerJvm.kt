@@ -132,8 +132,10 @@ class LanServerJvm(
                     val name = database.getAllPlayersSnapshot()
                         .firstOrNull { it.id == affectedPlayerId }
                         ?.name
-                    val message = "$name has been kicked out of the game."
-                    announce(message)
+                    name?.let{
+                        val message = "$it has been kicked out of the game."
+                        announce(message)
+                    }
                 }
                 else -> {}
             }

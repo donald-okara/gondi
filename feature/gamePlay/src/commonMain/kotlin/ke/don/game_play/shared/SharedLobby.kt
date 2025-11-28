@@ -275,7 +275,7 @@ private fun AnnouncementSection(
                         verticalArrangement = Arrangement.spacedBy(Theme.spacing.small),
                         modifier = Modifier.matchParentSize(),
                     ) {
-                        items(items.size, key = { it }) { index ->
+                        items(items.size, key = { items[it].hashCode() }) { index ->
                             val announcement = items[index]
                             AnnouncementBubble(
                                 modifier = Modifier
@@ -410,6 +410,7 @@ fun PlayersGrid(
                     showRole = player.id == myPlayerId || player.role != null,
                     isMe = myPlayerId == player.id,
                     player = player,
+                    enabled = true
                 )
             }
 

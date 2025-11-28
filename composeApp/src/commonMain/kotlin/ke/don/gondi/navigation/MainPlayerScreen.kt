@@ -33,8 +33,6 @@ class MainPlayerScreen(
     @OptIn(ExperimentalComposeUiApi::class, ExperimentalUuidApi::class)
     @Composable
     override fun Content() {
-        val koin = getKoin()
-        val screen = this
 
         val navigator = LocalNavigator.currentOrThrow
 

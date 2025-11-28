@@ -76,13 +76,11 @@ fun GameObjective(
 
 @Composable
 fun RolesList(modifier: Modifier = Modifier) {
-    val spacing = MaterialTheme.spacing.medium
-    val minSize = 240.dp
 
     var showDialog by remember { mutableStateOf<Role?>(null) }
 
     LazyVerticalGrid(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .heightIn(min = 200.dp, max = Theme.spacing.largeScreenSize),
         columns = GridCells.Adaptive(240.dp),

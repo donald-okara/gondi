@@ -20,7 +20,7 @@ import org.koin.core.module.dsl.scopedOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-const val GAME_PLAYER_SCOPE = "GAME_MODERATOR_SCOPE"
+const val GAME_PLAYER_SCOPE = "GAME_PLAYER_SCOPE"
 
 val playerModule = module {
     includes(remoteDatasourceModule, gameplayDatasourceModule, datastoreModule)

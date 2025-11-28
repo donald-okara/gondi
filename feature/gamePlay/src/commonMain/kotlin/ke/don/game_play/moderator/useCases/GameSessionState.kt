@@ -44,7 +44,7 @@ class GameSessionState(
 
     fun updateModeratorState(transform: (ModeratorState) -> ModeratorState) {
         moderatorState.update {
-            transform(moderatorState.value)
+            transform(it)
         }
     }
 

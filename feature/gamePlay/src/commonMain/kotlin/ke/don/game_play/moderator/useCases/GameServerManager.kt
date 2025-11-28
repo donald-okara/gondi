@@ -16,16 +16,10 @@ import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.utils.result.LocalError
 import ke.don.utils.result.Result
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.SupervisorJob
 
 class GameServerManager(
     private val server: LocalServer,
 ) {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
     val announcements = server.localEvents
 
     suspend fun startServer(

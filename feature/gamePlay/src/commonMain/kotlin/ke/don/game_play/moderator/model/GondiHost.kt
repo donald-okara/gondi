@@ -14,6 +14,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import ke.don.components.helpers.Matcha
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.server.GameIdentity
+import ke.don.game_play.moderator.di.GAME_MODERATOR_SCOPE
 import ke.don.game_play.moderator.useCases.GameModeratorController
 import ke.don.game_play.moderator.useCases.GameServerManager
 import ke.don.game_play.moderator.useCases.GameSessionState
@@ -22,9 +23,13 @@ import ke.don.utils.Logger
 import ke.don.utils.result.ResultStatus
 import ke.don.utils.result.onFailure
 import ke.don.utils.result.onSuccess
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.core.Koin
 import org.koin.core.component.KoinScopeComponent
 import org.koin.core.qualifier.named
@@ -41,7 +46,7 @@ class GondiHost(
     override val scope: Scope by lazy {
         koin.createScope(
             Uuid.random().toString(),
-            named(GAME_PLAYER_SCOPE),
+            named(GAME_MODERATOR_SCOPE),
         )
     }
 
@@ -65,8 +70,8 @@ class GondiHost(
             serverManager.announcements.collect { event ->
                 Matcha.info(event.message)
                 session.updateModeratorState {
-                    it.copy(announcements = it.announcements + (event.message to Clock.System.now()))
-                }
+                    val updated = it.announcements + (event.message to Clock.System.now())
+                    it.copy(announcements = updated.takeLast(MAX_ANNOUNCEMENTS))                }
             }
         }
     }
@@ -145,8 +150,22 @@ class GondiHost(
         screenModelScope.launch {
             moderator.assignRoles().onSuccess { players ->
                 gameState.value?.let {
-                    serverManager.handleCommand(ModeratorCommand.AssignRoleBatch(it.id, players))
-                    serverManager.handleCommand(ModeratorCommand.StartGame(it.id))
+                    try {
+                        serverManager.handleCommand(
+                            ModeratorCommand.AssignRoleBatch(
+                                it.id,
+                                players
+                            )
+                        )
+                        serverManager.handleCommand(ModeratorCommand.StartGame(it.id))
+                    } catch (e: Exception) {
+                        logger.error("Failed to start game: ${e.message}")
+                        Matcha.showErrorToast(
+                            message = e.message ?: "Failed to start game",
+                            title = "Error",
+                            retryAction = { startGame() },
+                        )
+                    }
                 }
             }.onFailure { error ->
                 logger.error(error.message)
@@ -165,11 +184,11 @@ class GondiHost(
     }
 
     override fun onDispose() {
-        screenModelScope.launch {
-            session.stopObserving()
-            serverManager.stopServer()
-            scope.close()
-        }
+        session.stopObserving()
+        runBlocking { serverManager.stopServer() }
+        scope.close()
         super.onDispose()
     }
 }
+
+const val MAX_ANNOUNCEMENTS = 10

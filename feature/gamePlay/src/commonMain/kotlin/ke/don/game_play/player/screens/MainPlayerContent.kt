@@ -64,7 +64,6 @@ fun MainPlayerContent(
             } else {
                 onEvent(PlayerHandler.ShowLeaveDialog)
             }
-            onEvent(PlayerHandler.ShowLeaveDialog)
         },
         title = gameState?.phase?.let { phase ->
             "${phase.name.capitaliseFirst()} for ${gameState.name}"

@@ -7,8 +7,6 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-@file:OptIn(ExperimentalTime::class)
-
 package ke.don.game_play.moderator.screens
 
 import androidx.compose.runtime.Composable
@@ -22,6 +20,7 @@ import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.shared.SharedLobby
 import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun ModeratorLobby(
     modifier: Modifier = Modifier,

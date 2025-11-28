@@ -23,6 +23,7 @@ import ke.don.utils.result.ReadStatus
 import ke.don.utils.result.onFailure
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.core.Koin
 import org.koin.core.component.KoinScopeComponent
 import org.koin.core.component.createScope
@@ -92,11 +93,9 @@ class GondiClient(
     }
 
     override fun onDispose() {
-        screenModelScope.launch(NonCancellable) {
-            clientManager.dispose()
-            clientState.clearState()
-            scope.close()
-        }
+        runBlocking{ clientManager.dispose() }
+        clientState.clearState()
+        scope.close()
         super.onDispose()
     }
 }
