@@ -38,5 +38,8 @@ UPDATE playerEntity SET last_action = :last_action WHERE id = :id;
 updateKnownIdentities:
 UPDATE playerEntity SET known_identities = :known_identities WHERE id = :id;
 
+removePlayer:
+DELETE FROM playerEntity WHERE id = :id;
+
 clearPlayers:
 DELETE FROM playerEntity;

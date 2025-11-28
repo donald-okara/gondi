@@ -19,4 +19,5 @@ sealed interface ModeratorHandler {
     object StartServer : ModeratorHandler
     object StartGame : ModeratorHandler
     object ShowLeaveDialog : ModeratorHandler
+    object ShowRulesModal : ModeratorHandler
 }

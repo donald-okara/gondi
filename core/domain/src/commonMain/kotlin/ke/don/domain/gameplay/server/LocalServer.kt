@@ -10,8 +10,11 @@
 package ke.don.domain.gameplay.server
 
 import ke.don.domain.gameplay.ModeratorCommand
+import kotlinx.coroutines.flow.SharedFlow
 
 interface LocalServer {
+    val localEvents: SharedFlow<ServerUpdate.Announcement>
+
     suspend fun start(identity: GameIdentity)
     suspend fun stop()
     suspend fun handleModeratorCommand(gameId: String, command: ModeratorCommand)

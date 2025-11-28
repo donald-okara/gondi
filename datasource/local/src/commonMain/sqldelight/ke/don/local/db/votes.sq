@@ -12,5 +12,8 @@ insertOrReplaceVote:
 INSERT OR REPLACE INTO voteEntity(voter_id, target_id, is_guilty)
 VALUES (:voter_id, :target_id, :is_guilty);
 
+deleteVotesByPlayerId:
+DELETE FROM voteEntity WHERE voter_id = :id;
+
 clearVotes:
 DELETE FROM voteEntity;

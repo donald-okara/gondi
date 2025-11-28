@@ -18,7 +18,9 @@ import ke.don.game_play.moderator.components.SelectedPlayerModal
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.shared.SharedLobby
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @Composable
 fun ModeratorLobby(
     modifier: Modifier = Modifier,
@@ -39,6 +41,7 @@ fun ModeratorLobby(
         onSelectPlayer = {
             onEvent(ModeratorHandler.SelectPlayer(it))
         },
+        announcements = moderatorState.announcements,
         startGame = {
             gameState?.id?.let {
                 onEvent(
@@ -47,6 +50,9 @@ fun ModeratorLobby(
                     ),
                 )
             }
+        },
+        onShowRules = {
+            onEvent(ModeratorHandler.ShowRulesModal)
         },
     )
 

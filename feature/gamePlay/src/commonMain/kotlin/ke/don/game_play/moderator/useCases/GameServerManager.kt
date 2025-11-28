@@ -16,12 +16,12 @@ import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.utils.result.LocalError
 import ke.don.utils.result.Result
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 class GameServerManager(
     private val server: LocalServer,
 ) {
+    val announcements = server.localEvents
+
     suspend fun startServer(
         gameIdentity: GameIdentity,
         newGame: GameState,
@@ -40,11 +40,11 @@ class GameServerManager(
         }
     }
 
-    fun stopServer(
-        scope: CoroutineScope,
-    ) {
-        scope.launch {
-            runCatching { server.stop() }.onFailure { it.printStackTrace() }
-        }
+    suspend fun handleCommand(cmd: ModeratorCommand) {
+        server.handleModeratorCommand(cmd.gameId, cmd)
+    }
+
+    suspend fun stopServer() {
+        runCatching { server.stop() }.onFailure { it.printStackTrace() }
     }
 }

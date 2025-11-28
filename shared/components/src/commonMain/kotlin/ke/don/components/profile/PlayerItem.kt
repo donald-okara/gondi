@@ -60,6 +60,7 @@ fun PlayerItem(
     isMe: Boolean = false,
     showRole: Boolean = false,
     isSelected: Boolean,
+    enabled: Boolean = false,
     player: Player,
 ) {
     // Animate alpha for the entire item if the player is not alive
@@ -70,14 +71,21 @@ fun PlayerItem(
     )
 
     val color by animateColorAsState(
-        targetValue = if (isSelected) actionType.color else player.background.color(),
+        targetValue =
+        if (isSelected) {
+            actionType.color(
+                default = player.background.color(),
+            )
+        } else {
+            player.background.color()
+        },
         animationSpec = tween(300),
     )
     GlowingSelectableSurface(
         modifier = modifier.graphicsLayer { alpha = contentAlpha },
         onClick = onClick,
         selected = isSelected,
-        enabled = player.isAlive,
+        enabled = player.isAlive && enabled,
         glowingColor = color,
     ) {
         Column(
@@ -197,13 +205,15 @@ val ActionType.painter: DrawableResource?
         ActionType.NONE -> null
     }
 
-val ActionType.color: Color
-    @Composable get() = when (this) {
-        ActionType.KILL, ActionType.ACCUSE, ActionType.VOTE_GUILTY -> Theme.colorScheme.error
-        ActionType.SAVE, ActionType.VOTE_INNOCENT -> AppTheme.extendedColors.success.color
-        ActionType.SECOND, ActionType.INVESTIGATE -> AppTheme.extendedColors.warning.color
-        ActionType.NONE -> Theme.colorScheme.primary
-    }
+@Composable
+fun ActionType.color(
+    default: Color = Theme.colorScheme.primary,
+): Color = when (this) {
+    ActionType.KILL, ActionType.ACCUSE, ActionType.VOTE_GUILTY -> Theme.colorScheme.error
+    ActionType.SAVE, ActionType.VOTE_INNOCENT -> AppTheme.extendedColors.success.color
+    ActionType.SECOND, ActionType.INVESTIGATE -> AppTheme.extendedColors.warning.color
+    ActionType.NONE -> default
+}
 
 val Faction.color: Color
     @Composable get() = when (this) {

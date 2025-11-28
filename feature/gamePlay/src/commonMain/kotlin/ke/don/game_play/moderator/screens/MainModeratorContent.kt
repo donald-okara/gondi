@@ -25,6 +25,7 @@ import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
+import ke.don.game_play.shared.RulesModal
 import ke.don.utils.capitaliseFirst
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,6 +55,10 @@ fun MainModeratorContent(
             onEvent = onEvent,
             hostPlayer = hostPlayer,
         )
+    }
+
+    if (moderatorState.showRulesModal) {
+        RulesModal { onEvent(ModeratorHandler.ShowRulesModal) }
     }
 
     if (moderatorState.showLeaveGame) {

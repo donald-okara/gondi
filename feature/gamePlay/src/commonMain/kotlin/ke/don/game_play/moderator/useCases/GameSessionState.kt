@@ -7,6 +7,8 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
+@file:OptIn(ExperimentalTime::class)
+
 package ke.don.game_play.moderator.useCases
 
 import ke.don.domain.state.GameState
@@ -17,11 +19,12 @@ import ke.don.local.datastore.ProfileStore
 import ke.don.local.db.LocalDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.ExperimentalTime
 
 class GameSessionState(
     private val database: LocalDatabase,
@@ -31,13 +34,17 @@ class GameSessionState(
     val players = MutableStateFlow<List<Player>>(emptyList())
     val votes = MutableStateFlow<List<Vote>>(emptyList())
     val moderatorState = MutableStateFlow(ModeratorState())
-    val hostPlayer = profileStore.profileFlow.map { it?.toPlayer() }
+    val profileSnapshot = profileStore.profileFlow
+
+    val hostPlayer: Flow<Player?> = combine(players, profileSnapshot) { allPlayers, profile ->
+        allPlayers.firstOrNull { it.id == profile?.id }
+    }
 
     private var dbObserveJob: Job? = null
 
     fun updateModeratorState(transform: (ModeratorState) -> ModeratorState) {
         moderatorState.update {
-            transform(moderatorState.value)
+            transform(it)
         }
     }
 

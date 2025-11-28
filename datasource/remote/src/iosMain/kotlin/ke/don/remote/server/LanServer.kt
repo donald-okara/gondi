@@ -12,10 +12,16 @@ package ke.don.remote.server
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.domain.gameplay.server.LocalServer
+import ke.don.domain.gameplay.server.ServerUpdate
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 class LanServer(
     private val port: Int,
 ) : LocalServer {
+    private val _localEvents = MutableSharedFlow<ServerUpdate.Announcement>()
+    override val localEvents: SharedFlow<ServerUpdate.Announcement> = _localEvents
+
     override suspend fun start(identity: GameIdentity) {
         TODO("Not yet implemented")
     }

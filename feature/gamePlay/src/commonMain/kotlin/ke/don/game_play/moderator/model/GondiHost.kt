@@ -14,6 +14,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import ke.don.components.helpers.Matcha
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.server.GameIdentity
+import ke.don.game_play.moderator.di.GAME_MODERATOR_SCOPE
 import ke.don.game_play.moderator.useCases.GameModeratorController
 import ke.don.game_play.moderator.useCases.GameServerManager
 import ke.don.game_play.moderator.useCases.GameSessionState
@@ -23,14 +24,32 @@ import ke.don.utils.result.onFailure
 import ke.don.utils.result.onSuccess
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.koin.core.Koin
+import org.koin.core.component.KoinScopeComponent
+import org.koin.core.qualifier.named
+import org.koin.core.scope.Scope
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 class GondiHost(
-    private val session: GameSessionState,
-    private val moderator: GameModeratorController,
-    private val serverManager: GameServerManager,
-) : ScreenModel {
+    private val koin: Koin,
+) : ScreenModel, KoinScopeComponent {
+    override val scope: Scope by lazy {
+        koin.createScope(
+            Uuid.random().toString(),
+            named(GAME_MODERATOR_SCOPE),
+        )
+    }
+
+    private val session by lazy { scope.get<GameSessionState>() }
+    private val moderator by lazy { scope.get<GameModeratorController>() }
+    private val serverManager by lazy { scope.get<GameServerManager>() }
+
     private val logger = Logger("GondiHost")
     val gameState = session.gameState.asStateFlow()
 
@@ -42,13 +61,25 @@ class GondiHost(
 
     val moderatorState = session.moderatorState.asStateFlow()
 
+    init {
+        screenModelScope.launch {
+            serverManager.announcements.collect { event ->
+                Matcha.info(event.message)
+                session.updateModeratorState {
+                    val updated = it.announcements + (event.message to Clock.System.now())
+                    it.copy(announcements = updated.takeLast(MAX_ANNOUNCEMENTS))
+                }
+            }
+        }
+    }
+
     fun startServer() {
         session.updateModeratorState {
             it.copy(createStatus = ResultStatus.Loading)
         }
         moderator.validateAssignments().onSuccess {
             screenModelScope.launch {
-                val host = hostPlayer.first() ?: error("Player is not present")
+                val host = session.profileSnapshot.first()?.toPlayer() ?: error("Player is not present")
 
                 val identity = GameIdentity(
                     id = moderatorState.value.newGame.id,
@@ -92,7 +123,9 @@ class GondiHost(
     fun onEvent(intent: ModeratorHandler) {
         when (intent) {
             is ModeratorHandler.UpdateAssignments -> moderator.updateAssignment(intent.assignment)
-            is ModeratorHandler.HandleModeratorCommand -> moderator.handleCommand(intent.intent, screenModelScope)
+            is ModeratorHandler.HandleModeratorCommand -> screenModelScope.launch {
+                serverManager.handleCommand(intent.intent)
+            }
             ModeratorHandler.StartServer -> startServer()
             is ModeratorHandler.UpdateRoomName -> moderator.updateRoomName(intent.name)
             ModeratorHandler.ShowLeaveDialog -> session.updateModeratorState {
@@ -102,27 +135,44 @@ class GondiHost(
             ModeratorHandler.StartGame -> {
                 startGame()
             }
+            ModeratorHandler.ShowRulesModal -> {
+                session.updateModeratorState {
+                    it.copy(showRulesModal = !it.showRulesModal)
+                }
+            }
         }
     }
 
     fun startGame() {
         screenModelScope.launch {
-            // Wait for role assignment to complete
-            moderator.assignRoles().onSuccess {
-                // Wait for the players flow to reflect the changes from assignRoles
-                val updatedPlayers = players.first { list -> list.all { it.role != null || !it.isAlive } }
-                if (updatedPlayers.isNotEmpty()) {
-                    gameState.firstOrNull()?.let {
-                        moderator.handleCommand(
-                            ModeratorCommand.StartGame(it.id),
-                            screenModelScope,
+            moderator.assignRoles().onSuccess { players ->
+                gameState.value?.let {
+                    try {
+                        serverManager.handleCommand(
+                            ModeratorCommand.AssignRoleBatch(
+                                it.id,
+                                players,
+                            ),
+                        )
+                        serverManager.handleCommand(ModeratorCommand.StartGame(it.id))
+                    } catch (e: Exception) {
+                        logger.error("Failed to start game: ${e.message}")
+                        Matcha.showErrorToast(
+                            message = e.message ?: "Failed to start game",
+                            title = "Error",
+                            retryAction = { startGame() },
                         )
                     }
                 }
-            }.onFailure {
-                logger.error(it.message)
+            }.onFailure { error ->
+                logger.error(error.message)
+                session.updateModeratorState {
+                    it.copy(
+                        assignmentsStatus = ResultStatus.Error(error.message),
+                    )
+                }
                 Matcha.showErrorToast(
-                    message = it.message,
+                    message = error.message,
                     title = "Error",
                     retryAction = { startGame() },
                 )
@@ -132,8 +182,10 @@ class GondiHost(
 
     override fun onDispose() {
         session.stopObserving()
-        serverManager.stopServer(screenModelScope)
-
+        runBlocking { serverManager.stopServer() }
+        scope.close()
         super.onDispose()
     }
 }
+
+const val MAX_ANNOUNCEMENTS = 10

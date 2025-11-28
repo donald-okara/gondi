@@ -24,6 +24,7 @@ data class Profile(
 ) {
     fun toPlayer(): Player {
         return Player(
+            id = id,
             name = username,
             avatar = avatar,
             background = background,

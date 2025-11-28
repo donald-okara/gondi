@@ -98,6 +98,14 @@ class DefaultGameEngine(
                 )
             }
             is PlayerIntent.Vote -> db.insertOrReplaceVote(vote = intent.vote)
+            is PlayerIntent.Leave -> {
+                db.updateAliveStatus(
+                    isAlive = false,
+                    id = intent.playerId,
+                    round = intent.round,
+                )
+                logger.debug("Player dead: ${intent.playerId}")
+            }
         }
     }
 }

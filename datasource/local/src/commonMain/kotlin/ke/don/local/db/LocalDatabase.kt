@@ -161,6 +161,8 @@ class LocalDatabase(
 
     fun clearPlayers() = playersQueries.clearPlayers()
 
+    fun removePlayer(id: String) = playersQueries.removePlayer(id)
+
     /**
      * VOTE
      */
@@ -174,6 +176,8 @@ class LocalDatabase(
         vote.toVoteEntity.target_id,
         vote.toVoteEntity.is_guilty,
     )
+
+    fun deleteVotesByPlayerId(playerId: String) = votesQueries.deleteVotesByPlayerId(playerId)
 
     fun clearVotes() = votesQueries.clearVotes()
 }

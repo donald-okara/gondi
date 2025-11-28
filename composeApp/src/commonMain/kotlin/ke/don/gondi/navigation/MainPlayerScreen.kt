@@ -10,6 +10,7 @@
 package ke.don.gondi.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -18,41 +19,53 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import ke.don.game_play.moderator.model.GondiHost
-import ke.don.game_play.moderator.model.ModeratorHandler
-import ke.don.game_play.moderator.screens.MainModeratorContent
+import ke.don.domain.gameplay.server.ServerId
+import ke.don.game_play.player.model.GondiClient
+import ke.don.game_play.player.model.PlayerHandler
+import ke.don.game_play.player.screens.MainPlayerContent
+import ke.don.utils.result.isError
 import kotlin.uuid.ExperimentalUuidApi
 
-class MainModeratorScreen : Screen {
+class MainPlayerScreen(
+    private val serverId: ServerId,
+) : Screen {
     @OptIn(ExperimentalComposeUiApi::class, ExperimentalUuidApi::class)
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val gondiHost = koinScreenModel<GondiHost>()
+        val gondiClient = koinScreenModel<GondiClient>()
 
-        val gameState by gondiHost.gameState.collectAsState()
-        val players by gondiHost.players.collectAsState()
-        val hostPlayer by gondiHost.hostPlayer.collectAsState(
+        val gameState by gondiClient.gameState.collectAsState()
+        val players by gondiClient.players.collectAsState()
+        val currentPlayer by gondiClient.currentPlayer.collectAsState(
             initial = null,
         )
-        val votes by gondiHost.votes.collectAsState()
-        val moderatorState by gondiHost.moderatorState.collectAsState()
+        val votes by gondiClient.votes.collectAsState()
+        val playerState by gondiClient.playerState.collectAsState()
 
-        val onEvent = gondiHost::onEvent
+        val onEvent = gondiClient::onEvent
 
-        BackHandler(enabled = true) {
-            onEvent(ModeratorHandler.ShowLeaveDialog)
+        LaunchedEffect(serverId) {
+            onEvent(PlayerHandler.Connect(serverId = serverId))
         }
 
-        MainModeratorContent(
-            moderatorState = moderatorState,
+        BackHandler(enabled = true) {
+            if (playerState.connectionStatus.isError) {
+                navigator.pop()
+            } else {
+                onEvent(PlayerHandler.ShowLeaveDialog)
+            }
+        }
+
+        MainPlayerContent(
+            playerState = playerState,
             gameState = gameState,
             players = players,
             votes = votes,
             onEvent = onEvent,
             onBack = navigator::pop,
-            hostPlayer = hostPlayer,
+            currentPlayer = currentPlayer,
         )
     }
 }

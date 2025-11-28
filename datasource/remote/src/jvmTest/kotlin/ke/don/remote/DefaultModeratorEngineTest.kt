@@ -322,6 +322,27 @@ class DefaultModeratorEngineTest : BaseGameTest() {
      */
 
     @Test
+    fun testLeaveGame_success() = runTest {
+        val moderatorEngine = DefaultModeratorEngine(db)
+        val gameEngine = DefaultGameEngine(db)
+
+        val moderator = player1
+        val target = player2
+
+        db.batchUpdatePlayerRole(batchUpdateRoles)
+
+        moderatorEngine.handle(gameState.id, ModeratorCommand.CreateGame(gameState.id, gameState, moderator))
+        moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.SLEEP))
+
+        executeValidated(engine = gameEngine, intent = PlayerIntent.Leave(target.id, gameState.round))
+        val game = db.getGameState(gameState.id).firstOrNull()
+        val player = db.getPlayerById(target.id).firstOrNull()
+
+        assertNotNull(game)
+        assert(player?.isAlive == false)
+    }
+
+    @Test
     fun testResetGame_success() = runTest {
         val moderatorEngine = DefaultModeratorEngine(db)
         val gameEngine = DefaultGameEngine(db)
