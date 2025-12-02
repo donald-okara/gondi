@@ -21,6 +21,8 @@ import ke.don.game_play.player.useCases.GamePlayerController
 import ke.don.utils.Logger
 import ke.don.utils.result.ReadStatus
 import ke.don.utils.result.onFailure
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.core.Koin
@@ -32,7 +34,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(ExperimentalUuidApi::class, ExperimentalTime::class)
 class GondiClient(
     private val koin: Koin,
 ) : ScreenModel, KoinScopeComponent {
@@ -56,6 +58,18 @@ class GondiClient(
     val votes = clientState.votes
     val playerState = clientState.playerState
 
+    init {
+        screenModelScope.launch {
+            gameState
+                .map { it?.phase }              // Only care about the phase
+                .distinctUntilChanged()         // Only react when phase *actually* changes
+                .collect { newPhase ->
+                    // Reset selectedId whenever phase changes
+                    clientState.updatePlayerState { it.copy(selectedId = null) }
+                }
+        }
+    }
+
     @OptIn(ExperimentalTime::class)
     fun onEvent(intent: PlayerHandler) {
         when (intent) {
@@ -63,6 +77,7 @@ class GondiClient(
             is PlayerHandler.Send -> sendIntent(intent.message)
             PlayerHandler.ShowLeaveDialog -> clientState.updatePlayerState { it.copy(showLeaveGame = !it.showLeaveGame) }
             PlayerHandler.ShowRulesModal -> clientState.updatePlayerState { it.copy(showRulesModal = !it.showRulesModal) }
+            is PlayerHandler.SelectPlayer -> clientState.updatePlayerState { it.copy(selectedId = intent.playerId) }
         }
     }
 

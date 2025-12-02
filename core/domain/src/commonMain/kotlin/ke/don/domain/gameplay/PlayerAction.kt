@@ -32,7 +32,7 @@ enum class ActionType {
     INVESTIGATE,
     ACCUSE,
     SECOND,
-    VOTE_GUILTY,
-    VOTE_INNOCENT,
     NONE,
 }
+
+typealias SelectedPlayer = Pair<String, ActionType>

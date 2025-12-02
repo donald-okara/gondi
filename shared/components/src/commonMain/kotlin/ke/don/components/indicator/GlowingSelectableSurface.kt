@@ -18,12 +18,17 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -41,20 +46,18 @@ fun GlowingSelectableSurface(
     modifier: Modifier = Modifier,
     glowingColor: Color = MaterialTheme.colorScheme.primary,
     shape: Shape = MaterialTheme.shapes.medium,
+    icon: (@Composable () -> Unit)? = null, // <-- NEW
     content: @Composable () -> Unit,
 ) {
     val interaction = remember { MutableInteractionSource() }
     val hovered by interaction.collectIsHoveredAsState()
-
     val isActivated = enabled && (selected || hovered)
 
-    // Animate a single float to drive all animations, promoting consistency.
     val activationAnimation by animateFloatAsState(
         targetValue = if (isActivated) 1f else 0f,
         label = "activationAnimation",
     )
 
-    // Animate a pulsing glow effect when selected.
     val infiniteTransition = rememberInfiniteTransition(label = "infinite glow")
     val pulseAnimation by infiniteTransition.animateFloat(
         initialValue = 0.7f,
@@ -85,10 +88,7 @@ fun GlowingSelectableSurface(
     )
 
     val elevation = if (enabled) Theme.spacing.small else 0.dp
-    val border = BorderStroke(
-        width = borderThickness,
-        color = borderColor,
-    )
+    val border = BorderStroke(width = borderThickness, color = borderColor)
 
     Surface(
         onClick = onClick,
@@ -101,9 +101,23 @@ fun GlowingSelectableSurface(
         border = border,
         interactionSource = interaction,
     ) {
-        content()
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            content()
+
+            if (icon != null) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(6.dp)
+                        .offset(4.dp, (-4).dp), // shift upward-right
+                ) {
+                    icon()
+                }
+            }
+        }
     }
 }
+
 
 // Linear interpolation for Float
 private fun lerp(start: Float, stop: Float, fraction: Float): Float {

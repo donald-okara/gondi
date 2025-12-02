@@ -80,6 +80,7 @@ fun PlayersPreview(
                             onClick = { selectedColor = actionType },
                             isSelected = selectedColor == actionType,
                             showRole = true,
+                            enabled = true,
                             player = players[index % players.size],
                         )
                     }
