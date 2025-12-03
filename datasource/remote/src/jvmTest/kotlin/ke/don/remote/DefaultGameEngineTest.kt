@@ -138,6 +138,7 @@ class DefaultGameEngineTest : BaseGameTest() {
         assertNotNull(fetched)
         assertNull(fetched.role)
     }
+
     @Test
     fun testLeaveLobby_successWhenNotLobby() = runTest {
         val engine = DefaultGameEngine(db)
