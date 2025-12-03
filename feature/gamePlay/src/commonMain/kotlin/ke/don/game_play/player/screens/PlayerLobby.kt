@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.game_play.player.components
+package ke.don.game_play.player.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

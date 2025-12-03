@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.button.animatedIconColors
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 
 /**
  * Renders an icon that can be optionally interactive and animates between icons using a crossfade.
@@ -37,7 +40,6 @@ import ke.don.components.button.animatedIconColors
  * @param imageVector The vector graphic to display as the icon.
  * @param buttonType Visual style to apply when the icon is rendered as a button.
  * @param contentDescription Accessibility description for the icon.
- * @param contentPaddingValues Padding to apply when the icon is placed inside a ButtonToken.
  * @param enabled Whether the surrounding button is enabled when `onClick` is provided.
  * @param size Size of the displayed icon.
  * @param colors Colors used for the icon content (tint).
@@ -83,5 +85,41 @@ fun IconToken(
         Box(modifier = modifier) {
             content?.invoke() ?: animatedIcon()
         }
+    }
+}
+
+@Composable
+fun IconToken(
+    modifier: Modifier = Modifier,
+    painter: DrawableResource,
+    buttonType: ComponentType = ComponentType.Neutral,
+    contentDescription: String? = null,
+    enabled: Boolean = true,
+    size: Dp = 24.dp,
+    colors: IconButtonColors = buttonType.animatedIconColors(),
+    content: (@Composable () -> Unit)? = null,
+) {
+    val animatedIcon: @Composable () -> Unit = {
+        Crossfade(
+            targetState = painter,
+            label = "icon crossfade",
+        ) { target ->
+            IconButton(
+                onClick = {},
+                enabled = enabled,
+                colors = colors,
+            ) {
+                Icon(
+                    painter = painterResource(target),
+                    contentDescription = contentDescription,
+                    tint = colors.contentColor,
+                    modifier = Modifier.size(size),
+                )
+            }
+        }
+    }
+
+    Box(modifier = modifier) {
+        content?.invoke() ?: animatedIcon()
     }
 }

@@ -36,10 +36,9 @@ import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
-import ke.don.game_play.player.components.PlayerLobby
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.model.PlayerState
-import ke.don.game_play.shared.RulesModal
+import ke.don.game_play.shared.components.RulesModal
 import ke.don.utils.capitaliseFirst
 import ke.don.utils.result.ReadStatus
 import ke.don.utils.result.isError

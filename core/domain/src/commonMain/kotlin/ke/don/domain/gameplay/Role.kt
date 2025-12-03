@@ -42,3 +42,10 @@ enum class Role(
         canVote = false,
     ),
 }
+
+val Role.actionType: ActionType get() = when (this) {
+    Role.GONDI -> ActionType.KILL
+    Role.DOCTOR -> ActionType.SAVE
+    Role.DETECTIVE -> ActionType.INVESTIGATE
+    else -> ActionType.NONE
+}

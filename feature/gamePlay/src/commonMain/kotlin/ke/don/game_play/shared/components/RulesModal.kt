@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.game_play.shared
+package ke.don.game_play.shared.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

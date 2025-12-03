@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -39,6 +40,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import ke.don.components.button.ComponentType
+import ke.don.components.icon.IconToken
 import ke.don.components.indicator.GlowingSelectableSurface
 import ke.don.design.theme.AppTheme
 import ke.don.design.theme.Theme
@@ -48,6 +51,7 @@ import ke.don.domain.gameplay.Faction
 import ke.don.domain.state.Player
 import ke.don.resources.Resources
 import ke.don.resources.color
+import ke.don.resources.onColor
 import ke.don.resources.painter
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -77,7 +81,7 @@ fun PlayerItem(
                 default = player.background.color(),
             )
         } else {
-            player.background.color()
+            Theme.colorScheme.primary
         },
         animationSpec = tween(300),
     )
@@ -87,6 +91,21 @@ fun PlayerItem(
         selected = isSelected,
         enabled = player.isAlive && enabled,
         glowingColor = color,
+        icon = {
+            actionType.painter?.let {
+                AnimatedVisibility(isSelected) {
+                    IconToken(
+                        painter = it,
+                        colors = IconButtonColors(
+                            containerColor = color,
+                            contentColor = color.onColor(),
+                            disabledContainerColor = color.copy(alpha = 0.5f),
+                            disabledContentColor = color.onColor().copy(alpha = 0.5f),
+                        ),
+                    )
+                }
+            }
+        },
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
@@ -199,9 +218,7 @@ val ActionType.painter: DrawableResource?
         ActionType.KILL -> Resources.Images.ActionIcons.DEAD
         ActionType.ACCUSE, ActionType.SECOND -> Resources.Images.ActionIcons.ACCUSE
         ActionType.SAVE -> Resources.Images.ActionIcons.SAVE
-        ActionType.VOTE_GUILTY -> Resources.Images.ActionIcons.VOTE_GUILTY
         ActionType.INVESTIGATE -> Resources.Images.ActionIcons.INVESTIGATE
-        ActionType.VOTE_INNOCENT -> Resources.Images.ActionIcons.VOTE_INNOCENT
         ActionType.NONE -> null
     }
 
@@ -209,9 +226,19 @@ val ActionType.painter: DrawableResource?
 fun ActionType.color(
     default: Color = Theme.colorScheme.primary,
 ): Color = when (this) {
-    ActionType.KILL, ActionType.ACCUSE, ActionType.VOTE_GUILTY -> Theme.colorScheme.error
-    ActionType.SAVE, ActionType.VOTE_INNOCENT -> AppTheme.extendedColors.success.color
+    ActionType.KILL, ActionType.ACCUSE -> Theme.colorScheme.error
+    ActionType.SAVE -> AppTheme.extendedColors.success.color
     ActionType.SECOND, ActionType.INVESTIGATE -> AppTheme.extendedColors.warning.color
+    ActionType.NONE -> default
+}
+
+@Composable
+fun ActionType.componentType(
+    default: ComponentType = ComponentType.Primary,
+): ComponentType = when (this) {
+    ActionType.KILL, ActionType.ACCUSE -> ComponentType.Error
+    ActionType.SAVE -> ComponentType.Success
+    ActionType.SECOND, ActionType.INVESTIGATE -> ComponentType.Warning
     ActionType.NONE -> default
 }
 
