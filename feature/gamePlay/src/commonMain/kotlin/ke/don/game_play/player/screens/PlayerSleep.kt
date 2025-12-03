@@ -11,6 +11,7 @@ import ke.don.domain.gameplay.Role
 import ke.don.domain.gameplay.SelectedPlayer
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
+import ke.don.game_play.player.components.SleepModal
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.model.PlayerState
 import ke.don.game_play.shared.SharedSleep
@@ -68,11 +69,27 @@ fun PlayerSleep(
         onSelectPlayer = {
             onEvent(PlayerHandler.SelectPlayer(it))
         },
-        alivePlayers = players,
+        alivePlayers = alivePlayers,
         selectedPlayers = selectedPlayers,
         instruction = instruction,
         knownIdentity = myPlayer.knownIdentities.map { it.playerId },
         isModerator = false,
         onProceed = {}
     )
+
+    val selectedPlayer by remember(playerState.selectedId, alivePlayers) {
+        derivedStateOf {
+            alivePlayers.find { it.id == playerState.selectedId }
+        }
+    }
+
+    selectedPlayer?.let {
+        SleepModal(
+            modifier = Modifier,
+            onEvent = onEvent,
+            currentPlayer = myPlayer,
+            selectedPlayer = it,
+            gameState = gameState
+        )
+    }
 }
