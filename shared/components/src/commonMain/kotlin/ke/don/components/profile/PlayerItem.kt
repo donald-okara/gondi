@@ -93,19 +93,19 @@ fun PlayerItem(
         glowingColor = color,
         icon = {
             actionType.painter?.let {
-                AnimatedVisibility(isSelected){
+                AnimatedVisibility(isSelected) {
                     IconToken(
                         painter = it,
                         colors = IconButtonColors(
                             containerColor = color,
                             contentColor = color.onColor(),
                             disabledContainerColor = color.copy(alpha = 0.5f),
-                            disabledContentColor = color.onColor().copy(alpha = 0.5f)
+                            disabledContentColor = color.onColor().copy(alpha = 0.5f),
                         ),
                     )
                 }
             }
-        }
+        },
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
@@ -227,7 +227,7 @@ fun ActionType.color(
     default: Color = Theme.colorScheme.primary,
 ): Color = when (this) {
     ActionType.KILL, ActionType.ACCUSE -> Theme.colorScheme.error
-    ActionType.SAVE  -> AppTheme.extendedColors.success.color
+    ActionType.SAVE -> AppTheme.extendedColors.success.color
     ActionType.SECOND, ActionType.INVESTIGATE -> AppTheme.extendedColors.warning.color
     ActionType.NONE -> default
 }
@@ -237,12 +237,10 @@ fun ActionType.componentType(
     default: ComponentType = ComponentType.Primary,
 ): ComponentType = when (this) {
     ActionType.KILL, ActionType.ACCUSE -> ComponentType.Error
-    ActionType.SAVE  -> ComponentType.Success
+    ActionType.SAVE -> ComponentType.Success
     ActionType.SECOND, ActionType.INVESTIGATE -> ComponentType.Warning
     ActionType.NONE -> default
 }
-
-
 
 val Faction.color: Color
     @Composable get() = when (this) {

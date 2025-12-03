@@ -43,7 +43,7 @@ enum class Role(
     ),
 }
 
-val Role.actionType: ActionType get() =  when(this){
+val Role.actionType: ActionType get() = when (this) {
     Role.GONDI -> ActionType.KILL
     Role.DOCTOR -> ActionType.SAVE
     Role.DETECTIVE -> ActionType.INVESTIGATE

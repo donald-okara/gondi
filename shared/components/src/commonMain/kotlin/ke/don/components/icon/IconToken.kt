@@ -88,7 +88,6 @@ fun IconToken(
     }
 }
 
-
 @Composable
 fun IconToken(
     onClick: (() -> Unit)? = null,
@@ -111,7 +110,7 @@ fun IconToken(
                 onClick = onClick ?: {},
                 enabled = enabled,
                 colors = colors,
-            ){
+            ) {
                 Icon(
                     painter = painterResource(target),
                     contentDescription = contentDescription,

@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.shared
 
 import androidx.compose.foundation.layout.Arrangement
@@ -16,10 +25,8 @@ import ke.don.components.button.ComponentType
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.SelectedPlayer
-import ke.don.domain.state.KnownIdentity
 import ke.don.domain.state.Player
 import ke.don.game_play.shared.components.PlayersGrid
-
 
 @Composable
 fun SharedSleep(
@@ -40,15 +47,15 @@ fun SharedSleep(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         item {
-            if (isModerator){
+            if (isModerator) {
                 ButtonToken(
                     modifier = Modifier.fillMaxWidth(),
                     buttonType = ComponentType.Primary,
                     onClick = onProceed,
-                    enabled = enabled
+                    enabled = enabled,
                 ) {
                     Text(
-                        "Proceed"
+                        "Proceed",
                     )
                 }
             }
@@ -59,11 +66,10 @@ fun SharedSleep(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
-
         }
-        item{
+        item {
             PlayersGrid(
                 alivePlayers = alivePlayers,
                 selectedPlayers = selectedPlayers,
@@ -71,7 +77,7 @@ fun SharedSleep(
                 myPlayerId = myPlayerId,
                 knownIdentities = knownIdentity,
                 showEmpty = false,
-                availableSlots = 0
+                availableSlots = 0,
             )
         }
     }
