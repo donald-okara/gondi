@@ -29,6 +29,7 @@ class DefaultModeratorEngine(
         val game = db.getGameState(gameId).firstOrNull()
         val players = db.getAlivePlayers()
         val currentRound = game?.round
+        val currentPhase = game?.phase
 
         when (command) {
             is ModeratorCommand.CreateGame -> {
@@ -50,7 +51,10 @@ class DefaultModeratorEngine(
                 handlePhaseAdvance(command, currentGame, players, currentRound)
             }
 
-            is ModeratorCommand.RemovePlayer -> db.updateAliveStatus(false, command.playerId, currentRound ?: error("Current round cannot be null"))
+            is ModeratorCommand.RemovePlayer -> db.transaction {
+                if (currentPhase == GamePhase.LOBBY) db.updatePlayerRole(role = null, id = command.playerId)
+                db.updateAliveStatus(false, command.playerId, currentRound ?: error("Current round cannot be null"))
+            }
 
             is ModeratorCommand.ResetGame -> db.transaction {
                 db.clearGameState()

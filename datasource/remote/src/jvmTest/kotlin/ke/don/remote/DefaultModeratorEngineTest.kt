@@ -21,7 +21,9 @@ import ke.don.utils.Logger
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class DefaultModeratorEngineTest : BaseGameTest() {
@@ -229,7 +231,59 @@ class DefaultModeratorEngineTest : BaseGameTest() {
     }
 
     /**
-     * REMOVE PLAYER, START GAME
+     * REMOVE PLAYER,
+     */
+    @Test
+    fun removePlayer_success() = runTest {
+        val moderatorEngine = DefaultModeratorEngine(db)
+
+        val moderator = player1
+        val player = player9
+        val role = Role.VILLAGER
+
+        db.updatePlayerRole(role, player.id)
+        val updated = db.getPlayerById(player.id).firstOrNull()
+        assertEquals(role, updated?.role)
+
+        moderatorEngine.handle(gameState.id, ModeratorCommand.CreateGame(gameState.id, gameState, moderator))
+
+        db.updatePhase(GamePhase.LOBBY, 0L, gameState.id)
+
+        moderatorEngine.handle(gameState.id, ModeratorCommand.RemovePlayer(gameState.id, player.id))
+
+        val fetched = db.getPlayerById(player.id).firstOrNull()
+        assert(fetched != null)
+        assert(fetched?.isAlive == false)
+        assertNull(fetched?.role)
+    }
+
+    @Test
+    fun removePlayer_successWhenNotLobby() = runTest {
+        val moderatorEngine = DefaultModeratorEngine(db)
+
+        val moderator = player1
+        val player = player9
+        val role = Role.VILLAGER
+
+        db.updatePlayerRole(role, player.id)
+        val updated = db.getPlayerById(player.id).firstOrNull()
+        assertEquals(role, updated?.role)
+
+        moderatorEngine.handle(gameState.id, ModeratorCommand.CreateGame(gameState.id, gameState, moderator))
+
+        db.updatePhase(GamePhase.SLEEP, 0L, gameState.id)
+
+        moderatorEngine.handle(gameState.id, ModeratorCommand.RemovePlayer(gameState.id, player.id))
+
+        val fetched = db.getPlayerById(player.id).firstOrNull()
+        assert(fetched != null)
+        assert(fetched?.isAlive == false)
+        assertNotNull(fetched?.role)
+        assertEquals(role, fetched.role)
+    }
+
+    /**
+     * START GAME
      *
      * * These commands directly call [db] methods that have been
      * tested in other classes. We will skip them

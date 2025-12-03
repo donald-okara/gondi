@@ -13,6 +13,7 @@ import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.GameEngine
 import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.gameplay.PlayerIntent
+import ke.don.domain.state.GamePhase
 import ke.don.domain.state.KnownIdentity
 import ke.don.local.db.LocalDatabase
 import ke.don.utils.Logger
@@ -99,11 +100,16 @@ class DefaultGameEngine(
             }
             is PlayerIntent.Vote -> db.insertOrReplaceVote(vote = intent.vote)
             is PlayerIntent.Leave -> {
-                db.updateAliveStatus(
-                    isAlive = false,
-                    id = intent.playerId,
-                    round = intent.round,
-                )
+                val currentPhase = db.getGameState(gameId).firstOrNull()?.phase
+                db.transaction {
+                    if (currentPhase == GamePhase.LOBBY) db.updatePlayerRole(role = null, id = intent.playerId)
+                    db.updateAliveStatus(
+                        isAlive = false,
+                        id = intent.playerId,
+                        round = intent.round,
+                    )
+                }
+
                 logger.debug("Player dead: ${intent.playerId}")
             }
         }

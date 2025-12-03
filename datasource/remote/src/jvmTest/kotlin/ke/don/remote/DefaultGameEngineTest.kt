@@ -24,6 +24,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class DefaultGameEngineTest : BaseGameTest() {
@@ -105,6 +106,69 @@ class DefaultGameEngineTest : BaseGameTest() {
 
         val fetched = db.getPlayerById(newPlayer.id).first()
         assertNull(fetched)
+    }
+
+    @Test
+    fun testLeaveLobby_success() = runTest {
+        val engine = DefaultGameEngine(db)
+
+        val newPlayer = Player(
+            id = "playerTest",
+            name = "Johnny Test",
+            role = null,
+            avatar = Avatar.Katherine,
+            timeOfDeath = null,
+            background = AvatarBackground.GREEN_EMERALD,
+            isAlive = true,
+            lastAction = null,
+            knownIdentities = emptyList(),
+        )
+        val role = Role.GONDI
+
+        db.updatePlayerRole(Role.MODERATOR, player1.id)
+        executeValidated(engine, PlayerIntent.Join(newPlayer.id, gameState.round, newPlayer))
+        db.updatePlayerRole(role, newPlayer.id)
+
+        val player = db.getPlayerById("playerTest").firstOrNull()
+        assertEquals(role, player?.role)
+
+        executeValidated(engine, PlayerIntent.Leave(newPlayer.id, gameState.round))
+
+        val fetched = db.getPlayerById(newPlayer.id).firstOrNull()
+        assertNotNull(fetched)
+        assertNull(fetched.role)
+    }
+    @Test
+    fun testLeaveLobby_successWhenNotLobby() = runTest {
+        val engine = DefaultGameEngine(db)
+
+        val newPlayer = Player(
+            id = "playerTest",
+            name = "Johnny Test",
+            role = null,
+            avatar = Avatar.Katherine,
+            timeOfDeath = null,
+            background = AvatarBackground.GREEN_EMERALD,
+            isAlive = true,
+            lastAction = null,
+            knownIdentities = emptyList(),
+        )
+        val role = Role.GONDI
+
+        db.updatePlayerRole(Role.MODERATOR, player1.id)
+        executeValidated(engine, PlayerIntent.Join(newPlayer.id, gameState.round, newPlayer))
+        db.updatePlayerRole(role, newPlayer.id)
+
+        val player = db.getPlayerById("playerTest").firstOrNull()
+        assertEquals(role, player?.role)
+
+        db.updatePhase(GamePhase.SLEEP, 1L, gameState.id)
+        executeValidated(engine, PlayerIntent.Leave(newPlayer.id, gameState.round))
+
+        val fetched = db.getPlayerById(newPlayer.id).firstOrNull()
+        assertNotNull(fetched)
+        assertNotNull(fetched.role)
+        assertEquals(role, fetched.role)
     }
 
     /**
