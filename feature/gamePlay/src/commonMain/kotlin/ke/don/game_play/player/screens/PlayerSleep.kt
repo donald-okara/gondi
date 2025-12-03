@@ -86,6 +86,7 @@ fun PlayerSleep(
         knownIdentity = myPlayer.knownIdentities.map { it.playerId },
         isModerator = false,
         onProceed = {},
+        onShowRules = { onEvent(PlayerHandler.ShowRulesModal) }
     )
 
     val selectedPlayer by remember(playerState.selectedId, alivePlayers) {

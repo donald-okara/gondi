@@ -120,7 +120,7 @@ fun PlayerSleepPreview(
     )
     DevicePreviewContainer(theme) {
         ScaffoldToken(
-            title = "Lobby",
+            title = "Sleep",
             navigationIcon = NavigationIcon.Back {},
         ) {
             PlayerSleep(

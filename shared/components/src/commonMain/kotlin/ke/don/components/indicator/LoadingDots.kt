@@ -74,3 +74,37 @@ fun LoadingDots(
         }
     }
 }
+
+@Composable
+fun LoadingDotsInCircle(
+    modifier: Modifier = Modifier,
+    circleSize: Int = 24,
+    containerColor: Color = Color.Black.copy(alpha = 0.6f),
+    dotCount: Int = 3,
+    dotSize: Dp = (circleSize/6).dp,
+    dotSpacing: Dp = (circleSize/12).dp,
+    dotColor: Color = Color.White,
+    minAlpha: Float = 0.25f,
+    maxAlpha: Float = 1f,
+    pulseDuration: Int = 500,
+    delayBetweenDots: Int = 150,
+) {
+    Box(
+        modifier = modifier
+            .size(circleSize.dp)
+            .background(containerColor, CircleShape), // adjust color if needed
+        contentAlignment = Alignment.Center
+    ) {
+        LoadingDots(
+            modifier = Modifier,
+            dotCount = dotCount,
+            dotSize = dotSize,
+            dotSpacing = dotSpacing,
+            color = dotColor,
+            minAlpha = minAlpha,
+            maxAlpha = maxAlpha,
+            pulseDuration = pulseDuration,
+            delayBetweenDots = delayBetweenDots,
+        )
+    }
+}

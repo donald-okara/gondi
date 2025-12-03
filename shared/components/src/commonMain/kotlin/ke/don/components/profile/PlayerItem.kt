@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import ke.don.components.button.ComponentType
 import ke.don.components.icon.IconToken
 import ke.don.components.indicator.GlowingSelectableSurface
+import ke.don.components.indicator.LoadingDotsInCircle
 import ke.don.design.theme.AppTheme
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
@@ -64,6 +65,7 @@ fun PlayerItem(
     isMe: Boolean = false,
     showRole: Boolean = false,
     isSelected: Boolean,
+    isActing: Boolean = false,
     enabled: Boolean = false,
     player: Player,
 ) {
@@ -76,13 +78,13 @@ fun PlayerItem(
 
     val color by animateColorAsState(
         targetValue =
-        if (isSelected) {
-            actionType.color(
-                default = player.background.color(),
-            )
-        } else {
-            Theme.colorScheme.primary
-        },
+            if (isSelected) {
+                actionType.color(
+                    default = player.background.color(),
+                )
+            } else {
+                Theme.colorScheme.primary
+            },
         animationSpec = tween(300),
     )
     GlowingSelectableSurface(
@@ -92,17 +94,27 @@ fun PlayerItem(
         enabled = player.isAlive && enabled,
         glowingColor = color,
         icon = {
-            actionType.painter?.let {
-                AnimatedVisibility(isSelected) {
-                    IconToken(
-                        painter = it,
-                        colors = IconButtonColors(
+            when {
+                isActing ->
+                    AnimatedVisibility(visible = true) {
+                        LoadingDotsInCircle(
                             containerColor = color,
-                            contentColor = color.onColor(),
-                            disabledContainerColor = color.copy(alpha = 0.5f),
-                            disabledContentColor = color.onColor().copy(alpha = 0.5f),
-                        ),
-                    )
+                            dotColor = color.onColor(),
+                        )
+                    }
+
+                isSelected -> actionType.painter?.let { painter ->
+                    AnimatedVisibility(visible = true) { // isSelected is already true here
+                        IconToken(
+                            painter = painter,
+                            colors = IconButtonColors(
+                                containerColor = color,
+                                contentColor = color.onColor(),
+                                disabledContainerColor = color.copy(alpha = 0.5f),
+                                disabledContentColor = color.onColor().copy(alpha = 0.5f),
+                            ),
+                        )
+                    }
                 }
             }
         },
