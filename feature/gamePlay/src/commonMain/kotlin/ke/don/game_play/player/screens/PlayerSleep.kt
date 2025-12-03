@@ -49,9 +49,13 @@ fun PlayerSleep(
                         listOf(SelectedPlayer(it, ActionType.SAVE))
                     } ?: emptyList()
                 }
+
                 Role.DETECTIVE -> {
-                    val lastInvestigated = myPlayer.knownIdentities.find { identity -> identity.round == currentRound }
-                    listOf(SelectedPlayer(lastInvestigated?.playerId ?: "", ActionType.INVESTIGATE))
+                    val lastInvestigated =
+                        myPlayer.knownIdentities.find { identity -> identity.round == currentRound }
+                    lastInvestigated?.let {
+                        listOf(SelectedPlayer(it.playerId, ActionType.INVESTIGATE))
+                    } ?: emptyList()
                 }
 
                 else -> emptyList()

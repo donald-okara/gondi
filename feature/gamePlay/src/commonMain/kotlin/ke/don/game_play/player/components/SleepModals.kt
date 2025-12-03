@@ -54,14 +54,12 @@ fun SleepModal(
 ) {
     var showConfirmation by remember { mutableStateOf(false) }
 
-    val confirmationText by remember(currentPlayer.role) {
-        derivedStateOf {
-            when (currentPlayer.role) {
-                Role.GONDI -> "Do you want to end ${selectedPlayer.name}'s journey tonight?"
-                Role.DOCTOR -> "Will you use your skills to save ${selectedPlayer.name}?"
-                Role.DETECTIVE -> "Time to uncover the truth. Investigate ${selectedPlayer.name}?"
-                else -> null
-            }
+    val confirmationText = remember(currentPlayer.role, selectedPlayer.id) {
+        when (currentPlayer.role) {
+            Role.GONDI -> "Do you want to end ${selectedPlayer.name}'s journey tonight?"
+            Role.DOCTOR -> "Will you use your skills to save ${selectedPlayer.name}?"
+            Role.DETECTIVE -> "Time to uncover the truth. Investigate ${selectedPlayer.name}?"
+            else -> null
         }
     }
 
@@ -69,14 +67,47 @@ fun SleepModal(
         derivedStateOf {
             when (currentPlayer.role) {
                 Role.GONDI -> {
-                    { onEvent(PlayerHandler.Send(PlayerIntent.Kill(currentPlayer.id, gameState.round, selectedPlayer.id))) }
+                    {
+                        onEvent(
+                            PlayerHandler.Send(
+                                PlayerIntent.Kill(
+                                    currentPlayer.id,
+                                    gameState.round,
+                                    selectedPlayer.id,
+                                ),
+                            ),
+                        )
+                    }
                 }
+
                 Role.DOCTOR -> {
-                    { onEvent(PlayerHandler.Send(PlayerIntent.Save(currentPlayer.id, gameState.round, selectedPlayer.id))) }
+                    {
+                        onEvent(
+                            PlayerHandler.Send(
+                                PlayerIntent.Save(
+                                    currentPlayer.id,
+                                    gameState.round,
+                                    selectedPlayer.id,
+                                ),
+                            ),
+                        )
+                    }
                 }
+
                 Role.DETECTIVE -> {
-                    { onEvent(PlayerHandler.Send(PlayerIntent.Investigate(currentPlayer.id, gameState.round, selectedPlayer.id))) }
+                    {
+                        onEvent(
+                            PlayerHandler.Send(
+                                PlayerIntent.Investigate(
+                                    currentPlayer.id,
+                                    gameState.round,
+                                    selectedPlayer.id,
+                                ),
+                            ),
+                        )
+                    }
                 }
+
                 else -> {
                     { } // empty lambda
                 }
@@ -120,7 +151,10 @@ fun SleepModal(
                         componentType = currentPlayer.role?.actionType?.componentType()
                             ?: ComponentType.Neutral,
                         modifier = Modifier.fillMaxWidth(),
-                        onConfirm = { confirmationAction() },
+                        onConfirm = {
+                            confirmationAction()
+                            onEvent(PlayerHandler.SelectPlayer(null)) // dismiss modal
+                        },
                         onDismiss = { showConfirmation = false },
                     )
                 }
@@ -192,7 +226,10 @@ private fun ActionConfirmation(
         Text(text = confirmationText)
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.End),
+            horizontalArrangement = Arrangement.spacedBy(
+                MaterialTheme.spacing.medium,
+                Alignment.End,
+            ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             ButtonToken(onClick = onDismiss, buttonType = ComponentType.Neutral) {

@@ -79,10 +79,8 @@ fun SelectedPlayerModal(
 
             ModalActions(
                 onRemoveClick = {
-                    onAssignPlayer?.let {
-                        showRemoveDialog = true
-                        showAssignDialog = false
-                    }
+                    showRemoveDialog = true
+                    showAssignDialog = false
                 },
                 onAssignClick = onAssignPlayer?.let {
                     {

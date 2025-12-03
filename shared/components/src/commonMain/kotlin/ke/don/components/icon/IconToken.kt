@@ -90,14 +90,12 @@ fun IconToken(
 
 @Composable
 fun IconToken(
-    onClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     painter: DrawableResource,
     buttonType: ComponentType = ComponentType.Neutral,
     contentDescription: String? = null,
     enabled: Boolean = true,
     size: Dp = 24.dp,
-    paddingValues: PaddingValues = ButtonDefaults.ContentPadding,
     colors: IconButtonColors = buttonType.animatedIconColors(),
     content: (@Composable () -> Unit)? = null,
 ) {
@@ -107,7 +105,7 @@ fun IconToken(
             label = "icon crossfade",
         ) { target ->
             IconButton(
-                onClick = onClick ?: {},
+                onClick = {},
                 enabled = enabled,
                 colors = colors,
             ) {
@@ -121,18 +119,7 @@ fun IconToken(
         }
     }
 
-    if (onClick != null) {
-        ButtonToken(
-            onClick = onClick,
-            enabled = enabled,
-            buttonType = buttonType,
-            paddingValues = paddingValues,
-        ) {
-            content?.invoke() ?: animatedIcon()
-        }
-    } else {
-        Box(modifier = modifier) {
-            content?.invoke() ?: animatedIcon()
-        }
+    Box(modifier = modifier) {
+        content?.invoke() ?: animatedIcon()
     }
 }
