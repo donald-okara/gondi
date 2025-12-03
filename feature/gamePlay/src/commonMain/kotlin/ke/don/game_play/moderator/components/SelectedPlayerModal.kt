@@ -52,7 +52,7 @@ import ke.don.utils.capitaliseFirst
 fun SelectedPlayerModal(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onAssignPlayer: (Role?) -> Unit,
+    onAssignPlayer: ((Role?) -> Unit)? = null,
     onRemovePlayer: () -> Unit,
     player: Player,
 ) {
@@ -79,12 +79,16 @@ fun SelectedPlayerModal(
 
             ModalActions(
                 onRemoveClick = {
-                    showRemoveDialog = true
-                    showAssignDialog = false
+                    onAssignPlayer?.let{
+                        showRemoveDialog = true
+                        showAssignDialog = false
+                    }
                 },
-                onAssignClick = {
-                    showRemoveDialog = false
-                    showAssignDialog = true
+                onAssignClick = onAssignPlayer?.let {
+                    {
+                        showRemoveDialog = false
+                        showAssignDialog = true
+                    }
                 },
             )
 
@@ -115,7 +119,7 @@ fun SelectedPlayerModal(
 
     LaunchedEffect(selectedRole) {
         if (selectedRole != player.role) {
-            onAssignPlayer(selectedRole)
+            onAssignPlayer?.invoke(selectedRole)
             onDismissRequest()
         }
     }
@@ -124,7 +128,7 @@ fun SelectedPlayerModal(
 @Composable
 private fun ModalActions(
     onRemoveClick: () -> Unit,
-    onAssignClick: () -> Unit,
+    onAssignClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -140,12 +144,14 @@ private fun ModalActions(
             Text(text = "Remove")
         }
 
-        ButtonToken(
-            onClick = onAssignClick,
-            buttonType = ComponentType.Inverse,
-        ) {
-            Icon(Icons.Default.PersonAdd, contentDescription = null)
-            Text(text = "Assign Role")
+        onAssignClick?.let {
+            ButtonToken(
+                onClick = it,
+                buttonType = ComponentType.Inverse,
+            ) {
+                Icon(Icons.Default.PersonAdd, contentDescription = null)
+                Text(text = "Assign Role")
+            }
         }
     }
 }

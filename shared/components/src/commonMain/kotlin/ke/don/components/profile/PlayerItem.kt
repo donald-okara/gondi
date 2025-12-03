@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import ke.don.components.button.ComponentType
 import ke.don.components.icon.IconToken
 import ke.don.components.indicator.GlowingSelectableSurface
 import ke.don.design.theme.AppTheme
@@ -230,6 +231,18 @@ fun ActionType.color(
     ActionType.SECOND, ActionType.INVESTIGATE -> AppTheme.extendedColors.warning.color
     ActionType.NONE -> default
 }
+
+@Composable
+fun ActionType.componentType(
+    default: ComponentType = ComponentType.Primary,
+): ComponentType = when (this) {
+    ActionType.KILL, ActionType.ACCUSE -> ComponentType.Error
+    ActionType.SAVE  -> ComponentType.Success
+    ActionType.SECOND, ActionType.INVESTIGATE -> ComponentType.Warning
+    ActionType.NONE -> default
+}
+
+
 
 val Faction.color: Color
     @Composable get() = when (this) {
