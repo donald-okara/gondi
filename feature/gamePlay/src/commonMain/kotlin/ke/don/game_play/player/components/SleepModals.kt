@@ -41,6 +41,7 @@ import ke.don.domain.gameplay.actionType
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.game_play.player.model.PlayerHandler
+import ke.don.utils.capitaliseFirst
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -104,8 +105,8 @@ fun SleepModal(
                 selectedPlayer = selectedPlayer,
                 currentRound = gameState.round,
                 currentPlayer = currentPlayer,
-                onEvent = onEvent,
                 showConfirmation = { showConfirmation = true },
+                actionType = currentPlayer.role?.actionType ?: ActionType.NONE,
             )
 
             HorizontalDivider()
@@ -131,85 +132,12 @@ fun SleepModal(
 @Composable
 private fun ModalActions(
     modifier: Modifier = Modifier,
-    onEvent: (PlayerHandler) -> Unit,
     showConfirmation: () -> Unit,
+    actionType: ActionType,
     selectedPlayer: Player,
     currentRound: Long,
     currentPlayer: Player,
 ) {
-    val actionButton = remember(currentPlayer) {
-        @Composable {
-            when (currentPlayer.role) {
-                Role.GONDI -> ButtonToken(
-                    buttonType = ComponentType.Error,
-                    onClick = {
-                        onEvent(
-                            PlayerHandler.Send(
-                                PlayerIntent.Kill(
-                                    currentPlayer.id,
-                                    currentRound,
-                                    selectedPlayer.id,
-                                ),
-                            ),
-                        )
-                    },
-                ) {
-                    Text(
-                        text = "Kill ${selectedPlayer.name}",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-
-                Role.DOCTOR ->
-                    ButtonToken(
-                        buttonType = ComponentType.Success,
-                        onClick = {
-                            onEvent(
-                                PlayerHandler.Send(
-                                    PlayerIntent.Save(
-                                        currentPlayer.id,
-                                        currentRound,
-                                        selectedPlayer.id,
-                                    ),
-                                ),
-                            )
-                        },
-                    ) {
-                        Text(
-                            text = "Save ${selectedPlayer.name}",
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
-
-                Role.DETECTIVE ->
-                    ButtonToken(
-                        buttonType = ComponentType.Warning,
-                        onClick = {
-                            onEvent(
-                                PlayerHandler.Send(
-                                    PlayerIntent.Investigate(
-                                        currentPlayer.id,
-                                        currentRound,
-                                        selectedPlayer.id,
-                                    ),
-                                ),
-                            )
-                        },
-                    ) {
-                        Text(
-                            text = "Investigate ${selectedPlayer.name}",
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
-
-                else -> Unit
-            }
-        }
-    }
-
     val dormantText by remember(currentPlayer.role) {
         derivedStateOf {
             when (currentPlayer.role) {
@@ -226,7 +154,17 @@ private fun ModalActions(
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.End),
     ) {
         if (currentPlayer.lastAction?.round != currentRound) {
-            actionButton.invoke()
+            ButtonToken(
+                buttonType = actionType.componentType(),
+                onClick = showConfirmation
+                ,
+            ) {
+                Text(
+                    text = "${actionType.name.capitaliseFirst()} ${selectedPlayer.name}",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         } else {
             Text(
                 text = dormantText,
