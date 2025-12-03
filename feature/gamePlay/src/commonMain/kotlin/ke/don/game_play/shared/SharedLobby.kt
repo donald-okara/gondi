@@ -244,7 +244,7 @@ private fun ModeratorPanelHeader(modifier: Modifier = Modifier, onClick: () -> U
 fun GridHeader(
     modifier: Modifier = Modifier,
     availableSlots: Int,
-    alivePlayers: List<Player>
+    alivePlayers: List<Player>,
 ) {
     val playersSize = alivePlayers.size
 
@@ -277,4 +277,3 @@ fun GridHeader(
         }
     }
 }
-

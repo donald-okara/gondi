@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.previews
 
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,56 +42,56 @@ fun PlayerSleepPreview(
                 name = "Matt Foley",
                 role = Role.VILLAGER,
                 Avatar.Alexander,
-                background = AvatarBackground.PURPLE_LILAC
+                background = AvatarBackground.PURPLE_LILAC,
             ),
             Player(
                 id = "2",
                 name = "Stefon Zelesky",
                 role = Role.VILLAGER,
                 Avatar.Christian,
-                background = AvatarBackground.PINK_HOT
+                background = AvatarBackground.PINK_HOT,
             ),
             Player(
                 id = "3",
                 name = "David S. Pumpkins",
                 role = Role.GONDI,
                 Avatar.Amaya,
-                background = AvatarBackground.YELLOW_BANANA
+                background = AvatarBackground.YELLOW_BANANA,
             ),
             Player(
                 id = "4",
                 name = "Roseanne Roseannadanna",
                 role = Role.DETECTIVE,
                 Avatar.Aidan,
-                background = AvatarBackground.GREEN_LEAFY
+                background = AvatarBackground.GREEN_LEAFY,
             ),
             Player(
                 id = "5",
                 name = "Todd O'Connor",
                 role = Role.VILLAGER,
                 Avatar.Kimberly,
-                background = AvatarBackground.ORANGE_CORAL
+                background = AvatarBackground.ORANGE_CORAL,
             ),
             Player(
                 id = "6",
                 name = "Pat O'Neill",
                 role = Role.VILLAGER,
                 Avatar.George,
-                background = AvatarBackground.PURPLE_AMETHYST
+                background = AvatarBackground.PURPLE_AMETHYST,
             ),
             Player(
                 id = "7",
                 name = "Hans",
                 role = Role.VILLAGER,
                 Avatar.Jocelyn,
-                background = AvatarBackground.GREEN_MINTY
+                background = AvatarBackground.GREEN_MINTY,
             ),
             Player(
                 id = "8",
                 name = "Franz",
                 role = Role.DETECTIVE,
                 Avatar.Jameson,
-                background = AvatarBackground.YELLOW_GOLDEN
+                background = AvatarBackground.YELLOW_GOLDEN,
             ),
         )
     }
@@ -91,7 +100,7 @@ fun PlayerSleepPreview(
         GameState(
             pendingKills = listOf("1", "2"),
             lastSavedPlayerId = "3",
-            round = 1
+            round = 1,
         )
     }
 
@@ -105,9 +114,9 @@ fun PlayerSleepPreview(
             KnownIdentity(
                 playerId = "1",
                 role = Role.VILLAGER,
-                round = 1
-            )
-        )
+                round = 1,
+            ),
+        ),
     )
     DevicePreviewContainer(theme) {
         ScaffoldToken(
@@ -119,9 +128,8 @@ fun PlayerSleepPreview(
                 myPlayer = currentPlayer,
                 players = players,
                 playerState = PlayerState(),
-                onEvent = {}
+                onEvent = {},
             )
         }
-
     }
 }

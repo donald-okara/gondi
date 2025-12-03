@@ -61,8 +61,8 @@ class GondiClient(
     init {
         screenModelScope.launch {
             gameState
-                .map { it?.phase }              // Only care about the phase
-                .distinctUntilChanged()         // Only react when phase *actually* changes
+                .map { it?.phase } // Only care about the phase
+                .distinctUntilChanged() // Only react when phase *actually* changes
                 .collect { newPhase ->
                     // Reset selectedId whenever phase changes
                     clientState.updatePlayerState { it.copy(selectedId = null) }

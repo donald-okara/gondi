@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.player.components
 
 import androidx.compose.animation.AnimatedVisibility
@@ -46,7 +55,7 @@ fun SleepModal(
 
     val confirmationText by remember(currentPlayer.role) {
         derivedStateOf {
-            when(currentPlayer.role){
+            when (currentPlayer.role) {
                 Role.GONDI -> "Do you want to end ${selectedPlayer.name}'s journey tonight?"
                 Role.DOCTOR -> "Will you use your skills to save ${selectedPlayer.name}?"
                 Role.DETECTIVE -> "Time to uncover the truth. Investigate ${selectedPlayer.name}?"
@@ -68,7 +77,7 @@ fun SleepModal(
                     { onEvent(PlayerHandler.Send(PlayerIntent.Investigate(currentPlayer.id, gameState.round, selectedPlayer.id))) }
                 }
                 else -> {
-                    { }   // empty lambda
+                    { } // empty lambda
                 }
             }
         }
@@ -96,14 +105,14 @@ fun SleepModal(
                 currentRound = gameState.round,
                 currentPlayer = currentPlayer,
                 onEvent = onEvent,
-                showConfirmation = {showConfirmation = true}
+                showConfirmation = { showConfirmation = true },
             )
 
             HorizontalDivider()
 
             AnimatedVisibility(
-                visible = showConfirmation
-            ){
+                visible = showConfirmation,
+            ) {
                 confirmationText?.let {
                     ActionConfirmation(
                         confirmationText = it,
@@ -111,7 +120,7 @@ fun SleepModal(
                             ?: ComponentType.Neutral,
                         modifier = Modifier.fillMaxWidth(),
                         onConfirm = { confirmationAction() },
-                        onDismiss = { showConfirmation = false }
+                        onDismiss = { showConfirmation = false },
                     )
                 }
             }
@@ -139,16 +148,16 @@ private fun ModalActions(
                                 PlayerIntent.Kill(
                                     currentPlayer.id,
                                     currentRound,
-                                    selectedPlayer.id
-                                )
-                            )
+                                    selectedPlayer.id,
+                                ),
+                            ),
                         )
-                    }
+                    },
                 ) {
                     Text(
                         text = "Kill ${selectedPlayer.name}",
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
 
@@ -161,16 +170,16 @@ private fun ModalActions(
                                     PlayerIntent.Save(
                                         currentPlayer.id,
                                         currentRound,
-                                        selectedPlayer.id
-                                    )
-                                )
+                                        selectedPlayer.id,
+                                    ),
+                                ),
                             )
-                        }
+                        },
                     ) {
                         Text(
                             text = "Save ${selectedPlayer.name}",
                             maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
 
@@ -183,16 +192,16 @@ private fun ModalActions(
                                     PlayerIntent.Investigate(
                                         currentPlayer.id,
                                         currentRound,
-                                        selectedPlayer.id
-                                    )
-                                )
+                                        selectedPlayer.id,
+                                    ),
+                                ),
                             )
-                        }
+                        },
                     ) {
                         Text(
                             text = "Investigate ${selectedPlayer.name}",
                             maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
 

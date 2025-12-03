@@ -1,6 +1,14 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.player.screens
 
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -15,7 +23,6 @@ import ke.don.game_play.player.components.SleepModal
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.model.PlayerState
 import ke.don.game_play.shared.SharedSleep
-import ke.don.game_play.shared.components.PlayersGrid
 
 @Composable
 fun PlayerSleep(
@@ -74,7 +81,7 @@ fun PlayerSleep(
         instruction = instruction,
         knownIdentity = myPlayer.knownIdentities.map { it.playerId },
         isModerator = false,
-        onProceed = {}
+        onProceed = {},
     )
 
     val selectedPlayer by remember(playerState.selectedId, alivePlayers) {
@@ -89,7 +96,7 @@ fun PlayerSleep(
             onEvent = onEvent,
             currentPlayer = myPlayer,
             selectedPlayer = it,
-            gameState = gameState
+            gameState = gameState,
         )
     }
 }

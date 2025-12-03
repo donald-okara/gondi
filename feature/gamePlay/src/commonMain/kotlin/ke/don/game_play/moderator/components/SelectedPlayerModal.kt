@@ -79,7 +79,7 @@ fun SelectedPlayerModal(
 
             ModalActions(
                 onRemoveClick = {
-                    onAssignPlayer?.let{
+                    onAssignPlayer?.let {
                         showRemoveDialog = true
                         showAssignDialog = false
                     }
