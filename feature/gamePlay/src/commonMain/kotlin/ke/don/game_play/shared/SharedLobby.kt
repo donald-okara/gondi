@@ -95,7 +95,7 @@ fun SharedLobby(
             GridHeader(
                 modifier = Modifier,
                 availableSlots = availableSlots.toInt(),
-                alivePlayers = alivePlayers,
+                alivePlayersSize = alivePlayers.size,
             )
         }
         item {
@@ -244,10 +244,8 @@ private fun ModeratorPanelHeader(modifier: Modifier = Modifier, onClick: () -> U
 fun GridHeader(
     modifier: Modifier = Modifier,
     availableSlots: Int,
-    alivePlayers: List<Player>,
+    alivePlayersSize: Int,
 ) {
-    val playersSize = alivePlayers.size
-
     Row(
         modifier = modifier
             .padding(Theme.spacing.small)
@@ -267,7 +265,7 @@ fun GridHeader(
             shape = MaterialTheme.shapes.medium,
         ) {
             Text(
-                text = "$playersSize/$availableSlots",
+                text = "$alivePlayersSize/$availableSlots",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(
                     horizontal = Theme.spacing.small,

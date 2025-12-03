@@ -63,7 +63,7 @@ fun PlayerSleep(
         }
     }
 
-    val instruction by remember {
+    val instruction by remember(myPlayer.role) {
         derivedStateOf {
             when (myPlayer.role) {
                 Role.GONDI -> "You are a Gondi, Pick a player to kill"
