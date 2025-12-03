@@ -172,14 +172,12 @@ private fun ModalActions(
     currentRound: Long,
     currentPlayer: Player,
 ) {
-    val dormantText by remember(currentPlayer.role) {
-        derivedStateOf {
-            when (currentPlayer.role) {
-                Role.GONDI -> "You already killed during this round"
-                Role.DOCTOR -> "You already healed during this round"
-                Role.DETECTIVE -> "You already investigated during this round"
-                else -> "You should get some rest. There is nothing to do"
-            }
+    val dormantText = remember(currentPlayer.role) {
+        when (currentPlayer.role) {
+            Role.GONDI -> "You've already chosen a target for tonight."
+            Role.DOCTOR -> "Your patient for tonight is already chosen."
+            Role.DETECTIVE -> "You've already put your investigative skills to use this round."
+            else -> "It's time to rest. There's nothing more to do."
         }
     }
 

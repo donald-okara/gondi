@@ -69,7 +69,7 @@ fun PlayersGrid(
         )
     }
 
-    val playersSize = alivePlayers.size
+    val playersSize = sortedPlayers.size
 
     val selectionMap = remember(selectedPlayers) {
         selectedPlayers.associateBy({ it.first }, { it.second })

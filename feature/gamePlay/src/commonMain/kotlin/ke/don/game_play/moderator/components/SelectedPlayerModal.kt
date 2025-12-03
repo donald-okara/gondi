@@ -116,8 +116,8 @@ fun SelectedPlayerModal(
     }
 
     LaunchedEffect(selectedRole) {
-        if (selectedRole != player.role) {
-            onAssignPlayer?.invoke(selectedRole)
+        onAssignPlayer?.let { assign ->
+            assign(selectedRole)
             onDismissRequest()
         }
     }
