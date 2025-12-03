@@ -82,7 +82,6 @@ fun SharedLobby(
                 isModerator,
             )
         }
-        item { RoleLockWarning(modifier = Modifier, nonModeratorPlayers, isModerator) }
         item {
             ModeratorSection(
                 moderator,
@@ -91,6 +90,7 @@ fun SharedLobby(
                 onShowRules = onShowRules,
             )
         }
+        item { RoleLockWarning(modifier = Modifier, nonModeratorPlayers, isModerator) }
         item {
             GridHeader(
                 modifier = Modifier,
@@ -104,6 +104,7 @@ fun SharedLobby(
                 myPlayerId = myPlayerId,
                 availableSlots = availableSlots.toInt(),
                 alivePlayers = alivePlayers,
+                isModerator = isModerator,
                 onSelectPlayer = onSelectPlayer,
             )
         }
