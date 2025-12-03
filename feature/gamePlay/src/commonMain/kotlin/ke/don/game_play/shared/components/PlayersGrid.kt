@@ -143,7 +143,7 @@ fun AnnouncementSection(
                         verticalArrangement = Arrangement.spacedBy(Theme.spacing.small),
                         modifier = Modifier.matchParentSize(),
                     ) {
-                        items(items.size, key = { items[it].hashCode() }) { index ->
+                        items(items.size, key = { it }) { index ->
                             val announcement = items[index]
                             AnnouncementBubble(
                                 modifier = Modifier

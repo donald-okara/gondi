@@ -114,11 +114,14 @@ fun SelectedPlayerModal(
             }
         }
     }
+    val initialRole = remember(player.role) { player.role }
 
     LaunchedEffect(selectedRole) {
-        onAssignPlayer?.let { assign ->
-            assign(selectedRole)
-            onDismissRequest()
+        if (selectedRole != initialRole) {
+            onAssignPlayer?.let { assign ->
+                assign(selectedRole)
+                onDismissRequest()
+            }
         }
     }
 }
