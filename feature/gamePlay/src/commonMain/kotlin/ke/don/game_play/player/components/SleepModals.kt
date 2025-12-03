@@ -156,8 +156,7 @@ private fun ModalActions(
         if (currentPlayer.lastAction?.round != currentRound) {
             ButtonToken(
                 buttonType = actionType.componentType(),
-                onClick = showConfirmation
-                ,
+                onClick = showConfirmation,
             ) {
                 Text(
                     text = "${actionType.name.capitaliseFirst()} ${selectedPlayer.name}",
