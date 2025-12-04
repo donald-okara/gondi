@@ -23,6 +23,7 @@ sealed class ModeratorCommand {
     class LockJoin(override val gameId: String, val lock: Boolean) : ModeratorCommand()
     data class AdvancePhase(override val gameId: String, val phase: GamePhase) : ModeratorCommand()
     data class RevealDeaths(override val gameId: String) : ModeratorCommand()
+    data class ExoneratePlayer(override val gameId: String) : ModeratorCommand()
     data class RemovePlayer(override val gameId: String, val playerId: String) : ModeratorCommand()
     data class AssignRole(override val gameId: String, val playerId: String, val role: Role?) : ModeratorCommand()
     data class AssignRoleBatch(override val gameId: String, val players: List<Player>) : ModeratorCommand()

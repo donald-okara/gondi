@@ -74,6 +74,8 @@ class DefaultModeratorEngine(
                 db.toggleRevealFlag(true, it.id)
             }
 
+            is ModeratorCommand.ExoneratePlayer -> db.exoneratePlayer(command.gameId)
+
             is ModeratorCommand.StartGame -> game?.let {
                 db.updatePhase(GamePhase.SLEEP, round = 0L, id = it.id)
             }

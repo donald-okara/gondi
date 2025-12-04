@@ -230,6 +230,35 @@ class DefaultModeratorEngineTest : BaseGameTest() {
         assert(target2TownHall?.isAlive == true)
     }
 
+    @Test
+    fun textExoneratePlayer_success() = runTest {
+        val moderatorEngine = DefaultModeratorEngine(db)
+        val gameEngine = DefaultGameEngine(db)
+
+        val moderator = player1
+        val accuser = player4
+        val seconder = player5
+        val accused = player6
+
+        db.batchUpdatePlayerRole(batchUpdateRoles)
+
+        moderatorEngine.handle(gameState.id, ModeratorCommand.CreateGame(gameState.id, gameState, moderator))
+        moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.TOWN_HALL))
+
+        executeValidated(gameEngine, PlayerIntent.Accuse(accuser.id, gameState.round, accused.id))
+        executeValidated(gameEngine, PlayerIntent.Second(seconder.id, gameState.round, accused.id))
+
+        val game = db.getGameState(gameState.id).firstOrNull()
+        assertEquals(accused.id, game?.accusedPlayer?.targetId)
+        assertEquals(accused.id, game?.second?.targetId)
+
+        moderatorEngine.handle(gameState.id, ModeratorCommand.ExoneratePlayer(gameState.id))
+
+        val gameAfter = db.getGameState(gameState.id).firstOrNull()
+        assertNull(gameAfter?.accusedPlayer)
+        assertNull(gameAfter?.second)
+    }
+
     /**
      * REMOVE PLAYER,
      */

@@ -94,6 +94,8 @@ class LocalDatabase(
 
     fun toggleRevealFlag(flag: Boolean, id: String) = stateQueries.toggleRevealFlag(booleanAdapter.encode(flag), id)
 
+    fun exoneratePlayer(id: String) = stateQueries.exoneratePlayer(null, null, id)
+
     fun updateWinners(winners: Faction, gameId: String) = stateQueries.updateWinners(factionAdapter.encode(winners), gameId)
 
     fun accusePlayer(accusedPlayer: PlayerAction, id: String) = stateQueries.accusePlayer(playerActionAdapter.encode(accusedPlayer), id)

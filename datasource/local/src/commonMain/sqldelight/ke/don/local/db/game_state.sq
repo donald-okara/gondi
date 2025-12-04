@@ -33,6 +33,9 @@ UPDATE gameStateEntity SET lock_join = :lockJoin WHERE id = :id;
 updateWinners:
 UPDATE gameStateEntity SET winners = :winners WHERE id = :id;
 
+exoneratePlayer:
+UPDATE gameStateEntity SET second = :second, accused_player = :accused WHERE id = :id;
+
 updatePhase:
 UPDATE gameStateEntity SET phase = :phase, round = :round WHERE id = :id;
 
