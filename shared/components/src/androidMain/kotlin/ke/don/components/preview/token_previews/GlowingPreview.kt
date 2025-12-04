@@ -11,11 +11,12 @@ package ke.don.components.preview.token_previews
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,11 +24,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import ke.don.components.button.ButtonToken
+import ke.don.components.button.ComponentType
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 import ke.don.components.profile.PlayerItem
+import ke.don.components.profile.ProfilesStacked
 import ke.don.design.theme.AppTheme
 import ke.don.domain.datastore.Theme
 import ke.don.domain.gameplay.ActionType
@@ -85,6 +90,38 @@ fun PlayersPreview(
                             isActing = true,
                         )
                     }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun StackedPreview(
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
+) {
+    val player1 = Player(id = "1", name = "Matt Foley", role = Role.VILLAGER, Avatar.Alexander, background = AvatarBackground.PURPLE_LILAC)
+    val player2 = Player(id = "2", name = "Stefon Zelesky", role = Role.VILLAGER, Avatar.Christian, background = AvatarBackground.PINK_HOT)
+
+    var secondaryPlayer by remember { mutableStateOf<Player?>(null) }
+
+    DevicePreviewContainer(theme) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ){
+                ProfilesStacked(
+                    primaryPlayer = player1,
+                    secondaryPlayer = secondaryPlayer,
+                )
+
+                ButtonToken(
+                    onClick = { secondaryPlayer = if (secondaryPlayer == null) player2 else null },
+                    buttonType = ComponentType.Primary,
+                    modifier = Modifier.padding(vertical = 16.dp)
+                ) {
+                    Text("Toggle Secondary Player")
                 }
             }
         }
