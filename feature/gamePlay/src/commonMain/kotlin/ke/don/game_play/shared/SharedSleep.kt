@@ -41,6 +41,7 @@ fun SharedSleep(
     onProceed: () -> Unit,
     onShowRules: () -> Unit,
     enabled: Boolean = false,
+    actingPlayers: List<String> = emptyList(),
     knownIdentity: List<String> = emptyList(),
     onSelectPlayer: (String) -> Unit,
     alivePlayers: List<Player>,
@@ -93,8 +94,10 @@ fun SharedSleep(
                 selectedPlayers = selectedPlayers,
                 onSelectPlayer = onSelectPlayer,
                 myPlayerId = myPlayerId,
+                actingPlayers = actingPlayers,
                 knownIdentities = knownIdentity,
                 showEmpty = false,
+                isModerator = isModerator,
                 availableSlots = 0,
             )
         }

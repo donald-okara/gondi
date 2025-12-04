@@ -19,3 +19,12 @@ enum class GamePhase {
     COURT,
     GAME_OVER,
 }
+
+val GamePhase.nextPhase: GamePhase
+    get() = when(this) {
+        GamePhase.LOBBY -> GamePhase.SLEEP
+        GamePhase.SLEEP -> GamePhase.TOWN_HALL
+        GamePhase.TOWN_HALL -> GamePhase.COURT
+        GamePhase.COURT -> GamePhase.SLEEP
+        GamePhase.GAME_OVER -> GamePhase.LOBBY
+    }

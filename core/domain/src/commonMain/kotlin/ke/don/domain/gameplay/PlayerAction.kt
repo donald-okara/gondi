@@ -9,6 +9,7 @@
  */
 package ke.don.domain.gameplay
 
+import ke.don.domain.state.Player
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.time.Clock
@@ -33,6 +34,11 @@ enum class ActionType {
     ACCUSE,
     SECOND,
     NONE,
+}
+
+fun isActingInSleep(player: Player, round: Long): Boolean {
+    return player.role?.canActInSleep == true &&
+            (player.lastAction?.round != round || player.lastAction.type != player.role.actionType)
 }
 
 typealias SelectedPlayer = Pair<String, ActionType>

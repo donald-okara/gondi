@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.Role
 import ke.don.domain.gameplay.SelectedPlayer
+import ke.don.domain.gameplay.actionType
+import ke.don.domain.gameplay.isActingInSleep
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.game_play.player.components.SleepModal
@@ -73,6 +75,7 @@ fun PlayerSleep(
             }
         }
     }
+    val isActing = isActingInSleep(myPlayer, currentRound)
 
     SharedSleep(
         modifier = modifier,
@@ -81,6 +84,7 @@ fun PlayerSleep(
             onEvent(PlayerHandler.SelectPlayer(it))
         },
         alivePlayers = alivePlayers,
+        actingPlayers = if (isActing) listOf(myPlayer.id) else emptyList(),
         selectedPlayers = selectedPlayers,
         instruction = instruction,
         knownIdentity = myPlayer.knownIdentities.map { it.playerId },

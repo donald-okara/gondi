@@ -19,12 +19,15 @@ import ke.don.components.preview.token_previews.ThemeProvider
 import ke.don.components.scaffold.NavigationIcon
 import ke.don.components.scaffold.ScaffoldToken
 import ke.don.domain.datastore.Theme
+import ke.don.domain.gameplay.ActionType
+import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.gameplay.Role
 import ke.don.domain.state.GameState
 import ke.don.domain.state.KnownIdentity
 import ke.don.domain.state.Player
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
+import ke.don.game_play.moderator.screens.ModeratorSleep
 import ke.don.game_play.player.model.PlayerState
 import ke.don.game_play.player.screens.PlayerSleep
 import kotlin.time.ExperimentalTime
@@ -57,6 +60,11 @@ fun PlayerSleepPreview(
                 role = Role.GONDI,
                 Avatar.Amaya,
                 background = AvatarBackground.YELLOW_BANANA,
+                lastAction = PlayerAction(
+                    round = 1,
+                    type = ActionType.KILL,
+                    targetId = "4"
+                )
             ),
             Player(
                 id = "4",
@@ -64,6 +72,11 @@ fun PlayerSleepPreview(
                 role = Role.DETECTIVE,
                 Avatar.Aidan,
                 background = AvatarBackground.GREEN_LEAFY,
+                lastAction = PlayerAction(
+                    round = 1,
+                    type = ActionType.INVESTIGATE,
+                    targetId = "5"
+                )
             ),
             Player(
                 id = "5",
@@ -89,9 +102,14 @@ fun PlayerSleepPreview(
             Player(
                 id = "8",
                 name = "Franz",
-                role = Role.DETECTIVE,
+                role = Role.DOCTOR,
                 Avatar.Jameson,
                 background = AvatarBackground.YELLOW_GOLDEN,
+//                lastAction = PlayerAction(
+//                    round = 1,
+//                    type = ActionType.SAVE,
+//                    targetId = "4"
+//                )
             ),
         )
     }
@@ -105,7 +123,7 @@ fun PlayerSleepPreview(
     }
 
     val currentPlayer = Player(
-        id = "8",
+        id = "18",
         name = "Franz",
         role = Role.DETECTIVE,
         Avatar.Jameson,
@@ -113,7 +131,7 @@ fun PlayerSleepPreview(
         knownIdentities = listOf(
             KnownIdentity(
                 playerId = "1",
-                role = Role.VILLAGER,
+                role = Role.MODERATOR,
                 round = 1,
             ),
         ),
@@ -123,11 +141,10 @@ fun PlayerSleepPreview(
             title = "Sleep",
             navigationIcon = NavigationIcon.Back {},
         ) {
-            PlayerSleep(
+            ModeratorSleep(
                 gameState = gameState,
                 myPlayer = currentPlayer,
                 players = players,
-                playerState = PlayerState(),
                 onEvent = {},
             )
         }
