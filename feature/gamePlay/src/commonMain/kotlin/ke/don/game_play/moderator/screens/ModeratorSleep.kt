@@ -40,7 +40,9 @@ fun ModeratorSleep(
     }
     val alivePlayers = players.filter { it.isAlive }
 
-    val selectedPlayers = remember(gameState.lastSavedPlayerId, gameState.pendingKills) { gameState.selectedPlayersSleep() }
+    val selectedPlayers by remember(gameState.lastSavedPlayerId, gameState.pendingKills) {
+        derivedStateOf { gameState.selectedPlayersSleep() }
+    }
 
     val instruction = if (actingPlayers.isEmpty()) {
         "You can now proceed to Town hall"

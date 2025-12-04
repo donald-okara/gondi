@@ -62,7 +62,7 @@ fun PlayersGrid(
     knownIdentities: List<String> = emptyList(),
     selectedPlayers: List<SelectedPlayer> = emptyList(),
 ) {
-    val sortedPlayers = remember(alivePlayers, myPlayerId, knownIdentities) {
+    val sortedPlayers = remember(alivePlayers, myPlayerId, actingPlayers, knownIdentities) {
         alivePlayers.sortedWith(
             compareByDescending<Player> { it.id == myPlayerId } // Rule 1: "Me" first
                 .thenByDescending { actingPlayers.contains(it.id) } // Rule 2: Acting players next

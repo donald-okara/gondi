@@ -113,12 +113,12 @@ private fun ContentSwitcher(
                 )
             }
             GamePhase.SLEEP -> {
-                gameState?.let {
+                if (gameState != null && hostPlayer != null) {
                     ModeratorSleep(
                         modifier = modifier,
-                        gameState = it,
+                        gameState = gameState,
                         players = players,
-                        myPlayer = hostPlayer ?: Player(),
+                        myPlayer = hostPlayer,
                         onEvent = onEvent,
                     )
                 }
