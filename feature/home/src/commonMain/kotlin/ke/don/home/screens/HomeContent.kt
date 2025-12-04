@@ -28,6 +28,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.dialog.ConfirmationDialogToken
@@ -188,7 +189,7 @@ private fun SuccessState(
         modifier = modifier.fillMaxSize(),
         isRefreshing = state.readStatus.isRefreshing,
         pullRefreshState = pullState,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.Top),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small, Alignment.Top),
         onRefresh = { onEvent(HomeIntentHandler.Refresh) },
     ) {
         itemsIndexed(

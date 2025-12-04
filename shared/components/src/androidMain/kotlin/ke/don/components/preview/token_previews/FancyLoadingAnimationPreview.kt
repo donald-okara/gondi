@@ -163,8 +163,6 @@ fun RefreshLazyColumnPreview(
             isRefreshing = isRefreshing,
             onRefresh = { isRefreshing = true },
             pullRefreshState = pullState,
-            horizontalPadding = PaddingOption.Custom(MaterialTheme.spacing.small),
-            verticalPadding = PaddingOption.Custom(MaterialTheme.spacing.medium),
         ) {
             items(10) { index ->
                 Surface(

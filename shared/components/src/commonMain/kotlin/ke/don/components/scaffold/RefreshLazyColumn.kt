@@ -36,12 +36,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ke.don.components.indicator.FancyRefreshAnimation
 import ke.don.design.theme.PaddingOption
 import ke.don.design.theme.spacing
 import ke.don.design.theme.spacingPaddingValues
+import kotlin.compareTo
 import kotlin.math.roundToInt
 
 /**
@@ -83,8 +85,8 @@ fun RefreshLazyColumn(
         pullProgress = pullRefreshState.distanceFraction,
     ),
     lazyListState: LazyListState = rememberLazyListState(),
-    verticalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.medium),
-    horizontalPadding: PaddingOption = PaddingOption.Custom(MaterialTheme.spacing.small),
+    verticalPadding: Dp = 0.dp,
+    horizontalPadding: Dp = 0.dp,
     contentAlignment: Alignment = Alignment.TopCenter,
     reverseLayout: Boolean = false,
     verticalArrangement: Arrangement.Vertical =
@@ -151,11 +153,12 @@ private fun RefreshHeader(
     isRefreshing: Boolean,
     state: PullToRefreshState,
 ) {
+    val boxHeight = 100
     val animatedOffset by animateDpAsState(
         targetValue = when {
-            isRefreshing -> 150.dp
-            state.distanceFraction in 0f..1f -> (state.distanceFraction * 150).dp
-            state.distanceFraction > 1f -> (150 + (((state.distanceFraction - 1f) * .1f) * 150)).dp
+            isRefreshing -> boxHeight.dp
+            state.distanceFraction in 0f..1f -> (state.distanceFraction * boxHeight).dp
+            state.distanceFraction > 1f -> (boxHeight + (((state.distanceFraction - 1f) * .1f) * boxHeight)).dp
             else -> 0.dp
         },
         label = "animatedOffset",
@@ -164,8 +167,8 @@ private fun RefreshHeader(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp)
-            .offset(y = (-150).dp)
+            .height(boxHeight.dp)
+            .offset(y = (-boxHeight).dp)
             .offset { IntOffset(0, animatedOffset.roundToPx()) },
     ) {
         FancyRefreshAnimation(
@@ -314,16 +317,20 @@ fun rememberOffset(
 private fun computeOffset(
     isRefreshing: Boolean,
     progress: Float,
-): Int = when {
-    isRefreshing ->
-        124
+): Int {
+    val baseOffset = 70
+    return when {
+        isRefreshing ->
+            baseOffset
 
-    progress in 0f..1f ->
-        (124 * progress).roundToInt()
+        progress in 0f..1f ->
+            (baseOffset * progress).roundToInt()
 
-    progress > 1f ->
-        124 + (((progress - 1f) * 0.1f) * 100).roundToInt()
+        progress > 1f ->
+            baseOffset + (((progress - 1f) * 0.1f) * 100).roundToInt()
 
-    else ->
-        0
+        else ->
+            0
+    }
+
 }
