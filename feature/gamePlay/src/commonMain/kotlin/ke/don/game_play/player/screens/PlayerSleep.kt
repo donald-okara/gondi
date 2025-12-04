@@ -14,10 +14,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.Role
-import ke.don.domain.gameplay.SelectedPlayer
-import ke.don.domain.gameplay.actionType
 import ke.don.domain.gameplay.isActingInSleep
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
@@ -37,32 +34,9 @@ fun PlayerSleep(
 ) {
     val currentRound = gameState.round
     val alivePlayers = players.filter { it.isAlive }
-    val selectedPlayers by remember(myPlayer, gameState) {
-        derivedStateOf {
-            when (myPlayer.role) {
-                Role.GONDI -> {
-                    gameState.pendingKills.map { playerId ->
-                        SelectedPlayer(playerId, ActionType.KILL)
-                    }
-                }
 
-                Role.DOCTOR -> {
-                    gameState.lastSavedPlayerId?.let {
-                        listOf(SelectedPlayer(it, ActionType.SAVE))
-                    } ?: emptyList()
-                }
-
-                Role.DETECTIVE -> {
-                    val lastInvestigated =
-                        myPlayer.knownIdentities.find { identity -> identity.round == currentRound }
-                    lastInvestigated?.let {
-                        listOf(SelectedPlayer(it.playerId, ActionType.INVESTIGATE))
-                    } ?: emptyList()
-                }
-
-                else -> emptyList()
-            }
-        }
+    val selectedPlayers by remember(gameState.lastSavedPlayerId, gameState.pendingKills, myPlayer) {
+        derivedStateOf { gameState.selectedPlayersSleep(myPlayer) }
     }
 
     val instruction by remember(myPlayer.role) {
@@ -75,7 +49,10 @@ fun PlayerSleep(
             }
         }
     }
-    val isActing = isActingInSleep(myPlayer, currentRound)
+
+    val isActing by remember(myPlayer.lastAction,myPlayer.role, currentRound){
+        derivedStateOf{ isActingInSleep(myPlayer, currentRound) }
+    }
 
     SharedSleep(
         modifier = modifier,

@@ -1,6 +1,9 @@
 package ke.don.game_play.moderator.screens
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.ModeratorCommand
@@ -21,21 +24,16 @@ fun ModeratorSleep(
     onEvent: (ModeratorHandler) -> Unit,
 ) {
     val currentRound = gameState.round
-    val actingPlayers =
-        players.filter { player ->
-            isActingInSleep(player, currentRound)
-        }.map { it.id }
-    val alivePlayers = players.filter { it.isAlive }
-    val lastSaved = gameState.lastSavedPlayerId to ActionType.SAVE
-    val pendingKills = gameState.pendingKills.map { it to ActionType.KILL }
-
-    val selectedPlayers =
-        buildList {
-            lastSaved.first?.let {
-                add(SelectedPlayer(it, lastSaved.second))
-            }
-            addAll(pendingKills)
+    val actingPlayers by remember(players, currentRound) {
+        derivedStateOf {
+            players.filter { player ->
+                isActingInSleep(player, currentRound)
+            }.map { it.id }
         }
+    }
+    val alivePlayers = players.filter { it.isAlive }
+
+    val selectedPlayers = remember(gameState.lastSavedPlayerId, gameState.pendingKills){ gameState.selectedPlayersSleep() }
 
     val instruction = if (actingPlayers.isEmpty())
         "You can now proceed to Town hall" else
