@@ -10,9 +10,12 @@
 package ke.don.game_play.shared
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AutoStories
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
+import ke.don.components.icon.IconToken
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.SelectedPlayer
@@ -35,7 +39,9 @@ fun SharedSleep(
     instruction: String,
     isModerator: Boolean,
     onProceed: () -> Unit,
+    onShowRules: () -> Unit,
     enabled: Boolean = false,
+    actingPlayers: List<String> = emptyList(),
     knownIdentity: List<String> = emptyList(),
     onSelectPlayer: (String) -> Unit,
     alivePlayers: List<Player>,
@@ -61,6 +67,19 @@ fun SharedSleep(
             }
         }
         item {
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+            ) {
+                IconToken(
+                    imageVector = Icons.Outlined.AutoStories,
+                    buttonType = ComponentType.Inverse,
+                    onClick = onShowRules,
+                )
+            }
+        }
+        item {
             Text(
                 text = instruction,
                 style = MaterialTheme.typography.titleMedium,
@@ -75,8 +94,10 @@ fun SharedSleep(
                 selectedPlayers = selectedPlayers,
                 onSelectPlayer = onSelectPlayer,
                 myPlayerId = myPlayerId,
+                actingPlayers = actingPlayers,
                 knownIdentities = knownIdentity,
                 showEmpty = false,
+                isModerator = isModerator,
                 availableSlots = 0,
             )
         }

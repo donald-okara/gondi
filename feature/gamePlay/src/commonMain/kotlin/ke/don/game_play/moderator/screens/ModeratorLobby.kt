@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
-import ke.don.game_play.moderator.components.SelectedPlayerModal
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.shared.SharedLobby
@@ -30,8 +29,6 @@ fun ModeratorLobby(
     players: List<Player>,
     onEvent: (ModeratorHandler) -> Unit,
 ) {
-    val selectedPlayer = players.find { it.id == moderatorState.selectedPlayerId }
-
     SharedLobby(
         modifier = modifier,
         isModerator = true,
@@ -55,26 +52,4 @@ fun ModeratorLobby(
             onEvent(ModeratorHandler.ShowRulesModal)
         },
     )
-
-    if (selectedPlayer != null) {
-        SelectedPlayerModal(
-            onDismissRequest = { onEvent(ModeratorHandler.SelectPlayer(null)) },
-            onAssignPlayer = {
-                gameState?.let { it1 -> onEvent(ModeratorHandler.HandleModeratorCommand(ModeratorCommand.AssignRole(it1.id, selectedPlayer.id, it))) }
-            },
-            onRemovePlayer = {
-                gameState?.let {
-                    onEvent(
-                        ModeratorHandler.HandleModeratorCommand(
-                            ModeratorCommand.RemovePlayer(
-                                it.id,
-                                selectedPlayer.id,
-                            ),
-                        ),
-                    )
-                }
-            },
-            player = selectedPlayer,
-        )
-    }
 }

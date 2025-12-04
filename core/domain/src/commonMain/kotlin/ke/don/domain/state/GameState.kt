@@ -9,8 +9,11 @@
  */
 package ke.don.domain.state
 
+import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.Faction
 import ke.don.domain.gameplay.PlayerAction
+import ke.don.domain.gameplay.Role
+import ke.don.domain.gameplay.SelectedPlayer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.uuid.ExperimentalUuidApi
@@ -32,4 +35,53 @@ constructor(
     @SerialName("accused_player_id") val accusedPlayer: PlayerAction? = null, // Accuser to accused
     @SerialName("second") val second: PlayerAction? = null, // Accuser to accused
     @SerialName("reveal_eliminated_player") val revealEliminatedPlayer: Boolean = false,
-)
+) {
+    /**
+     * These are players who have been selected to be killed or saved by Gondis and the Doctor. It is usable in the Moderator's sleep view
+     */
+    fun selectedPlayersSleep(player: Player): List<SelectedPlayer> {
+        val selectedPlayers = when (player.role) {
+            Role.GONDI -> {
+                this.pendingKills.map { playerId ->
+                    SelectedPlayer(playerId, ActionType.KILL)
+                }
+            }
+
+            Role.DOCTOR -> {
+                this.lastSavedPlayerId?.let {
+                    listOf(SelectedPlayer(it, ActionType.SAVE))
+                } ?: emptyList()
+            }
+
+            Role.DETECTIVE -> {
+                val lastInvestigated =
+                    player.knownIdentities.find { identity -> identity.round == this.round }
+                lastInvestigated?.let {
+                    listOf(SelectedPlayer(it.playerId, ActionType.INVESTIGATE))
+                } ?: emptyList()
+            }
+
+            else -> emptyList()
+        }
+
+        return selectedPlayers
+    }
+
+    /**
+     * These are players who have been selected to be killed, investigated or saved by the Gondis, Detective and doctor. It is usable in the Player's sleep view
+     */
+    fun selectedPlayersSleep(): List<SelectedPlayer> {
+        val lastSaved = this.lastSavedPlayerId to ActionType.SAVE
+        val pendingKills = this.pendingKills.map { it to ActionType.KILL }
+
+        val selectedPlayers =
+            buildList {
+                lastSaved.first?.let {
+                    add(SelectedPlayer(it, lastSaved.second))
+                }
+                addAll(pendingKills)
+            }
+
+        return selectedPlayers
+    }
+}

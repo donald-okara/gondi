@@ -143,7 +143,18 @@ private fun ContentSwitcher(
                     onEvent = onEvent,
                 )
             }
-            GamePhase.SLEEP -> {}
+            GamePhase.SLEEP -> {
+                if (gameState != null && currentPlayer != null) {
+                    PlayerSleep(
+                        modifier = modifier,
+                        gameState = gameState,
+                        myPlayer = currentPlayer,
+                        players = players,
+                        playerState = playerState,
+                        onEvent = onEvent,
+                    )
+                }
+            }
             GamePhase.TOWN_HALL -> {}
             GamePhase.COURT -> {}
             GamePhase.GAME_OVER -> {}

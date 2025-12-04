@@ -19,10 +19,12 @@ import ke.don.components.button.ComponentType
 import ke.don.components.dialog.ConfirmationDialogToken
 import ke.don.components.scaffold.NavigationIcon
 import ke.don.components.scaffold.ScaffoldToken
+import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
+import ke.don.game_play.moderator.components.SelectedPlayerModal
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.shared.components.RulesModal
@@ -86,6 +88,8 @@ private fun ContentSwitcher(
     votes: List<Vote>,
     onEvent: (ModeratorHandler) -> Unit,
 ) {
+    val selectedPlayer = players.find { it.id == moderatorState.selectedPlayerId }
+
     AnimatedContent(
         targetState = gameState?.phase,
         label = "Game State",
@@ -108,10 +112,42 @@ private fun ContentSwitcher(
                     myPlayerId = hostPlayer?.id,
                 )
             }
-            GamePhase.SLEEP -> {}
+            GamePhase.SLEEP -> {
+                if (gameState != null && hostPlayer != null) {
+                    ModeratorSleep(
+                        modifier = modifier,
+                        gameState = gameState,
+                        players = players,
+                        myPlayer = hostPlayer,
+                        onEvent = onEvent,
+                    )
+                }
+            }
             GamePhase.TOWN_HALL -> {}
             GamePhase.COURT -> {}
             GamePhase.GAME_OVER -> {}
         }
+    }
+
+    if (selectedPlayer != null) {
+        SelectedPlayerModal(
+            onDismissRequest = { onEvent(ModeratorHandler.SelectPlayer(null)) },
+            onAssignPlayer = {
+                gameState?.let { it1 -> onEvent(ModeratorHandler.HandleModeratorCommand(ModeratorCommand.AssignRole(it1.id, selectedPlayer.id, it))) }
+            },
+            onRemovePlayer = {
+                gameState?.let {
+                    onEvent(
+                        ModeratorHandler.HandleModeratorCommand(
+                            ModeratorCommand.RemovePlayer(
+                                it.id,
+                                selectedPlayer.id,
+                            ),
+                        ),
+                    )
+                }
+            },
+            player = selectedPlayer,
+        )
     }
 }
