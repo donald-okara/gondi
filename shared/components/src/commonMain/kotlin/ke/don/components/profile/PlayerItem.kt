@@ -78,13 +78,13 @@ fun PlayerItem(
 
     val color by animateColorAsState(
         targetValue =
-            if (isSelected) {
-                actionType.color(
-                    default = player.background.color(),
-                )
-            } else {
-                Theme.colorScheme.primary
-            },
+        if (isSelected) {
+            actionType.color(
+                default = player.background.color(),
+            )
+        } else {
+            Theme.colorScheme.primary
+        },
         animationSpec = tween(300),
     )
     GlowingSelectableSurface(

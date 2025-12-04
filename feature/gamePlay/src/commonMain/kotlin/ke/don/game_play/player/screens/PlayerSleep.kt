@@ -50,8 +50,8 @@ fun PlayerSleep(
         }
     }
 
-    val isActing by remember(myPlayer.lastAction,myPlayer.role, currentRound){
-        derivedStateOf{ isActingInSleep(myPlayer, currentRound) }
+    val isActing by remember(myPlayer.lastAction, myPlayer.role, currentRound) {
+        derivedStateOf { isActingInSleep(myPlayer, currentRound) }
     }
 
     SharedSleep(
@@ -67,7 +67,7 @@ fun PlayerSleep(
         knownIdentity = myPlayer.knownIdentities.map { it.playerId },
         isModerator = false,
         onProceed = {},
-        onShowRules = { onEvent(PlayerHandler.ShowRulesModal) }
+        onShowRules = { onEvent(PlayerHandler.ShowRulesModal) },
     )
 
     val selectedPlayer by remember(playerState.selectedId, alivePlayers) {

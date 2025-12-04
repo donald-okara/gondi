@@ -28,8 +28,6 @@ import ke.don.domain.state.Player
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.game_play.moderator.screens.ModeratorSleep
-import ke.don.game_play.player.model.PlayerState
-import ke.don.game_play.player.screens.PlayerSleep
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
@@ -63,8 +61,8 @@ fun PlayerSleepPreview(
                 lastAction = PlayerAction(
                     round = 1,
                     type = ActionType.KILL,
-                    targetId = "4"
-                )
+                    targetId = "4",
+                ),
             ),
             Player(
                 id = "4",
@@ -75,8 +73,8 @@ fun PlayerSleepPreview(
                 lastAction = PlayerAction(
                     round = 1,
                     type = ActionType.INVESTIGATE,
-                    targetId = "5"
-                )
+                    targetId = "5",
+                ),
             ),
             Player(
                 id = "5",

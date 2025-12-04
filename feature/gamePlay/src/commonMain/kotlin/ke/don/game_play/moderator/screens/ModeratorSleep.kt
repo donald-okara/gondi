@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.moderator.screens
 
 import androidx.compose.runtime.Composable
@@ -5,9 +14,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.ModeratorCommand
-import ke.don.domain.gameplay.SelectedPlayer
 import ke.don.domain.gameplay.isActingInSleep
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
@@ -33,11 +40,13 @@ fun ModeratorSleep(
     }
     val alivePlayers = players.filter { it.isAlive }
 
-    val selectedPlayers = remember(gameState.lastSavedPlayerId, gameState.pendingKills){ gameState.selectedPlayersSleep() }
+    val selectedPlayers = remember(gameState.lastSavedPlayerId, gameState.pendingKills) { gameState.selectedPlayersSleep() }
 
-    val instruction = if (actingPlayers.isEmpty())
-        "You can now proceed to Town hall" else
+    val instruction = if (actingPlayers.isEmpty()) {
+        "You can now proceed to Town hall"
+    } else {
         "Someone has not done their part yet"
+    }
 
     SharedSleep(
         modifier = modifier,
@@ -56,13 +65,12 @@ fun ModeratorSleep(
                 ModeratorHandler.HandleModeratorCommand(
                     ModeratorCommand.AdvancePhase(
                         gameState.id,
-                        gameState.phase.nextPhase
-                    )
-                )
+                        gameState.phase.nextPhase,
+                    ),
+                ),
             )
         },
         actingPlayers = actingPlayers,
-        onShowRules = { onEvent(ModeratorHandler.ShowRulesModal) }
+        onShowRules = { onEvent(ModeratorHandler.ShowRulesModal) },
     )
 }
-

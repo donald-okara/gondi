@@ -81,8 +81,8 @@ fun LoadingDotsInCircle(
     circleSize: Int = 24,
     containerColor: Color = Color.Black.copy(alpha = 0.6f),
     dotCount: Int = 3,
-    dotSize: Dp = (circleSize/6).dp,
-    dotSpacing: Dp = (circleSize/12).dp,
+    dotSize: Dp = (circleSize / 6).dp,
+    dotSpacing: Dp = (circleSize / 12).dp,
     dotColor: Color = Color.White,
     minAlpha: Float = 0.25f,
     maxAlpha: Float = 1f,
@@ -93,7 +93,7 @@ fun LoadingDotsInCircle(
         modifier = modifier
             .size(circleSize.dp)
             .background(containerColor, CircleShape), // adjust color if needed
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         LoadingDots(
             modifier = Modifier,

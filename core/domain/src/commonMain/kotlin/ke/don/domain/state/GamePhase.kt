@@ -21,7 +21,7 @@ enum class GamePhase {
 }
 
 val GamePhase.nextPhase: GamePhase
-    get() = when(this) {
+    get() = when (this) {
         GamePhase.LOBBY -> GamePhase.SLEEP
         GamePhase.SLEEP -> GamePhase.TOWN_HALL
         GamePhase.TOWN_HALL -> GamePhase.COURT

@@ -82,7 +82,7 @@ fun PlayersPreview(
                             showRole = true,
                             enabled = true,
                             player = players[index % players.size],
-                            isActing = true
+                            isActing = true,
                         )
                     }
                 }

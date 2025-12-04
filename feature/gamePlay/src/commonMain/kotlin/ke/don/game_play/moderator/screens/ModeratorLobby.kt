@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
-import ke.don.game_play.moderator.components.SelectedPlayerModal
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.shared.SharedLobby
