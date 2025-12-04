@@ -10,17 +10,26 @@
 package ke.don.components.profile
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.animateBounds
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonColors
@@ -36,10 +45,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.LookaheadScope
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import ke.don.components.button.ComponentType
 import ke.don.components.icon.IconToken
 import ke.don.components.indicator.GlowingSelectableSurface
@@ -78,13 +91,13 @@ fun PlayerItem(
 
     val color by animateColorAsState(
         targetValue =
-        if (isSelected) {
-            actionType.color(
-                default = player.background.color(),
-            )
-        } else {
-            Theme.colorScheme.primary
-        },
+            if (isSelected) {
+                actionType.color(
+                    default = player.background.color(),
+                )
+            } else {
+                Theme.colorScheme.primary
+            },
         animationSpec = tween(300),
     )
     GlowingSelectableSurface(
@@ -213,6 +226,82 @@ fun PlayerItem(
             }
         }
     }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+fun StackedBase(
+    modifier: Modifier = Modifier,
+    primary: (@Composable () -> Unit)? = null,
+    secondary: (@Composable () -> Unit)? = null,
+    spacing: Dp = MaterialTheme.spacing.small,
+    overlap: Dp = 80.dp,
+) {
+    LookaheadScope {
+        Row(
+            modifier = modifier
+                .animateContentSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(spacing, Alignment.CenterHorizontally)
+        ) {
+            secondary?.let {
+                Box(
+                    modifier = Modifier
+                ) { it() }
+            }
+
+            primary?.let {
+                Box(
+                    modifier = Modifier
+                        .then(
+                            if (secondary != null)
+                                Modifier.offset(x = -(overlap))
+                            else Modifier
+                        )
+                        .zIndex(1f)
+                ) { it() }
+            }
+        }
+    }
+}
+
+
+
+@Composable
+fun ProfilesStacked(
+    modifier: Modifier = Modifier,
+    primaryPlayer: Player?,
+    secondaryPlayer: Player?,
+) {
+    StackedBase(
+        modifier = modifier,
+        primary = primaryPlayer?.let {
+            {
+                PlayerItem(
+                    player = it,
+                    actionType = ActionType.ACCUSE,
+                    isSelected = true,
+                    enabled = true
+                )
+            }
+        },
+        secondary =
+            secondaryPlayer?.let {
+                {
+                    PlayerItem(
+                        player = it,
+                        actionType = ActionType.SECOND,
+                        isSelected = true,
+                        enabled = true,
+                        modifier = Modifier
+                            .graphicsLayer {
+                                alpha = 0.5f
+                            }
+                    )
+                }
+            },
+    )
+
 }
 
 /**
