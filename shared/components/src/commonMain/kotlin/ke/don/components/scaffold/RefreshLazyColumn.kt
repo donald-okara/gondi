@@ -26,7 +26,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberOverscrollEffect
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -40,8 +39,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import ke.don.components.indicator.FancyRefreshAnimation
-import ke.don.design.theme.PaddingOption
-import ke.don.design.theme.spacing
 import ke.don.design.theme.spacingPaddingValues
 import kotlin.compareTo
 import kotlin.math.roundToInt
@@ -332,5 +329,4 @@ private fun computeOffset(
         else ->
             0
     }
-
 }

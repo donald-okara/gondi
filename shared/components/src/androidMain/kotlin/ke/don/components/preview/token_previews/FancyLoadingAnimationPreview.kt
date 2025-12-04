@@ -38,8 +38,6 @@ import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 import ke.don.components.scaffold.RefreshLazyColumn
 import ke.don.components.scaffold.cardCrunchEffects
-import ke.don.design.theme.PaddingOption
-import ke.don.design.theme.spacing
 import ke.don.domain.datastore.Theme
 import kotlinx.coroutines.delay
 
