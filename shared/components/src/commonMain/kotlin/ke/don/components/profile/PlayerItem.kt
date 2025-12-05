@@ -235,29 +235,23 @@ fun StackedBase(
     primary: (@Composable () -> Unit)? = null,
     secondary: (@Composable () -> Unit)? = null,
     spacing: Dp = MaterialTheme.spacing.small,
-    overlap: Dp = 80.dp,
 ) {
-    LookaheadScope {
+    LookaheadScope{
         Row(
-            modifier = modifier
-                .animateContentSize(),
+            modifier = modifier,
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(spacing, Alignment.CenterHorizontally)
         ) {
             secondary?.let {
                 Box(
-                    modifier = Modifier
+                    modifier = Modifier.animateBounds(this@LookaheadScope)
                 ) { it() }
             }
+
 
             primary?.let {
                 Box(
                     modifier = Modifier
-                        .then(
-                            if (secondary != null)
-                                Modifier.offset(x = -(overlap))
-                            else Modifier
-                        )
                         .zIndex(1f)
                 ) { it() }
             }
@@ -272,6 +266,7 @@ fun ProfilesStacked(
     modifier: Modifier = Modifier,
     primaryPlayer: Player?,
     secondaryPlayer: Player?,
+    myProfileId: String? = null,
 ) {
     StackedBase(
         modifier = modifier,
@@ -281,7 +276,8 @@ fun ProfilesStacked(
                     player = it,
                     actionType = ActionType.ACCUSE,
                     isSelected = true,
-                    enabled = true
+                    enabled = true,
+                    isMe = myProfileId == it.id
                 )
             }
         },
@@ -293,10 +289,7 @@ fun ProfilesStacked(
                         actionType = ActionType.SECOND,
                         isSelected = true,
                         enabled = true,
-                        modifier = Modifier
-                            .graphicsLayer {
-                                alpha = 0.5f
-                            }
+                        isMe = myProfileId == it.id
                     )
                 }
             },
