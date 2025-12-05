@@ -34,7 +34,7 @@ fun SharedTownHall(
     onSelectPlayer: (String) -> Unit,
     myPlayerId: String,
     seconder: Player?,
-    accuser: Player,
+    accuser: Player?,
     accused: Player?,
     knownIdentity: List<String> = emptyList(),
     onSecond: () -> Unit,
@@ -52,26 +52,28 @@ fun SharedTownHall(
     ) {
         item {
             if (isModerator) {
-                AnimatedContent(targetState = seconder){ seconder ->
-                    if(seconder != null){
-                        ButtonToken(
+                AnimatedContent(targetState = seconder) { seconder ->
+                    when {
+                        seconder != null -> ButtonToken(
                             modifier = Modifier.fillMaxWidth(),
                             buttonType = ComponentType.Primary,
                             onClick = goToCourt
-                        ){
-                            Text(
-                                "Proceed",
-                            )
+                        ) {
+                            Text("Proceed")
                         }
-                    } else if (accused != null) {
-                        ButtonToken(
+                        accused != null -> ButtonToken(
                             modifier = Modifier.fillMaxWidth(),
                             buttonType = ComponentType.Neutral,
                             onClick = exoneratePlayer
-                        ){
-                            Text(
-                                "Exonerate ${accused.name}",
-                            )
+                        ) {
+                            Text("Exonerate ${accused.name}")
+                        }
+                        else -> ButtonToken(
+                            modifier = Modifier.fillMaxWidth(),
+                            buttonType = ComponentType.Primary,
+                            onClick = goToCourt
+                        ) {
+                            Text("Proceed")
                         }
                     }
                 }
@@ -93,11 +95,11 @@ fun SharedTownHall(
         }
 
         item {
-            accused?.let {
+            if(accuser != null && accused != null) {
                 AnimatedVisibility(true){
                     AccusationSection(
                         accuser = accuser,
-                        accused = it,
+                        accused = accused,
                         seconder = seconder,
                         myProfileId = myPlayerId,
                         onSecond = onSecond,
