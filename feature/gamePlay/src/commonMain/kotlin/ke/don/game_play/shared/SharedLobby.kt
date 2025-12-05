@@ -103,7 +103,7 @@ fun SharedLobby(
                 modifier = Modifier,
                 myPlayerId = myPlayerId,
                 availableSlots = availableSlots.toInt(),
-                alivePlayers = alivePlayers,
+                players = alivePlayers,
                 isModerator = isModerator,
                 onSelectPlayer = onSelectPlayer,
             )

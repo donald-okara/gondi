@@ -44,7 +44,7 @@ fun SharedSleep(
     actingPlayers: List<String> = emptyList(),
     knownIdentity: List<String> = emptyList(),
     onSelectPlayer: (String) -> Unit,
-    alivePlayers: List<Player>,
+    players: List<Player>,
     selectedPlayers: List<SelectedPlayer> = emptyList(),
 ) {
     LazyColumn(
@@ -90,7 +90,7 @@ fun SharedSleep(
         }
         item {
             PlayersGrid(
-                alivePlayers = alivePlayers,
+                players = players,
                 selectedPlayers = selectedPlayers,
                 onSelectPlayer = onSelectPlayer,
                 myPlayerId = myPlayerId,

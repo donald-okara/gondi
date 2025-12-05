@@ -185,10 +185,11 @@ private fun ModalActions(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.End),
     ) {
-        if (currentPlayer.lastAction?.round != currentRound) {
+        if (currentPlayer.lastAction?.round != currentRound && currentPlayer.isAlive) {
             ButtonToken(
                 buttonType = actionType.componentType(),
                 onClick = showConfirmation,
+                enabled = currentPlayer.isAlive
             ) {
                 Text(
                     text = "${actionType.name.capitaliseFirst()} ${selectedPlayer.name}",
@@ -198,7 +199,7 @@ private fun ModalActions(
             }
         } else {
             Text(
-                text = dormantText,
+                text = if (currentPlayer.isAlive) dormantText else "Dead men tell no tales",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

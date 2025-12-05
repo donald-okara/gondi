@@ -48,7 +48,7 @@ fun PlayerTownHall(
     }
 
     SharedTownHall(
-        alivePlayers = players.filter { it.isAlive },
+        players = players,
         onSelectPlayer = { TODO("Add accusation modal") },
         myPlayerId = myPlayer.id,
         seconder = seconder,

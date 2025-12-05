@@ -18,8 +18,6 @@ import ke.don.components.button.ComponentType
 import ke.don.components.icon.IconToken
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
-import ke.don.domain.gameplay.ModeratorCommand
-import ke.don.domain.gameplay.SelectedPlayer
 import ke.don.domain.state.Player
 import ke.don.game_play.moderator.model.Announcement
 import ke.don.game_play.shared.components.AccusationSection
@@ -30,7 +28,7 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 @Composable
 fun SharedTownHall(
-    alivePlayers: List<Player>,
+    players: List<Player>,
     onSelectPlayer: (String) -> Unit,
     myPlayerId: String,
     seconder: Player?,
@@ -111,7 +109,7 @@ fun SharedTownHall(
 
         item {
             PlayersGrid(
-                alivePlayers = alivePlayers,
+                players = players,
                 onSelectPlayer = onSelectPlayer,
                 myPlayerId = myPlayerId,
                 knownIdentities = knownIdentity,

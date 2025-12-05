@@ -5,12 +5,10 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import ke.don.components.list_items.GamePhases
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
-import ke.don.domain.state.nextPhase
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.shared.SharedTownHall
@@ -60,7 +58,7 @@ fun ModeratorTownHall(
 
 
     SharedTownHall(
-        alivePlayers = players.filter { it.isAlive },
+        players = players,
         onSelectPlayer = { },
         myPlayerId = myPlayer.id,
         seconder = seconder,

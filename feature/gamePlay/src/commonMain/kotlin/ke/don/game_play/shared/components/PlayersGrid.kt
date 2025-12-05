@@ -56,14 +56,14 @@ fun PlayersGrid(
     onSelectPlayer: (String) -> Unit,
     availableSlots: Int,
     showEmpty: Boolean = true,
-    alivePlayers: List<Player>,
+    players: List<Player>,
     isModerator: Boolean = false,
     actingPlayers: List<String> = emptyList(),
     knownIdentities: List<String> = emptyList(),
     selectedPlayers: List<SelectedPlayer> = emptyList(),
 ) {
-    val sortedPlayers = remember(alivePlayers, myPlayerId, actingPlayers, knownIdentities) {
-        alivePlayers.sortedWith(
+    val sortedPlayers = remember(players, myPlayerId, actingPlayers, knownIdentities) {
+        players.sortedWith(
             compareByDescending<Player> { it.id == myPlayerId } // Rule 1: "Me" first
                 .thenByDescending { actingPlayers.contains(it.id) } // Rule 2: Acting players next
                 .thenByDescending { it.role != null } // Rule 3: Players with roles next

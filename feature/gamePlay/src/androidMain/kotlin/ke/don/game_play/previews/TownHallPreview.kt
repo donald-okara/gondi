@@ -1,15 +1,11 @@
 package ke.don.game_play.previews
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
@@ -22,8 +18,6 @@ import ke.don.domain.state.Player
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.game_play.shared.SharedTownHall
-import ke.don.game_play.shared.components.AccusationItem
-import ke.don.game_play.shared.components.AccusationSection
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -84,7 +78,7 @@ fun TownHallPreview(
                 onSecond = {
                     seconderUi = if(seconderUi == null) seconder else null
                 },
-                alivePlayers = players,
+                players = players,
                 onSelectPlayer = {},
                 onShowRules = {},
                 exoneratePlayer = {
@@ -95,7 +89,7 @@ fun TownHallPreview(
                 },
                 announcements = announcements,
                 knownIdentity = emptyList(),
-                isModerator = true,
+                isModerator = false,
             )
         }
     }
