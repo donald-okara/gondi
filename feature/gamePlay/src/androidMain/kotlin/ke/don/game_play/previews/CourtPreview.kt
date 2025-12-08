@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.previews
 
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,9 +32,6 @@ import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.moderator.screens.ModeratorCourt
-import ke.don.game_play.player.model.PlayerState
-import ke.don.game_play.player.screens.PlayerCourt
-import ke.don.game_play.shared.SharedTownHall
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -42,56 +48,56 @@ fun CourtPreview(
                 name = "Matt Foley",
                 role = Role.VILLAGER,
                 Avatar.Alexander,
-                background = AvatarBackground.PURPLE_LILAC
+                background = AvatarBackground.PURPLE_LILAC,
             ),
             Player(
                 id = "2",
                 name = "Stefon Zelesky",
                 role = Role.VILLAGER,
                 Avatar.Christian,
-                background = AvatarBackground.PINK_HOT
+                background = AvatarBackground.PINK_HOT,
             ),
             Player(
                 id = "3",
                 name = "David S. Pumpkins",
                 role = Role.GONDI,
                 Avatar.Amaya,
-                background = AvatarBackground.YELLOW_BANANA
+                background = AvatarBackground.YELLOW_BANANA,
             ),
             Player(
                 id = "4",
                 name = "Roseanne Roseannadanna",
                 role = Role.DETECTIVE,
                 Avatar.Aidan,
-                background = AvatarBackground.GREEN_LEAFY
+                background = AvatarBackground.GREEN_LEAFY,
             ),
             Player(
                 id = "5",
                 name = "Todd O'Connor",
                 role = Role.VILLAGER,
                 Avatar.Kimberly,
-                background = AvatarBackground.ORANGE_CORAL
+                background = AvatarBackground.ORANGE_CORAL,
             ),
             Player(
                 id = "6",
                 name = "Pat O'Neill",
                 role = Role.VILLAGER,
                 Avatar.George,
-                background = AvatarBackground.PURPLE_AMETHYST
+                background = AvatarBackground.PURPLE_AMETHYST,
             ),
             Player(
                 id = "7",
                 name = "Hans",
                 role = Role.VILLAGER,
                 Avatar.Jocelyn,
-                background = AvatarBackground.GREEN_MINTY
+                background = AvatarBackground.GREEN_MINTY,
             ),
             Player(
                 id = "8",
                 name = "Franz",
                 role = Role.MODERATOR,
                 Avatar.Jameson,
-                background = AvatarBackground.YELLOW_GOLDEN
+                background = AvatarBackground.YELLOW_GOLDEN,
             ),
         )
     }
@@ -101,21 +107,21 @@ fun CourtPreview(
         name = "Matt Foley",
         role = Role.VILLAGER,
         Avatar.Alexander,
-        background = AvatarBackground.PURPLE_LILAC
+        background = AvatarBackground.PURPLE_LILAC,
     )
     val accused = Player(
         id = "2",
         name = "Stefon Zelesky",
         role = Role.VILLAGER,
         Avatar.Christian,
-        background = AvatarBackground.ORANGE_CORAL
+        background = AvatarBackground.ORANGE_CORAL,
     )
     val seconder = Player(
         id = "5",
         name = "Todd O'Connor",
         role = Role.VILLAGER,
         Avatar.Kimberly,
-        background = AvatarBackground.ORANGE_CORAL
+        background = AvatarBackground.ORANGE_CORAL,
     )
 
     var seconderUi by remember {
@@ -129,32 +135,38 @@ fun CourtPreview(
         Vote(
             voterId = "1",
             targetId = accused.id,
-            isGuilty = false
-        ), Vote(
+            isGuilty = false,
+        ),
+        Vote(
             voterId = "3",
             targetId = accused.id,
-            isGuilty = false
-        ), Vote(
+            isGuilty = false,
+        ),
+        Vote(
             voterId = "4",
             targetId = accused.id,
-            isGuilty = false
-        ), Vote(
+            isGuilty = false,
+        ),
+        Vote(
             voterId = "5",
             targetId = accused.id,
-            isGuilty = false
-        ), Vote(
+            isGuilty = false,
+        ),
+        Vote(
             voterId = "6",
             targetId = accused.id,
-            isGuilty = false
-        ), Vote(
+            isGuilty = false,
+        ),
+        Vote(
             voterId = "7",
             targetId = accused.id,
-            isGuilty = false
-        ), Vote(
+            isGuilty = false,
+        ),
+        Vote(
             voterId = "8",
             targetId = accused.id,
-            isGuilty = false
-        )
+            isGuilty = false,
+        ),
     )
 
     val gameState = GameState(
@@ -162,17 +174,16 @@ fun CourtPreview(
             round = 1,
             type = ActionType.ACCUSE,
             targetId = accused.id,
-            playerId = accuser.id
+            playerId = accuser.id,
         ),
 
         second = PlayerAction(
             round = 1,
             type = ActionType.SECOND,
             targetId = seconder.id,
-            playerId = seconder.id
-        )
+            playerId = seconder.id,
+        ),
     )
-
 
     val announcements = // emptyList()
         listOf(
@@ -199,7 +210,7 @@ fun CourtPreview(
                 players = players,
                 votes = votes,
                 moderatorState = ModeratorState(announcements = announcements),
-                onEvent = {}
+                onEvent = {},
             )
         }
     }

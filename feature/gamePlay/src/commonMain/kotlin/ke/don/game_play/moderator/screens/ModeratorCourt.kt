@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.moderator.screens
 
 import androidx.compose.runtime.Composable
@@ -12,12 +21,8 @@ import ke.don.domain.state.Vote
 import ke.don.domain.state.nextPhase
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
-import ke.don.game_play.player.components.CourtModal
-import ke.don.game_play.player.model.PlayerHandler
-import ke.don.game_play.player.model.PlayerState
 import ke.don.game_play.shared.SharedCourt
 import kotlin.time.ExperimentalTime
-
 
 @ExperimentalTime
 @Composable

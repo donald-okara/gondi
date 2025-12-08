@@ -70,7 +70,7 @@ fun SharedTownHall(
                             modifier = Modifier.fillMaxWidth(),
                             buttonType = ComponentType.Primary,
                             onClick = proceed,
-                            enabled = actingPlayers.isEmpty()
+                            enabled = actingPlayers.isEmpty(),
                         ) {
                             Text("Proceed")
                         }
@@ -91,7 +91,7 @@ fun SharedTownHall(
                     }
                 }
             } else {
-                if (isCourt){
+                if (isCourt) {
                     Column(
                         modifier = modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,

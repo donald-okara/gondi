@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.player.components
 
 import androidx.compose.animation.AnimatedVisibility
@@ -38,7 +47,6 @@ import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.shared.components.ActionConfirmation
-import ke.don.utils.capitaliseFirst
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,7 +76,7 @@ fun CourtModal(
         guiltyDecision,
         selectedPlayer,
         currentPlayer,
-        gameState.round
+        gameState.round,
     ) {
         derivedStateOf {
             guiltyDecision?.let { isGuilty ->
@@ -82,15 +90,14 @@ fun CourtModal(
                                     voterId = currentPlayer.id,
                                     targetId = selectedPlayer.id,
                                     isGuilty = isGuilty,
-                                )
-                            )
-                        )
+                                ),
+                            ),
+                        ),
                     )
                 }
             }
         }
     }
-
 
     BottomSheetToken(
         onDismissRequest = {
@@ -138,7 +145,6 @@ fun CourtModal(
             }
         }
     }
-
 }
 
 @Composable

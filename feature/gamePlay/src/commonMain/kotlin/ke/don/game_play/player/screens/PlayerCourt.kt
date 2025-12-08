@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.player.screens
 
 import androidx.compose.runtime.Composable
@@ -67,14 +76,13 @@ fun PlayerCourt(
         announcements = playerState.announcements,
     )
 
-
-    if(playerState.showVote && accused != null){
+    if (playerState.showVote && accused != null) {
         CourtModal(
             modifier = Modifier,
             gameState = gameState,
             onEvent = onEvent,
             currentPlayer = myPlayer,
-            selectedPlayer = accused!!
+            selectedPlayer = accused!!,
         )
     }
 }
