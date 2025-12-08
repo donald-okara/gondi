@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import ke.don.domain.gameplay.PlayerIntent
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
+import ke.don.game_play.player.components.TownHallModal
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.model.PlayerState
 import ke.don.game_play.shared.SharedTownHall
@@ -49,7 +50,7 @@ fun PlayerTownHall(
 
     SharedTownHall(
         players = players,
-        onSelectPlayer = { TODO("Add accusation modal") },
+        onSelectPlayer = { onEvent(PlayerHandler.SelectPlayer(it)) },
         myPlayerId = myPlayer.id,
         seconder = seconder,
         accuser = accuser,
@@ -63,4 +64,19 @@ fun PlayerTownHall(
         announcements = playerState.announcements,
         modifier = modifier
     )
+
+    val selectedPlayer by remember(playerState.selectedId, players) {
+        derivedStateOf {
+            players.find { it.id == playerState.selectedId }
+        }
+    }
+    selectedPlayer?.let {
+        TownHallModal(
+            modifier = Modifier,
+            gameState = gameState,
+            onEvent = onEvent,
+            currentPlayer = myPlayer,
+            selectedPlayer = it,
+        )
+    }
 }

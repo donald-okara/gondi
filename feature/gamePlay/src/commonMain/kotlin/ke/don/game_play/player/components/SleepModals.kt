@@ -41,6 +41,8 @@ import ke.don.domain.gameplay.actionType
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.game_play.player.model.PlayerHandler
+import ke.don.game_play.shared.components.ActionConfirmation
+import ke.don.game_play.shared.components.ModalActions
 import ke.don.utils.capitaliseFirst
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,6 +62,15 @@ fun SleepModal(
             Role.DOCTOR -> "Will you use your skills to save ${selectedPlayer.name}?"
             Role.DETECTIVE -> "Time to uncover the truth. Investigate ${selectedPlayer.name}?"
             else -> null
+        }
+    }
+
+    val dormantText = remember(currentPlayer.role) {
+        when (currentPlayer.role) {
+            Role.GONDI -> "You've already chosen a target for tonight."
+            Role.DOCTOR -> "Your patient for tonight is already chosen."
+            Role.DETECTIVE -> "You've already put your investigative skills to use this round."
+            else -> "It's time to rest. There's nothing more to do."
         }
     }
 
@@ -137,6 +148,7 @@ fun SleepModal(
                 currentRound = gameState.round,
                 currentPlayer = currentPlayer,
                 showConfirmation = { showConfirmation = true },
+                dormantText = dormantText,
                 actionType = currentPlayer.role?.actionType ?: ActionType.NONE,
             )
 
@@ -163,80 +175,4 @@ fun SleepModal(
     }
 }
 
-@Composable
-private fun ModalActions(
-    modifier: Modifier = Modifier,
-    showConfirmation: () -> Unit,
-    actionType: ActionType,
-    selectedPlayer: Player,
-    currentRound: Long,
-    currentPlayer: Player,
-) {
-    val dormantText = remember(currentPlayer.role) {
-        when (currentPlayer.role) {
-            Role.GONDI -> "You've already chosen a target for tonight."
-            Role.DOCTOR -> "Your patient for tonight is already chosen."
-            Role.DETECTIVE -> "You've already put your investigative skills to use this round."
-            else -> "It's time to rest. There's nothing more to do."
-        }
-    }
 
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.End),
-    ) {
-        if (currentPlayer.lastAction?.round != currentRound && currentPlayer.isAlive) {
-            ButtonToken(
-                buttonType = actionType.componentType(),
-                onClick = showConfirmation,
-                enabled = currentPlayer.isAlive
-            ) {
-                Text(
-                    text = "${actionType.name.capitaliseFirst()} ${selectedPlayer.name}",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-        } else {
-            Text(
-                text = if (currentPlayer.isAlive) dormantText else "Dead men tell no tales",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
-}
-
-@Composable
-private fun ActionConfirmation(
-    confirmationText: String,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit,
-    componentType: ComponentType,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(MaterialTheme.spacing.small),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(text = confirmationText)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(
-                MaterialTheme.spacing.medium,
-                Alignment.End,
-            ),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            ButtonToken(onClick = onDismiss, buttonType = ComponentType.Neutral) {
-                Text(text = "Never mind")
-            }
-            ButtonToken(onClick = onConfirm, buttonType = componentType) {
-                Text(text = "I am sure")
-            }
-        }
-    }
-}
