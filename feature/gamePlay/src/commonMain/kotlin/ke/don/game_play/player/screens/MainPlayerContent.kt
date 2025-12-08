@@ -155,7 +155,18 @@ private fun ContentSwitcher(
                     )
                 }
             }
-            GamePhase.TOWN_HALL -> {}
+            GamePhase.TOWN_HALL -> {
+                if (gameState != null && currentPlayer != null) {
+                    PlayerTownHall(
+                        modifier = modifier,
+                        gameState = gameState,
+                        myPlayer = currentPlayer,
+                        players = players,
+                        playerState = playerState,
+                        onEvent = onEvent,
+                    )
+                }
+            }
             GamePhase.COURT -> {}
             GamePhase.GAME_OVER -> {}
         }
