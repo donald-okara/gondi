@@ -106,14 +106,14 @@ fun StackedPreview(
         name = "Matt Foley",
         role = Role.VILLAGER,
         avatar = Avatar.Alexander,
-        background = AvatarBackground.PURPLE_LILAC
+        background = AvatarBackground.PURPLE_LILAC,
     )
     val player2 = Player(
         id = "2",
         name = "Stefon Zelesky",
         role = Role.VILLAGER,
         avatar = Avatar.Christian,
-        background = AvatarBackground.PINK_HOT
+        background = AvatarBackground.PINK_HOT,
     )
 
     var secondaryPlayer by remember { mutableStateOf<Player?>(null) }
