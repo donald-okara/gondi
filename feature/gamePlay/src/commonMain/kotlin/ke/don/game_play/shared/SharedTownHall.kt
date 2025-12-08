@@ -12,12 +12,14 @@ package ke.don.game_play.shared
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoStories
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -68,6 +70,7 @@ fun SharedTownHall(
                             modifier = Modifier.fillMaxWidth(),
                             buttonType = ComponentType.Primary,
                             onClick = proceed,
+                            enabled = actingPlayers.isEmpty()
                         ) {
                             Text("Proceed")
                         }
@@ -89,12 +92,24 @@ fun SharedTownHall(
                 }
             } else {
                 if (isCourt){
-                    ButtonToken(
-                        modifier = Modifier.fillMaxWidth(),
-                        buttonType = ComponentType.Primary,
-                        onClick = onVote,
-                    ){
-                        Text("Vote")
+                    Column(
+                        modifier = modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
+                    ) {
+                        Text(
+                            text = "Do you think ${accused?.name} is guilty?",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.align(Alignment.Start),
+                        )
+
+                        ButtonToken(
+                            modifier = Modifier.fillMaxWidth(),
+                            buttonType = ComponentType.Primary,
+                            onClick = onVote,
+                        ) {
+                            Text("Vote")
+                        }
                     }
                 }
             }

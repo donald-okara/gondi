@@ -15,7 +15,6 @@ import kotlin.time.ExperimentalTime
 @Composable
 fun SharedCourt(
     modifier: Modifier = Modifier,
-    gameState: GameState,
     myPlayer: Player,
     onVote: () -> Unit,
     proceed: () -> Unit,
@@ -31,6 +30,8 @@ fun SharedCourt(
         derivedStateOf {
             players.filter { player ->
                 votes.none { vote -> vote.voterId == player.id }
+                    .and(player.isAlive)
+                    .and(player != accused)
             }.map { value ->
                 value.id
             }
