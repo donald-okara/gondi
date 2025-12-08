@@ -91,14 +91,14 @@ fun SharedTownHall(
                     }
                 }
             } else {
-                if (isCourt) {
+                if (isCourt && accused != null) {
                     Column(
                         modifier = modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
                     ) {
                         Text(
-                            text = "Do you think ${accused?.name} is guilty?",
+                            text = "Do you think ${accused.name} is guilty?",
                             style = MaterialTheme.typography.titleMedium,
                             modifier = Modifier.align(Alignment.Start),
                         )

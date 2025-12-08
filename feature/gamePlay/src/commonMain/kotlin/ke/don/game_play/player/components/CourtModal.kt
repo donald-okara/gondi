@@ -62,7 +62,7 @@ fun CourtModal(
 
     val dormantText =
         "You've already voted this round."
-    val confirmationText by remember {
+    val confirmationText by remember(guiltyDecision, selectedPlayer) {
         derivedStateOf {
             when (guiltyDecision) {
                 true -> "Do you really want to condemn ${selectedPlayer.name}?"

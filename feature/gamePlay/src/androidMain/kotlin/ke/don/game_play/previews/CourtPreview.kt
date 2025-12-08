@@ -201,7 +201,7 @@ fun CourtPreview(
 
     DevicePreviewContainer(theme) {
         ScaffoldToken(
-            title = "Town Hall",
+            title = "Court",
             navigationIcon = NavigationIcon.Back {},
         ) {
             ModeratorCourt(
