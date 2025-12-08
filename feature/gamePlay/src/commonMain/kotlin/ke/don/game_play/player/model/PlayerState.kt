@@ -21,5 +21,6 @@ data class PlayerState(
     val showLeaveGame: Boolean = false,
     val showRulesModal: Boolean = false,
     val selectedId: String? = null,
+    val showVote: Boolean = false,
     val announcements: List<Announcement> = emptyList(),
 )

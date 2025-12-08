@@ -42,6 +42,7 @@ import ke.don.game_play.shared.components.RulesModal
 import ke.don.utils.capitaliseFirst
 import ke.don.utils.result.ReadStatus
 import ke.don.utils.result.isError
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,6 +100,7 @@ fun MainPlayerContent(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 private fun ContentSwitcher(
     modifier: Modifier = Modifier,
@@ -167,7 +169,19 @@ private fun ContentSwitcher(
                     )
                 }
             }
-            GamePhase.COURT -> {}
+            GamePhase.COURT -> {
+                if (gameState != null && currentPlayer != null) {
+                    PlayerCourt(
+                        modifier = modifier,
+                        gameState = gameState,
+                        myPlayer = currentPlayer,
+                        players = players,
+                        votes = votes,
+                        playerState = playerState,
+                        onEvent = onEvent,
+                    )
+                }
+            }
             GamePhase.GAME_OVER -> {}
         }
     }
