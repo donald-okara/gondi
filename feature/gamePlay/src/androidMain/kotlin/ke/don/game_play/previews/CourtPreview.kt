@@ -21,6 +21,8 @@ import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
+import ke.don.game_play.moderator.model.ModeratorState
+import ke.don.game_play.moderator.screens.ModeratorCourt
 import ke.don.game_play.player.model.PlayerState
 import ke.don.game_play.player.screens.PlayerCourt
 import ke.don.game_play.shared.SharedTownHall
@@ -148,6 +150,10 @@ fun CourtPreview(
             voterId = "7",
             targetId = accused.id,
             isGuilty = false
+        ), Vote(
+            voterId = "8",
+            targetId = accused.id,
+            isGuilty = false
         )
     )
 
@@ -187,12 +193,12 @@ fun CourtPreview(
             title = "Town Hall",
             navigationIcon = NavigationIcon.Back {},
         ) {
-            PlayerCourt(
+            ModeratorCourt(
                 gameState = gameState,
                 myPlayer = accused,
                 players = players,
                 votes = votes,
-                playerState = PlayerState(announcements = announcements),
+                moderatorState = ModeratorState(announcements = announcements),
                 onEvent = {}
             )
         }

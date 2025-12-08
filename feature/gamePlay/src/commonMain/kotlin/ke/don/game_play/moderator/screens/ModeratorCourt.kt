@@ -74,6 +74,7 @@ fun ModeratorCourt(
         showRules = { onEvent(ModeratorHandler.ShowRulesModal) },
         votes = votes,
         accused = accused,
+        isModerator = true,
         seconder = seconder,
         accuser = accuser,
         announcements = moderatorState.announcements,
