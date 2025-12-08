@@ -49,7 +49,8 @@ fun AccusationSection(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.CenterVertically),
     ) {
-        val secondaryText = seconder?.let { "${it.name} seconds the accusation" } ?: "Waiting for a second to proceed to court"
+        val secondaryText = seconder?.let { "${it.name} seconds the accusation" }
+            ?: "Waiting for a second to proceed to court"
 
         Text(
             text = "${accuser.name} accuses ${accused.name}",

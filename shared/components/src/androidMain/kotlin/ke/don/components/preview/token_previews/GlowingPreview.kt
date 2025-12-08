@@ -101,8 +101,20 @@ fun PlayersPreview(
 fun StackedPreview(
     @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
-    val player1 = Player(id = "1", name = "Matt Foley", role = Role.VILLAGER, Avatar.Alexander, background = AvatarBackground.PURPLE_LILAC)
-    val player2 = Player(id = "2", name = "Stefon Zelesky", role = Role.VILLAGER, Avatar.Christian, background = AvatarBackground.PINK_HOT)
+    val player1 = Player(
+        id = "1",
+        name = "Matt Foley",
+        role = Role.VILLAGER,
+        avatar = Avatar.Alexander,
+        background = AvatarBackground.PURPLE_LILAC
+    )
+    val player2 = Player(
+        id = "2",
+        name = "Stefon Zelesky",
+        role = Role.VILLAGER,
+        avatar = Avatar.Christian,
+        background = AvatarBackground.PINK_HOT
+    )
 
     var secondaryPlayer by remember { mutableStateOf<Player?>(null) }
 

@@ -122,7 +122,10 @@ fun SleepModal(
     }
 
     BottomSheetToken(
-        onDismissRequest = { onEvent(PlayerHandler.SelectPlayer(null)) },
+        onDismissRequest = {
+            showConfirmation = false
+            onEvent(PlayerHandler.SelectPlayer(null))
+        },
         modifier = modifier,
     ) {
         Column(

@@ -49,7 +49,8 @@ fun TownHallModal(
 ) {
     var showConfirmation by remember { mutableStateOf(false) }
 
-    val dormantText = "Someone's already on trial. You can second the accusation or wait for the verdict."
+    val dormantText =
+        "Someone's already on trial. You can second the accusation or wait for the verdict."
     val confirmationText = "Accuse ${selectedPlayer.name} and put them on trial? Are you sure?"
     val confirmationAction = {
         onEvent(
@@ -64,7 +65,10 @@ fun TownHallModal(
     }
 
     BottomSheetToken(
-        onDismissRequest = { onEvent(PlayerHandler.SelectPlayer(null)) },
+        onDismissRequest = {
+            showConfirmation = false
+            onEvent(PlayerHandler.SelectPlayer(null))
+        },
         modifier = modifier,
     ) {
         Column(

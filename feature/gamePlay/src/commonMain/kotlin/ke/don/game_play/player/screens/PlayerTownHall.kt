@@ -42,7 +42,7 @@ fun PlayerTownHall(
     }
 
     val seconder by remember(
-        gameState.accusedPlayer,
+        gameState.second,
     ) {
         derivedStateOf {
             players.find { it.id == gameState.second?.playerId }
