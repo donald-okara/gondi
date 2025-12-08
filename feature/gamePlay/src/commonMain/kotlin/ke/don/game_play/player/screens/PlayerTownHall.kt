@@ -69,7 +69,7 @@ fun PlayerTownHall(
         accused = accused,
         knownIdentity = myPlayer.knownIdentities.map { it.playerId },
         onSecond = { accused?.id?.let { onEvent(PlayerHandler.Send(PlayerIntent.Second(myPlayer.id, gameState.round, it))) } },
-        goToCourt = {},
+        proceed = {},
         exoneratePlayer = {},
         onShowRules = { onEvent(PlayerHandler.ShowRulesModal) },
         isModerator = false,

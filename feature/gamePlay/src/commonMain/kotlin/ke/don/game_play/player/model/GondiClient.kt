@@ -76,6 +76,7 @@ class GondiClient(
             is PlayerHandler.Connect -> connect(intent.serverId)
             is PlayerHandler.Send -> sendIntent(intent.message)
             PlayerHandler.ShowLeaveDialog -> clientState.updatePlayerState { it.copy(showLeaveGame = !it.showLeaveGame) }
+            PlayerHandler.ShowVoteDialog -> clientState.updatePlayerState { it.copy(showVote = !it.showVote) }
             PlayerHandler.ShowRulesModal -> clientState.updatePlayerState { it.copy(showRulesModal = !it.showRulesModal) }
             is PlayerHandler.SelectPlayer -> clientState.updatePlayerState { it.copy(selectedId = intent.playerId) }
         }

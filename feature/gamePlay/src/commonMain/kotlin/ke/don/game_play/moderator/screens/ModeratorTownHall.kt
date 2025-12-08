@@ -74,7 +74,7 @@ fun ModeratorTownHall(
         accused = accused,
         isModerator = true,
         onSecond = {},
-        goToCourt = {
+        proceed = {
             onEvent(
                 ModeratorHandler.HandleModeratorCommand(
                     ModeratorCommand.AdvancePhase(

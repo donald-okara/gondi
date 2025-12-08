@@ -39,16 +39,19 @@ import kotlin.time.ExperimentalTime
 fun SharedTownHall(
     players: List<Player>,
     onSelectPlayer: (String) -> Unit,
+    onVote: () -> Unit = {},
     myPlayerId: String,
     seconder: Player?,
     accuser: Player?,
     accused: Player?,
     knownIdentity: List<String> = emptyList(),
+    actingPlayers: List<String> = emptyList(),
     onSecond: () -> Unit,
-    goToCourt: () -> Unit = {},
+    proceed: () -> Unit = {},
     exoneratePlayer: () -> Unit = {},
     onShowRules: () -> Unit,
     isModerator: Boolean,
+    isCourt: Boolean = false,
     announcements: List<Announcement> = emptyList(),
     modifier: Modifier = Modifier,
 ) {
@@ -64,7 +67,7 @@ fun SharedTownHall(
                         seconder != null -> ButtonToken(
                             modifier = Modifier.fillMaxWidth(),
                             buttonType = ComponentType.Primary,
-                            onClick = goToCourt,
+                            onClick = proceed,
                         ) {
                             Text("Proceed")
                         }
@@ -78,10 +81,20 @@ fun SharedTownHall(
                         else -> ButtonToken(
                             modifier = Modifier.fillMaxWidth(),
                             buttonType = ComponentType.Primary,
-                            onClick = goToCourt,
+                            onClick = proceed,
                         ) {
                             Text("Proceed")
                         }
+                    }
+                }
+            } else {
+                if (isCourt){
+                    ButtonToken(
+                        modifier = Modifier.fillMaxWidth(),
+                        buttonType = ComponentType.Primary,
+                        onClick = onVote,
+                    ){
+                        Text("Vote")
                     }
                 }
             }
@@ -122,6 +135,7 @@ fun SharedTownHall(
                 onSelectPlayer = onSelectPlayer,
                 myPlayerId = myPlayerId,
                 knownIdentities = knownIdentity,
+                actingPlayers = actingPlayers,
                 showEmpty = false,
                 isModerator = isModerator,
                 availableSlots = 0,

@@ -17,5 +17,6 @@ sealed interface PlayerHandler {
     class Send(val message: PlayerIntent) : PlayerHandler
     class SelectPlayer(val playerId: String?) : PlayerHandler
     object ShowLeaveDialog : PlayerHandler
+    object ShowVoteDialog : PlayerHandler
     object ShowRulesModal : PlayerHandler
 }
