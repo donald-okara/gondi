@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.shared
 
 import androidx.compose.animation.AnimatedContent
@@ -55,21 +64,21 @@ fun SharedTownHall(
                         seconder != null -> ButtonToken(
                             modifier = Modifier.fillMaxWidth(),
                             buttonType = ComponentType.Primary,
-                            onClick = goToCourt
+                            onClick = goToCourt,
                         ) {
                             Text("Proceed")
                         }
                         accused != null -> ButtonToken(
                             modifier = Modifier.fillMaxWidth(),
                             buttonType = ComponentType.Neutral,
-                            onClick = exoneratePlayer
+                            onClick = exoneratePlayer,
                         ) {
                             Text("Exonerate ${accused.name}")
                         }
                         else -> ButtonToken(
                             modifier = Modifier.fillMaxWidth(),
                             buttonType = ComponentType.Primary,
-                            onClick = goToCourt
+                            onClick = goToCourt,
                         ) {
                             Text("Proceed")
                         }
@@ -93,15 +102,15 @@ fun SharedTownHall(
         }
 
         item {
-            if(accuser != null && accused != null) {
-                AnimatedVisibility(true){
+            if (accuser != null && accused != null) {
+                AnimatedVisibility(true) {
                     AccusationSection(
                         accuser = accuser,
                         accused = accused,
                         seconder = seconder,
                         myProfileId = myPlayerId,
                         onSecond = onSecond,
-                        isModerator = isModerator
+                        isModerator = isModerator,
                     )
                 }
             }
@@ -121,7 +130,7 @@ fun SharedTownHall(
 
         item {
             AnnouncementSection(
-                announcements = announcements
+                announcements = announcements,
             )
         }
     }

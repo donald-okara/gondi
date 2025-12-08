@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.moderator.screens
 
 import androidx.compose.runtime.Composable
@@ -25,7 +34,7 @@ fun ModeratorTownHall(
     onEvent: (ModeratorHandler) -> Unit,
 ) {
     val accuser by remember(
-        gameState.accusedPlayer
+        gameState.accusedPlayer,
     ) {
         derivedStateOf {
             players.find { it.id == gameState.accusedPlayer?.playerId }
@@ -33,7 +42,7 @@ fun ModeratorTownHall(
     }
 
     val seconder by remember(
-        gameState.accusedPlayer
+        gameState.accusedPlayer,
     ) {
         derivedStateOf {
             players.find { it.id == gameState.second?.playerId }
@@ -41,7 +50,7 @@ fun ModeratorTownHall(
     }
 
     val accused by remember(
-        gameState.accusedPlayer
+        gameState.accusedPlayer,
     ) {
         derivedStateOf {
             players.find { it.id == gameState.accusedPlayer?.targetId }
@@ -49,13 +58,12 @@ fun ModeratorTownHall(
     }
 
     val nextPhase by remember(
-        gameState.accusedPlayer
+        gameState.accusedPlayer,
     ) {
         derivedStateOf {
             if (gameState.accusedPlayer == null) GamePhase.SLEEP else GamePhase.COURT
         }
     }
-
 
     SharedTownHall(
         players = players,
@@ -71,22 +79,22 @@ fun ModeratorTownHall(
                 ModeratorHandler.HandleModeratorCommand(
                     ModeratorCommand.AdvancePhase(
                         gameState.id,
-                        nextPhase
-                    )
-                )
+                        nextPhase,
+                    ),
+                ),
             )
         },
         exoneratePlayer = {
             onEvent(
                 ModeratorHandler.HandleModeratorCommand(
                     ModeratorCommand.ExoneratePlayer(
-                        gameState.id
-                    )
-                )
+                        gameState.id,
+                    ),
+                ),
             )
         },
         announcements = moderatorState.announcements,
         onShowRules = { onEvent(ModeratorHandler.ShowRulesModal) },
-        modifier = modifier
+        modifier = modifier,
     )
 }

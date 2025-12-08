@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.player.screens
 
 import androidx.compose.runtime.Composable
@@ -25,7 +34,7 @@ fun PlayerTownHall(
     onEvent: (PlayerHandler) -> Unit,
 ) {
     val accuser by remember(
-        gameState.accusedPlayer
+        gameState.accusedPlayer,
     ) {
         derivedStateOf {
             players.find { it.id == gameState.accusedPlayer?.playerId }
@@ -33,7 +42,7 @@ fun PlayerTownHall(
     }
 
     val seconder by remember(
-        gameState.accusedPlayer
+        gameState.accusedPlayer,
     ) {
         derivedStateOf {
             players.find { it.id == gameState.second?.playerId }
@@ -41,7 +50,7 @@ fun PlayerTownHall(
     }
 
     val accused by remember(
-        gameState.accusedPlayer
+        gameState.accusedPlayer,
     ) {
         derivedStateOf {
             players.find { it.id == gameState.accusedPlayer?.targetId }
@@ -59,10 +68,10 @@ fun PlayerTownHall(
         onSecond = { accused?.id?.let { onEvent(PlayerHandler.Send(PlayerIntent.Second(myPlayer.id, gameState.round, it))) } },
         goToCourt = {},
         exoneratePlayer = {},
-        onShowRules = {onEvent(PlayerHandler.ShowRulesModal)},
+        onShowRules = { onEvent(PlayerHandler.ShowRulesModal) },
         isModerator = false,
         announcements = playerState.announcements,
-        modifier = modifier
+        modifier = modifier,
     )
 
     val selectedPlayer by remember(playerState.selectedId, players) {

@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.previews
 
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,7 +34,7 @@ import kotlin.time.ExperimentalTime
 @DevicePreviews
 @Composable
 fun TownHallPreview(
-    @PreviewParameter(ThemeProvider::class) theme: Theme
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
     val players = remember {
         listOf(
@@ -76,7 +85,7 @@ fun TownHallPreview(
                 seconder = seconderUi,
                 myPlayerId = seconder.id,
                 onSecond = {
-                    seconderUi = if(seconderUi == null) seconder else null
+                    seconderUi = if (seconderUi == null) seconder else null
                 },
                 players = players,
                 onSelectPlayer = {},

@@ -110,7 +110,7 @@ fun StackedPreview(
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-            ){
+            ) {
                 ProfilesStacked(
                     primaryPlayer = player1,
                     secondaryPlayer = secondaryPlayer,
@@ -119,7 +119,7 @@ fun StackedPreview(
                 ButtonToken(
                     onClick = { secondaryPlayer = if (secondaryPlayer == null) player2 else null },
                     buttonType = ComponentType.Primary,
-                    modifier = Modifier.padding(vertical = 16.dp)
+                    modifier = Modifier.padding(vertical = 16.dp),
                 ) {
                     Text("Toggle Secondary Player")
                 }
