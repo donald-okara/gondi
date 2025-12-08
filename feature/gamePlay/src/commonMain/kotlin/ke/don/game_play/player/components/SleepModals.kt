@@ -12,13 +12,11 @@ package ke.don.game_play.player.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -27,8 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
-import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.dialog.BottomSheetToken
 import ke.don.components.profile.PlayerItem
@@ -41,7 +37,8 @@ import ke.don.domain.gameplay.actionType
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.game_play.player.model.PlayerHandler
-import ke.don.utils.capitaliseFirst
+import ke.don.game_play.shared.components.ActionConfirmation
+import ke.don.game_play.shared.components.ModalActions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,6 +57,15 @@ fun SleepModal(
             Role.DOCTOR -> "Will you use your skills to save ${selectedPlayer.name}?"
             Role.DETECTIVE -> "Time to uncover the truth. Investigate ${selectedPlayer.name}?"
             else -> null
+        }
+    }
+
+    val dormantText = remember(currentPlayer.role) {
+        when (currentPlayer.role) {
+            Role.GONDI -> "You've already chosen a target for tonight."
+            Role.DOCTOR -> "Your patient for tonight is already chosen."
+            Role.DETECTIVE -> "You've already put your investigative skills to use this round."
+            else -> "It's time to rest. There's nothing more to do."
         }
     }
 
@@ -116,7 +122,10 @@ fun SleepModal(
     }
 
     BottomSheetToken(
-        onDismissRequest = { onEvent(PlayerHandler.SelectPlayer(null)) },
+        onDismissRequest = {
+            showConfirmation = false
+            onEvent(PlayerHandler.SelectPlayer(null))
+        },
         modifier = modifier,
     ) {
         Column(
@@ -137,6 +146,7 @@ fun SleepModal(
                 currentRound = gameState.round,
                 currentPlayer = currentPlayer,
                 showConfirmation = { showConfirmation = true },
+                dormantText = dormantText,
                 actionType = currentPlayer.role?.actionType ?: ActionType.NONE,
             )
 
@@ -158,83 +168,6 @@ fun SleepModal(
                         onDismiss = { showConfirmation = false },
                     )
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ModalActions(
-    modifier: Modifier = Modifier,
-    showConfirmation: () -> Unit,
-    actionType: ActionType,
-    selectedPlayer: Player,
-    currentRound: Long,
-    currentPlayer: Player,
-) {
-    val dormantText = remember(currentPlayer.role) {
-        when (currentPlayer.role) {
-            Role.GONDI -> "You've already chosen a target for tonight."
-            Role.DOCTOR -> "Your patient for tonight is already chosen."
-            Role.DETECTIVE -> "You've already put your investigative skills to use this round."
-            else -> "It's time to rest. There's nothing more to do."
-        }
-    }
-
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.End),
-    ) {
-        if (currentPlayer.lastAction?.round != currentRound) {
-            ButtonToken(
-                buttonType = actionType.componentType(),
-                onClick = showConfirmation,
-            ) {
-                Text(
-                    text = "${actionType.name.capitaliseFirst()} ${selectedPlayer.name}",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-        } else {
-            Text(
-                text = dormantText,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
-}
-
-@Composable
-private fun ActionConfirmation(
-    confirmationText: String,
-    onConfirm: () -> Unit,
-    onDismiss: () -> Unit,
-    componentType: ComponentType,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(MaterialTheme.spacing.small),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(text = confirmationText)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(
-                MaterialTheme.spacing.medium,
-                Alignment.End,
-            ),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            ButtonToken(onClick = onDismiss, buttonType = ComponentType.Neutral) {
-                Text(text = "Never mind")
-            }
-            ButtonToken(onClick = onConfirm, buttonType = componentType) {
-                Text(text = "I am sure")
             }
         }
     }

@@ -123,7 +123,18 @@ private fun ContentSwitcher(
                     )
                 }
             }
-            GamePhase.TOWN_HALL -> {}
+            GamePhase.TOWN_HALL -> {
+                if (gameState != null && hostPlayer != null) {
+                    ModeratorTownHall(
+                        modifier = modifier,
+                        gameState = gameState,
+                        moderatorState = moderatorState,
+                        myPlayer = hostPlayer,
+                        players = players,
+                        onEvent = onEvent,
+                    )
+                }
+            }
             GamePhase.COURT -> {}
             GamePhase.GAME_OVER -> {}
         }

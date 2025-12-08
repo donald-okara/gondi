@@ -38,7 +38,6 @@ fun ModeratorSleep(
             }.map { it.id }
         }
     }
-    val alivePlayers = players.filter { it.isAlive }
 
     val selectedPlayers by remember(gameState.lastSavedPlayerId, gameState.pendingKills) {
         derivedStateOf { gameState.selectedPlayersSleep() }
@@ -56,7 +55,7 @@ fun ModeratorSleep(
         onSelectPlayer = {
             onEvent(ModeratorHandler.SelectPlayer(it))
         },
-        alivePlayers = alivePlayers,
+        players = players,
         selectedPlayers = selectedPlayers,
         instruction = instruction,
         knownIdentity = myPlayer.knownIdentities.map { it.playerId },

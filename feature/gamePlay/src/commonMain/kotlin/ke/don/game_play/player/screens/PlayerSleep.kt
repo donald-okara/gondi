@@ -60,7 +60,7 @@ fun PlayerSleep(
         onSelectPlayer = {
             onEvent(PlayerHandler.SelectPlayer(it))
         },
-        alivePlayers = alivePlayers,
+        players = players,
         actingPlayers = if (isActing) listOf(myPlayer.id) else emptyList(),
         selectedPlayers = selectedPlayers,
         instruction = instruction,

@@ -38,7 +38,7 @@ enum class ActionType {
 
 fun isActingInSleep(player: Player, round: Long): Boolean {
     return player.role?.canActInSleep == true &&
-        (player.lastAction?.round != round || player.lastAction.type != player.role.actionType)
+        (player.lastAction?.round != round || player.lastAction.type != player.role.actionType) && player.isAlive
 }
 
 typealias SelectedPlayer = Pair<String, ActionType>
