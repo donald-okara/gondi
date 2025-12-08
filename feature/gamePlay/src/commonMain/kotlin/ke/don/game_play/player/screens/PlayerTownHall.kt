@@ -35,6 +35,7 @@ fun PlayerTownHall(
 ) {
     val accuser by remember(
         gameState.accusedPlayer,
+        players
     ) {
         derivedStateOf {
             players.find { it.id == gameState.accusedPlayer?.playerId }
@@ -43,6 +44,7 @@ fun PlayerTownHall(
 
     val seconder by remember(
         gameState.second,
+        players
     ) {
         derivedStateOf {
             players.find { it.id == gameState.second?.playerId }
@@ -51,6 +53,7 @@ fun PlayerTownHall(
 
     val accused by remember(
         gameState.accusedPlayer,
+        players
     ) {
         derivedStateOf {
             players.find { it.id == gameState.accusedPlayer?.targetId }
