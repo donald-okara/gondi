@@ -71,7 +71,7 @@ fun PlayersGrid(
                 .thenByDescending { actingPlayers.contains(it.id) } // Rule 2: Acting players next
                 .thenByDescending { it.role != null } // Rule 3: Players with roles next
                 .thenByDescending { knownIdentities.contains(it.id) } // Rule 4: Known identities next
-                .thenByDescending { it.isAlive } // Rule 5: Alive players first
+                .thenByDescending { it.isAlive }, // Rule 5: Alive players first
 
         )
     }.filterNot { player -> player.role == Role.MODERATOR || player.role == null }
@@ -124,7 +124,7 @@ fun GameOverGrid(
     val sortedPlayers = remember(players, myPlayerId) {
         players.sortedWith(
             compareByDescending<Player> { it.id == myPlayerId } // Rule 1: "Me" first
-                .thenByDescending { it.role != null } // Rule 3: Players with roles next
+                .thenByDescending { it.role != null }, // Rule 3: Players with roles next
         )
     }.filterNot { player -> player.role == Role.MODERATOR || player.role == null }
 
@@ -152,10 +152,9 @@ fun GameOverGrid(
                                 .graphicsLayer { alpha = 0.6f }
                         } else {
                             Modifier
-                        }
-                    )
+                        },
+                    ),
             )
-
         }
     }
 }

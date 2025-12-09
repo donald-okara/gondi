@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.shared
 
 import androidx.compose.foundation.layout.Arrangement
@@ -17,11 +26,9 @@ import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
-import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.Faction
 import ke.don.domain.state.Player
 import ke.don.game_play.shared.components.GameOverGrid
-import ke.don.game_play.shared.components.PlayersGrid
 import ke.don.utils.capitaliseFirst
 
 @Composable
@@ -31,7 +38,7 @@ fun SharedGameOver(
     players: List<Player>,
     myPlayer: Player,
     winnerFaction: Faction,
-    playAgain: () -> Unit = {}
+    playAgain: () -> Unit = {},
 ) {
     val remark = remember(winnerFaction) {
         when (winnerFaction) {
@@ -56,7 +63,7 @@ fun SharedGameOver(
                     text = "${winnerFaction.name.capitaliseFirst()}s Win!",
                     style = MaterialTheme.typography.displayMedium,
                     fontWeight = FontWeight.Bold,
-                    color = if(winnerFaction == Faction.GONDI) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                    color = if (winnerFaction == Faction.GONDI) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -70,7 +77,7 @@ fun SharedGameOver(
             }
         }
         item {
-            if (isModerator){
+            if (isModerator) {
                 ButtonToken(
                     modifier = Modifier.fillMaxWidth(),
                     buttonType = if (winnerFaction == Faction.GONDI) ComponentType.Error else ComponentType.Primary,
@@ -85,7 +92,7 @@ fun SharedGameOver(
             GameOverGrid(
                 players = players,
                 myPlayerId = myPlayer.id,
-                winningFaction = winnerFaction
+                winningFaction = winnerFaction,
             )
         }
     }

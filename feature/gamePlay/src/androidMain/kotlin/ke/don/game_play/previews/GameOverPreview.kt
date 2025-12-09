@@ -1,9 +1,17 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.previews
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -19,7 +27,6 @@ import ke.don.domain.state.Player
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.game_play.shared.SharedGameOver
-import kotlin.time.Clock
 
 @OptIn(ExperimentalMaterial3Api::class)
 @DevicePreviews
@@ -42,7 +49,7 @@ fun GameOverPreview(
 
     val winningFaction = Faction.GONDI
 
-    DevicePreviewContainer(theme){
+    DevicePreviewContainer(theme) {
         ScaffoldToken(
             title = "Game Over",
             navigationIcon = NavigationIcon.Back {},
@@ -54,6 +61,5 @@ fun GameOverPreview(
                 isModerator = false,
             )
         }
-
     }
 }
