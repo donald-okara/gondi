@@ -29,6 +29,7 @@ import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.shared.components.RulesModal
 import ke.don.utils.capitaliseFirst
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,6 +79,7 @@ fun MainModeratorContent(
     }
 }
 
+@OptIn(ExperimentalTime::class)
 @Composable
 private fun ContentSwitcher(
     modifier: Modifier = Modifier,
@@ -135,8 +137,30 @@ private fun ContentSwitcher(
                     )
                 }
             }
-            GamePhase.COURT -> {}
-            GamePhase.GAME_OVER -> {}
+            GamePhase.COURT -> {
+                if (gameState != null && hostPlayer != null) {
+                    ModeratorCourt(
+                        modifier = modifier,
+                        gameState = gameState,
+                        myPlayer = hostPlayer,
+                        players = players,
+                        votes = votes,
+                        onEvent = onEvent,
+                        moderatorState = moderatorState,
+                    )
+                }
+            }
+            GamePhase.GAME_OVER -> {
+                if (gameState != null && hostPlayer != null) {
+                    ModeratorGameOver(
+                        modifier = modifier,
+                        gameState = gameState,
+                        myPlayer = hostPlayer,
+                        players = players,
+                        onEvent = onEvent,
+                    )
+                }
+            }
         }
     }
 
