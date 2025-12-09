@@ -400,6 +400,36 @@ class DefaultModeratorEngineTest : BaseGameTest() {
     }
 
     /**
+     * LOBBY
+     */
+
+    @Test
+    fun testLobby_success() = runTest {
+        val moderatorEngine = DefaultModeratorEngine(db)
+        val moderator = player1
+
+        db.batchUpdatePlayerRole(batchUpdateRoles)
+        moderatorEngine.handle(gameState.id, ModeratorCommand.CreateGame(gameState.id, gameState, moderator))
+
+        // All players should have roles before advancing to lobby
+        val playersBefore = db.getAllPlayers().firstOrNull()
+        assertNotNull(playersBefore)
+        assertTrue(playersBefore.all { it.role != null })
+
+        moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.LOBBY))
+
+        val game = db.getGameState(gameState.id).firstOrNull()
+        assertNotNull(game)
+        assert(game.phase == GamePhase.LOBBY)
+
+        // Only the moderator should have a role in the lobby
+        val playersAfter = db.getAllPlayers().firstOrNull()
+        assertNotNull(playersAfter)
+        assertEquals(playersAfter.filter { it.role != null }.size, 1)
+        assertEquals(playersAfter.first { it.role != null }.role, Role.MODERATOR)
+    }
+
+    /**
      * RESET GAME
      *
      */

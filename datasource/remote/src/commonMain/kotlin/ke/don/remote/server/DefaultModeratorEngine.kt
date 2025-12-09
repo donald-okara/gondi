@@ -92,15 +92,15 @@ class DefaultModeratorEngine(
         val round = currentRound ?: error("Current round cannot be null")
 
         when (command.phase) {
-            GamePhase.TOWN_HALL -> handleTownHallPhase(game, command.phase, round, gameId)
-            GamePhase.SLEEP -> handleSleepPhase(game, command.phase, round, players, gameId)
+            GamePhase.TOWN_HALL -> handleTownHallPhase(game,  round, gameId)
+            GamePhase.SLEEP -> handleSleepPhase(game, round, players, gameId)
+            GamePhase.LOBBY -> handleLobbyPhase( round, gameId, players)
             else -> db.updatePhase(command.phase, round, gameId)
         }
     }
 
     private suspend fun handleSleepPhase(
         game: GameState,
-        phase: GamePhase,
         round: Long,
         players: Flow<List<Player>>,
         gameId: String,
@@ -160,13 +160,12 @@ class DefaultModeratorEngine(
                     db.updateWinners(Faction.VILLAGER, gameId)
                 }
             }
-            else -> db.updatePhase(phase, round + 1, gameId)
+            else -> db.updatePhase(GamePhase.SLEEP, round + 1, gameId)
         }
     }
 
     private fun handleTownHallPhase(
         game: GameState,
-        phase: GamePhase,
         round: Long,
         gameId: String,
     ) {
@@ -178,7 +177,23 @@ class DefaultModeratorEngine(
             if (toEliminate.isNotEmpty()) {
                 db.updateAliveStatus(isAlive = false, ids = toEliminate, round)
             }
-            db.updatePhase(phase, round, gameId)
+            db.updatePhase(GamePhase.TOWN_HALL, round, gameId)
         }
+    }
+
+    private suspend fun handleLobbyPhase(
+        round: Long,
+        gameId: String,
+        players: Flow<List<Player>>,
+    ){
+        val gamePlayers = players.firstOrNull()
+
+        val nonModerators = gamePlayers?.filter { player -> player.role != Role.MODERATOR }
+        val playersWithRoles = nonModerators?.map { player -> player.copy(role = null) }
+        db.transaction {
+            playersWithRoles?.let { db.batchUpdatePlayerRole(it) }
+            db.updatePhase(GamePhase.LOBBY, round, gameId)
+        }
+
     }
 }
