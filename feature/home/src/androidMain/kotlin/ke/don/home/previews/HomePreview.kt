@@ -66,7 +66,7 @@ fun HomeShowcase(
             gameName = "Synchronized Sighing",
             moderatorName = "DramaKing_42",
             moderatorAvatar = Avatar.Christian,
-            moderatorAvatarBackground = AvatarBackground.PURPLE_LILAC,
+            moderatorAvatarBackground = AvatarBackground.ORANGE_CORAL,
             version = "0.0.1"
         ),
     )
