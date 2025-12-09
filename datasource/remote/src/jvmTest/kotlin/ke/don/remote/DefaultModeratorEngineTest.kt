@@ -379,7 +379,7 @@ class DefaultModeratorEngineTest : BaseGameTest() {
     }
 
     @Test
-    fun testGameOver_vilagersWin() = runTest {
+    fun testGameOver_villagersWin() = runTest {
         val moderatorEngine = DefaultModeratorEngine(db)
 
         val moderator = player1
