@@ -15,26 +15,37 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import ke.don.domain.gameplay.ModeratorCommand
-import ke.don.domain.state.GamePhase
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
+import ke.don.domain.state.Vote
+import ke.don.domain.state.nextPhase
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
-import ke.don.game_play.shared.SharedTownHall
+import ke.don.game_play.shared.SharedCourt
 import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
+@ExperimentalTime
 @Composable
-fun ModeratorTownHall(
+fun ModeratorCourt(
     modifier: Modifier = Modifier,
     gameState: GameState,
-    moderatorState: ModeratorState,
     myPlayer: Player,
     players: List<Player>,
+    votes: List<Vote>,
+    moderatorState: ModeratorState,
     onEvent: (ModeratorHandler) -> Unit,
 ) {
+    val accused by remember(
+        gameState.accusedPlayer,
+        players,
+    ) {
+        derivedStateOf {
+            players.find { it.id == gameState.accusedPlayer?.targetId }
+        }
+    }
     val accuser by remember(
         gameState.accusedPlayer,
+        players,
     ) {
         derivedStateOf {
             players.find { it.id == gameState.accusedPlayer?.playerId }
@@ -42,59 +53,35 @@ fun ModeratorTownHall(
     }
 
     val seconder by remember(
-        gameState.accusedPlayer,
+        gameState.second,
+        players,
     ) {
         derivedStateOf {
             players.find { it.id == gameState.second?.playerId }
         }
     }
 
-    val accused by remember(
-        gameState.accusedPlayer,
-    ) {
-        derivedStateOf {
-            players.find { it.id == gameState.accusedPlayer?.targetId }
-        }
-    }
-
-    val nextPhase by remember(
-        gameState.accusedPlayer,
-    ) {
-        derivedStateOf {
-            if (gameState.accusedPlayer == null) GamePhase.SLEEP else GamePhase.COURT
-        }
-    }
-
-    SharedTownHall(
+    SharedCourt(
         players = players,
-        onSelectPlayer = { },
-        myPlayerId = myPlayer.id,
-        seconder = seconder,
-        accuser = accuser,
-        accused = accused,
-        isModerator = true,
-        onSecond = {},
+        onVote = {},
+        modifier = modifier,
+        myPlayer = myPlayer,
         proceed = {
             onEvent(
                 ModeratorHandler.HandleModeratorCommand(
                     ModeratorCommand.AdvancePhase(
                         gameState.id,
-                        nextPhase,
+                        gameState.phase.nextPhase,
                     ),
                 ),
             )
         },
-        exoneratePlayer = {
-            onEvent(
-                ModeratorHandler.HandleModeratorCommand(
-                    ModeratorCommand.ExoneratePlayer(
-                        gameState.id,
-                    ),
-                ),
-            )
-        },
+        showRules = { onEvent(ModeratorHandler.ShowRulesModal) },
+        votes = votes,
+        accused = accused,
+        isModerator = true,
+        seconder = seconder,
+        accuser = accuser,
         announcements = moderatorState.announcements,
-        onShowRules = { onEvent(ModeratorHandler.ShowRulesModal) },
-        modifier = modifier,
     )
 }

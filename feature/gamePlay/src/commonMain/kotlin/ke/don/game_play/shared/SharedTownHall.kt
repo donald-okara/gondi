@@ -12,12 +12,14 @@ package ke.don.game_play.shared
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoStories
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,16 +41,19 @@ import kotlin.time.ExperimentalTime
 fun SharedTownHall(
     players: List<Player>,
     onSelectPlayer: (String) -> Unit,
+    onVote: () -> Unit = {},
     myPlayerId: String,
     seconder: Player?,
     accuser: Player?,
     accused: Player?,
     knownIdentity: List<String> = emptyList(),
+    actingPlayers: List<String> = emptyList(),
     onSecond: () -> Unit,
-    goToCourt: () -> Unit = {},
+    proceed: () -> Unit = {},
     exoneratePlayer: () -> Unit = {},
     onShowRules: () -> Unit,
     isModerator: Boolean,
+    isCourt: Boolean = false,
     announcements: List<Announcement> = emptyList(),
     modifier: Modifier = Modifier,
 ) {
@@ -64,7 +69,8 @@ fun SharedTownHall(
                         seconder != null -> ButtonToken(
                             modifier = Modifier.fillMaxWidth(),
                             buttonType = ComponentType.Primary,
-                            onClick = goToCourt,
+                            onClick = proceed,
+                            enabled = actingPlayers.isEmpty(),
                         ) {
                             Text("Proceed")
                         }
@@ -78,9 +84,31 @@ fun SharedTownHall(
                         else -> ButtonToken(
                             modifier = Modifier.fillMaxWidth(),
                             buttonType = ComponentType.Primary,
-                            onClick = goToCourt,
+                            onClick = proceed,
                         ) {
                             Text("Proceed")
+                        }
+                    }
+                }
+            } else {
+                if (isCourt && accused != null) {
+                    Column(
+                        modifier = modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
+                    ) {
+                        Text(
+                            text = "Do you think ${accused.name} is guilty?",
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.align(Alignment.Start),
+                        )
+
+                        ButtonToken(
+                            modifier = Modifier.fillMaxWidth(),
+                            buttonType = ComponentType.Primary,
+                            onClick = onVote,
+                        ) {
+                            Text("Vote")
                         }
                     }
                 }
@@ -122,6 +150,7 @@ fun SharedTownHall(
                 onSelectPlayer = onSelectPlayer,
                 myPlayerId = myPlayerId,
                 knownIdentities = knownIdentity,
+                actingPlayers = actingPlayers,
                 showEmpty = false,
                 isModerator = isModerator,
                 availableSlots = 0,

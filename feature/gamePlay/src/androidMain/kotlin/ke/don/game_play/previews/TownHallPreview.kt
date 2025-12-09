@@ -93,7 +93,7 @@ fun TownHallPreview(
                 exoneratePlayer = {
                     accusedUi = null
                 },
-                goToCourt = {
+                proceed = {
                     accusedUi = accused
                 },
                 announcements = announcements,
