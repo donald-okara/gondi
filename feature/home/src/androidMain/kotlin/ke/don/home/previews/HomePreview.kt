@@ -42,7 +42,7 @@ fun HomeShowcase(
             moderatorName = "General Whiskers",
             moderatorAvatar = Avatar.Alexander,
             moderatorAvatarBackground = AvatarBackground.PURPLE_LILAC,
-            version = "0.0.1"
+            version = "0.0.1",
         ),
         GameIdentity(
             id = "2",
@@ -50,7 +50,7 @@ fun HomeShowcase(
             moderatorName = "SleepyHead",
             moderatorAvatar = Avatar.Adrian,
             moderatorAvatarBackground = AvatarBackground.GREEN_EMERALD,
-            version = "0.0.1"
+            version = "0.0.1",
         ),
         GameIdentity(
             id = "3",
@@ -58,7 +58,7 @@ fun HomeShowcase(
             moderatorName = "DetectiveNomNom",
             moderatorAvatar = Avatar.Amaya,
             moderatorAvatarBackground = AvatarBackground.YELLOW_BANANA,
-            version = "0.0.1"
+            version = "0.0.1",
         ),
         GameIdentity(
             id = "4",
@@ -67,7 +67,7 @@ fun HomeShowcase(
             moderatorName = "DramaKing_42",
             moderatorAvatar = Avatar.Christian,
             moderatorAvatarBackground = AvatarBackground.ORANGE_CORAL,
-            version = "0.0.1"
+            version = "0.0.1",
         ),
     )
 

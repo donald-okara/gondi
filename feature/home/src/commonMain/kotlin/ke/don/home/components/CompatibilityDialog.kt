@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.home.components
 
 import androidx.compose.material.icons.Icons
@@ -17,9 +26,9 @@ fun CompatibilityDialog(
     versionCompatibility: VersionCompatibility,
     onEvent: (HomeIntentHandler) -> Unit,
     updateGame: () -> Unit,
-    game: GameIdentity
+    game: GameIdentity,
 ) {
-    when(versionCompatibility){
+    when (versionCompatibility) {
         VersionCompatibility.COMPATIBLE -> return
         VersionCompatibility.PARTIALLY_COMPATIBLE -> {
             ConfirmationDialogToken(
@@ -30,7 +39,7 @@ fun CompatibilityDialog(
                 checklist = listOf(
                     "Game rules might differ slightly.",
                     "Some avatars or backgrounds may not appear correctly.",
-                    "You might experience unexpected behavior."
+                    "You might experience unexpected behavior.",
                 ),
                 dialogType = ComponentType.Warning,
                 secondaryAction = { updateGame() },
@@ -39,7 +48,7 @@ fun CompatibilityDialog(
                 onDismiss = {
                     onEvent(HomeIntentHandler.SelectGame())
                     onEvent(HomeIntentHandler.ShowVersionMismatch())
-                }
+                },
             )
         }
         VersionCompatibility.INCOMPATIBLE -> {
@@ -53,7 +62,7 @@ fun CompatibilityDialog(
                 onDismiss = {
                     onEvent(HomeIntentHandler.SelectGame())
                     onEvent(HomeIntentHandler.ShowVersionMismatch())
-                }
+                },
             )
         }
         VersionCompatibility.INVALID -> return

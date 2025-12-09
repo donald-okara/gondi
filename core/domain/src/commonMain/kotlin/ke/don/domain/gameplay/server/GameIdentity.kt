@@ -52,9 +52,8 @@ enum class VersionCompatibility {
     INCOMPATIBLE,
 
     /** One or both of the version strings are malformed. */
-    INVALID
+    INVALID,
 }
-
 
 /**
  * Compares this semantic version string (requester) with another (requested) to check for compatibility.
@@ -95,4 +94,3 @@ fun String.checkSemanticVersionCompatibility(requestedVersion: String): VersionC
         else -> VersionCompatibility.PARTIALLY_COMPATIBLE
     }
 }
-

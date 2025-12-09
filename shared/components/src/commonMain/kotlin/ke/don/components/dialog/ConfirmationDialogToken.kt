@@ -151,7 +151,7 @@ fun ConfirmationDialogToken(
                 ) {
                     Text("Cancel")
                 }
-                if (secondaryText != null && secondaryAction != null){
+                if (secondaryText != null && secondaryAction != null) {
                     ButtonToken(
                         onClick = secondaryAction,
                         buttonType = dialogType,

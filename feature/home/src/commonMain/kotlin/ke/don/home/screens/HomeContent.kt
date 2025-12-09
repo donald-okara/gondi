@@ -13,10 +13,8 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -32,7 +30,6 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.dialog.ConfirmationDialogToken
@@ -43,7 +40,6 @@ import ke.don.components.icon.IconToken
 import ke.don.components.indicator.FancyLoadingIndicator
 import ke.don.components.list_items.DropDownData
 import ke.don.components.list_items.DropDownToken
-import ke.don.components.profile.AdaptiveLogo
 import ke.don.components.profile.ProfileImageToken
 import ke.don.components.profile.VersionComponent
 import ke.don.components.scaffold.NavigationIcon
@@ -145,7 +141,7 @@ fun HomeContent(
         val displayStatus = when (state.readStatus) {
             is ReadStatus.Success,
             is ReadStatus.Refreshing,
-                -> ReadStatus.Success
+            -> ReadStatus.Success
 
             else -> state.readStatus
         }
@@ -201,7 +197,7 @@ fun HomeContent(
                     title = "Updating Game",
                     description = "Updating game to latest version...",
                 )
-            }
+            },
         )
     }
 }
@@ -279,7 +275,8 @@ private fun ErrorState(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(
-                MaterialTheme.spacing.small, Alignment.CenterVertically
+                MaterialTheme.spacing.small,
+                Alignment.CenterVertically,
             ),
         ) {
             EmptyState(
@@ -316,7 +313,8 @@ private fun HomeEmptyState(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(
-                MaterialTheme.spacing.small, Alignment.CenterVertically
+                MaterialTheme.spacing.small,
+                Alignment.CenterVertically,
             ),
         ) {
             EmptyState(
@@ -352,7 +350,6 @@ private fun HomeEmptyState(
                 versionName = VERSION_NAME,
             )
         }
-
     }
 }
 
