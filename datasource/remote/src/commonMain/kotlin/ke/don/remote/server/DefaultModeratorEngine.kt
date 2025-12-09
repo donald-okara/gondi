@@ -92,9 +92,9 @@ class DefaultModeratorEngine(
         val round = currentRound ?: error("Current round cannot be null")
 
         when (command.phase) {
-            GamePhase.TOWN_HALL -> handleTownHallPhase(game,  round, gameId)
+            GamePhase.TOWN_HALL -> handleTownHallPhase(game, round, gameId)
             GamePhase.SLEEP -> handleSleepPhase(game, round, players, gameId)
-            GamePhase.LOBBY -> handleLobbyPhase( round, gameId, players)
+            GamePhase.LOBBY -> handleLobbyPhase(round, gameId, players)
             else -> db.updatePhase(command.phase, round, gameId)
         }
     }
@@ -185,7 +185,7 @@ class DefaultModeratorEngine(
         round: Long,
         gameId: String,
         players: Flow<List<Player>>,
-    ){
+    ) {
         val gamePlayers = players.firstOrNull()
 
         val nonModerators = gamePlayers?.filter { player -> player.role != Role.MODERATOR }
@@ -194,6 +194,5 @@ class DefaultModeratorEngine(
             playersWithRoles?.let { db.batchUpdatePlayerRole(it) }
             db.updatePhase(GamePhase.LOBBY, round, gameId)
         }
-
     }
 }
