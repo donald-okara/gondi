@@ -70,7 +70,9 @@ fun PlayersGrid(
             compareByDescending<Player> { it.id == myPlayerId } // Rule 1: "Me" first
                 .thenByDescending { actingPlayers.contains(it.id) } // Rule 2: Acting players next
                 .thenByDescending { it.role != null } // Rule 3: Players with roles next
-                .thenByDescending { knownIdentities.contains(it.id) }, // Rule 4: Known identities next
+                .thenByDescending { knownIdentities.contains(it.id) } // Rule 4: Known identities next
+                .thenByDescending { it.isAlive } // Rule 5: Alive players first
+
         )
     }.filterNot { player -> player.role == Role.MODERATOR || player.role == null }
 

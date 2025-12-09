@@ -94,7 +94,7 @@ class DefaultModeratorEngine(
         when (command.phase) {
             GamePhase.TOWN_HALL -> handleTownHallPhase(game, round, gameId)
             GamePhase.SLEEP -> handleSleepPhase(game, round, players, gameId)
-            GamePhase.LOBBY -> handleLobbyPhase(round, gameId, players)
+            GamePhase.LOBBY -> handleLobbyPhase(gameId, players)
             else -> db.updatePhase(command.phase, round, gameId)
         }
     }
@@ -182,7 +182,6 @@ class DefaultModeratorEngine(
     }
 
     private suspend fun handleLobbyPhase(
-        round: Long,
         gameId: String,
         players: Flow<List<Player>>,
     ) {
@@ -192,7 +191,7 @@ class DefaultModeratorEngine(
         val playersWithRoles = nonModerators?.map { player -> player.copy(role = null) }
         db.transaction {
             playersWithRoles?.let { db.batchUpdatePlayerRole(it) }
-            db.updatePhase(GamePhase.LOBBY, round, gameId)
+            db.updatePhase(GamePhase.LOBBY, 0L, gameId)
         }
     }
 }

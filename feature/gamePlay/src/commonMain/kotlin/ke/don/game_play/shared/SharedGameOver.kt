@@ -41,7 +41,6 @@ fun SharedGameOver(
         }
     }
 
-
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Theme.spacing.large),
@@ -57,7 +56,7 @@ fun SharedGameOver(
                     text = "${winnerFaction.name.capitaliseFirst()}s Win!",
                     style = MaterialTheme.typography.displayMedium,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = if(winnerFaction == Faction.GONDI) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -74,7 +73,7 @@ fun SharedGameOver(
             if (isModerator){
                 ButtonToken(
                     modifier = Modifier.fillMaxWidth(),
-                    buttonType = ComponentType.Primary,
+                    buttonType = if (winnerFaction == Faction.GONDI) ComponentType.Error else ComponentType.Primary,
                     onClick = playAgain,
                 ) {
                     Text("Play again")

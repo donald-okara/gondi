@@ -182,7 +182,16 @@ private fun ContentSwitcher(
                     )
                 }
             }
-            GamePhase.GAME_OVER -> {}
+            GamePhase.GAME_OVER -> {
+                if (gameState != null && currentPlayer != null) {
+                    PlayerGameOver(
+                        modifier = modifier,
+                        gameState = gameState,
+                        myPlayer = currentPlayer,
+                        players = players,
+                    )
+                }
+            }
         }
     }
 }

@@ -51,7 +51,7 @@ fun GameOverPreview(
                 players = players,
                 myPlayer = players.first(),
                 winnerFaction = winningFaction,
-                isModerator = true,
+                isModerator = false,
             )
         }
 
