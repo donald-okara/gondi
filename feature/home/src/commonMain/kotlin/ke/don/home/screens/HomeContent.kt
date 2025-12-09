@@ -253,7 +253,13 @@ private fun SuccessState(
 
         item {
             VersionComponent(
-                modifier = Modifier.padding(vertical = MaterialTheme.spacing.large),
+                modifier = Modifier
+                    .padding(vertical = MaterialTheme.spacing.large)
+                    .cardCrunchEffects(
+                        isRefreshing = state.readStatus.isRefreshing,
+                        pullProgress = pullState.distanceFraction,
+                        index = -1,
+                    ),
                 versionName = VERSION_NAME,
             )
         }
