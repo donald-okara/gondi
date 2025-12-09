@@ -196,7 +196,7 @@ fun PlayerItem(
                     contentColor = Theme.colorScheme.onErrorContainer,
                 ) {
                     Text(
-                        text = "Eliminated",
+                        text = "Deceased",
                         style = Theme.typography.bodySmall,
                         modifier = Modifier.padding(
                             horizontal = MaterialTheme.spacing.extraSmall,

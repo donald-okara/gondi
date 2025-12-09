@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -41,6 +42,8 @@ import ke.don.components.profile.PlayerItem
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.ActionType
+import ke.don.domain.gameplay.Faction
+import ke.don.domain.gameplay.Role
 import ke.don.domain.gameplay.SelectedPlayer
 import ke.don.domain.state.Player
 import ke.don.game_play.moderator.components.EmptySlot
@@ -69,7 +72,7 @@ fun PlayersGrid(
                 .thenByDescending { it.role != null } // Rule 3: Players with roles next
                 .thenByDescending { knownIdentities.contains(it.id) }, // Rule 4: Known identities next
         )
-    }
+    }.filterNot { player -> player.role == Role.MODERATOR || player.role == null }
 
     val playersSize = sortedPlayers.size
 
@@ -105,6 +108,52 @@ fun PlayersGrid(
         val emptySlotCount = availableSlots - playersSize
         if (emptySlotCount > 0 && showEmpty) {
             items(emptySlotCount) { EmptySlot() }
+        }
+    }
+}
+
+@Composable
+fun GameOverGrid(
+    modifier: Modifier = Modifier,
+    myPlayerId: String?,
+    winningFaction: Faction,
+    players: List<Player>,
+) {
+    val sortedPlayers = remember(players, myPlayerId) {
+        players.sortedWith(
+            compareByDescending<Player> { it.id == myPlayerId } // Rule 1: "Me" first
+                .thenByDescending { it.role != null } // Rule 3: Players with roles next
+        )
+    }.filterNot { player -> player.role == Role.MODERATOR || player.role == null }
+
+    LazyVerticalGrid(
+        modifier = modifier
+            .fillMaxWidth()
+            .heightIn(min = 200.dp, max = Theme.spacing.largeScreenSize),
+        columns = GridCells.Adaptive(130.dp),
+        horizontalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
+        verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
+        contentPadding = PaddingValues(vertical = Theme.spacing.small),
+    ) {
+        gridItems(sortedPlayers, key = { it.id }) { player ->
+            PlayerItem(
+                actionType = ActionType.NONE,
+                isSelected = player.role?.faction == winningFaction,
+                showRole = true,
+                isMe = myPlayerId == player.id,
+                player = player.copy(isAlive = true),
+                enabled = true,
+                modifier = Modifier
+                    .then(
+                        if (player.role?.faction != winningFaction) {
+                            Modifier
+                                .graphicsLayer { alpha = 0.6f }
+                        } else {
+                            Modifier
+                        }
+                    )
+            )
+
         }
     }
 }
