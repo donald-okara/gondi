@@ -79,6 +79,7 @@ class LanDiscoveryJvm : LanDiscovery {
         val id = txt["id"] ?: return null
         val gameName = txt["gameName"] ?: return null
         val moderatorName = txt["mod_name"] ?: return null
+        val version = txt["version"] ?: return null
         val moderatorAvatar = txt["mod_avatar"]?.let { Avatar.fromValue(it) } ?: Avatar.George // fallback
         val moderatorBackground = txt["background"]?.let { AvatarBackground.fromValue(it) } ?: AvatarBackground.entries.first() // fallback
 
@@ -90,6 +91,7 @@ class LanDiscoveryJvm : LanDiscovery {
             gameName = gameName,
             moderatorName = moderatorName,
             moderatorAvatar = moderatorAvatar,
+            version = version,
             moderatorAvatarBackground = moderatorBackground,
         )
     }

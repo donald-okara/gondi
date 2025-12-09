@@ -1,11 +1,25 @@
 import io.kotzilla.gradle.ext.KotzillaKeyGeneration
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatformApplication)
     alias(libs.plugins.ktorSupabasePlugin)
     alias(libs.plugins.kotzilla)
 }
+
+val identityFile = rootProject.file("gradle.properties")
+val identityProperties = Properties()
+if (identityFile.exists()) {
+    identityProperties.load(identityFile.inputStream())
+}
+
+val versionProperty =
+    identityProperties["version"]?.toString()
+        ?: error("Vesrion not found in local.properties")
+val versionNameProperty =
+    identityProperties["versionName"]?.toString()
+        ?: error("Version name not found in local.properties")
 
 kotlin {
 
@@ -24,8 +38,8 @@ compose {
 
 android {
     defaultConfig {
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = versionProperty.toInt()
+        versionName = versionNameProperty
     }
 }
 

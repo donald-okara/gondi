@@ -3,7 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.datasourceConvention)
     alias(libs.plugins.ktorSupabasePlugin)
-    id("com.github.gmazzo.buildconfig") version "5.7.0"
+    alias(libs.plugins.gmazzoBuildConfig)
 }
 
 val keysFile = rootProject.file("local.properties")

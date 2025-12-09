@@ -34,6 +34,7 @@ spotless = "8.0.0"
 kover = "0.9.3"
 datastore = "1.1.7"
 kotzilla = "1.4.0"
+buildConfig = "5.7.0"
 
 [libraries]
 jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
@@ -143,6 +144,8 @@ sqlDelight = {id = "app.cash.sqldelight", version.ref = "sqlDelight"}
 spotless = {id = "com.diffplug.spotless", version.ref = "spotless"}
 kover ={id="org.jetbrains.kotlinx.kover", version.ref = "kover"}
 kotzilla = { id = "io.kotzilla.kotzilla-plugin", version.ref = "kotzilla" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+gmazzoBuildConfig = { id = "com.github.gmazzo.buildconfig", version.ref = "buildConfig" }
 
 # Custom app plugins
 composeMultiplatformPlugin = { id = "ke.don.gondi.composeMultiplatformPlugin", version = "unspecified" }
@@ -151,4 +154,3 @@ kotlinMultiplatformApplication = { id = "ke.don.gondi.kotlinMultiplatformApplica
 featureConvention = { id = "ke.don.gondi.featureConvention", version = "unspecified" }
 datasourceConvention = { id = "ke.don.gondi.datasourceConvention", version = "unspecified" }
 ktorSupabasePlugin = { id = "ke.don.gondi.ktorSupabasePlugin", version = "unspecified" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

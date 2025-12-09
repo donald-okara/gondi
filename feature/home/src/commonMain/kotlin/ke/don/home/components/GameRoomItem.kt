@@ -60,6 +60,7 @@ fun GameRoomItem(
         ) {
             ProfileImageToken(
                 isHero = false,
+                isSelected = true,
                 profile = Profile(
                     username = gameIdentity.moderatorName,
                     avatar = gameIdentity.moderatorAvatar,
@@ -76,6 +77,12 @@ fun GameRoomItem(
                 Text(
                     text = "Hosted by ${gameIdentity.moderatorName}",
                     style = MaterialTheme.typography.bodySmall,
+                )
+                Spacer(Modifier.height(Theme.spacing.extraSmall))
+                Text(
+                    text = "v${gameIdentity.version}",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
         }

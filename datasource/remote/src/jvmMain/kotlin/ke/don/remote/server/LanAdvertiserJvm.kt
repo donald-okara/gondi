@@ -32,6 +32,7 @@ class LanAdvertiserJvm : LanAdvertiser {
             val txtRecord = mapOf(
                 "id" to gameIdentity.id,
                 "mod_name" to gameIdentity.moderatorName,
+                "version" to gameIdentity.version,
                 "mod_avatar" to gameIdentity.moderatorAvatar?.name,
                 "background" to gameIdentity.moderatorAvatarBackground.name,
                 "gameName" to gameIdentity.gameName,

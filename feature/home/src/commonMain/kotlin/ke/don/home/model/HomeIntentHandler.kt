@@ -10,7 +10,9 @@
 package ke.don.home.model
 
 import ke.don.domain.datastore.Theme
+import ke.don.domain.gameplay.server.GameIdentity
 import ke.don.domain.gameplay.server.ServerId
+import ke.don.domain.gameplay.server.VersionCompatibility
 
 sealed interface HomeIntentHandler {
     data object DiscoverGames : HomeIntentHandler
@@ -21,9 +23,11 @@ sealed interface HomeIntentHandler {
     data object ShowNetworkChooser : HomeIntentHandler
     data object ShowMenu : HomeIntentHandler
     data object NavigateToRules : HomeIntentHandler
+    data object NavigateToEdit : HomeIntentHandler
     data object NavigateToNewGame : HomeIntentHandler
     data class NavigateToGame(val id: ServerId) : HomeIntentHandler
-    data object NavigateToEdit : HomeIntentHandler
+    data class SelectGame(val game: GameIdentity? = null) : HomeIntentHandler
     data class LogOut(val navigateToAuth: () -> Unit) : HomeIntentHandler
     data class SetTheme(val theme: Theme) : HomeIntentHandler
+    data class ShowVersionMismatch(val versionCompatibility: VersionCompatibility = VersionCompatibility.COMPATIBLE) : HomeIntentHandler
 }
