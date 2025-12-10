@@ -253,7 +253,7 @@ private fun SuccessState(
                     .cardCrunchEffects(
                         isRefreshing = state.readStatus.isRefreshing,
                         pullProgress = pullState.distanceFraction,
-                        index = -1,
+                        index = -1, // Intentional sentinel value
                     ),
                 versionName = VERSION_NAME,
             )
