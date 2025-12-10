@@ -194,8 +194,7 @@ fun HomeContent(
             game = state.selectedGame,
             updateGame = {
                 Matcha.info(
-                    title = "Updating Game",
-                    description = "Updating game to latest version...",
+                    title = "Coming soon to play store",
                 )
             },
         )

@@ -8,15 +8,15 @@ plugins {
 val identityFile = rootProject.file("gradle.properties")
 val identityProperties = Properties()
 if (identityFile.exists()) {
-    identityProperties.load(identityFile.inputStream())
+    identityFile.inputStream().use { identityProperties.load(it) }
 }
 
 val versionProperty =
     identityProperties["version"]?.toString()
-        ?: error("Vesrion not found in local.properties")
+        ?: error("Vesrion not found in gradle.properties")
 val versionNameProperty =
     identityProperties["versionName"]?.toString()
-        ?: error("Version name not found in local.properties")
+        ?: error("Version name not found in gradle.properties")
 
 buildConfig {
     packageName.set("ke.don.home")

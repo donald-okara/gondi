@@ -76,10 +76,10 @@ class LanDiscoveryJvm : LanDiscovery {
         val type = info.type
         val txt = info.propertyNames.toList().associateWith { info.getPropertyString(it) }
 
-        val id = txt["id"] ?: return null
-        val gameName = txt["gameName"] ?: return null
-        val moderatorName = txt["mod_name"] ?: return null
-        val version = txt["version"] ?: return null
+        val id = txt["id"] ?: "Unknown"
+        val gameName = txt["gameName"] ?: "Unknown"
+        val moderatorName = txt["mod_name"] ?: "Unknown"
+        val version = txt["version"] ?: "Unknown"
         val moderatorAvatar = txt["mod_avatar"]?.let { Avatar.fromValue(it) } ?: Avatar.George // fallback
         val moderatorBackground = txt["background"]?.let { AvatarBackground.fromValue(it) } ?: AvatarBackground.entries.first() // fallback
 

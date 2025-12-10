@@ -58,7 +58,7 @@ fun CompatibilityDialog(
                 title = "Incompatible Version",
                 message = "Your game version is incompatible with ${game.gameName}. To join, you'll need to update your game. Please ask the host to update theirs as well if the problem persists.",
                 dialogType = ComponentType.Warning,
-                onConfirm = { updateGame },
+                onConfirm = { updateGame() },
                 onDismiss = {
                     onEvent(HomeIntentHandler.SelectGame())
                     onEvent(HomeIntentHandler.ShowVersionMismatch())
