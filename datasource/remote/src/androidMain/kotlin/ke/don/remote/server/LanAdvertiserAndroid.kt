@@ -33,6 +33,7 @@ class LanAdvertiserAndroid(
             // Embed custom data as TXT records
             setAttribute("id", gameIdentity.id)
             setAttribute("mod_name", gameIdentity.moderatorName)
+            setAttribute("version", gameIdentity.version)
             setAttribute("background", gameIdentity.moderatorAvatarBackground.name)
             gameIdentity.moderatorAvatar?.let { setAttribute("mod_avatar", it.name) }
         }

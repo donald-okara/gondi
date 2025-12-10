@@ -14,6 +14,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import ke.don.components.helpers.Matcha
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.server.GameIdentity
+import ke.don.game_play.BuildConfig.VERSION_NAME
 import ke.don.game_play.moderator.di.GAME_MODERATOR_SCOPE
 import ke.don.game_play.moderator.useCases.GameModeratorController
 import ke.don.game_play.moderator.useCases.GameServerManager
@@ -85,6 +86,7 @@ class GondiHost(
                     id = moderatorState.value.newGame.id,
                     gameName = moderatorState.value.newGame.name,
                     moderatorName = host.name,
+                    version = VERSION_NAME,
                     moderatorAvatar = host.avatar ?: error("Player avatar is not present"),
                     moderatorAvatarBackground = host.background,
                 )

@@ -12,7 +12,9 @@ package ke.don.home.screens
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -33,16 +35,22 @@ import ke.don.components.button.ComponentType
 import ke.don.components.dialog.ConfirmationDialogToken
 import ke.don.components.empty_state.EmptyState
 import ke.don.components.empty_state.EmptyType
+import ke.don.components.helpers.Matcha
 import ke.don.components.icon.IconToken
 import ke.don.components.indicator.FancyLoadingIndicator
 import ke.don.components.list_items.DropDownData
 import ke.don.components.list_items.DropDownToken
 import ke.don.components.profile.ProfileImageToken
+import ke.don.components.profile.VersionComponent
 import ke.don.components.scaffold.NavigationIcon
 import ke.don.components.scaffold.RefreshLazyColumn
 import ke.don.components.scaffold.ScaffoldToken
 import ke.don.components.scaffold.cardCrunchEffects
 import ke.don.design.theme.spacing
+import ke.don.domain.gameplay.server.VersionCompatibility
+import ke.don.domain.gameplay.server.checkSemanticVersionCompatibility
+import ke.don.home.BuildConfig.VERSION_NAME
+import ke.don.home.components.CompatibilityDialog
 import ke.don.home.components.GameRoomItem
 import ke.don.home.components.ThemeSheet
 import ke.don.home.model.HomeIntentHandler
@@ -134,6 +142,7 @@ fun HomeContent(
             is ReadStatus.Success,
             is ReadStatus.Refreshing,
             -> ReadStatus.Success
+
             else -> state.readStatus
         }
 
@@ -146,10 +155,12 @@ fun HomeContent(
                     state = state,
                     onEvent = onEvent,
                 )
+
                 is ReadStatus.Error -> ErrorState(
                     state = state,
                     onEvent = onEvent,
                 )
+
                 ReadStatus.Loading -> LoadingState()
                 ReadStatus.Empty -> HomeEmptyState(onEvent = onEvent)
                 else -> {}
@@ -175,6 +186,19 @@ fun HomeContent(
             currentTheme = state.theme,
         )
     }
+
+    if ((state.showVersionMismatch == VersionCompatibility.INCOMPATIBLE || state.showVersionMismatch == VersionCompatibility.PARTIALLY_COMPATIBLE) && state.selectedGame != null) {
+        CompatibilityDialog(
+            versionCompatibility = state.showVersionMismatch,
+            onEvent = onEvent,
+            game = state.selectedGame,
+            updateGame = {
+                Matcha.info(
+                    title = "Coming soon to play store",
+                )
+            },
+        )
+    }
 }
 
 @Composable
@@ -198,15 +222,40 @@ private fun SuccessState(
             GameRoomItem(
                 gameIdentity = game,
                 onClick = {
-                    onEvent(
-                        HomeIntentHandler.NavigateToGame(game.serviceHost to game.servicePort),
-                    )
+                    val compatibility = VERSION_NAME.checkSemanticVersionCompatibility(game.version)
+                    when (compatibility) {
+                        VersionCompatibility.COMPATIBLE -> onEvent(
+                            HomeIntentHandler.NavigateToGame(game.serviceHost to game.servicePort),
+                        )
+
+                        VersionCompatibility.INVALID -> Matcha.error(
+                            title = "Invalid Version",
+                        )
+
+                        else -> {
+                            onEvent(HomeIntentHandler.SelectGame(game))
+                            onEvent(HomeIntentHandler.ShowVersionMismatch(compatibility))
+                        }
+                    }
                 },
                 modifier = Modifier.cardCrunchEffects(
                     isRefreshing = state.readStatus.isRefreshing,
                     pullProgress = pullState.distanceFraction,
                     index = index,
                 ),
+            )
+        }
+
+        item {
+            VersionComponent(
+                modifier = Modifier
+                    .padding(vertical = MaterialTheme.spacing.large)
+                    .cardCrunchEffects(
+                        isRefreshing = state.readStatus.isRefreshing,
+                        pullProgress = pullState.distanceFraction,
+                        index = -1, // Intentional sentinel value
+                    ),
+                versionName = VERSION_NAME,
             )
         }
     }
@@ -222,17 +271,30 @@ private fun ErrorState(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        EmptyState(
-            title = "Something went wrong",
-            description = state.readStatus.message,
-            emptyType = EmptyType.Error,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(
+                MaterialTheme.spacing.small,
+                Alignment.CenterVertically,
+            ),
         ) {
-            ButtonToken(
-                onClick = { onEvent(HomeIntentHandler.DiscoverGames) },
-                buttonType = ComponentType.Primary,
+            EmptyState(
+                title = "Something went wrong",
+                description = state.readStatus.message,
+                emptyType = EmptyType.Error,
             ) {
-                Text(text = "Retry")
+                ButtonToken(
+                    onClick = { onEvent(HomeIntentHandler.DiscoverGames) },
+                    buttonType = ComponentType.Primary,
+                ) {
+                    Text(text = "Retry")
+                }
             }
+
+            VersionComponent(
+                modifier = Modifier.padding(vertical = MaterialTheme.spacing.large),
+                versionName = VERSION_NAME,
+            )
         }
     }
 }
@@ -246,35 +308,46 @@ private fun HomeEmptyState(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        EmptyState(
-            icon = Icons.Default.Casino,
-            title = "Start a New Adventure?",
-            description = "It looks a bit quiet around here. " +
-                "There are currently no active games available to join. " +
-                "Games are only discoverable if you are on the same LAN. " +
-                " Why not check your network, or better yet, be the first to start one?",
-            emptyType = EmptyType.Empty,
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(
+                MaterialTheme.spacing.small,
+                Alignment.CenterVertically,
+            ),
         ) {
-            ButtonToken(
-                onClick = { onEvent(HomeIntentHandler.ShowNetworkChooser) },
-                buttonType = ComponentType.Inverse,
+            EmptyState(
+                icon = Icons.Default.Casino,
+                title = "Start a New Adventure?",
+                description = "It looks a bit quiet around here. " + "There are currently no active games available to join. " + "Games are only discoverable if you are on the same LAN. " + " Why not check your network, or better yet, be the first to start one?",
+                emptyType = EmptyType.Empty,
             ) {
-                Text(text = "Check Network")
+                ButtonToken(
+                    onClick = { onEvent(HomeIntentHandler.ShowNetworkChooser) },
+                    buttonType = ComponentType.Inverse,
+                ) {
+                    Text(text = "Check Network")
+                }
+
+                ButtonToken(
+                    onClick = { onEvent(HomeIntentHandler.DiscoverGames) },
+                    buttonType = ComponentType.Inverse,
+                ) {
+                    Text(text = "Refresh Screen")
+                }
+
+                ButtonToken(
+                    onClick = { onEvent(HomeIntentHandler.NavigateToNewGame) },
+                    buttonType = ComponentType.Primary,
+                ) {
+                    Text(text = "Create New Game")
+                }
             }
 
-            ButtonToken(
-                onClick = { onEvent(HomeIntentHandler.DiscoverGames) },
-                buttonType = ComponentType.Inverse,
-            ) {
-                Text(text = "Refresh Screen")
-            }
-
-            ButtonToken(
-                onClick = { onEvent(HomeIntentHandler.NavigateToNewGame) },
-                buttonType = ComponentType.Primary,
-            ) {
-                Text(text = "Create New Game")
-            }
+            VersionComponent(
+                modifier = Modifier.padding(vertical = MaterialTheme.spacing.large),
+                versionName = VERSION_NAME,
+            )
         }
     }
 }

@@ -80,9 +80,19 @@ class HomeModel(
                     showMenu = !state.showMenu,
                 )
             }
+            is HomeIntentHandler.ShowVersionMismatch -> _uiState.update { state ->
+                state.copy(
+                    showVersionMismatch = intent.versionCompatibility,
+                )
+            }
             is HomeIntentHandler.ShowNetworkChooser -> networkChooser.open()
             is HomeIntentHandler.SetTheme -> setTheme(intent.theme)
             is HomeIntentHandler.LogOut -> logOut(intent.navigateToAuth)
+            is HomeIntentHandler.SelectGame -> _uiState.update { state ->
+                state.copy(
+                    selectedGame = intent.game,
+                )
+            }
             else -> {}
         }
     }

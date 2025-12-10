@@ -12,6 +12,7 @@ package ke.don.components.dialog
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -57,6 +58,8 @@ fun ConfirmationDialogToken(
     message: String,
     checklist: List<String>? = null,
     dialogType: ComponentType,
+    secondaryAction: (() -> Unit)? = null,
+    secondaryText: String? = null,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -138,7 +141,7 @@ fun ConfirmationDialogToken(
             }
 
             // ✅ Actions
-            Row(
+            FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.End),
                 modifier = Modifier.fillMaxWidth(),
             ) {
@@ -147,6 +150,14 @@ fun ConfirmationDialogToken(
                     buttonType = ComponentType.Neutral,
                 ) {
                     Text("Cancel")
+                }
+                if (secondaryText != null && secondaryAction != null) {
+                    ButtonToken(
+                        onClick = secondaryAction,
+                        buttonType = dialogType,
+                    ) {
+                        Text(secondaryText)
+                    }
                 }
                 ButtonToken(
                     onClick = onConfirm,

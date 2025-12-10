@@ -10,5 +10,6 @@
 package ke.don.components.card
 
 enum class CardType {
-    Outlined, Solid,
+    Outlined,
+    Solid,
 }

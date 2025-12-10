@@ -66,6 +66,7 @@ class LanDiscoveryAndroid(
                                 serviceType = type,
                                 servicePort = port,
                                 gameName = name,
+                                version = txt["version"] ?: "Unknown",
                                 moderatorName = moderatorName,
                                 moderatorAvatarBackground = moderatorBackground,
                                 moderatorAvatar = moderatorAvatar,

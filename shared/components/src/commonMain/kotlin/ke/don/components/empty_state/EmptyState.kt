@@ -139,5 +139,6 @@ fun EmptyState(
 }
 
 enum class EmptyType {
-    Error, Empty
+    Error,
+    Empty,
 }

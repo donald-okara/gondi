@@ -3,7 +3,9 @@ import org.gradle.api.Project
 data class AppIdentity(
     val appName: String,
     val packagePrefix: String,
-    val mainPackageName: String
+    val mainPackageName: String,
+    val version: Int,
+    val versionName: String
 ) {
     val packageName: String
         get() = "$packagePrefix.$mainPackageName"
@@ -16,5 +18,9 @@ val Project.appIdentity: AppIdentity
         packagePrefix = findProperty("appPackagePrefix")?.toString()
             ?: error("APP_PACKAGE_PREFIX not defined in gradle.properties"),
         mainPackageName = findProperty("appPackageName")?.toString()
-            ?: error("MAIN_PACKAGE_NAME not defined in gradle.properties")
+            ?: error("MAIN_PACKAGE_NAME not defined in gradle.properties"),
+        version = findProperty("version")?.toString()?.toInt()
+            ?: error("VERSION not defined in gradle.properties"),
+        versionName = findProperty("versionName")?.toString()
+            ?: error("VERSION_NAME not defined in gradle.properties"),
     )
