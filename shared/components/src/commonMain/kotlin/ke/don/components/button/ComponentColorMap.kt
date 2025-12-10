@@ -21,7 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import ke.don.design.theme.AppTheme
 
-private const val disabledAlpha = 0.38f
+private const val DISABLED_ALPHA = 0.38f
 
 // Map the type to target colors
 private val ComponentType.targetContainerColor @Composable get() = when (this) {
@@ -50,8 +50,8 @@ private val ComponentType.targetContentColor @Composable get() = when (this) {
     ComponentType.Success -> AppTheme.extendedColors.success.onColor
 }
 
-private val ComponentType.disabledContainerColor @Composable get() = if (this == ComponentType.Outlined) targetContainerColor else targetContainerColor.copy(alpha = disabledAlpha)
-private val ComponentType.disabledContentColor @Composable get() = targetContentColor.copy(alpha = disabledAlpha)
+private val ComponentType.disabledContainerColor @Composable get() = if (this == ComponentType.Outlined) targetContainerColor else targetContainerColor.copy(alpha = DISABLED_ALPHA)
+private val ComponentType.disabledContentColor @Composable get() = targetContentColor.copy(alpha = DISABLED_ALPHA)
 
 val ComponentType.buttonTypeColor: @Composable () -> ButtonColors
     get() = {
@@ -59,62 +59,62 @@ val ComponentType.buttonTypeColor: @Composable () -> ButtonColors
             ComponentType.Primary -> ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,
-                disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = disabledAlpha),
-                disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = disabledAlpha),
+                disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = DISABLED_ALPHA),
+                disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Secondary -> ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary,
                 contentColor = MaterialTheme.colorScheme.onSecondary,
-                disabledContentColor = MaterialTheme.colorScheme.secondary.copy(alpha = disabledAlpha),
-                disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = disabledAlpha),
+                disabledContentColor = MaterialTheme.colorScheme.secondary.copy(alpha = DISABLED_ALPHA),
+                disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Tertiary -> ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.tertiary,
                 contentColor = MaterialTheme.colorScheme.onTertiary,
-                disabledContentColor = MaterialTheme.colorScheme.tertiary.copy(alpha = disabledAlpha),
-                disabledContainerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = disabledAlpha),
+                disabledContentColor = MaterialTheme.colorScheme.tertiary.copy(alpha = DISABLED_ALPHA),
+                disabledContainerColor = MaterialTheme.colorScheme.tertiary.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Error -> ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.error,
                 contentColor = MaterialTheme.colorScheme.onError,
-                disabledContentColor = MaterialTheme.colorScheme.error.copy(alpha = disabledAlpha),
-                disabledContainerColor = MaterialTheme.colorScheme.error.copy(alpha = disabledAlpha),
+                disabledContentColor = MaterialTheme.colorScheme.error.copy(alpha = DISABLED_ALPHA),
+                disabledContainerColor = MaterialTheme.colorScheme.error.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Inverse -> ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.onSurface,
                 contentColor = MaterialTheme.colorScheme.surface,
-                disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = disabledAlpha),
-                disabledContentColor = MaterialTheme.colorScheme.surface.copy(alpha = disabledAlpha),
+                disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = DISABLED_ALPHA),
+                disabledContentColor = MaterialTheme.colorScheme.surface.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Outlined -> ButtonDefaults.outlinedButtonColors(
                 contentColor = MaterialTheme.colorScheme.primary,
                 containerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
-                disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = disabledAlpha),
+                disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Neutral -> ButtonDefaults.buttonColors(
                 contentColor = MaterialTheme.colorScheme.inverseSurface,
                 containerColor = MaterialTheme.colorScheme.inverseOnSurface,
-                disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = disabledAlpha),
-                disabledContainerColor = MaterialTheme.colorScheme.inverseSurface.copy(alpha = disabledAlpha),
+                disabledContentColor = MaterialTheme.colorScheme.inverseOnSurface.copy(alpha = DISABLED_ALPHA),
+                disabledContainerColor = MaterialTheme.colorScheme.inverseSurface.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Info -> ButtonDefaults.buttonColors(
                 containerColor = AppTheme.extendedColors.info.colorContainer,
                 contentColor = AppTheme.extendedColors.info.onColorContainer,
-                disabledContainerColor = AppTheme.extendedColors.info.colorContainer.copy(alpha = disabledAlpha),
-                disabledContentColor = AppTheme.extendedColors.info.onColorContainer.copy(alpha = disabledAlpha),
+                disabledContainerColor = AppTheme.extendedColors.info.colorContainer.copy(alpha = DISABLED_ALPHA),
+                disabledContentColor = AppTheme.extendedColors.info.onColorContainer.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Warning -> ButtonDefaults.buttonColors(
                 containerColor = AppTheme.extendedColors.warning.colorContainer,
                 contentColor = AppTheme.extendedColors.warning.onColorContainer,
-                disabledContainerColor = AppTheme.extendedColors.warning.colorContainer.copy(alpha = disabledAlpha),
-                disabledContentColor = AppTheme.extendedColors.warning.onColorContainer.copy(alpha = disabledAlpha),
+                disabledContainerColor = AppTheme.extendedColors.warning.colorContainer.copy(alpha = DISABLED_ALPHA),
+                disabledContentColor = AppTheme.extendedColors.warning.onColorContainer.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Success -> ButtonDefaults.buttonColors(
                 containerColor = AppTheme.extendedColors.success.colorContainer,
                 contentColor = AppTheme.extendedColors.success.onColorContainer,
-                disabledContainerColor = AppTheme.extendedColors.success.colorContainer.copy(alpha = disabledAlpha),
-                disabledContentColor = AppTheme.extendedColors.success.onColorContainer.copy(alpha = disabledAlpha),
+                disabledContainerColor = AppTheme.extendedColors.success.colorContainer.copy(alpha = DISABLED_ALPHA),
+                disabledContentColor = AppTheme.extendedColors.success.onColorContainer.copy(alpha = DISABLED_ALPHA),
             )
         }
     }
@@ -146,64 +146,64 @@ val ComponentType.iconTypeColor: @Composable () -> IconButtonColors
         when (this) {
             ComponentType.Primary -> IconButtonDefaults.iconButtonColors(
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                disabledContentColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = disabledAlpha),
+                disabledContentColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = DISABLED_ALPHA),
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
-                disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = disabledAlpha),
+                disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = DISABLED_ALPHA),
             )
 
             ComponentType.Secondary -> IconButtonDefaults.iconButtonColors(
                 contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                disabledContentColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = disabledAlpha),
+                disabledContentColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = DISABLED_ALPHA),
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = disabledAlpha),
+                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Tertiary -> IconButtonDefaults.iconButtonColors(
                 contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                disabledContentColor = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = disabledAlpha),
+                disabledContentColor = MaterialTheme.colorScheme.onTertiaryContainer.copy(alpha = DISABLED_ALPHA),
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = disabledAlpha),
+                disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Error -> IconButtonDefaults.iconButtonColors(
                 contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                disabledContentColor = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = disabledAlpha),
+                disabledContentColor = MaterialTheme.colorScheme.onErrorContainer.copy(alpha = DISABLED_ALPHA),
                 containerColor = MaterialTheme.colorScheme.errorContainer,
-                disabledContainerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = disabledAlpha),
+                disabledContainerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Inverse -> IconButtonDefaults.iconButtonColors(
                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = disabledAlpha),
+                disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = DISABLED_ALPHA),
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = disabledAlpha),
+                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Outlined -> IconButtonDefaults.iconButtonColors(
                 contentColor = MaterialTheme.colorScheme.primary,
-                disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = disabledAlpha),
+                disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = DISABLED_ALPHA),
                 containerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
             )
             ComponentType.Neutral -> IconButtonDefaults.iconButtonColors(
                 contentColor = MaterialTheme.colorScheme.inverseSurface,
-                disabledContentColor = MaterialTheme.colorScheme.inverseSurface.copy(alpha = disabledAlpha),
+                disabledContentColor = MaterialTheme.colorScheme.inverseSurface.copy(alpha = DISABLED_ALPHA),
                 containerColor = Color.Transparent,
                 disabledContainerColor = Color.Transparent,
             )
             ComponentType.Success -> IconButtonDefaults.iconButtonColors(
                 contentColor = AppTheme.extendedColors.success.onColorContainer,
-                disabledContentColor = AppTheme.extendedColors.success.onColorContainer.copy(alpha = disabledAlpha),
+                disabledContentColor = AppTheme.extendedColors.success.onColorContainer.copy(alpha = DISABLED_ALPHA),
                 containerColor = AppTheme.extendedColors.success.colorContainer,
-                disabledContainerColor = AppTheme.extendedColors.success.colorContainer.copy(alpha = disabledAlpha),
+                disabledContainerColor = AppTheme.extendedColors.success.colorContainer.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Warning -> IconButtonDefaults.iconButtonColors(
                 contentColor = AppTheme.extendedColors.warning.onColorContainer,
-                disabledContentColor = AppTheme.extendedColors.warning.onColorContainer.copy(alpha = disabledAlpha),
+                disabledContentColor = AppTheme.extendedColors.warning.onColorContainer.copy(alpha = DISABLED_ALPHA),
                 containerColor = AppTheme.extendedColors.warning.colorContainer,
-                disabledContainerColor = AppTheme.extendedColors.warning.colorContainer.copy(alpha = disabledAlpha),
+                disabledContainerColor = AppTheme.extendedColors.warning.colorContainer.copy(alpha = DISABLED_ALPHA),
             )
             ComponentType.Info -> IconButtonDefaults.iconButtonColors(
                 contentColor = AppTheme.extendedColors.info.onColorContainer,
-                disabledContentColor = AppTheme.extendedColors.info.onColorContainer.copy(alpha = disabledAlpha),
+                disabledContentColor = AppTheme.extendedColors.info.onColorContainer.copy(alpha = DISABLED_ALPHA),
                 containerColor = AppTheme.extendedColors.info.colorContainer,
-                disabledContainerColor = AppTheme.extendedColors.info.colorContainer.copy(alpha = disabledAlpha),
+                disabledContainerColor = AppTheme.extendedColors.info.colorContainer.copy(alpha = DISABLED_ALPHA),
             )
         }
     }
@@ -256,7 +256,7 @@ fun ComponentType.animatedCheckboxColors(
         if (enabled) {
             containerColor
         } else {
-            containerColor.copy(disabledAlpha)
+            containerColor.copy(DISABLED_ALPHA)
         },
     )
 
@@ -267,13 +267,13 @@ fun ComponentType.animatedCheckboxColors(
         uncheckedCheckmarkColor = Color.Transparent,
         checkedBoxColor = containerColor,
         uncheckedBoxColor = uncheckedBoxColor,
-        disabledCheckedBoxColor = containerColor.copy(alpha = disabledAlpha),
-        disabledUncheckedBoxColor = uncheckedBoxColor.copy(alpha = disabledAlpha),
-        disabledIndeterminateBoxColor = containerColor.copy(alpha = disabledAlpha),
+        disabledCheckedBoxColor = containerColor.copy(alpha = DISABLED_ALPHA),
+        disabledUncheckedBoxColor = uncheckedBoxColor.copy(alpha = DISABLED_ALPHA),
+        disabledIndeterminateBoxColor = containerColor.copy(alpha = DISABLED_ALPHA),
         checkedBorderColor = borderColor,
         uncheckedBorderColor = borderColor,
-        disabledBorderColor = borderColor.copy(alpha = disabledAlpha),
-        disabledUncheckedBorderColor = borderColor.copy(alpha = disabledAlpha),
-        disabledIndeterminateBorderColor = borderColor.copy(alpha = disabledAlpha),
+        disabledBorderColor = borderColor.copy(alpha = DISABLED_ALPHA),
+        disabledUncheckedBorderColor = borderColor.copy(alpha = DISABLED_ALPHA),
+        disabledIndeterminateBorderColor = borderColor.copy(alpha = DISABLED_ALPHA),
     )
 }

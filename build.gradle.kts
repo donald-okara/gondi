@@ -17,24 +17,29 @@ plugins {
 subprojects {
     apply(plugin = "com.diffplug.spotless")
     apply(plugin = "org.jetbrains.kotlinx.kover")
+
     configure<SpotlessExtension> {
         kotlin {
             target("**/*.kt")
             targetExclude("${layout.buildDirectory.get().asFile}/**/*.kt")
-            ktlint("0.50.0")
+
+            ktlint("1.2.1")
                 .editorConfigOverride(
                     mapOf(
                         "ktlint_standard_package-name" to "disabled",
+                        "ktlint_standard_function-naming" to "disabled",
                         "ktlint_standard_no-wildcard-imports" to "disabled",
                         "ktlint_standard_class-naming" to "disabled"
                     )
                 )
+
             licenseHeaderFile(rootProject.file("spotless/copyright.kt"))
         }
 
         kotlinGradle {
             target("*.gradle.kts")
-            ktlint("1.7.0")
+
+            ktlint("1.2.1")
         }
     }
 }
