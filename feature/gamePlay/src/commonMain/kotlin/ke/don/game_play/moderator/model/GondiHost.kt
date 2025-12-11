@@ -14,6 +14,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import ke.don.components.helpers.Matcha
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.server.GameIdentity
+import ke.don.domain.state.GamePhase
 import ke.don.game_play.BuildConfig.VERSION_NAME
 import ke.don.game_play.moderator.di.GAME_MODERATOR_SCOPE
 import ke.don.game_play.moderator.useCases.GameModeratorController
@@ -24,7 +25,9 @@ import ke.don.utils.result.ResultStatus
 import ke.don.utils.result.onFailure
 import ke.don.utils.result.onSuccess
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.koin.core.Koin
@@ -71,6 +74,15 @@ class GondiHost(
                     it.copy(announcements = updated.takeLast(MAX_ANNOUNCEMENTS))
                 }
             }
+
+            gameState
+                .map { it?.phase } // Only care about the phase
+                .distinctUntilChanged() // Only react when phase *actually* changes
+                .collect { newPhase ->
+                    if (newPhase == GamePhase.TOWN_HALL || newPhase == GamePhase.SLEEP) {
+                        session.updateModeratorState { it.copy(revealDeaths = true) }
+                    }
+                }
         }
     }
 
@@ -132,6 +144,9 @@ class GondiHost(
             is ModeratorHandler.UpdateRoomName -> moderator.updateRoomName(intent.name)
             ModeratorHandler.ShowLeaveDialog -> session.updateModeratorState {
                 it.copy(showLeaveGame = !it.showLeaveGame)
+            }
+            is ModeratorHandler.RevealDeaths -> session.updateModeratorState {
+                it.copy(revealDeaths = it.revealDeaths.not())
             }
             is ModeratorHandler.SelectPlayer -> moderator.selectPlayer(intent.id)
             ModeratorHandler.StartGame -> {

@@ -22,6 +22,9 @@ import androidx.compose.material.icons.outlined.AutoStories
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import ke.don.components.button.ButtonToken
@@ -29,17 +32,23 @@ import ke.don.components.button.ComponentType
 import ke.don.components.icon.IconToken
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
+import ke.don.domain.state.GamePhase
 import ke.don.domain.state.Player
 import ke.don.game_play.moderator.model.Announcement
 import ke.don.game_play.shared.components.AccusationSection
 import ke.don.game_play.shared.components.AnnouncementSection
 import ke.don.game_play.shared.components.PlayersGrid
+import ke.don.game_play.shared.components.RevealDeathModal
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @Composable
 fun SharedTownHall(
     players: List<Player>,
+    revealDeaths: Boolean,
+    onDismiss: () -> Unit,
+    lastSaved: String?,
+    lastKilled: List<String>,
     onSelectPlayer: (String) -> Unit,
     onVote: () -> Unit = {},
     myPlayerId: String,
@@ -57,6 +66,13 @@ fun SharedTownHall(
     announcements: List<Announcement> = emptyList(),
     modifier: Modifier = Modifier,
 ) {
+    val savedPlayer by remember(players, lastSaved) {
+        derivedStateOf { players.find { player -> player.id == lastSaved } }
+    }
+    val killedPlayers by remember(players, lastKilled) {
+        derivedStateOf { players.filter { player -> lastKilled.contains(player.id) } }
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Theme.spacing.large),
@@ -162,5 +178,14 @@ fun SharedTownHall(
                 announcements = announcements,
             )
         }
+    }
+
+    if (revealDeaths) {
+        RevealDeathModal(
+            onDismiss = onDismiss,
+            savedPlayer = savedPlayer,
+            killedPlayers = killedPlayers,
+            currentPhase = GamePhase.TOWN_HALL,
+        )
     }
 }

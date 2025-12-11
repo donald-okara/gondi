@@ -95,6 +95,10 @@ fun ModeratorTownHall(
         },
         announcements = moderatorState.announcements,
         onShowRules = { onEvent(ModeratorHandler.ShowRulesModal) },
+        revealDeaths = moderatorState.revealDeaths,
+        onDismiss = { onEvent(ModeratorHandler.RevealDeaths) },
+        lastSaved = gameState.lastSavedPlayerId,
+        lastKilled = gameState.pendingKills.filter { id -> players.find { it.id == id }?.isAlive == false }, // Only show players whose death has been processed
         modifier = modifier,
     )
 }

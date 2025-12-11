@@ -28,6 +28,7 @@ data class ModeratorState(
             else -> 0
         }
     },
+    val revealDeaths: Boolean = false,
     val assignmentsStatus: ResultStatus<Unit> = ResultStatus.Idle,
     val createStatus: ResultStatus<Unit> = ResultStatus.Idle,
     val showAssignRoles: Boolean = false,

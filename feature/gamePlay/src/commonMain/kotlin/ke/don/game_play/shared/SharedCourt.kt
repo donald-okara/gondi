@@ -65,5 +65,9 @@ fun SharedCourt(
         modifier = modifier,
         isCourt = true,
         onVote = onVote,
+        revealDeaths = false,
+        onDismiss = {},
+        lastSaved = null,
+        lastKilled = emptyList(),
     )
 }

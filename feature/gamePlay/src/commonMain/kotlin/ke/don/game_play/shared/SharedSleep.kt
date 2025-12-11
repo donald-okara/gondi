@@ -19,6 +19,9 @@ import androidx.compose.material.icons.outlined.AutoStories
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -29,13 +32,18 @@ import ke.don.components.icon.IconToken
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.SelectedPlayer
+import ke.don.domain.state.GamePhase
 import ke.don.domain.state.Player
 import ke.don.game_play.shared.components.PlayersGrid
+import ke.don.game_play.shared.components.RevealDeathModal
 
 @Composable
 fun SharedSleep(
     modifier: Modifier = Modifier,
     myPlayerId: String?,
+    revealDeaths: Boolean,
+    onDismiss: () -> Unit,
+    lastAccused: String?,
     instruction: String,
     isModerator: Boolean,
     onProceed: () -> Unit,
@@ -47,6 +55,10 @@ fun SharedSleep(
     players: List<Player>,
     selectedPlayers: List<SelectedPlayer> = emptyList(),
 ) {
+    val lastAccusedPlayer by remember(lastAccused, players) {
+        derivedStateOf { lastAccused?.let { accusedId -> players.find { it.id == accusedId } } }
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(Theme.spacing.large),
@@ -101,5 +113,14 @@ fun SharedSleep(
                 availableSlots = 0,
             )
         }
+    }
+
+    if (revealDeaths) {
+        RevealDeathModal(
+            onDismiss = onDismiss,
+            savedPlayer = if (lastAccusedPlayer?.isAlive == true) lastAccusedPlayer else null,
+            killedPlayers = if (lastAccusedPlayer?.isAlive == false && lastAccusedPlayer != null) listOf(lastAccusedPlayer!!) else emptyList(),
+            currentPhase = GamePhase.TOWN_HALL,
+        )
     }
 }

@@ -20,12 +20,14 @@ import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.domain.state.nextPhase
 import ke.don.game_play.moderator.model.ModeratorHandler
+import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.shared.SharedSleep
 
 @Composable
 fun ModeratorSleep(
     modifier: Modifier = Modifier,
     gameState: GameState,
+    moderatorState: ModeratorState,
     myPlayer: Player,
     players: List<Player>,
     onEvent: (ModeratorHandler) -> Unit,
@@ -73,5 +75,10 @@ fun ModeratorSleep(
         },
         actingPlayers = actingPlayers,
         onShowRules = { onEvent(ModeratorHandler.ShowRulesModal) },
+        revealDeaths = moderatorState.revealDeaths,
+        onDismiss = {
+            onEvent(ModeratorHandler.RevealDeaths)
+        },
+        lastAccused = null,
     )
 }

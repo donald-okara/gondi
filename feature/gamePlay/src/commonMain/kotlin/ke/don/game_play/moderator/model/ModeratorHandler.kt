@@ -17,6 +17,7 @@ sealed interface ModeratorHandler {
     class SelectPlayer(val id: String? = null) : ModeratorHandler
     class HandleModeratorCommand(val intent: ModeratorCommand) : ModeratorHandler
     object StartServer : ModeratorHandler
+    object RevealDeaths : ModeratorHandler
     object StartGame : ModeratorHandler
     object ShowLeaveDialog : ModeratorHandler
     object ShowRulesModal : ModeratorHandler

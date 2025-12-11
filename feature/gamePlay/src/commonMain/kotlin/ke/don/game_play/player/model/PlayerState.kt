@@ -20,6 +20,7 @@ data class PlayerState(
     val connectionStatus: ReadStatus = ReadStatus.Loading,
     val showLeaveGame: Boolean = false,
     val showRulesModal: Boolean = false,
+    val revealDeaths: Boolean = false,
     val selectedId: String? = null,
     val showVote: Boolean = false,
     val announcements: List<Announcement> = emptyList(),

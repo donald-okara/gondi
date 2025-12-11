@@ -173,6 +173,7 @@ class DefaultModeratorEngine(
         val pendingKills = game.pendingKills
 
         db.transaction {
+            db.exoneratePlayer(gameId)
             val toEliminate = pendingKills.filterNot { it == lastSaved }
             if (toEliminate.isNotEmpty()) {
                 db.updateAliveStatus(isAlive = false, ids = toEliminate, round)

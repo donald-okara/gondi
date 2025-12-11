@@ -98,6 +98,10 @@ fun TownHallPreview(
                 },
                 announcements = announcements,
                 knownIdentity = emptyList(),
+                revealDeaths = false,
+                onDismiss = {},
+                lastSaved = null,
+                lastKilled = emptyList(),
                 isModerator = false,
             )
         }
