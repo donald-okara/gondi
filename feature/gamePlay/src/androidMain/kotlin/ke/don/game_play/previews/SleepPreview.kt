@@ -27,6 +27,7 @@ import ke.don.domain.state.KnownIdentity
 import ke.don.domain.state.Player
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
+import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.moderator.screens.ModeratorSleep
 import kotlin.time.ExperimentalTime
 
@@ -144,6 +145,9 @@ fun PlayerSleepPreview(
                 myPlayer = currentPlayer,
                 players = players,
                 onEvent = {},
+                moderatorState = ModeratorState(
+                    revealDeaths = false
+                )
             )
         }
     }

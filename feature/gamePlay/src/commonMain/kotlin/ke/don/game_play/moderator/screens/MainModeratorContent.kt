@@ -122,6 +122,7 @@ private fun ContentSwitcher(
                         players = players,
                         myPlayer = hostPlayer,
                         onEvent = onEvent,
+                        moderatorState = moderatorState,
                     )
                 }
             }

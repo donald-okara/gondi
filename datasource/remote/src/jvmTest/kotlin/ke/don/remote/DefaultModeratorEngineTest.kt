@@ -78,6 +78,7 @@ class DefaultModeratorEngineTest : BaseGameTest() {
         assert(game.phase == GamePhase.SLEEP)
 
         assert(gondi?.knownIdentities?.isNotEmpty() == true)
+        assertEquals(1L, game.round)
     }
 
     @Test
@@ -231,7 +232,44 @@ class DefaultModeratorEngineTest : BaseGameTest() {
     }
 
     @Test
-    fun textExoneratePlayer_success() = runTest {
+    fun testMoveToTownHall_successExoneratesLastAccused() = runTest {
+        val moderatorEngine = DefaultModeratorEngine(db)
+        val gameEngine = DefaultGameEngine(db)
+
+        val moderator = player1
+        val accuser = player9
+        val seconder = player10
+        val accused = player6
+
+        db.batchUpdatePlayerRole(batchUpdateRoles)
+
+        moderatorEngine.handle(gameState.id, ModeratorCommand.CreateGame(gameState.id, gameState, moderator))
+
+        moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.TOWN_HALL))
+
+        executeValidated(gameEngine, PlayerIntent.Accuse(accuser.id, gameState.round, accused.id))
+        executeValidated(gameEngine, PlayerIntent.Second(seconder.id, gameState.round, accused.id))
+
+        val game = db.getGameState(gameState.id).firstOrNull()
+
+        assertNotNull(game)
+        assert(game.phase == GamePhase.TOWN_HALL)
+
+        val firstGame = db.getGameState(gameState.id).firstOrNull()
+        assert(firstGame?.accusedPlayer != null)
+        assert(firstGame?.second != null)
+
+        moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.COURT))
+        moderatorEngine.handle(gameState.id, ModeratorCommand.AdvancePhase(gameState.id, GamePhase.TOWN_HALL))
+
+        val secondGame = db.getGameState(gameState.id).firstOrNull()
+        assert(secondGame?.accusedPlayer == null)
+        assert(secondGame?.second == null)
+
+    }
+
+    @Test
+    fun testExoneratePlayer_success() = runTest {
         val moderatorEngine = DefaultModeratorEngine(db)
         val gameEngine = DefaultGameEngine(db)
 

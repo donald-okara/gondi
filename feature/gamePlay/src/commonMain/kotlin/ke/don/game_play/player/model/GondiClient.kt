@@ -14,6 +14,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import ke.don.components.helpers.Matcha
 import ke.don.domain.gameplay.PlayerIntent
 import ke.don.domain.gameplay.server.ServerId
+import ke.don.domain.state.GamePhase
 import ke.don.game_play.player.di.GAME_PLAYER_SCOPE
 import ke.don.game_play.player.useCases.GameClientManager
 import ke.don.game_play.player.useCases.GameClientState
@@ -66,6 +67,9 @@ class GondiClient(
                 .collect { newPhase ->
                     // Reset selectedId whenever phase changes
                     clientState.updatePlayerState { it.copy(selectedId = null) }
+                    if(newPhase == GamePhase.TOWN_HALL || newPhase == GamePhase.SLEEP){
+                        clientState.updatePlayerState { it.copy(revealDeaths = true) }
+                    }
                 }
         }
     }
@@ -74,6 +78,7 @@ class GondiClient(
     fun onEvent(intent: PlayerHandler) {
         when (intent) {
             is PlayerHandler.Connect -> connect(intent.serverId)
+            PlayerHandler.RevealDeaths -> clientState.updatePlayerState { it.copy(revealDeaths = !it.revealDeaths) }
             is PlayerHandler.Send -> sendIntent(intent.message)
             PlayerHandler.ShowLeaveDialog -> clientState.updatePlayerState { it.copy(showLeaveGame = !it.showLeaveGame) }
             PlayerHandler.ShowVoteDialog -> clientState.updatePlayerState { it.copy(showVote = !it.showVote) }

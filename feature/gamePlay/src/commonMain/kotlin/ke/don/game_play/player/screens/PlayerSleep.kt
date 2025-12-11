@@ -68,6 +68,9 @@ fun PlayerSleep(
         isModerator = false,
         onProceed = {},
         onShowRules = { onEvent(PlayerHandler.ShowRulesModal) },
+        revealDeaths = playerState.revealDeaths,
+        onDismiss = { onEvent(PlayerHandler.RevealDeaths) },
+        lastAccused = null
     )
 
     val selectedPlayer by remember(playerState.selectedId, alivePlayers) {

@@ -20,6 +20,7 @@ import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
+import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.shared.SharedTownHall
 import kotlin.time.ExperimentalTime
 
@@ -95,6 +96,10 @@ fun ModeratorTownHall(
         },
         announcements = moderatorState.announcements,
         onShowRules = { onEvent(ModeratorHandler.ShowRulesModal) },
-        modifier = modifier,
+        revealDeaths = moderatorState.revealDeaths,
+        onDismiss = { onEvent(ModeratorHandler.RevealDeaths) },
+        lastSaved = gameState.lastSavedPlayerId,
+        lastKilled = gameState.pendingKills.filter { id -> players.find { it.id == id }?.isAlive == false },
+        modifier = modifier
     )
 }
