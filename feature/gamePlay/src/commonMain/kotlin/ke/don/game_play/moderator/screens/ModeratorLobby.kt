@@ -42,9 +42,7 @@ fun ModeratorLobby(
         startGame = {
             gameState?.id?.let {
                 onEvent(
-                    ModeratorHandler.HandleModeratorCommand(
-                        ModeratorCommand.StartGame(it),
-                    ),
+                    ModeratorHandler.StartGame,
                 )
             }
         },

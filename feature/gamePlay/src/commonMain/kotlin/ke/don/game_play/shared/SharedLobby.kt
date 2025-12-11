@@ -134,7 +134,7 @@ fun LobbyHeader(
 
         ButtonToken(
             modifier = Modifier.fillMaxWidth(),
-            enabled = playersSize > PLAYER_LOWER_LIMIT,
+            enabled = playersSize >= PLAYER_LOWER_LIMIT,
             buttonType = ComponentType.Primary,
             onClick = startGame,
         ) {
