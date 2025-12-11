@@ -146,8 +146,8 @@ fun PlayerSleepPreview(
                 players = players,
                 onEvent = {},
                 moderatorState = ModeratorState(
-                    revealDeaths = false
-                )
+                    revealDeaths = false,
+                ),
             )
         }
     }

@@ -265,7 +265,6 @@ class DefaultModeratorEngineTest : BaseGameTest() {
         val secondGame = db.getGameState(gameState.id).firstOrNull()
         assert(secondGame?.accusedPlayer == null)
         assert(secondGame?.second == null)
-
     }
 
     @Test

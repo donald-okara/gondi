@@ -115,7 +115,7 @@ fun SharedSleep(
         }
     }
 
-    if (revealDeaths){
+    if (revealDeaths) {
         RevealDeathModal(
             onDismiss = onDismiss,
             savedPlayer = if (lastAccusedPlayer?.isAlive == true) lastAccusedPlayer else null,

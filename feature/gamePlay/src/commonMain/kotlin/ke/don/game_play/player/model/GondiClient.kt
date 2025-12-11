@@ -67,7 +67,7 @@ class GondiClient(
                 .collect { newPhase ->
                     // Reset selectedId whenever phase changes
                     clientState.updatePlayerState { it.copy(selectedId = null) }
-                    if(newPhase == GamePhase.TOWN_HALL || newPhase == GamePhase.SLEEP){
+                    if (newPhase == GamePhase.TOWN_HALL || newPhase == GamePhase.SLEEP) {
                         clientState.updatePlayerState { it.copy(revealDeaths = true) }
                     }
                 }

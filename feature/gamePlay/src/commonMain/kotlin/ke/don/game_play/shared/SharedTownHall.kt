@@ -180,7 +180,7 @@ fun SharedTownHall(
         }
     }
 
-    if (revealDeaths){
+    if (revealDeaths) {
         RevealDeathModal(
             onDismiss = onDismiss,
             savedPlayer = savedPlayer,

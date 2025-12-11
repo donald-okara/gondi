@@ -79,6 +79,6 @@ fun ModeratorSleep(
         onDismiss = {
             onEvent(ModeratorHandler.RevealDeaths)
         },
-        lastAccused = null
+        lastAccused = null,
     )
 }

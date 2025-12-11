@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.shared.components
 
 import androidx.compose.foundation.background
@@ -46,12 +55,12 @@ fun RevealDeathModal(
 ) {
     DialogToken(
         onDismissRequest = onDismiss,
-        modifier = modifier
-    ){
+        modifier = modifier,
+    ) {
         RevealDeathsComponent(
             savedPlayer = savedPlayer,
             currentPhase = currentPhase,
-            killedPlayers = killedPlayers
+            killedPlayers = killedPlayers,
         )
     }
 }
@@ -62,7 +71,7 @@ fun RevealDeathsComponent(
     savedPlayer: Player? = null,
     currentPhase: GamePhase,
     killedPlayers: List<Player> = emptyList(),
-){
+) {
     val icon = if (currentPhase == GamePhase.TOWN_HALL) Icons.Default.Bedtime else Icons.Default.Gavel
     val title = if (currentPhase == GamePhase.TOWN_HALL) "Night Results" else "Court ruling"
     val message = if (currentPhase == GamePhase.TOWN_HALL) "Here is what happened when the villagers slept!" else "Here is what the court decided"
@@ -72,7 +81,7 @@ fun RevealDeathsComponent(
             .padding(16.dp)
             .width(500.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
             modifier = Modifier
@@ -82,9 +91,9 @@ fun RevealDeathsComponent(
                 .border(
                     2.dp,
                     MaterialTheme.colorScheme.surface,
-                    CircleShape
+                    CircleShape,
                 ),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Icon(
                 imageVector = icon,
@@ -92,19 +101,19 @@ fun RevealDeathsComponent(
                 tint = Theme.colorScheme.primary,
                 modifier = Modifier
                     .padding(12.dp)
-                    .fillMaxSize()
+                    .fillMaxSize(),
             )
         }
 
         Text(
             text = title,
             style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.ExtraBold
+            fontWeight = FontWeight.ExtraBold,
         )
 
         Text(
             text = message,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
 
         Column(
@@ -117,18 +126,17 @@ fun RevealDeathsComponent(
                 NightResultItem(
                     player = it,
                     isSleep = currentPhase == GamePhase.SLEEP,
-                    status = NightStatus.Killed
+                    status = NightStatus.Killed,
                 )
             }
             savedPlayer?.let {
                 NightResultItem(
                     player = it,
                     isSleep = currentPhase == GamePhase.SLEEP,
-                    status = NightStatus.Saved
+                    status = NightStatus.Saved,
                 )
             }
         }
-
     }
 }
 
@@ -137,7 +145,7 @@ fun NightResultItem(
     modifier: Modifier = Modifier,
     player: Player,
     isSleep: Boolean,
-    status: NightStatus
+    status: NightStatus,
 ) {
     val action = when (status) {
         NightStatus.Killed -> ActionType.KILL
@@ -162,32 +170,30 @@ fun NightResultItem(
                 brush = Brush.linearGradient(
                     listOf(
                         bg,
-                        bg.copy(alpha = 0.55f)
-                    )
-                )
+                        bg.copy(alpha = 0.55f),
+                    ),
+                ),
             )
             .border(
                 1.dp,
                 border,
-                MaterialTheme.shapes.large
+                MaterialTheme.shapes.large,
             )
             .padding(horizontal = 16.dp, vertical = 14.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(14.dp)
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-
             Box(modifier = Modifier.size(56.dp)) {
                 ProfileImageToken(
                     isHero = false,
                     isSelected = true,
                     profile = player.toProfile(),
                     modifier = Modifier
-                        .matchParentSize()
+                        .matchParentSize(),
                 )
 
                 // Status badge
@@ -200,15 +206,15 @@ fun NightResultItem(
                         .border(
                             2.dp,
                             MaterialTheme.colorScheme.surface,
-                            CircleShape
+                            CircleShape,
                         ),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         painter = painterResource(action.painter!!),
                         contentDescription = null,
                         tint = action.color(),
-                        modifier = Modifier.size(14.dp)
+                        modifier = Modifier.size(14.dp),
                     )
                 }
             }
@@ -218,19 +224,19 @@ fun NightResultItem(
                     text = player.name,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+                        color = MaterialTheme.colorScheme.onSurface,
+                    ),
                 )
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     Icon(
                         painter = painterResource(action.painter!!),
                         contentDescription = null,
                         tint = action.color(),
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.size(16.dp),
                     )
 
                     val saviour = if (isSleep) "The court ruling" else "The Doctor"
@@ -240,8 +246,8 @@ fun NightResultItem(
                             NightStatus.Saved -> "Saved by $saviour"
                         },
                         style = MaterialTheme.typography.bodySmall.copy(
-                            color = action.color().copy(alpha = 0.9f)
-                        )
+                            color = action.color().copy(alpha = 0.9f),
+                        ),
                     )
                 }
             }
@@ -253,11 +259,10 @@ fun NightResultItem(
                 painter = painterResource(ActionType.SAVE.painter!!),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.55f),
-                modifier = Modifier.size(26.dp)
+                modifier = Modifier.size(26.dp),
             )
         }
     }
 }
-
 
 enum class NightStatus { Killed, Saved }
