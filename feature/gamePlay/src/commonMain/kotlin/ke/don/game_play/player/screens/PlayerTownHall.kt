@@ -78,7 +78,7 @@ fun PlayerTownHall(
         revealDeaths = playerState.revealDeaths,
         onDismiss = { onEvent(PlayerHandler.RevealDeaths) },
         lastSaved = gameState.lastSavedPlayerId,
-        lastKilled = gameState.pendingKills.filter { id -> players.find { it.id == id }?.isAlive == false },
+        lastKilled = gameState.pendingKills.filter { id -> players.find { it.id == id }?.isAlive == false }, // Only show players whose death has been processed
     )
 
     val selectedPlayer by remember(playerState.selectedId, players) {

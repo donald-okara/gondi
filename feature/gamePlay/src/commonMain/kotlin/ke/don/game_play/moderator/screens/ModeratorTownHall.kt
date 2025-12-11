@@ -98,7 +98,7 @@ fun ModeratorTownHall(
         revealDeaths = moderatorState.revealDeaths,
         onDismiss = { onEvent(ModeratorHandler.RevealDeaths) },
         lastSaved = gameState.lastSavedPlayerId,
-        lastKilled = gameState.pendingKills.filter { id -> players.find { it.id == id }?.isAlive == false },
+        lastKilled = gameState.pendingKills.filter { id -> players.find { it.id == id }?.isAlive == false }, // Only show players whose death has been processed
         modifier = modifier,
     )
 }
