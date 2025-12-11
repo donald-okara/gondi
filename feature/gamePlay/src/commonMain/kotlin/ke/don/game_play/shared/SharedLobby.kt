@@ -236,6 +236,7 @@ private fun ModeratorPanelHeader(modifier: Modifier = Modifier, onClick: () -> U
         IconToken(
             imageVector = Icons.Outlined.AutoStories,
             buttonType = ComponentType.Inverse,
+            contentDescription = "Show rules",
             onClick = onClick,
         )
     }

@@ -103,7 +103,7 @@ class TestGameRules @OptIn(ExperimentalTestApi::class) constructor(
         id = "123",
         name = "Test Game",
         phase = GamePhase.LOBBY,
-        availableSlots = 8
+        availableSlots = 7
     )
 
     @OptIn(ExperimentalTime::class)
