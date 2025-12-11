@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
@@ -24,6 +25,7 @@ import ke.don.domain.table.AvatarBackground
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.moderator.screens.MainModeratorContent
+import ke.don.game_play.moderator.useCases.PLAYER_LOWER_LIMIT
 import ke.don.utils.Logger
 import ke.don.utils.capitaliseFirst
 import kotlin.test.Test
@@ -35,7 +37,7 @@ class LobbyInstrumentedTest {
     val logger = Logger("LobbyInstrumentedTest")
 
     @Test
-    fun advancePhaseMovesToSleep() = runComposeUiTest {
+    fun advancePhaseMovesToSleep_SuccessWhenPlayersAreEnough() = runComposeUiTest {
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val clicked = mutableStateOf(false)
@@ -71,15 +73,120 @@ class LobbyInstrumentedTest {
                 )
             }
         }
-        onNodeWithText("Start Game").assertIsDisplayed()
-        onNodeWithText("Start Game").assertIsEnabled()
-        onNodeWithText("Start Game").performClick()
+
+        val expectedPhase = GamePhase.SLEEP
+        val expectedButtonText = "Start Game"
+
+        onNodeWithText(expectedButtonText).assertIsDisplayed()
+        onNodeWithText(expectedButtonText).assertIsEnabled()
+        onNodeWithText(expectedButtonText).performClick()
 
         waitForIdle()
-        val expectedPhase = GamePhase.SLEEP
 
         assertEquals(true, clicked.value)
         assertEquals(expectedPhase, rules.gameState.value.phase)
         onNodeWithText("${expectedPhase.name.capitaliseFirst()} for ${rules.gameState.value.name}").assertIsDisplayed()
+    }
+
+    @Test
+    fun advancePhaseMovesToSleep_SuccessWhenPlayersAreInadequate() = runComposeUiTest {
+        val rules = TestGameRules(this)
+        rules.setupDefaults()
+        rules.setUpPlayers(
+            rules.players.take(rules.gameState.value.availableSlots.toInt() - 1)
+        )
+        val clicked = mutableStateOf(false)
+
+        rules.setContent {
+            WithTestLifecycle {
+                val gameState by rules.gameState.collectAsState()
+                val moderatorState by rules.moderatorState.collectAsState()
+
+                fun onEvent(event: ModeratorHandler) {
+                    when (event) {
+                        ModeratorHandler.StartGame -> {
+                            clicked.value = true
+                            rules.setUpGameState(rules.gameState.value.copy(phase = GamePhase.SLEEP))
+
+                            logger.info(
+                                "State Phase: ${gameState.phase.name.capitaliseFirst()} Live Phase: ${rules.gameState.value.phase.name.capitaliseFirst()}"
+                            )
+                        }
+
+                        else -> {}
+                    }
+                }
+
+                MainModeratorContent(
+                    moderatorState = moderatorState,
+                    gameState = gameState,
+                    hostPlayer = rules.currentPlayer,
+                    players = rules.players,
+                    votes = rules.votes,
+                    onEvent = ::onEvent,
+                    onBack = {},
+                )
+            }
+        }
+
+        val expectedPhase = GamePhase.SLEEP
+        val expectedButtonText = "Start with ${rules.players.size} players"
+
+        onNodeWithText(expectedButtonText).assertIsDisplayed()
+        onNodeWithText(expectedButtonText).assertIsEnabled()
+        onNodeWithText(expectedButtonText).performClick()
+
+        waitForIdle()
+
+        assertEquals(true, clicked.value)
+        assertEquals(expectedPhase, rules.gameState.value.phase)
+        onNodeWithText("${expectedPhase.name.capitaliseFirst()} for ${rules.gameState.value.name}").assertIsDisplayed()
+    }
+
+    @Test
+    fun advancePhaseMovesToSleep_buttonDisabled() = runComposeUiTest {
+        val rules = TestGameRules(this)
+        rules.setupDefaults()
+        rules.setUpPlayers(
+            rules.players.take(PLAYER_LOWER_LIMIT - 1)
+        )
+        val clicked = mutableStateOf(false)
+
+        rules.setContent {
+            WithTestLifecycle {
+                val gameState by rules.gameState.collectAsState()
+                val moderatorState by rules.moderatorState.collectAsState()
+
+                fun onEvent(event: ModeratorHandler) {
+                    when (event) {
+                        ModeratorHandler.StartGame -> {
+                            clicked.value = true
+                            rules.setUpGameState(rules.gameState.value.copy(phase = GamePhase.SLEEP))
+
+                            logger.info(
+                                "State Phase: ${gameState.phase.name.capitaliseFirst()} Live Phase: ${rules.gameState.value.phase.name.capitaliseFirst()}"
+                            )
+                        }
+
+                        else -> {}
+                    }
+                }
+
+                MainModeratorContent(
+                    moderatorState = moderatorState,
+                    gameState = gameState,
+                    hostPlayer = rules.currentPlayer,
+                    players = rules.players,
+                    votes = rules.votes,
+                    onEvent = ::onEvent,
+                    onBack = {},
+                )
+            }
+        }
+
+        val expectedButtonText = "Start with ${rules.players.size} players"
+
+        onNodeWithText(expectedButtonText).assertIsDisplayed()
+        onNodeWithText(expectedButtonText).assertIsNotEnabled()
     }
 }
