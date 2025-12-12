@@ -13,7 +13,6 @@ import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
-import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.player.model.PlayerState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -52,18 +51,18 @@ class TestGameRules @OptIn(ExperimentalTestApi::class) constructor(
         }
     }
 
-    fun setupDefaults() {
+    fun setUpDefaults() {
         players = defaultPlayers()
         votes = emptyList()
 
-        currentPlayer = players.first { it.role == Role.MODERATOR }
+        currentPlayer = players.find { it.id == "3" }!!
 
         _gameState.update {
             defaultGameState()
         }
     }
 
-    fun setUpModeratorState(
+    fun setUpPlayerState(
         state: PlayerState
     ){
         _playerState.update {

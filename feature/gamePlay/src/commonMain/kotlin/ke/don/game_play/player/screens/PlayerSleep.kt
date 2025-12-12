@@ -14,6 +14,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import io.ktor.util.collections.getValue
 import ke.don.domain.gameplay.Role
 import ke.don.domain.gameplay.isActingInSleep
 import ke.don.domain.state.GameState
@@ -54,6 +55,8 @@ fun PlayerSleep(
         derivedStateOf { isActingInSleep(myPlayer, currentRound) }
     }
 
+    val lastAccused = remember(gameState.accusedPlayer) { gameState.accusedPlayer?.targetId }
+
     SharedSleep(
         modifier = modifier,
         myPlayerId = myPlayer.id,
@@ -70,7 +73,7 @@ fun PlayerSleep(
         onShowRules = { onEvent(PlayerHandler.ShowRulesModal) },
         revealDeaths = playerState.revealDeaths,
         onDismiss = { onEvent(PlayerHandler.RevealDeaths) },
-        lastAccused = null,
+        lastAccused = lastAccused,
     )
 
     val selectedPlayer by remember(playerState.selectedId, alivePlayers) {

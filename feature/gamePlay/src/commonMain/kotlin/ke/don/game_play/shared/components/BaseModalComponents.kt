@@ -39,16 +39,27 @@ fun ModalActions(
     dormantText: String,
     currentPlayer: Player,
 ) {
+    val lastAction = currentPlayer.lastAction
+    val lastActionSameRound = lastAction?.round == currentRound
+    val lastActionSameType = lastAction?.type == actionType
+
+    val shouldPermit = when {
+        overrideShowButton -> true
+        !currentPlayer.isAlive -> false
+        currentPlayer.id == selectedPlayer.id -> false
+
+        // If last action was this round, permit only if it's a different type
+        lastActionSameRound -> !lastActionSameType
+
+        // If last action is from previous rounds — permit
+        else -> true
+    }
+
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.End),
     ) {
-        if (
-            currentPlayer.lastAction?.round != currentRound &&
-            currentPlayer.isAlive &&
-            currentPlayer.lastAction?.type != actionType &&
-            overrideShowButton.not()
-        ) {
+        if (shouldPermit) {
             ButtonToken(
                 buttonType = actionType.componentType(),
                 onClick = showConfirmation,

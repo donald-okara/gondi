@@ -256,7 +256,7 @@ class LobbyInstrumentedTest {
     }
 
     @Test
-    fun showRules_assignDismissesModal() = runComposeUiTest {
+    fun assign_assignDismissesModal() = runComposeUiTest {
         val selectedId = "1"
         val rules = TestGameRules(this)
         rules.setupDefaults()
@@ -337,7 +337,7 @@ class LobbyInstrumentedTest {
     }
 
     @Test
-    fun showRules_removeDismissesModal() = runComposeUiTest {
+    fun assign_removeDismissesModal() = runComposeUiTest {
         val selectedId = "1"
         val rules = TestGameRules(this)
         rules.setupDefaults()

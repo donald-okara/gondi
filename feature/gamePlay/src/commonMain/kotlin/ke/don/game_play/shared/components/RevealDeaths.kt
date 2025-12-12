@@ -28,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +44,8 @@ import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.Player
+import ke.don.utils.Logger
+import ke.don.utils.capitaliseFirst
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -212,7 +215,10 @@ fun NightResultItem(
                 ) {
                     Icon(
                         painter = painterResource(action.painter!!),
-                        contentDescription = null,
+                        contentDescription = when (status) {
+                            NightStatus.Killed -> "Killed player"
+                            NightStatus.Saved -> "Saved player"
+                        },
                         tint = action.color(),
                         modifier = Modifier.size(14.dp),
                     )
@@ -242,7 +248,7 @@ fun NightResultItem(
                     val saviour = if (isSleep) "The court ruling" else "The Doctor"
                     Text(
                         text = when (status) {
-                            NightStatus.Killed -> "Eliminated — ${player.role}"
+                            NightStatus.Killed -> "Eliminated — ${player.role?.name?.capitaliseFirst()}"
                             NightStatus.Saved -> "Saved by $saviour"
                         },
                         style = MaterialTheme.typography.bodySmall.copy(
