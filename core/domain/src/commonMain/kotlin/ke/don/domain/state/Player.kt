@@ -11,6 +11,7 @@ package ke.don.domain.state
 
 import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.gameplay.Role
+import ke.don.domain.gameplay.actionType
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.domain.table.Profile
@@ -40,6 +41,10 @@ data class Player(
         username = name,
         avatar = avatar,
         background = background,
+    )
+
+    fun withLastAction(round: Long) = copy(
+        lastAction = PlayerAction(role!!.actionType, round)
     )
 }
 

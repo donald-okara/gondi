@@ -70,7 +70,7 @@ fun SharedTownHall(
         derivedStateOf { players.find { player -> player.id == lastSaved } }
     }
     val killedPlayers by remember(players, lastKilled) {
-        derivedStateOf { players.filter { player -> lastKilled.contains(player.id) } }
+        derivedStateOf { players.filter { player -> lastKilled.contains(player.id) && player.id == lastSaved } }
     }
 
     LazyColumn(

@@ -37,8 +37,20 @@ enum class ActionType {
 }
 
 fun isActingInSleep(player: Player, round: Long): Boolean {
-    return player.role?.canActInSleep == true &&
-        (player.lastAction?.round != round || player.lastAction.type != player.role.actionType) && player.isAlive
+    if (player.role?.canActInSleep != true) return false
+    if (!player.isAlive) return false
+
+    val lastAction = player.lastAction
+    val actedThisRound = lastAction?.round == round
+    val sameTypeAsRole = lastAction?.type == player.role.actionType
+
+    // If they acted this round, allow only if type was different
+    return if (actedThisRound) {
+        !sameTypeAsRole
+    } else {
+        true // hasn't acted this round → allowed
+    }
 }
+
 
 typealias SelectedPlayer = Pair<String, ActionType>

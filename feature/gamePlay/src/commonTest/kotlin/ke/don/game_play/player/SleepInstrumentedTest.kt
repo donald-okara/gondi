@@ -27,7 +27,7 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTestApi::class)
 class SleepInstrumentedTest {
-    val logger = Logger("SleepInstrumentedTest")
+    val logger = Logger("TownHallInstrumentedTest")
 
     @OptIn(ExperimentalTime::class)
     @Test
