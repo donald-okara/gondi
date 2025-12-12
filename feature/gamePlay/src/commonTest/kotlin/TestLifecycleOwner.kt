@@ -12,6 +12,15 @@ class TestLifecycleOwner : LifecycleOwner {
     override val lifecycle: Lifecycle = registry
 }
 
+/**
+ * A Composable that provides a [TestLifecycleOwner] to its content.
+ *
+ * This is useful for testing Composables that rely on a [LifecycleOwner]
+ * from [LocalLifecycleOwner]. The provided lifecycle is created in the
+ * `RESUMED` state.
+ *
+ * @param content The Composable content that requires a [LifecycleOwner].
+ */
 @Composable
 fun WithTestLifecycle(content: @Composable () -> Unit) {
     CompositionLocalProvider(
