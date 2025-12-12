@@ -60,6 +60,7 @@ class TestGameRules @OptIn(ExperimentalTestApi::class) constructor(
         _gameState.update {
             defaultGameState()
         }
+        votes = defaultVotes()
     }
 
     fun setUpPlayerState(
@@ -104,6 +105,33 @@ class TestGameRules @OptIn(ExperimentalTestApi::class) constructor(
         availableSlots = 7
     )
 
+    private fun defaultVotes() = listOf<Vote>(
+        Vote(
+            voterId = "1",
+            targetId = "2",
+            isGuilty = true
+        ),Vote(
+            voterId = "3",
+            targetId = "2",
+            isGuilty = true
+        ),Vote(
+            voterId = "4",
+            targetId = "2",
+            isGuilty = true
+        ),Vote(
+            voterId = "5",
+            targetId = "2",
+            isGuilty = true
+        ),Vote(
+            voterId = "6",
+            targetId = "2",
+            isGuilty = true
+        ),Vote(
+            voterId = "7",
+            targetId = "2",
+            isGuilty = true
+        )
+    )
 
     private fun defaultPlayers() = listOf(
         Player(id = "1", name = "Matt Foley", role = Role.VILLAGER, Avatar.Alexander, background = AvatarBackground.PURPLE_LILAC),

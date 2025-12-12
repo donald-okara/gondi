@@ -60,6 +60,15 @@ fun PlayerCourt(
         }
     }
 
+    val vote by remember(
+        votes,
+        myPlayer
+    ) {
+        derivedStateOf {
+            votes.find { it.voterId == myPlayer.id }
+        }
+    }
+
     SharedCourt(
         players = players,
         onVote = {
@@ -83,6 +92,7 @@ fun PlayerCourt(
             onEvent = onEvent,
             currentPlayer = myPlayer,
             selectedPlayer = accused!!,
+            vote = vote
         )
     }
 }
