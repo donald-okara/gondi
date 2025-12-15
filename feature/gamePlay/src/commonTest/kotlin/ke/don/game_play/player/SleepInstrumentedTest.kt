@@ -33,7 +33,7 @@ class SleepInstrumentedTest {
     @Test
     fun selectPlayer_ShowsModalAndActionsWhenAlive() = runComposeUiTest {
         val rules = TestGameRules(this)
-        rules.setUpDefaults()
+        rules.setupDefaults()
         rules.setUpGameState(
             rules.gameState.value.copy(
                 phase = GamePhase.SLEEP
@@ -89,7 +89,7 @@ class SleepInstrumentedTest {
     fun selectPlayer_performsActionWhenClicked() = runComposeUiTest {
         val selectedId = "2"
         val rules = TestGameRules(this)
-        rules.setUpDefaults()
+        rules.setupDefaults()
         rules.setUpGameState(
             rules.gameState.value.copy(
                 phase = GamePhase.SLEEP
@@ -145,7 +145,7 @@ class SleepInstrumentedTest {
     @Test
     fun selectPlayer_showsDormantText() = runComposeUiTest {
         val rules = TestGameRules(this)
-        rules.setUpDefaults()
+        rules.setupDefaults()
         val selectedId = "2"
         rules.setUpGameState(
             rules.gameState.value.copy(
@@ -209,7 +209,7 @@ class SleepInstrumentedTest {
     @Test
     fun revealDeaths_showsDeadPlayers() = runComposeUiTest {// Reuse in moderator
         val rules = TestGameRules(this)
-        rules.setUpDefaults()
+        rules.setupDefaults()
         val selectedId = "2"
         rules.setUpGameState(
             rules.gameState.value.copy(
@@ -283,7 +283,7 @@ class SleepInstrumentedTest {
     @Test
     fun onShowRules_showsRules() = runComposeUiTest {
         val rules = TestGameRules(this)
-        rules.setUpDefaults()
+        rules.setupDefaults()
         val clicked = mutableStateOf(false)
 
         rules.setContent {

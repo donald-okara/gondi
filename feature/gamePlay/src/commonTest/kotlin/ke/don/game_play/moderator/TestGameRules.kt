@@ -51,17 +51,23 @@ class TestGameRules @OptIn(ExperimentalTestApi::class) constructor(
     }
 
     fun setupDefaults() {
-        players = defaultPlayers()
-        votes = emptyList()
+        setUpPlayers(
+            defaultPlayers()
+        )
+        setUpCurrentPlayer(
+            players.first { it.role == Role.MODERATOR }
+        )
 
-        currentPlayer = players.first { it.role == Role.MODERATOR }
-
-        _gameState.update {
+        setUpGameState(
             defaultGameState()
-        }
-        _moderatorState.update {
+        )
+
+        setUpModeratorState(
             defaultModeratorState(gameState.value)
-        }
+        )
+        setUpVotes(
+            defaultVotes()
+        )
     }
 
     fun setUpModeratorState(
@@ -109,6 +115,34 @@ class TestGameRules @OptIn(ExperimentalTestApi::class) constructor(
     @OptIn(ExperimentalTime::class)
     private fun defaultModeratorState(newGame: GameState? = null) = ModeratorState(
         newGame = newGame ?: defaultGameState()
+    )
+
+    private fun defaultVotes() = listOf<Vote>(
+        Vote(
+            voterId = "1",
+            targetId = "2",
+            isGuilty = true
+        ),Vote(
+            voterId = "3",
+            targetId = "2",
+            isGuilty = true
+        ),Vote(
+            voterId = "4",
+            targetId = "2",
+            isGuilty = true
+        ),Vote(
+            voterId = "5",
+            targetId = "2",
+            isGuilty = true
+        ),Vote(
+            voterId = "6",
+            targetId = "2",
+            isGuilty = true
+        ),Vote(
+            voterId = "7",
+            targetId = "2",
+            isGuilty = true
+        )
     )
 
     private fun defaultPlayers() = listOf(

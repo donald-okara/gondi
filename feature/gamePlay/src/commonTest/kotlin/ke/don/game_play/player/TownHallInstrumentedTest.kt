@@ -13,7 +13,6 @@ import androidx.compose.ui.test.runComposeUiTest
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.state.GamePhase
-import ke.don.game_play.moderator.screens.ModeratorTownHall
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.screens.PlayerTownHall
 import ke.don.utils.Logger
@@ -31,7 +30,7 @@ class TownHallInstrumentedTest {
     @Test
     fun revealDeaths_showsSavedPlayers() = runComposeUiTest {
         val rules = TestGameRules(this)
-        rules.setUpDefaults()
+        rules.setupDefaults()
         val selectedId = "2"
         rules.setUpGameState(
             rules.gameState.value.copy(
@@ -73,7 +72,7 @@ class TownHallInstrumentedTest {
     @Test
     fun selectPlayer_showsModal() = runComposeUiTest {
         val rules = TestGameRules(this)
-        rules.setUpDefaults()
+        rules.setupDefaults()
 
         val selectedId = "2"
         val clicked = mutableStateOf(false)
@@ -124,7 +123,7 @@ class TownHallInstrumentedTest {
     @Test
     fun accusePlayer_setsAccusation() = runComposeUiTest {
         val rules = TestGameRules(this)
-        rules.setUpDefaults()
+        rules.setupDefaults()
 
         val selectedId = "2"
         val clicked = mutableStateOf(false)
@@ -184,7 +183,7 @@ class TownHallInstrumentedTest {
     @Test
     fun secondPlayer_setsSecond() = runComposeUiTest {
         val rules = TestGameRules(this)
-        rules.setUpDefaults()
+        rules.setupDefaults()
 
         val selectedId = "2"
         val clicked = mutableStateOf(false)

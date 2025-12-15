@@ -21,12 +21,12 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTestApi::class, ExperimentalTime::class)
 class CourtInstrumentedTest {
-    val logger = Logger("TownHallInstrumentedTest")
+    val logger = Logger("CourtInstrumentedTest")
 
     @Test
     fun vote_showsVoteModal() = runComposeUiTest {
         val rules = TestGameRules(this)
-        rules.setUpDefaults()
+        rules.setupDefaults()
         val selectedId = "2"
         rules.setUpGameState(
             rules.gameState.value.copy(
@@ -86,7 +86,7 @@ class CourtInstrumentedTest {
     @Test
     fun vote_showsVoteModalWhenPlayerHasntVoted() = runComposeUiTest {
         val rules = TestGameRules(this)
-        rules.setUpDefaults()
+        rules.setupDefaults()
         val selectedId = "2"
         rules.setUpGameState(
             rules.gameState.value.copy(
@@ -164,7 +164,7 @@ class CourtInstrumentedTest {
     @Test
     fun vote_showsDormantWhenPlayerIsDead() = runComposeUiTest {
         val rules = TestGameRules(this)
-        rules.setUpDefaults()
+        rules.setupDefaults()
         val selectedId = "2"
         rules.setUpGameState(
             rules.gameState.value.copy(
@@ -241,6 +241,4 @@ class CourtInstrumentedTest {
 
         onNodeWithText("Dead men tell no tales").assertIsDisplayed()
     }
-
-
 }

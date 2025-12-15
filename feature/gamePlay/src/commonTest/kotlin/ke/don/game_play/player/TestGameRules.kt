@@ -50,17 +50,20 @@ class TestGameRules @OptIn(ExperimentalTestApi::class) constructor(
             content()
         }
     }
+    fun setupDefaults() {
+        setUpPlayers(
+            defaultPlayers()
+        )
+        setUpCurrentPlayer(
+            players.find { it.id == "3" }!!
+        )
 
-    fun setUpDefaults() {
-        players = defaultPlayers()
-        votes = emptyList()
-
-        currentPlayer = players.find { it.id == "3" }!!
-
-        _gameState.update {
+        setUpGameState(
             defaultGameState()
-        }
-        votes = defaultVotes()
+        )
+        setUpVotes(
+            defaultVotes()
+        )
     }
 
     fun setUpPlayerState(

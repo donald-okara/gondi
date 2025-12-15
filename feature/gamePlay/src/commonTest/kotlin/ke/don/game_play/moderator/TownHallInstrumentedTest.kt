@@ -27,6 +27,17 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.time.ExperimentalTime
 
+/**
+ * Instrumented tests for the Town Hall phase of the game from the moderator's perspective.
+ * This class verifies the UI and state transitions for various scenarios within the `TOWN_HALL` game phase.
+ * It uses `ComposeUiTest` to interact with and assert the state of the UI components.
+ *
+ * The tests cover:
+ * - `revealDeaths_showsSavedPlayers`: Confirms that when night results are revealed, players who were saved are correctly indicated in the UI.
+ * - `proceed_MovesToCourtWhenAccusationAndSecondArePresent`: Verifies that the moderator can advance the game to the `COURT` phase when a player has been accused and seconded.
+ * - `proceed_MovesToSleepWhenAccusationAndSecondAreAbsent`: Checks that if no accusation is seconded, the moderator's "Proceed" action advances the game to the `SLEEP` phase.
+ * - `exonerates_clearsAccused`: Ensures the moderator can clear an accusation against a player, resetting the accusation state.
+ */
 @OptIn(ExperimentalTestApi::class)
 class TownHallInstrumentedTest {
     val logger = Logger("TownHallInstrumentedTest")
