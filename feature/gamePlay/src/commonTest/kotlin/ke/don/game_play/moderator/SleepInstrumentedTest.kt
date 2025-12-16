@@ -171,7 +171,7 @@ class SleepInstrumentedTest {
             val actionType = player.role?.actionType
 
             if (player.role?.canActInSleep == true && actionType != null) {
-                player.withLastAction(rules.gameState.value.round)
+                player.withLastAction(rules.gameState.value.round) ?: player
             } else {
                 player
             }
@@ -225,6 +225,6 @@ class SleepInstrumentedTest {
 
         val expectedPhase = GamePhase.TOWN_HALL
 
-        onNodeWithText("${expectedPhase.name.capitaliseFirst()} for ${rules.gameState.value.name}")
+        onNodeWithText("${expectedPhase.name.capitaliseFirst()} for ${rules.gameState.value.name}").assertIsDisplayed()
     }
 }

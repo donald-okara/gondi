@@ -36,7 +36,7 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTestApi::class)
 class SleepInstrumentedTest {
-    val logger = Logger("TownHallInstrumentedTest")
+    val logger = Logger("SleepInstrumentedTest")
 
     @OptIn(ExperimentalTime::class)
     @Test
@@ -156,9 +156,11 @@ class SleepInstrumentedTest {
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val selectedId = "2"
+        val round = 2L
         rules.setUpGameState(
             rules.gameState.value.copy(
                 phase = GamePhase.SLEEP,
+                round = round
             ),
         )
         rules.setUpPlayerState(
@@ -169,7 +171,9 @@ class SleepInstrumentedTest {
         val editedPlayer = rules.players.find { player -> player.id == rules.currentPlayer.id }?.copy(
             lastAction = PlayerAction(
                 type = ActionType.KILL,
-                round = rules.gameState.value.round,
+                round = round,
+                playerId = rules.currentPlayer.id,
+                targetId = selectedId,
             ),
         )
         rules.setUpPlayers(
@@ -189,7 +193,7 @@ class SleepInstrumentedTest {
                 val gameState by rules.gameState.collectAsState()
                 val playerState by rules.playerState.collectAsState()
                 val players = rules.players
-                val currentPlayer = rules.currentPlayer
+                val currentPlayer = players.find { it.id == rules.currentPlayer.id }!!
 
                 fun onEvent(event: PlayerHandler) {
                     when (event) {
@@ -210,7 +214,7 @@ class SleepInstrumentedTest {
             }
         }
 
-        onNodeWithText(DORMANT_TEXT_GONDI)
+        onNodeWithText(DORMANT_TEXT_GONDI).assertIsDisplayed()
     }
 
     @OptIn(ExperimentalTime::class)

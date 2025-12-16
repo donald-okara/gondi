@@ -43,9 +43,9 @@ data class Player(
         background = background,
     )
 
-    fun withLastAction(round: Long) = copy(
-        lastAction = PlayerAction(role!!.actionType, round),
-    )
+    fun withLastAction(round: Long): Player? = role?.let {
+        copy(lastAction = PlayerAction(it.actionType, round))
+    }
 }
 
 @Serializable

@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.icon.IconToken
-import ke.don.components.profile.componentType
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.domain.state.GamePhase
@@ -71,7 +70,7 @@ fun SharedTownHall(
         derivedStateOf { players.find { player -> player.id == lastSaved } }
     }
     val killedPlayers by remember(players, lastKilled) {
-        derivedStateOf { players.filter { player -> lastKilled.contains(player.id) && player.id == lastSaved } }
+        derivedStateOf { players.filter { player -> lastKilled.contains(player.id) && player.id != lastSaved } }
     }
 
     LazyColumn(
