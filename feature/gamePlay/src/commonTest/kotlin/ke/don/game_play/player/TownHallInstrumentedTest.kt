@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.player
 
 import WithTestLifecycle
@@ -25,7 +34,6 @@ import kotlin.time.ExperimentalTime
 class TownHallInstrumentedTest {
     val logger = Logger("TownHallInstrumentedTest")
 
-
     @OptIn(ExperimentalTime::class)
     @Test
     fun revealDeaths_showsSavedPlayers() = runComposeUiTest {
@@ -36,13 +44,13 @@ class TownHallInstrumentedTest {
             rules.gameState.value.copy(
                 phase = GamePhase.TOWN_HALL,
                 pendingKills = listOf(selectedId),
-                lastSavedPlayerId = selectedId
-            )
+                lastSavedPlayerId = selectedId,
+            ),
         )
         rules.setUpPlayerState(
             rules.playerState.value.copy(
-                revealDeaths = true
-            )
+                revealDeaths = true,
+            ),
         )
 
         rules.setContent {
@@ -51,7 +59,6 @@ class TownHallInstrumentedTest {
                 val playerState by rules.playerState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
-
 
                 PlayerTownHall(
                     gameState = gameState,
@@ -62,7 +69,6 @@ class TownHallInstrumentedTest {
                 )
             }
         }
-
 
         onNodeWithText("Night Results").assertIsDisplayed()
         onNodeWithContentDescription("Saved player").assertIsDisplayed()
@@ -78,8 +84,8 @@ class TownHallInstrumentedTest {
         val clicked = mutableStateOf(false)
         rules.setUpGameState(
             rules.gameState.value.copy(
-                phase = GamePhase.TOWN_HALL
-            )
+                phase = GamePhase.TOWN_HALL,
+            ),
         )
 
         rules.setContent {
@@ -89,8 +95,8 @@ class TownHallInstrumentedTest {
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
 
-                fun onEvent(event: PlayerHandler){
-                    when(event) {
+                fun onEvent(event: PlayerHandler) {
+                    when (event) {
                         is PlayerHandler.SelectPlayer -> {
                             clicked.value = true
                         }
@@ -107,7 +113,6 @@ class TownHallInstrumentedTest {
                 )
             }
         }
-
 
         val selectedPlayer = rules.players.find { it.id == selectedId }
 
@@ -129,14 +134,14 @@ class TownHallInstrumentedTest {
         val clicked = mutableStateOf(false)
         rules.setUpGameState(
             rules.gameState.value.copy(
-                phase = GamePhase.TOWN_HALL
-            )
+                phase = GamePhase.TOWN_HALL,
+            ),
         )
 
         rules.setUpPlayerState(
             rules.playerState.value.copy(
-                selectedId = selectedId
-            )
+                selectedId = selectedId,
+            ),
         )
         rules.setContent {
             WithTestLifecycle {
@@ -145,8 +150,8 @@ class TownHallInstrumentedTest {
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
 
-                fun onEvent(event: PlayerHandler){
-                    when(event) {
+                fun onEvent(event: PlayerHandler) {
+                    when (event) {
                         is PlayerHandler.Send -> {
                             clicked.value = true
                         }
@@ -195,9 +200,9 @@ class TownHallInstrumentedTest {
                     type = ActionType.ACCUSE,
                     round = rules.gameState.value.round,
                     targetId = selectedId,
-                    playerId = "5"
-                )
-            )
+                    playerId = "5",
+                ),
+            ),
         )
 
         rules.setContent {
@@ -207,8 +212,8 @@ class TownHallInstrumentedTest {
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
 
-                fun onEvent(event: PlayerHandler){
-                    when(event) {
+                fun onEvent(event: PlayerHandler) {
+                    when (event) {
                         is PlayerHandler.Send -> {
                             clicked.value = true
                         }

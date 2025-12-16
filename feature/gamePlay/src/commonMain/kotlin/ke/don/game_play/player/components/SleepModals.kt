@@ -187,4 +187,3 @@ const val DORMANT_TEXT_GONDI = "You've already chosen a target for tonight."
 const val DORMANT_TEXT_DOCTOR = "Your patient for tonight is already chosen."
 const val DORMANT_TEXT_DETECTIVE = "You've already put your investigative skills to use this round."
 const val DORMANT_TEXT_DEFAULT = "It's time to rest. There's nothing more to do."
-

@@ -19,7 +19,6 @@ import androidx.compose.material.icons.outlined.AutoStories
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -37,7 +36,6 @@ import ke.don.domain.state.GamePhase
 import ke.don.domain.state.Player
 import ke.don.game_play.shared.components.PlayersGrid
 import ke.don.game_play.shared.components.RevealDeathModal
-import ke.don.utils.Logger
 
 @Composable
 fun SharedSleep(

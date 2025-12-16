@@ -22,7 +22,6 @@ import androidx.compose.material.icons.outlined.AutoStories
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -34,7 +33,6 @@ import ke.don.components.icon.IconToken
 import ke.don.components.profile.componentType
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
-import ke.don.domain.gameplay.ActionType
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.Player
 import ke.don.game_play.moderator.model.Announcement
@@ -42,7 +40,6 @@ import ke.don.game_play.shared.components.AccusationSection
 import ke.don.game_play.shared.components.AnnouncementSection
 import ke.don.game_play.shared.components.PlayersGrid
 import ke.don.game_play.shared.components.RevealDeathModal
-import ke.don.utils.Logger
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -93,7 +90,7 @@ fun SharedTownHall(
                                 callToActionText = "Proceed",
                                 componentType = ComponentType.Primary,
                                 onActionClick = proceed,
-                                enabled = actingPlayers.isEmpty()
+                                enabled = actingPlayers.isEmpty(),
                             )
 
                         seconder != null ->
@@ -103,7 +100,7 @@ fun SharedTownHall(
                                 callToActionText = "Proceed",
                                 componentType = ComponentType.Primary,
                                 onActionClick = proceed,
-                                enabled = true
+                                enabled = true,
                             )
 
                         accused != null ->
@@ -113,7 +110,7 @@ fun SharedTownHall(
                                 callToActionText = "Exonerate ${accused.name}",
                                 componentType = ComponentType.Primary,
                                 onActionClick = exoneratePlayer,
-                                enabled = true
+                                enabled = true,
                             )
 
                         else ->
@@ -123,7 +120,7 @@ fun SharedTownHall(
                                 callToActionText = "Proceed",
                                 componentType = ComponentType.Primary,
                                 onActionClick = proceed,
-                                enabled = actingPlayers.isEmpty()
+                                enabled = actingPlayers.isEmpty(),
                             )
                     }
                 }
@@ -135,7 +132,7 @@ fun SharedTownHall(
                         callToActionText = "Vote",
                         componentType = ComponentType.Primary,
                         onActionClick = onVote,
-                        enabled = true
+                        enabled = true,
                     )
                 }
             }
@@ -200,7 +197,6 @@ fun SharedTownHall(
     }
 }
 
-
 @Composable
 fun CallToActionSection(
     modifier: Modifier = Modifier,
@@ -210,16 +206,15 @@ fun CallToActionSection(
     onActionClick: () -> Unit,
     enabled: Boolean = true,
 ) {
-
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
     ) {
         // --- 1. Explanation Text ---
         Text(
             text = explanationText,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
         )
 
         // --- 2. Call to Action Button ---
@@ -231,6 +226,5 @@ fun CallToActionSection(
         ) {
             Text(callToActionText)
         }
-
     }
 }

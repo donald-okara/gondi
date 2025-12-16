@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.player
 
 import WithTestLifecycle
@@ -36,8 +45,8 @@ class SleepInstrumentedTest {
         rules.setupDefaults()
         rules.setUpGameState(
             rules.gameState.value.copy(
-                phase = GamePhase.SLEEP
-            )
+                phase = GamePhase.SLEEP,
+            ),
         )
         val clicked = mutableStateOf(false)
 
@@ -54,8 +63,8 @@ class SleepInstrumentedTest {
                             clicked.value = true
                             rules.setUpPlayerState(
                                 rules.playerState.value.copy(
-                                    selectedId = event.playerId
-                                )
+                                    selectedId = event.playerId,
+                                ),
                             )
                         }
                         else -> {}
@@ -81,7 +90,7 @@ class SleepInstrumentedTest {
 
         assertEquals(true, clicked.value)
 
-        onNodeWithText( "${ActionType.KILL.name.capitaliseFirst()} $selectedPlayerName").assertIsDisplayed()
+        onNodeWithText("${ActionType.KILL.name.capitaliseFirst()} $selectedPlayerName").assertIsDisplayed()
     }
 
     @OptIn(ExperimentalTime::class)
@@ -92,13 +101,13 @@ class SleepInstrumentedTest {
         rules.setupDefaults()
         rules.setUpGameState(
             rules.gameState.value.copy(
-                phase = GamePhase.SLEEP
-            )
+                phase = GamePhase.SLEEP,
+            ),
         )
         rules.setUpPlayerState(
             rules.playerState.value.copy(
-                selectedId = selectedId
-            )
+                selectedId = selectedId,
+            ),
         )
         val clicked = mutableStateOf(false)
 
@@ -111,7 +120,7 @@ class SleepInstrumentedTest {
 
                 fun onEvent(event: PlayerHandler) {
                     when (event) {
-                        is  PlayerHandler.Send -> {
+                        is PlayerHandler.Send -> {
                             clicked.value = true
                         }
                         else -> {}
@@ -130,8 +139,8 @@ class SleepInstrumentedTest {
 
         val selectedPlayerName = rules.players.find { player -> player.id == selectedId }?.name
 
-        onNodeWithText( "${ActionType.KILL.name.capitaliseFirst()} $selectedPlayerName").assertIsDisplayed()
-        onNodeWithText( "${ActionType.KILL.name.capitaliseFirst()} $selectedPlayerName").performClick()
+        onNodeWithText("${ActionType.KILL.name.capitaliseFirst()} $selectedPlayerName").assertIsDisplayed()
+        onNodeWithText("${ActionType.KILL.name.capitaliseFirst()} $selectedPlayerName").performClick()
 
         waitForIdle()
 
@@ -149,19 +158,19 @@ class SleepInstrumentedTest {
         val selectedId = "2"
         rules.setUpGameState(
             rules.gameState.value.copy(
-                phase = GamePhase.SLEEP
-            )
+                phase = GamePhase.SLEEP,
+            ),
         )
         rules.setUpPlayerState(
             rules.playerState.value.copy(
-                selectedId = selectedId
-            )
+                selectedId = selectedId,
+            ),
         )
         val editedPlayer = rules.players.find { player -> player.id == rules.currentPlayer.id }?.copy(
             lastAction = PlayerAction(
                 type = ActionType.KILL,
-                round = rules.gameState.value.round
-            )
+                round = rules.gameState.value.round,
+            ),
         )
         rules.setUpPlayers(
             rules.players.map { player ->
@@ -170,7 +179,7 @@ class SleepInstrumentedTest {
                 } else {
                     player
                 }
-            }
+            },
         )
 
         val clicked = mutableStateOf(false)
@@ -184,7 +193,7 @@ class SleepInstrumentedTest {
 
                 fun onEvent(event: PlayerHandler) {
                     when (event) {
-                        is  PlayerHandler.Send -> {
+                        is PlayerHandler.Send -> {
                             clicked.value = true
                         }
                         else -> {}
@@ -201,13 +210,12 @@ class SleepInstrumentedTest {
             }
         }
 
-
         onNodeWithText(DORMANT_TEXT_GONDI)
     }
 
     @OptIn(ExperimentalTime::class)
     @Test
-    fun revealDeaths_showsDeadPlayers() = runComposeUiTest {// Reuse in moderator
+    fun revealDeaths_showsDeadPlayers() = runComposeUiTest { // Reuse in moderator
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val selectedId = "2"
@@ -217,17 +225,17 @@ class SleepInstrumentedTest {
                 accusedPlayer = PlayerAction(
                     type = ActionType.ACCUSE,
                     round = rules.gameState.value.round,
-                    targetId = selectedId
-                )
-            )
+                    targetId = selectedId,
+                ),
+            ),
         )
         rules.setUpPlayerState(
             rules.playerState.value.copy(
-                revealDeaths = true
-            )
+                revealDeaths = true,
+            ),
         )
         val editedPlayer = rules.players.find { player -> player.id == selectedId }?.copy(
-            isAlive = false
+            isAlive = false,
         )
         logger.info("Edited player =  $editedPlayer")
         rules.setUpPlayers(
@@ -237,11 +245,11 @@ class SleepInstrumentedTest {
                 } else {
                     player
                 }
-            }
+            },
         )
 
         logger.info(
-            "New player =  ${rules.players.find { player -> player.id == selectedId }}"
+            "New player =  ${rules.players.find { player -> player.id == selectedId }}",
         )
 
         val clicked = mutableStateOf(false)
@@ -255,7 +263,7 @@ class SleepInstrumentedTest {
 
                 fun onEvent(event: PlayerHandler) {
                     when (event) {
-                        is  PlayerHandler.Send -> {
+                        is PlayerHandler.Send -> {
                             clicked.value = true
                         }
                         else -> {}
@@ -272,12 +280,9 @@ class SleepInstrumentedTest {
             }
         }
 
-
         onNodeWithText("Night Results").assertIsDisplayed()
         onNodeWithContentDescription("Killed player").assertIsDisplayed()
-
     }
-
 
     @OptIn(ExperimentalTime::class)
     @Test
@@ -308,7 +313,7 @@ class SleepInstrumentedTest {
                     playerState = playerState,
                     onEvent = ::onEvent,
                     onBack = {},
-                    votes = emptyList()
+                    votes = emptyList(),
                 )
             }
         }

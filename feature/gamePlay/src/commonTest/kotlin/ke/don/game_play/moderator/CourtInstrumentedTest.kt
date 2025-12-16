@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.moderator
 
 import WithTestLifecycle
@@ -17,15 +26,11 @@ import ke.don.domain.state.GamePhase
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.screens.MainModeratorContent
 import ke.don.game_play.moderator.screens.ModeratorCourt
-import ke.don.game_play.player.model.PlayerHandler
-import ke.don.game_play.player.screens.PlayerCourt
 import ke.don.utils.Logger
 import ke.don.utils.capitaliseFirst
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import kotlin.time.ExperimentalTime
-
 
 /**
  * Instrumented UI tests for the [GamePhase.COURT] screen.
@@ -56,8 +61,8 @@ class CourtInstrumentedTest {
                     round = rules.gameState.value.round,
                     targetId = selectedId,
                     playerId = rules.currentPlayer.id,
-                )
-            )
+                ),
+            ),
         )
         val selectedPhase = mutableStateOf(GamePhase.COURT)
 
@@ -68,8 +73,8 @@ class CourtInstrumentedTest {
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
 
-                fun onEvent(event : ModeratorHandler){
-                    when(event){
+                fun onEvent(event: ModeratorHandler) {
+                    when (event) {
                         is ModeratorHandler.HandleModeratorCommand -> {
                             selectedPhase.value = GamePhase.SLEEP
                         }
@@ -82,7 +87,7 @@ class CourtInstrumentedTest {
                     players = players,
                     moderatorState = moderatorState,
                     onEvent = ::onEvent,
-                    votes = emptyList()
+                    votes = emptyList(),
                 )
             }
         }
@@ -90,6 +95,7 @@ class CourtInstrumentedTest {
         onNodeWithText("Proceed").assertIsDisplayed()
         onNodeWithText("Proceed").assertIsNotEnabled()
     }
+
     @ExperimentalTime
     @Test
     fun proceed_isPresentAndEnabledWhenVotesNotEmpty() = runComposeUiTest {
@@ -110,8 +116,8 @@ class CourtInstrumentedTest {
                     round = rules.gameState.value.round,
                     targetId = selectedId,
                     playerId = rules.currentPlayer.id,
-                )
-            )
+                ),
+            ),
         )
         val selectedPhase = mutableStateOf(GamePhase.COURT)
 
@@ -123,14 +129,14 @@ class CourtInstrumentedTest {
                 val votes = rules.votes
                 val currentPlayer = rules.currentPlayer
 
-                fun onEvent(event : ModeratorHandler){
-                    when(event){
+                fun onEvent(event: ModeratorHandler) {
+                    when (event) {
                         is ModeratorHandler.HandleModeratorCommand -> {
                             selectedPhase.value = GamePhase.SLEEP
                             rules.setUpGameState(
                                 gameState.copy(
-                                    phase = selectedPhase.value
-                                )
+                                    phase = selectedPhase.value,
+                                ),
                             )
                         }
                         else -> {}
@@ -143,7 +149,7 @@ class CourtInstrumentedTest {
                     moderatorState = moderatorState,
                     onEvent = ::onEvent,
                     votes = votes,
-                    onBack = {}
+                    onBack = {},
                 )
             }
         }
@@ -157,7 +163,7 @@ class CourtInstrumentedTest {
         val expectedPhase = GamePhase.SLEEP
         assertEquals(expectedPhase, selectedPhase.value)
         onNodeWithText(
-            "${expectedPhase.name.capitaliseFirst()} for ${rules.gameState.value.name}"
+            "${expectedPhase.name.capitaliseFirst()} for ${rules.gameState.value.name}",
         ).assertIsDisplayed()
     }
 }

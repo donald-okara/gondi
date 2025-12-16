@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.moderator
 
 import WithTestLifecycle
@@ -36,7 +45,7 @@ class SleepInstrumentedTest {
 
     @OptIn(ExperimentalTime::class)
     @Test
-    fun revealDeaths_showsDeadPlayers() = runComposeUiTest {// Reuse in moderator
+    fun revealDeaths_showsDeadPlayers() = runComposeUiTest { // Reuse in moderator
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val selectedId = "2"
@@ -46,17 +55,17 @@ class SleepInstrumentedTest {
                 accusedPlayer = PlayerAction(
                     type = ActionType.ACCUSE,
                     round = rules.gameState.value.round,
-                    targetId = selectedId
-                )
-            )
+                    targetId = selectedId,
+                ),
+            ),
         )
         rules.setUpModeratorState(
             rules.moderatorState.value.copy(
-                revealDeaths = true
-            )
+                revealDeaths = true,
+            ),
         )
         val editedPlayer = rules.players.find { player -> player.id == selectedId }?.copy(
-            isAlive = false
+            isAlive = false,
         )
         logger.info("Edited player =  $editedPlayer")
         rules.setUpPlayers(
@@ -66,13 +75,12 @@ class SleepInstrumentedTest {
                 } else {
                     player
                 }
-            }
+            },
         )
 
         logger.info(
-            "New player =  ${rules.players.find { player -> player.id == selectedId }}"
+            "New player =  ${rules.players.find { player -> player.id == selectedId }}",
         )
-
 
         rules.setContent {
             WithTestLifecycle {
@@ -80,7 +88,6 @@ class SleepInstrumentedTest {
                 val moderatorState by rules.moderatorState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
-
 
                 ModeratorSleep(
                     gameState = gameState,
@@ -91,7 +98,6 @@ class SleepInstrumentedTest {
                 )
             }
         }
-
 
         onNodeWithText("Night Results").assertIsDisplayed()
         onNodeWithContentDescription("Killed player").assertIsDisplayed()
@@ -104,8 +110,8 @@ class SleepInstrumentedTest {
         rules.setUpGameState(
             rules.gameState.value.copy(
                 phase = GamePhase.SLEEP,
-                round = 1
-            )
+                round = 1,
+            ),
         )
         rules.setContent {
             WithTestLifecycle {
@@ -117,12 +123,12 @@ class SleepInstrumentedTest {
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
                         is ModeratorHandler.HandleModeratorCommand -> {
-                            when(event.intent) {
+                            when (event.intent) {
                                 is ModeratorCommand.AdvancePhase -> {
                                     rules.setUpGameState(
                                         rules.gameState.value.copy(
-                                            phase = event.intent.phase
-                                        )
+                                            phase = event.intent.phase,
+                                        ),
                                     )
                                 }
 
@@ -141,14 +147,13 @@ class SleepInstrumentedTest {
                     moderatorState = moderatorState,
                     onEvent = ::onEvent,
                     onBack = {},
-                    votes = emptyList()
+                    votes = emptyList(),
                 )
             }
         }
 
         onNodeWithText("Proceed").assertIsDisplayed()
         onNodeWithText("Proceed").assertIsNotEnabled()
-
     }
 
     @Test
@@ -158,8 +163,8 @@ class SleepInstrumentedTest {
         rules.setUpGameState(
             rules.gameState.value.copy(
                 phase = GamePhase.SLEEP,
-                round = 1
-            )
+                round = 1,
+            ),
         )
 
         val editedPlayers = rules.players.map { player ->
@@ -184,12 +189,12 @@ class SleepInstrumentedTest {
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
                         is ModeratorHandler.HandleModeratorCommand -> {
-                            when(event.intent) {
+                            when (event.intent) {
                                 is ModeratorCommand.AdvancePhase -> {
                                     rules.setUpGameState(
                                         rules.gameState.value.copy(
-                                            phase = event.intent.phase
-                                        )
+                                            phase = event.intent.phase,
+                                        ),
                                     )
                                 }
 
@@ -208,7 +213,7 @@ class SleepInstrumentedTest {
                     moderatorState = moderatorState,
                     onEvent = ::onEvent,
                     onBack = {},
-                    votes = emptyList()
+                    votes = emptyList(),
                 )
             }
         }

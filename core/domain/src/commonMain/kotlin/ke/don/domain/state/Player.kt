@@ -44,7 +44,7 @@ data class Player(
     )
 
     fun withLastAction(round: Long) = copy(
-        lastAction = PlayerAction(role!!.actionType, round)
+        lastAction = PlayerAction(role!!.actionType, round),
     )
 }
 

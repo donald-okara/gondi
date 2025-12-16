@@ -68,7 +68,7 @@ class GondiClient(
                     // Reset selectedId whenever phase changes
                     clientState.updatePlayerState { it.copy(selectedId = null) }
 
-                    //Always reveal deaths on town hall and sleep except on round 0L for the latter
+                    // Always reveal deaths on town hall and sleep except on round 0L for the latter
                     if (newPhase == GamePhase.TOWN_HALL || (newPhase == GamePhase.SLEEP && gameState.value?.round != 0L)) {
                         clientState.updatePlayerState { it.copy(revealDeaths = true) }
                     }

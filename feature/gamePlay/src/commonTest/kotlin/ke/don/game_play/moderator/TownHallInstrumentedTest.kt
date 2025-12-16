@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.moderator
 
 import WithTestLifecycle
@@ -6,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -14,11 +22,9 @@ import androidx.compose.ui.test.runComposeUiTest
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.ModeratorCommand
 import ke.don.domain.gameplay.PlayerAction
-import ke.don.domain.gameplay.actionType
 import ke.don.domain.state.GamePhase
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.screens.MainModeratorContent
-import ke.don.game_play.moderator.screens.ModeratorSleep
 import ke.don.game_play.moderator.screens.ModeratorTownHall
 import ke.don.utils.Logger
 import ke.don.utils.capitaliseFirst
@@ -42,7 +48,6 @@ import kotlin.time.ExperimentalTime
 class TownHallInstrumentedTest {
     val logger = Logger("TownHallInstrumentedTest")
 
-
     @OptIn(ExperimentalTime::class)
     @Test
     fun revealDeaths_showsSavedPlayers() = runComposeUiTest {
@@ -53,13 +58,13 @@ class TownHallInstrumentedTest {
             rules.gameState.value.copy(
                 phase = GamePhase.TOWN_HALL,
                 pendingKills = listOf(selectedId),
-                lastSavedPlayerId = selectedId
-            )
+                lastSavedPlayerId = selectedId,
+            ),
         )
         rules.setUpModeratorState(
             rules.moderatorState.value.copy(
-                revealDeaths = true
-            )
+                revealDeaths = true,
+            ),
         )
 
         rules.setContent {
@@ -68,7 +73,6 @@ class TownHallInstrumentedTest {
                 val moderatorState by rules.moderatorState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
-
 
                 ModeratorTownHall(
                     gameState = gameState,
@@ -80,7 +84,6 @@ class TownHallInstrumentedTest {
             }
         }
 
-
         onNodeWithText("Night Results").assertIsDisplayed()
         onNodeWithContentDescription("Saved player").assertIsDisplayed()
     }
@@ -88,7 +91,6 @@ class TownHallInstrumentedTest {
     @OptIn(ExperimentalTime::class)
     @Test
     fun proceed_MovesToCourtWhenAccusationAndSecondArePresent() = runComposeUiTest {
-
         val rules = TestGameRules(this)
         rules.setupDefaults()
 
@@ -102,15 +104,15 @@ class TownHallInstrumentedTest {
                     type = ActionType.ACCUSE,
                     round = rules.gameState.value.round,
                     targetId = selectedId,
-                    playerId = "4"
+                    playerId = "4",
                 ),
                 second = PlayerAction(
                     type = ActionType.SECOND,
                     round = rules.gameState.value.round,
                     targetId = selectedId,
-                    playerId = "5"
-                )
-            )
+                    playerId = "5",
+                ),
+            ),
         )
 
         rules.setContent {
@@ -123,14 +125,14 @@ class TownHallInstrumentedTest {
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
                         is ModeratorHandler.HandleModeratorCommand -> {
-                            when(event.intent) {
+                            when (event.intent) {
                                 is ModeratorCommand.AdvancePhase -> {
                                     selectedPhase.value = event.intent.phase
                                     logger.info("Passed phase: ${event.intent.phase}, set value: ${selectedPhase.value}")
                                     rules.setUpGameState(
                                         rules.gameState.value.copy(
-                                            phase = event.intent.phase
-                                        )
+                                            phase = event.intent.phase,
+                                        ),
                                     )
                                 }
                                 else -> {}
@@ -147,7 +149,7 @@ class TownHallInstrumentedTest {
                     moderatorState = moderatorState,
                     onEvent = ::onEvent,
                     votes = emptyList(),
-                    onBack = {}
+                    onBack = {},
                 )
             }
         }
@@ -176,14 +178,14 @@ class TownHallInstrumentedTest {
 
     @OptIn(ExperimentalTime::class)
     @Test
-    fun proceed_MovesToSleepWhenAccusationAndSecondAreAbsent() = runComposeUiTest {// Reuse in moderator
+    fun proceed_MovesToSleepWhenAccusationAndSecondAreAbsent() = runComposeUiTest { // Reuse in moderator
 
         val rules = TestGameRules(this)
         rules.setupDefaults()
         rules.setUpGameState(
             rules.gameState.value.copy(
                 phase = GamePhase.TOWN_HALL,
-            )
+            ),
         )
 
         val selectedPhase = mutableStateOf<GamePhase?>(null)
@@ -198,14 +200,14 @@ class TownHallInstrumentedTest {
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
                         is ModeratorHandler.HandleModeratorCommand -> {
-                            when(event.intent) {
+                            when (event.intent) {
                                 is ModeratorCommand.AdvancePhase -> {
                                     selectedPhase.value = event.intent.phase
                                     logger.info("Passed phase: ${event.intent.phase}, set value: ${selectedPhase.value}")
                                     rules.setUpGameState(
                                         rules.gameState.value.copy(
-                                            phase = event.intent.phase
-                                        )
+                                            phase = event.intent.phase,
+                                        ),
                                     )
                                 }
                                 else -> {}
@@ -222,7 +224,7 @@ class TownHallInstrumentedTest {
                     moderatorState = moderatorState,
                     onEvent = ::onEvent,
                     votes = emptyList(),
-                    onBack = {}
+                    onBack = {},
                 )
             }
         }
@@ -242,7 +244,6 @@ class TownHallInstrumentedTest {
     @OptIn(ExperimentalTime::class)
     @Test
     fun exonerates_clearsAccused() = runComposeUiTest {
-
         val rules = TestGameRules(this)
         rules.setupDefaults()
 
@@ -255,9 +256,9 @@ class TownHallInstrumentedTest {
                     type = ActionType.ACCUSE,
                     round = rules.gameState.value.round,
                     targetId = selectedId,
-                    playerId = "4"
-                )
-            )
+                    playerId = "4",
+                ),
+            ),
         )
 
         rules.setContent {
@@ -270,13 +271,13 @@ class TownHallInstrumentedTest {
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
                         is ModeratorHandler.HandleModeratorCommand -> {
-                            when(event.intent) {
+                            when (event.intent) {
                                 is ModeratorCommand.ExoneratePlayer -> {
                                     rules.setUpGameState(
                                         rules.gameState.value.copy(
                                             accusedPlayer = null,
-                                            second = null
-                                        )
+                                            second = null,
+                                        ),
                                     )
                                 }
                                 else -> {}
@@ -293,7 +294,7 @@ class TownHallInstrumentedTest {
                     moderatorState = moderatorState,
                     onEvent = ::onEvent,
                     votes = emptyList(),
-                    onBack = {}
+                    onBack = {},
                 )
             }
         }
@@ -318,5 +319,4 @@ class TownHallInstrumentedTest {
         waitForIdle()
         assertNull(rules.gameState.value.accusedPlayer)
     }
-
 }

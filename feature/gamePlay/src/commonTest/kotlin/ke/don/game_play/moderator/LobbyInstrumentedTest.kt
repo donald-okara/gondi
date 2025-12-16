@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.moderator
 
 import WithTestLifecycle
@@ -61,7 +70,7 @@ class LobbyInstrumentedTest {
                             rules.setUpGameState(rules.gameState.value.copy(phase = GamePhase.SLEEP))
 
                             logger.info(
-                                "State Phase: ${gameState.phase.name.capitaliseFirst()} Live Phase: ${rules.gameState.value.phase.name.capitaliseFirst()}"
+                                "State Phase: ${gameState.phase.name.capitaliseFirst()} Live Phase: ${rules.gameState.value.phase.name.capitaliseFirst()}",
                             )
                         }
 
@@ -100,7 +109,7 @@ class LobbyInstrumentedTest {
         val rules = TestGameRules(this)
         rules.setupDefaults()
         rules.setUpPlayers(
-            rules.players.take(rules.gameState.value.availableSlots.toInt() - 1)
+            rules.players.take(rules.gameState.value.availableSlots.toInt() - 1),
         )
         val clicked = mutableStateOf(false)
 
@@ -116,7 +125,7 @@ class LobbyInstrumentedTest {
                             rules.setUpGameState(rules.gameState.value.copy(phase = GamePhase.SLEEP))
 
                             logger.info(
-                                "State Phase: ${gameState.phase.name.capitaliseFirst()} Live Phase: ${rules.gameState.value.phase.name.capitaliseFirst()}"
+                                "State Phase: ${gameState.phase.name.capitaliseFirst()} Live Phase: ${rules.gameState.value.phase.name.capitaliseFirst()}",
                             )
                         }
 
@@ -155,7 +164,7 @@ class LobbyInstrumentedTest {
         val rules = TestGameRules(this)
         rules.setupDefaults()
         rules.setUpPlayers(
-            rules.players.take(PLAYER_LOWER_LIMIT - 1)
+            rules.players.take(PLAYER_LOWER_LIMIT - 1),
         )
         val clicked = mutableStateOf(false)
 
@@ -171,7 +180,7 @@ class LobbyInstrumentedTest {
                             rules.setUpGameState(rules.gameState.value.copy(phase = GamePhase.SLEEP))
 
                             logger.info(
-                                "State Phase: ${gameState.phase.name.capitaliseFirst()} Live Phase: ${rules.gameState.value.phase.name.capitaliseFirst()}"
+                                "State Phase: ${gameState.phase.name.capitaliseFirst()} Live Phase: ${rules.gameState.value.phase.name.capitaliseFirst()}",
                             )
                         }
 
@@ -216,12 +225,12 @@ class LobbyInstrumentedTest {
                             clicked.value = true
                             rules.setUpModeratorState(
                                 rules.moderatorState.value.copy(
-                                    selectedPlayerId = event.id
-                                )
+                                    selectedPlayerId = event.id,
+                                ),
                             )
 
                             logger.info(
-                                "State Selected Id: ${moderatorState.selectedPlayerId} Live Selected Id: ${rules.moderatorState.value.selectedPlayerId}"
+                                "State Selected Id: ${moderatorState.selectedPlayerId} Live Selected Id: ${rules.moderatorState.value.selectedPlayerId}",
                             )
                         }
 
@@ -276,8 +285,8 @@ class LobbyInstrumentedTest {
         rules.setupDefaults()
         rules.setUpModeratorState(
             rules.moderatorState.value.copy(
-                selectedPlayerId = selectedId
-            )
+                selectedPlayerId = selectedId,
+            ),
         )
         val clicked = mutableStateOf(false)
         val roleAssigned = mutableStateOf(false)
@@ -294,12 +303,12 @@ class LobbyInstrumentedTest {
                             clicked.value = true
                             rules.setUpModeratorState(
                                 rules.moderatorState.value.copy(
-                                    selectedPlayerId = event.id
-                                )
+                                    selectedPlayerId = event.id,
+                                ),
                             )
 
                             logger.info(
-                                "State Selected Id: ${moderatorState.selectedPlayerId} Live Selected Id: ${rules.moderatorState.value.selectedPlayerId}"
+                                "State Selected Id: ${moderatorState.selectedPlayerId} Live Selected Id: ${rules.moderatorState.value.selectedPlayerId}",
                             )
                         }
 
@@ -357,8 +366,8 @@ class LobbyInstrumentedTest {
         rules.setupDefaults()
         rules.setUpModeratorState(
             rules.moderatorState.value.copy(
-                selectedPlayerId = selectedId
-            )
+                selectedPlayerId = selectedId,
+            ),
         )
         val clicked = mutableStateOf(false)
         val roleAssigned = mutableStateOf(false)
@@ -375,12 +384,12 @@ class LobbyInstrumentedTest {
                             clicked.value = true
                             rules.setUpModeratorState(
                                 rules.moderatorState.value.copy(
-                                    selectedPlayerId = event.id
-                                )
+                                    selectedPlayerId = event.id,
+                                ),
                             )
 
                             logger.info(
-                                "State Selected Id: ${moderatorState.selectedPlayerId} Live Selected Id: ${rules.moderatorState.value.selectedPlayerId}"
+                                "State Selected Id: ${moderatorState.selectedPlayerId} Live Selected Id: ${rules.moderatorState.value.selectedPlayerId}",
                             )
                         }
 

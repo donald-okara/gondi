@@ -1,5 +1,13 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.player
-
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.test.ComposeUiTest
@@ -20,8 +28,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.time.ExperimentalTime
 
-class TestGameRules @OptIn(ExperimentalTestApi::class) constructor(
-    private val rule: ComposeUiTest
+class TestGameRules
+@OptIn(ExperimentalTestApi::class)
+constructor(
+    private val rule: ComposeUiTest,
 ) {
 
     // Exposed test state
@@ -31,7 +41,6 @@ class TestGameRules @OptIn(ExperimentalTestApi::class) constructor(
     @OptIn(ExperimentalTime::class)
     private val _playerState = MutableStateFlow(PlayerState())
     val playerState: StateFlow<PlayerState> = _playerState
-
 
     var players: List<Player> = emptyList()
         private set
@@ -43,97 +52,101 @@ class TestGameRules @OptIn(ExperimentalTestApi::class) constructor(
         private set
 
     @OptIn(ExperimentalTestApi::class)
-    fun setContent(content: @Composable () -> Unit) = rule.setContent{
+    fun setContent(content: @Composable () -> Unit) = rule.setContent {
         AppTheme(
-          theme = Theme.Dark,
-        ){
+            theme = Theme.Dark,
+        ) {
             content()
         }
     }
     fun setupDefaults() {
         setUpPlayers(
-            defaultPlayers()
+            defaultPlayers(),
         )
         setUpCurrentPlayer(
-            players.find { it.id == "3" }!!
+            players.find { it.id == "3" }!!,
         )
 
         setUpGameState(
-            defaultGameState()
+            defaultGameState(),
         )
         setUpVotes(
-            defaultVotes()
+            defaultVotes(),
         )
     }
 
     fun setUpPlayerState(
-        state: PlayerState
-    ){
+        state: PlayerState,
+    ) {
         _playerState.update {
             state
         }
     }
 
     fun setUpGameState(
-        state: GameState
-    ){
+        state: GameState,
+    ) {
         _gameState.update {
             state
         }
     }
 
     fun setUpPlayers(
-        players: List<Player>
-    ){
+        players: List<Player>,
+    ) {
         this.players = players
     }
 
     fun setUpVotes(
-        votes: List<Vote>
-    ){
+        votes: List<Vote>,
+    ) {
         this.votes = votes
     }
 
     fun setUpCurrentPlayer(
-        player: Player
-    ){
+        player: Player,
+    ) {
         this.currentPlayer = player
     }
-
 
     private fun defaultGameState() = GameState(
         id = "123",
         name = "Test Game",
         phase = GamePhase.LOBBY,
-        availableSlots = 7
+        availableSlots = 7,
     )
 
     private fun defaultVotes() = listOf<Vote>(
         Vote(
             voterId = "1",
             targetId = "2",
-            isGuilty = true
-        ),Vote(
+            isGuilty = true,
+        ),
+        Vote(
             voterId = "3",
             targetId = "2",
-            isGuilty = true
-        ),Vote(
+            isGuilty = true,
+        ),
+        Vote(
             voterId = "4",
             targetId = "2",
-            isGuilty = true
-        ),Vote(
+            isGuilty = true,
+        ),
+        Vote(
             voterId = "5",
             targetId = "2",
-            isGuilty = true
-        ),Vote(
+            isGuilty = true,
+        ),
+        Vote(
             voterId = "6",
             targetId = "2",
-            isGuilty = true
-        ),Vote(
+            isGuilty = true,
+        ),
+        Vote(
             voterId = "7",
             targetId = "2",
-            isGuilty = true
-        )
+            isGuilty = true,
+        ),
     )
 
     private fun defaultPlayers() = listOf(
@@ -145,5 +158,5 @@ class TestGameRules @OptIn(ExperimentalTestApi::class) constructor(
         Player(id = "6", name = "Pat O'Neill", role = Role.VILLAGER, Avatar.George, background = AvatarBackground.PURPLE_AMETHYST),
         Player(id = "7", name = "Hans", role = Role.VILLAGER, Avatar.Jocelyn, background = AvatarBackground.GREEN_MINTY),
         Player(id = "8", name = "Franz", role = Role.MODERATOR, Avatar.Jameson, background = AvatarBackground.YELLOW_GOLDEN),
-  )
+    )
 }

@@ -79,7 +79,7 @@ class GondiHost(
                 .map { it?.phase } // Only care about the phase
                 .distinctUntilChanged() // Only react when phase *actually* changes
                 .collect { newPhase ->
-                    //Always reveal deaths on town hall and sleep except on round 0L for the latter
+                    // Always reveal deaths on town hall and sleep except on round 0L for the latter
                     if (newPhase == GamePhase.TOWN_HALL || (newPhase == GamePhase.SLEEP && gameState.value?.round != 0L)) {
                         session.updateModeratorState { it.copy(revealDeaths = true) }
                     }

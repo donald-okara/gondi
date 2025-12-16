@@ -52,5 +52,4 @@ fun isActingInSleep(player: Player, round: Long): Boolean {
     }
 }
 
-
 typealias SelectedPlayer = Pair<String, ActionType>

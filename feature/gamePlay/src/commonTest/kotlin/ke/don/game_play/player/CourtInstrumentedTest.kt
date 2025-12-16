@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.game_play.player
 
 import WithTestLifecycle
@@ -48,8 +57,8 @@ class CourtInstrumentedTest {
                     round = rules.gameState.value.round,
                     targetId = selectedId,
                     playerId = rules.currentPlayer.id,
-                )
-            )
+                ),
+            ),
         )
         val clicked = mutableStateOf(false)
 
@@ -67,8 +76,8 @@ class CourtInstrumentedTest {
                             clicked.value = true
                             rules.setUpPlayerState(
                                 rules.playerState.value.copy(
-                                    showVote = true
-                                )
+                                    showVote = true,
+                                ),
                             )
                         }
                         else -> {}
@@ -81,7 +90,7 @@ class CourtInstrumentedTest {
                     players = players,
                     playerState = playerState,
                     onEvent = ::onEvent,
-                    votes = votes
+                    votes = votes,
                 )
             }
         }
@@ -108,11 +117,11 @@ class CourtInstrumentedTest {
                     round = rules.gameState.value.round,
                     targetId = selectedId,
                     playerId = rules.currentPlayer.id,
-                )
-            )
+                ),
+            ),
         )
         val editedVotes = rules.votes.minus(
-            rules.votes.find { vote -> vote.voterId == rules.currentPlayer.id }!!
+            rules.votes.find { vote -> vote.voterId == rules.currentPlayer.id }!!,
         )
         rules.setUpVotes(editedVotes)
         val clicked = mutableStateOf(false)
@@ -132,8 +141,8 @@ class CourtInstrumentedTest {
                             clicked.value = true
                             rules.setUpPlayerState(
                                 rules.playerState.value.copy(
-                                    showVote = true
-                                )
+                                    showVote = true,
+                                ),
                             )
                         }
                         is PlayerHandler.Send -> {
@@ -149,7 +158,7 @@ class CourtInstrumentedTest {
                     players = players,
                     playerState = playerState,
                     onEvent = ::onEvent,
-                    votes = votes
+                    votes = votes,
                 )
             }
         }
@@ -186,11 +195,11 @@ class CourtInstrumentedTest {
                     round = rules.gameState.value.round,
                     targetId = selectedId,
                     playerId = rules.currentPlayer.id,
-                )
-            )
+                ),
+            ),
         )
         val editedVotes = rules.votes.minus(
-            rules.votes.find { vote -> vote.voterId == rules.currentPlayer.id }!!
+            rules.votes.find { vote -> vote.voterId == rules.currentPlayer.id }!!,
         )
         rules.setUpVotes(editedVotes)
 
@@ -203,10 +212,10 @@ class CourtInstrumentedTest {
         }
         rules.setUpPlayers(editedPlayers)
         logger.info(
-            "Edited player: ${editedPlayers.find{it.id == rules.currentPlayer.id}}"
+            "Edited player: ${editedPlayers.find{it.id == rules.currentPlayer.id}}",
         )
         logger.info(
-            "Current player: ${rules.currentPlayer}"
+            "Current player: ${rules.currentPlayer}",
         )
 
         val clicked = mutableStateOf(false)
@@ -225,8 +234,8 @@ class CourtInstrumentedTest {
                             clicked.value = true
                             rules.setUpPlayerState(
                                 rules.playerState.value.copy(
-                                    showVote = true
-                                )
+                                    showVote = true,
+                                ),
                             )
                         }
                         else -> {}
@@ -239,7 +248,7 @@ class CourtInstrumentedTest {
                     players = players,
                     playerState = playerState,
                     onEvent = ::onEvent,
-                    votes = votes
+                    votes = votes,
                 )
             }
         }

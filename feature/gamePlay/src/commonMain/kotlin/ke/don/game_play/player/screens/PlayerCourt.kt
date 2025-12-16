@@ -62,7 +62,7 @@ fun PlayerCourt(
 
     val vote by remember(
         votes,
-        myPlayer
+        myPlayer,
     ) {
         derivedStateOf {
             votes.find { it.voterId == myPlayer.id }
@@ -92,7 +92,7 @@ fun PlayerCourt(
             onEvent = onEvent,
             currentPlayer = myPlayer,
             selectedPlayer = accused!!,
-            vote = vote
+            vote = vote,
         )
     }
 }
