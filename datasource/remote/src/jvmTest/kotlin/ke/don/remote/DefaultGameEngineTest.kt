@@ -27,6 +27,17 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
+/**
+ * Test suite for [DefaultGameEngine].
+ *
+ * This class contains a comprehensive set of unit tests that validate the behavior of the [DefaultGameEngine]
+ * under various conditions. It covers all major player intents and game actions, such as joining, leaving,
+ * killing, saving, investigating, accusing, seconding, and voting.
+ *
+ * Each test case simulates a specific scenario, including both success and error conditions, to ensure
+ * that the game logic is robust and functions as expected. The tests rely on a base test setup provided
+ * by [BaseGameTest] to initialize the game state and mock database interactions.
+ */
 class DefaultGameEngineTest : BaseGameTest() {
     val logger = Logger("DefaultGameEngineTest")
 

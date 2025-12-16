@@ -31,6 +31,21 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
+/**
+ * Test suite for [ke.don.local.db.LocalDatabase] and its DAOs.
+ *
+ * This class contains unit tests that verify the correctness of the database operations
+ * for `GameState`, `Player`, and `Vote` entities. It uses an in-memory version of the
+ * database for each test to ensure isolation and repeatability.
+ *
+ * The tests cover:
+ * - **GameState**: Insertion, retrieval, updates (phase, flags, accusations), and clearing of game state data.
+ * - **Player**: Insertion, retrieval, updates (alive status, role, last action, known identities), batch updates, and clearing of player data.
+ * - **Vote**: Insertion, retrieval, and clearing of vote data.
+ *
+ * Each test function is designed to be self-contained, creating a fresh database instance
+ * to avoid side effects between tests.
+ */
 class LocalDatabaseTest {
 
     private val logger = Logger(LocalDatabaseTest::class.java.simpleName)

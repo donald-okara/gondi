@@ -23,6 +23,13 @@ import ke.don.utils.capitaliseFirst
 import kotlin.test.Test
 import kotlin.time.ExperimentalTime
 
+/**
+ * Instrumented tests for the moderator's view during the [GamePhase.SLEEP] phase.
+ * This class verifies the UI and state transitions related to the sleep phase, such as
+ * revealing deaths and proceeding to the next game phase.
+ *
+ * It uses [TestGameRules] to set up and manage the game state for each test scenario.
+ */
 @OptIn(ExperimentalTestApi::class)
 class SleepInstrumentedTest {
     val logger = Logger("SleepInstrumentedTest")

@@ -20,6 +20,42 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.time.ExperimentalTime
 
+/**
+ * A test rule helper class for managing game state and setting up the UI environment
+ * for Jetpack Compose UI tests.
+ *
+ * This class encapsulates common setup logic for tests related to the game's UI. It provides
+ * default states for the game, players, and votes, and offers methods to customize these states
+ * for specific test scenarios. It also handles wrapping the test content in the required `AppTheme`.
+ *
+ * This is designed to be used with a [ComposeUiTest] rule, such as `createComposeRule()`.
+ *
+ * Example Usage:
+ * ```
+ * @get:Rule
+ * val composeTestRule = createComposeRule()
+ *
+ * private lateinit var testGameRules: TestGameRules
+ *
+ * @Before
+ * fun setUp() {
+ *     testGameRules = TestGameRules(composeTestRule)
+ *     testGameRules.setupDefaults() // Initialize with default test data
+ * }
+ *
+ * @Test
+ * fun myUiTest() {
+ *     testGameRules.setContent {
+ *         // Your Composable under test, using state from testGameRules
+ *         MyScreen(state = testGameRules.moderatorState.collectAsState().value)
+ *     }
+ *
+ *     // ... perform assertions
+ * }
+ * ```
+ *
+ * @param rule The [ComposeUiTest] instance used to set the content for the UI test.
+ */
 class TestGameRules @OptIn(ExperimentalTestApi::class) constructor(
     private val rule: ComposeUiTest
 ) {

@@ -26,6 +26,18 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
+/**
+ * Test suite for [DefaultModeratorEngine].
+ *
+ * This class contains unit tests that verify the behavior of the `DefaultModeratorEngine`,
+ * which is responsible for handling moderator-specific commands and managing the overall
+ * flow of the game. It covers various scenarios such as game creation, phase transitions,
+ * player management, and game conclusion.
+ *
+ * The tests simulate moderator actions and assert the expected changes in the game state,
+ * player data, and other relevant entities within the database. It leverages a base test
+ * class, [BaseGameTest], for common setup and test data.
+ */
 class DefaultModeratorEngineTest : BaseGameTest() {
     val logger = Logger("DefaultModeratorEngineTest")
 

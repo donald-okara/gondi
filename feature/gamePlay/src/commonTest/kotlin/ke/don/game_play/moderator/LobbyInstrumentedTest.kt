@@ -25,6 +25,20 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.time.ExperimentalTime
 
+/**
+ * Instrumented tests for the game Lobby screen as seen by the moderator.
+ * This class tests the UI and interactions within the [MainModeratorContent] composable
+ * when the game phase is [GamePhase.LOBBY].
+ *
+ * It covers scenarios such as:
+ * - Starting the game with sufficient, insufficient, and too few players.
+ * - Selecting a player to bring up moderator actions (assign role, remove).
+ * - Performing moderator actions and verifying the UI state changes.
+ * - Displaying the game rules modal.
+ *
+ * These tests use [TestGameRules] to set up and manage the test environment, including
+ * game state, moderator state, and player data.
+ */
 @OptIn(ExperimentalTestApi::class, ExperimentalTime::class)
 class LobbyInstrumentedTest {
     val logger = Logger("LobbyInstrumentedTest")

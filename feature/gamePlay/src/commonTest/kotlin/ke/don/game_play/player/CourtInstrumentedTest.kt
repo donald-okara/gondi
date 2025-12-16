@@ -19,6 +19,18 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 import kotlin.time.ExperimentalTime
 
+/**
+ * Instrumented test for the [PlayerCourt] composable, which handles the UI and logic
+ * for the "Court" phase of the game from the player's perspective.
+ *
+ * This test class verifies the following scenarios:
+ * - The voting modal appears correctly when the "Vote" button is clicked.
+ * - The UI correctly prevents a player from voting twice in the same round.
+ * - The UI correctly allows a player who hasn't voted yet to cast a vote.
+ * - The UI displays a "dormant" state for players who are dead and cannot vote.
+ *
+ * It uses [TestGameRules] to set up and manage the game state for each test case.
+ */
 @OptIn(ExperimentalTestApi::class, ExperimentalTime::class)
 class CourtInstrumentedTest {
     val logger = Logger("CourtInstrumentedTest")
