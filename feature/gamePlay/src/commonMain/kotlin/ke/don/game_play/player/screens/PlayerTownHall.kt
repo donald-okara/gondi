@@ -86,13 +86,13 @@ fun PlayerTownHall(
             players.find { it.id == playerState.selectedId }
         }
     }
-    selectedPlayer?.let {
+    if (selectedPlayer != null) {
         TownHallModal(
             modifier = Modifier,
             gameState = gameState,
             onEvent = onEvent,
             currentPlayer = myPlayer,
-            selectedPlayer = it,
+            selectedPlayer = selectedPlayer!!,
         )
     }
 }

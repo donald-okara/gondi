@@ -86,6 +86,7 @@ fun SharedSleep(
             ) {
                 IconToken(
                     imageVector = Icons.Outlined.AutoStories,
+                    contentDescription = "Show rules",
                     buttonType = ComponentType.Inverse,
                     onClick = onShowRules,
                 )

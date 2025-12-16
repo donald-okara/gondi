@@ -47,3 +47,11 @@ fun Instant.toFormattedTime(): String {
         else -> "$days days ago"
     }
 }
+
+fun String.formatArgs(vararg args: Any?): String {
+    var formatted = this
+    args.forEach { arg ->
+        formatted = formatted.replaceFirst("%s", arg.toString())
+    }
+    return formatted
+}

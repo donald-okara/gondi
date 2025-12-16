@@ -159,7 +159,7 @@ private fun ModalActions(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.End),
     ) {
-        if (hasVoted.not()) {
+        if (hasVoted.not() && currentPlayer.isAlive) {
             ButtonToken(
                 buttonType = ComponentType.Primary,
                 onClick = { vote(false) },

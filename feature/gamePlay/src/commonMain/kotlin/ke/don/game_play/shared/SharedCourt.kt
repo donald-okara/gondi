@@ -14,6 +14,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import ke.don.domain.gameplay.Role
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.game_play.moderator.model.Announcement
@@ -40,6 +41,7 @@ fun SharedCourt(
             players.filter { player ->
                 votes.none { vote -> vote.voterId == player.id }
                     .and(player.isAlive)
+                    .and(player.role != Role.MODERATOR)
                     .and(player != accused)
             }.map { value ->
                 value.id

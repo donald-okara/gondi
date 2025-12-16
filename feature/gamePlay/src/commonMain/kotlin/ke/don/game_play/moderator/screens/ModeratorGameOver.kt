@@ -31,7 +31,7 @@ fun ModeratorGameOver(
 
     SharedGameOver(
         modifier = modifier,
-        isModerator = false,
+        isModerator = true,
         players = players,
         myPlayer = myPlayer,
         winnerFaction = winningFaction,

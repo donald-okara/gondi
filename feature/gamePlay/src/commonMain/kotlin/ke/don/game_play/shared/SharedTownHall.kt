@@ -70,7 +70,7 @@ fun SharedTownHall(
         derivedStateOf { players.find { player -> player.id == lastSaved } }
     }
     val killedPlayers by remember(players, lastKilled) {
-        derivedStateOf { players.filter { player -> lastKilled.contains(player.id) } }
+        derivedStateOf { players.filter { player -> lastKilled.contains(player.id) && player.id != lastSaved } }
     }
 
     LazyColumn(
@@ -82,51 +82,57 @@ fun SharedTownHall(
             if (isModerator) {
                 AnimatedContent(targetState = seconder) { seconder ->
                     when {
-                        seconder != null -> ButtonToken(
-                            modifier = Modifier.fillMaxWidth(),
-                            buttonType = ComponentType.Primary,
-                            onClick = proceed,
-                            enabled = actingPlayers.isEmpty(),
-                        ) {
-                            Text("Proceed")
-                        }
-                        accused != null -> ButtonToken(
-                            modifier = Modifier.fillMaxWidth(),
-                            buttonType = ComponentType.Neutral,
-                            onClick = exoneratePlayer,
-                        ) {
-                            Text("Exonerate ${accused.name}")
-                        }
-                        else -> ButtonToken(
-                            modifier = Modifier.fillMaxWidth(),
-                            buttonType = ComponentType.Primary,
-                            onClick = proceed,
-                        ) {
-                            Text("Proceed")
-                        }
+                        isCourt ->
+                            CallToActionSection(
+                                modifier = Modifier,
+                                explanationText = "The day's session is over. Time to move to the night phase.",
+                                callToActionText = "Proceed",
+                                componentType = ComponentType.Primary,
+                                onActionClick = proceed,
+                                enabled = actingPlayers.isEmpty(),
+                            )
+
+                        seconder != null ->
+                            CallToActionSection(
+                                modifier = Modifier,
+                                explanationText = "Would you like to go to court?",
+                                callToActionText = "Proceed",
+                                componentType = ComponentType.Primary,
+                                onActionClick = proceed,
+                                enabled = true,
+                            )
+
+                        accused != null ->
+                            CallToActionSection(
+                                modifier = Modifier,
+                                explanationText = "${accused.name} has no seconder. Would you like to exonerate them?",
+                                callToActionText = "Exonerate ${accused.name}",
+                                componentType = ComponentType.Primary,
+                                onActionClick = exoneratePlayer,
+                                enabled = true,
+                            )
+
+                        else ->
+                            CallToActionSection(
+                                modifier = Modifier,
+                                explanationText = "No accusations are on the floor. Shall we move on?",
+                                callToActionText = "Proceed",
+                                componentType = ComponentType.Primary,
+                                onActionClick = proceed,
+                                enabled = actingPlayers.isEmpty(),
+                            )
                     }
                 }
             } else {
                 if (isCourt && accused != null) {
-                    Column(
-                        modifier = modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
-                    ) {
-                        Text(
-                            text = "Do you think ${accused.name} is guilty?",
-                            style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.align(Alignment.Start),
-                        )
-
-                        ButtonToken(
-                            modifier = Modifier.fillMaxWidth(),
-                            buttonType = ComponentType.Primary,
-                            onClick = onVote,
-                        ) {
-                            Text("Vote")
-                        }
-                    }
+                    CallToActionSection(
+                        modifier = Modifier,
+                        explanationText = "Do you think ${accused.name} is guilty?",
+                        callToActionText = "Vote",
+                        componentType = ComponentType.Primary,
+                        onActionClick = onVote,
+                        enabled = true,
+                    )
                 }
             }
         }
@@ -187,5 +193,37 @@ fun SharedTownHall(
             killedPlayers = killedPlayers,
             currentPhase = GamePhase.TOWN_HALL,
         )
+    }
+}
+
+@Composable
+fun CallToActionSection(
+    modifier: Modifier = Modifier,
+    explanationText: String,
+    callToActionText: String,
+    componentType: ComponentType,
+    onActionClick: () -> Unit,
+    enabled: Boolean = true,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+    ) {
+        // --- 1. Explanation Text ---
+        Text(
+            text = explanationText,
+            style = MaterialTheme.typography.titleMedium,
+        )
+
+        // --- 2. Call to Action Button ---
+        ButtonToken(
+            modifier = Modifier.fillMaxWidth(),
+            buttonType = componentType,
+            enabled = enabled,
+            onClick = onActionClick,
+        ) {
+            Text(callToActionText)
+        }
     }
 }

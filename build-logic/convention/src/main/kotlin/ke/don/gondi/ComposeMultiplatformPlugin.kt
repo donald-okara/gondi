@@ -6,6 +6,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.compose.ComposeExtension
+import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
 class ComposeMultiplatformPlugin : Plugin<Project> {
@@ -20,6 +21,7 @@ class ComposeMultiplatformPlugin : Plugin<Project> {
      *
      * @param target The Gradle project to configure.
      */
+    @OptIn(ExperimentalComposeLibrary::class)
     override fun apply(target: Project) = with(target) {
         with(pluginManager){
             listOf(
@@ -50,6 +52,12 @@ class ComposeMultiplatformPlugin : Plugin<Project> {
                 androidMain.dependencies {
                     implementation(composeDeps.preview)
                     implementation(libs.findBundle("preview").get())
+                }
+                commonTest {
+                    dependencies {
+                        implementation(libs.findLibrary("kotlin-test").get())
+                        implementation(composeDeps.uiTest)
+                    }
                 }
                 jvmMain.dependencies {
                     implementation(composeDeps.desktop.currentOs)

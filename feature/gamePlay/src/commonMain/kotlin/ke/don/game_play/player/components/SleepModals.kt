@@ -39,6 +39,7 @@ import ke.don.domain.state.Player
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.shared.components.ActionConfirmation
 import ke.don.game_play.shared.components.ModalActions
+import ke.don.utils.formatArgs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,19 +54,20 @@ fun SleepModal(
 
     val confirmationText = remember(currentPlayer.role, selectedPlayer.id) {
         when (currentPlayer.role) {
-            Role.GONDI -> "Do you want to end ${selectedPlayer.name}'s journey tonight?"
-            Role.DOCTOR -> "Will you use your skills to save ${selectedPlayer.name}?"
-            Role.DETECTIVE -> "Time to uncover the truth. Investigate ${selectedPlayer.name}?"
+            // Use the .format() extension function instead of String.format()
+            Role.GONDI -> CONFIRMATION_GONDI.formatArgs(selectedPlayer.name)
+            Role.DOCTOR -> CONFIRMATION_DOCTOR.formatArgs(selectedPlayer.name)
+            Role.DETECTIVE -> CONFIRMATION_DETECTIVE.formatArgs(selectedPlayer.name)
             else -> null
         }
     }
 
     val dormantText = remember(currentPlayer.role) {
         when (currentPlayer.role) {
-            Role.GONDI -> "You've already chosen a target for tonight."
-            Role.DOCTOR -> "Your patient for tonight is already chosen."
-            Role.DETECTIVE -> "You've already put your investigative skills to use this round."
-            else -> "It's time to rest. There's nothing more to do."
+            Role.GONDI -> DORMANT_TEXT_GONDI
+            Role.DOCTOR -> DORMANT_TEXT_DOCTOR
+            Role.DETECTIVE -> DORMANT_TEXT_DETECTIVE
+            else -> DORMANT_TEXT_DEFAULT
         }
     }
 
@@ -172,3 +174,16 @@ fun SleepModal(
         }
     }
 }
+
+// Top-level constants, outside of any class or function
+
+// Confirmation Texts
+const val CONFIRMATION_GONDI = "Do you want to end %s's journey tonight?"
+const val CONFIRMATION_DOCTOR = "Will you use your skills to save %s?"
+const val CONFIRMATION_DETECTIVE = "Time to uncover the truth. Investigate %s?"
+
+// Dormant Texts
+const val DORMANT_TEXT_GONDI = "You've already chosen a target for tonight."
+const val DORMANT_TEXT_DOCTOR = "Your patient for tonight is already chosen."
+const val DORMANT_TEXT_DETECTIVE = "You've already put your investigative skills to use this round."
+const val DORMANT_TEXT_DEFAULT = "It's time to rest. There's nothing more to do."

@@ -51,6 +51,8 @@ fun ModeratorSleep(
         "Someone has not done their part yet"
     }
 
+    val lastAccused = remember(gameState.accusedPlayer) { gameState.accusedPlayer?.targetId }
+
     SharedSleep(
         modifier = modifier,
         myPlayerId = myPlayer.id,
@@ -79,6 +81,6 @@ fun ModeratorSleep(
         onDismiss = {
             onEvent(ModeratorHandler.RevealDeaths)
         },
-        lastAccused = null,
+        lastAccused = lastAccused,
     )
 }

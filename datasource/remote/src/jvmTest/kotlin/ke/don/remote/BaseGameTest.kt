@@ -27,6 +27,22 @@ import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Before
 
+/**
+ * An abstract base class for setting up a standardized test environment for game logic.
+ * This class handles the initialization and teardown of an in-memory database,
+ * and pre-populates it with a standard set of players and a default game state.
+ *
+ * It provides common data and utility functions that can be reused across different
+ * game-related test suites, reducing boilerplate code and ensuring consistency.
+ *
+ * Subclasses should extend this class to inherit the setup and teardown logic,
+ * as well as the predefined test data.
+ *
+ * @property db An instance of [LocalDatabase] that is created in-memory for each test.
+ * @property gameState A default [GameState] object initialized to the [GamePhase.LOBBY] phase.
+ * @property player1 to @property player10 Pre-defined [Player] objects for use in tests.
+ * @property batchUpdateRoles A list of players with roles assigned, useful for testing role-based logic.
+ */
 abstract class BaseGameTest {
 
     lateinit var db: LocalDatabase

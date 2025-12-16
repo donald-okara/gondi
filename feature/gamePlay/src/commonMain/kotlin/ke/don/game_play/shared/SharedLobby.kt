@@ -134,7 +134,7 @@ fun LobbyHeader(
 
         ButtonToken(
             modifier = Modifier.fillMaxWidth(),
-            enabled = playersSize > PLAYER_LOWER_LIMIT,
+            enabled = playersSize >= PLAYER_LOWER_LIMIT,
             buttonType = ComponentType.Primary,
             onClick = startGame,
         ) {
@@ -236,6 +236,7 @@ private fun ModeratorPanelHeader(modifier: Modifier = Modifier, onClick: () -> U
         IconToken(
             imageVector = Icons.Outlined.AutoStories,
             buttonType = ComponentType.Inverse,
+            contentDescription = "Show rules",
             onClick = onClick,
         )
     }

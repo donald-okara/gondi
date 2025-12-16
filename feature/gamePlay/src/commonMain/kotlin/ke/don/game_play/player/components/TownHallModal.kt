@@ -90,7 +90,7 @@ fun TownHallModal(
                 currentPlayer = currentPlayer,
                 showConfirmation = { showConfirmation = true },
                 dormantText = dormantText,
-                actionType = currentPlayer.role?.actionType ?: ActionType.NONE,
+                actionType = ActionType.ACCUSE,
             )
 
             HorizontalDivider()
