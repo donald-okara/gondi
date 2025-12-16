@@ -160,7 +160,7 @@ class SleepInstrumentedTest {
         rules.setUpGameState(
             rules.gameState.value.copy(
                 phase = GamePhase.SLEEP,
-                round = round
+                round = round,
             ),
         )
         rules.setUpPlayerState(
