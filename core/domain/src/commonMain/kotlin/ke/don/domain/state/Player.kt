@@ -15,11 +15,7 @@ import ke.don.domain.gameplay.actionType
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.domain.table.Profile
-import ke.don.utils.Logger
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.onEach
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.time.ExperimentalTime
@@ -66,9 +62,6 @@ data class Player(
         copy(lastAction = PlayerAction(it.actionType, round))
     }
 }
-
-
-
 
 @Serializable
 data class KnownIdentity(

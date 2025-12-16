@@ -85,9 +85,9 @@ class GondiClient(
             is PlayerHandler.Send -> sendIntent(intent.message)
             PlayerHandler.ShowLeaveDialog -> clientState.updatePlayerState { it.copy(showLeaveGame = !it.showLeaveGame) }
             PlayerHandler.ShowVoteDialog -> clientState.updatePlayerState { it.copy(showVote = !it.showVote) }
-            PlayerHandler.ShowRulesModal -> screenModelScope.launch{
+            PlayerHandler.ShowRulesModal -> screenModelScope.launch {
                 currentPlayer.firstOrNull()?.captureEvent(
-                    if (playerState.value.showRulesModal) "Closed rules modal" else "Opened rules modal"
+                    if (playerState.value.showRulesModal) "Closed rules modal" else "Opened rules modal",
                 )
                 clientState.updatePlayerState { it.copy(showRulesModal = !it.showRulesModal) }
             }

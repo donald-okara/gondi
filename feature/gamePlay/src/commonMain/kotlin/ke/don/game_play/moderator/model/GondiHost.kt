@@ -142,10 +142,10 @@ class GondiHost(
             is ModeratorHandler.UpdateAssignments -> moderator.updateAssignment(intent.assignment)
             is ModeratorHandler.HandleModeratorCommand -> screenModelScope.launch {
                 serverManager.handleCommand(intent.intent).also {
-                    if (intent.intent is ModeratorCommand.RemovePlayer){
+                    if (intent.intent is ModeratorCommand.RemovePlayer) {
                         screenModelScope.launch {
                             hostPlayer.firstOrNull()?.captureEvent(
-                                "Removed player"
+                                "Removed player",
                             )
                         }
                     }
@@ -165,7 +165,7 @@ class GondiHost(
             }
             ModeratorHandler.ShowRulesModal -> screenModelScope.launch {
                 hostPlayer.firstOrNull()?.captureEvent(
-                    if (moderatorState.value.showRulesModal) "Closed rules modal" else "Opened rules modal"
+                    if (moderatorState.value.showRulesModal) "Closed rules modal" else "Opened rules modal",
                 )
                 session.updateModeratorState {
                     it.copy(showRulesModal = !it.showRulesModal)
@@ -178,7 +178,7 @@ class GondiHost(
         screenModelScope.launch {
             moderator.assignRoles().onSuccess { players ->
                 hostPlayer.firstOrNull()?.captureEvent(
-                    "Created game"
+                    "Created game",
                 )
                 gameState.value?.let {
                     try {

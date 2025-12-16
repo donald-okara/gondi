@@ -21,7 +21,7 @@ class GondiApplication : Application() {
     override fun onCreate() {
         val config = PostHogAndroidConfig(
             apiKey = POSTHOG_API_KEY,
-            host = POSTHOG_HOST
+            host = POSTHOG_HOST,
         )
 
         PostHogAndroid.setup(this, config)

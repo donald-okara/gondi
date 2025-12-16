@@ -10,11 +10,9 @@
 package ke.don.domain.table
 
 import ke.don.domain.state.Player
-import ke.don.utils.Logger
 import ke.don.utils.analytics.PosthogCapture
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -61,13 +59,13 @@ data class Profile(
             },
             // Immutable user facts
             userPropertiesSetOnce = mapOf(
-                "profile_created_at" to createdAt
+                "profile_created_at" to createdAt,
             ),
 
             // Only if you actually use groups (safe to omit)
             groups = null,
 
-            timestamp = timestamp
+            timestamp = timestamp,
         )
     }
 }

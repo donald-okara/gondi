@@ -1,3 +1,12 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ */
 package ke.don.utils.analytics
 
 import com.posthog.PostHog
@@ -19,7 +28,7 @@ actual object PosthogCapture {
         timestamp: Instant?,
     ) {
         val logger = Logger("PosthogCapture")
-        try{
+        try {
             PostHog.capture(
                 event = event,
                 distinctId = distinctId,
@@ -27,12 +36,12 @@ actual object PosthogCapture {
                 userProperties = userProperties,
                 userPropertiesSetOnce = userPropertiesSetOnce,
                 groups = groups,
-                timestamp = (timestamp ?: Clock.System.now()).toDate()
+                timestamp = (timestamp ?: Clock.System.now()).toDate(),
             )
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             logger.error(
                 "Failed to capture event: $event",
-                e
+                e,
             )
         }
     }
