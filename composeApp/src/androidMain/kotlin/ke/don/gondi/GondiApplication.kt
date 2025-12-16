@@ -19,14 +19,14 @@ import org.koin.android.ext.koin.androidContext
 
 class GondiApplication : Application() {
     override fun onCreate() {
+        super.onCreate()
+
         val config = PostHogAndroidConfig(
             apiKey = POSTHOG_API_KEY,
             host = POSTHOG_HOST,
         )
-
         PostHogAndroid.setup(this, config)
 
-        super.onCreate()
         initKoin {
             androidContext(this@GondiApplication)
             analytics()

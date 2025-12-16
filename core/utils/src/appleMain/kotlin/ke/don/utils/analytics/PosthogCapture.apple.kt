@@ -9,6 +9,8 @@
  */
 package ke.don.utils.analytics
 
+import ke.don.utils.Logger
+
 actual object PosthogCapture {
     @OptIn(markerClass = [kotlin.time.ExperimentalTime::class])
     actual fun capture(
@@ -20,5 +22,7 @@ actual object PosthogCapture {
         groups: Map<String, String>?,
         timestamp: kotlin.time.Instant?,
     ) {
+        val logger = Logger("PosthogCaptureIos")
+        logger.info("Posthog sdk is not implemented for Ios yet")
     }
 }

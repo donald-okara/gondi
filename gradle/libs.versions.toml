@@ -36,7 +36,7 @@ datastore = "1.2.0"
 kotzilla = "1.4.1"
 buildConfig = "6.0.6"
 
-posthog = "3.+"
+posthog = "3.27.2"
 
 [libraries]
 jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }

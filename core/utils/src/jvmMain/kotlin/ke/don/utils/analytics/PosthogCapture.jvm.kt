@@ -9,6 +9,7 @@
  */
 package ke.don.utils.analytics
 
+import ke.don.utils.Logger
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -23,5 +24,7 @@ actual object PosthogCapture {
         groups: Map<String, String>?,
         timestamp: Instant?,
     ) {
+        val logger = Logger("PosthogCaptureJvm")
+        logger.info("Posthog sdk is not implemented for JVM yet")
     }
 }
