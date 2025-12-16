@@ -23,6 +23,7 @@ import ke.don.utils.Logger
 import ke.don.utils.result.ReadStatus
 import ke.don.utils.result.onFailure
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -84,7 +85,12 @@ class GondiClient(
             is PlayerHandler.Send -> sendIntent(intent.message)
             PlayerHandler.ShowLeaveDialog -> clientState.updatePlayerState { it.copy(showLeaveGame = !it.showLeaveGame) }
             PlayerHandler.ShowVoteDialog -> clientState.updatePlayerState { it.copy(showVote = !it.showVote) }
-            PlayerHandler.ShowRulesModal -> clientState.updatePlayerState { it.copy(showRulesModal = !it.showRulesModal) }
+            PlayerHandler.ShowRulesModal -> screenModelScope.launch {
+                currentPlayer.firstOrNull()?.captureEvent(
+                    if (playerState.value.showRulesModal) "Closed rules modal" else "Opened rules modal",
+                )
+                clientState.updatePlayerState { it.copy(showRulesModal = !it.showRulesModal) }
+            }
             is PlayerHandler.SelectPlayer -> clientState.updatePlayerState { it.copy(selectedId = intent.playerId) }
         }
     }

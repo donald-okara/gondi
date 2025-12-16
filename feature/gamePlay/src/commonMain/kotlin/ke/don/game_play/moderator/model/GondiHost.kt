@@ -27,6 +27,7 @@ import ke.don.utils.result.onSuccess
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -55,6 +56,7 @@ class GondiHost(
     private val serverManager by lazy { scope.get<GameServerManager>() }
 
     private val logger = Logger("GondiHost")
+
     val gameState = session.gameState.asStateFlow()
 
     val players = session.players.asStateFlow()
@@ -139,7 +141,15 @@ class GondiHost(
         when (intent) {
             is ModeratorHandler.UpdateAssignments -> moderator.updateAssignment(intent.assignment)
             is ModeratorHandler.HandleModeratorCommand -> screenModelScope.launch {
-                serverManager.handleCommand(intent.intent)
+                serverManager.handleCommand(intent.intent).also {
+                    if (intent.intent is ModeratorCommand.RemovePlayer) {
+                        screenModelScope.launch {
+                            hostPlayer.firstOrNull()?.captureEvent(
+                                "Removed player",
+                            )
+                        }
+                    }
+                }
             }
             ModeratorHandler.StartServer -> startServer()
             is ModeratorHandler.UpdateRoomName -> moderator.updateRoomName(intent.name)
@@ -153,7 +163,10 @@ class GondiHost(
             ModeratorHandler.StartGame -> {
                 startGame()
             }
-            ModeratorHandler.ShowRulesModal -> {
+            ModeratorHandler.ShowRulesModal -> screenModelScope.launch {
+                hostPlayer.firstOrNull()?.captureEvent(
+                    if (moderatorState.value.showRulesModal) "Closed rules modal" else "Opened rules modal",
+                )
                 session.updateModeratorState {
                     it.copy(showRulesModal = !it.showRulesModal)
                 }
@@ -164,6 +177,9 @@ class GondiHost(
     fun startGame() {
         screenModelScope.launch {
             moderator.assignRoles().onSuccess { players ->
+                hostPlayer.firstOrNull()?.captureEvent(
+                    "Created game",
+                )
                 gameState.value?.let {
                     try {
                         serverManager.handleCommand(

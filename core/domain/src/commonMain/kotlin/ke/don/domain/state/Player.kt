@@ -15,8 +15,11 @@ import ke.don.domain.gameplay.actionType
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.domain.table.Profile
+import kotlinx.coroutines.flow.first
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @Serializable
 data class Player(
@@ -43,6 +46,18 @@ data class Player(
         background = background,
     )
 
+    @OptIn(ExperimentalTime::class)
+    fun captureEvent(
+        event: String,
+        properties: Map<String, Any>? = null,
+        timestamp: Instant? = null,
+    ) {
+        this.toProfile().captureEvent(
+            event = event,
+            properties = properties,
+            timestamp = timestamp,
+        )
+    }
     fun withLastAction(round: Long): Player? = role?.let {
         copy(lastAction = PlayerAction(it.actionType, round))
     }

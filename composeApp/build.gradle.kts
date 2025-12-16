@@ -6,20 +6,40 @@ plugins {
     alias(libs.plugins.kotlinMultiplatformApplication)
     alias(libs.plugins.ktorSupabasePlugin)
     alias(libs.plugins.kotzilla)
+    alias(libs.plugins.gmazzoBuildConfig)
 }
 
 val identityFile = rootProject.file("gradle.properties")
+val keysFile = rootProject.file("local.properties")
 val identityProperties = Properties()
 if (identityFile.exists()) {
     identityFile.inputStream().use { identityProperties.load(it) }
 }
 
+val keysProperties = Properties()
+if (keysFile.exists()) {
+    keysFile.inputStream().use { keysProperties.load(it) }
+}
 val versionProperty =
     identityProperties["version"]?.toString()
         ?: error("Vesrion not found in gradle.properties")
 val versionNameProperty =
     identityProperties["versionName"]?.toString()
         ?: error("Version name not found in gradle.properties")
+
+val posthogHost =
+    keysProperties["POSTHOG_HOST"]?.toString()
+        ?: error("PostHog host not found in local.properties")
+val posthogApiKey =
+    keysProperties["POSTHOG_API_KEY"]?.toString()
+        ?: error("PostHog api key not found in local.properties")
+
+buildConfig {
+    packageName.set("ke.don.gondi")
+
+    buildConfigField("POSTHOG_HOST", posthogHost)
+    buildConfigField("POSTHOG_API_KEY", posthogApiKey)
+}
 
 kotlin {
 

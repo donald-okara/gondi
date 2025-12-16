@@ -5,6 +5,7 @@ import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.dependencies
 
 internal fun Project.configureKotlinAndroid(
     extension: CommonExtension<*, *, *, * ,* , *>
@@ -49,5 +50,9 @@ internal fun Project.configureKotlinAndroid(
             excludes += "META-INF/io.netty.versions.properties"
             excludes += "META-INF/DEPENDENCIES"
         }
+    }
+
+    dependencies {
+        add("implementation", libs.findLibrary("posthog").get())
     }
 }

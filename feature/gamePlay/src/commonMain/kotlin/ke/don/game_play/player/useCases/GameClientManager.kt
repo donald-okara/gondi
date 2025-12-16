@@ -148,6 +148,10 @@ class GameClientManager(
 
                 send(Frame.Text(Json.encodeToString(ClientUpdate.serializer(), joinMessage)))
 
+                player.captureEvent(
+                    "Joined game",
+                )
+
                 for (frame in incoming) {
                     lastPingMillis = Clock.System.now()
                     if (frame is Frame.Text) clientState.handleServerUpdate(frame.readText())
