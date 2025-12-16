@@ -35,6 +35,7 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -147,6 +148,10 @@ class GameClientManager(
                 )
 
                 send(Frame.Text(Json.encodeToString(ClientUpdate.serializer(), joinMessage)))
+
+                player.captureEvent(
+                    "Joined game"
+                )
 
                 for (frame in incoming) {
                     lastPingMillis = Clock.System.now()

@@ -10,8 +10,13 @@
 package ke.don.domain.table
 
 import ke.don.domain.state.Player
+import ke.don.utils.Logger
+import ke.don.utils.analytics.PosthogCapture
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @Serializable
 data class Profile(
@@ -28,6 +33,41 @@ data class Profile(
             name = username,
             avatar = avatar,
             background = background,
+        )
+    }
+
+    @OptIn(ExperimentalTime::class)
+    fun captureEvent(
+        event: String,
+        properties: Map<String, Any>? = null,
+        timestamp: Instant? = null,
+    ) {
+        PosthogCapture.capture(
+            event = event,
+            distinctId = id.ifBlank { null },
+
+            // Event-specific context
+            properties = properties,
+
+            // Mutable user traits
+            userProperties = buildMap<String, Any> {
+                put("username", username)
+                put("has_avatar", avatar != null)
+                put("avatar_background", background.name)
+
+                avatar?.url()?.let {
+                    put("profile_url", it)
+                }
+            },
+            // Immutable user facts
+            userPropertiesSetOnce = mapOf(
+                "profile_created_at" to createdAt
+            ),
+
+            // Only if you actually use groups (safe to omit)
+            groups = null,
+
+            timestamp = timestamp
         )
     }
 }

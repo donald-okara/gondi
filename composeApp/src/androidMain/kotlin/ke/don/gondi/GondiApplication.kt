@@ -10,11 +10,22 @@
 package ke.don.gondi
 
 import android.app.Application
+import com.posthog.android.PostHogAndroid
+import com.posthog.android.PostHogAndroidConfig
 import io.kotzilla.sdk.analytics.koin.analytics
+import ke.don.gondi.BuildConfig.POSTHOG_API_KEY
+import ke.don.gondi.BuildConfig.POSTHOG_HOST
 import org.koin.android.ext.koin.androidContext
 
 class GondiApplication : Application() {
     override fun onCreate() {
+        val config = PostHogAndroidConfig(
+            apiKey = POSTHOG_API_KEY,
+            host = POSTHOG_HOST
+        )
+
+        PostHogAndroid.setup(this, config)
+
         super.onCreate()
         initKoin {
             androidContext(this@GondiApplication)
