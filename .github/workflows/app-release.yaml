@@ -51,10 +51,21 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: ./gradlew :composeApp:assembleRelease :composeApp:bundleRelease
 
-      # --- Build Desktop releases (macOS + Windows) ---
-      - name: Build Desktop releases
-        if: matrix.os != 'ubuntu-latest'
-        run: ./gradlew :desktop:package
+      # --- Build Macos ---
+      - name: Build Desktop release (macOS)
+        if: matrix.os == 'macos-latest'
+        run: ./gradlew packageDmg
+
+      # --- Build Windows ---
+      - name: Build Desktop release (Windows)
+        if: matrix.os == 'windows-latest'
+        run: ./gradlew packageMsi
+
+      # --- Build Ubuntu ---
+      - name: Build Desktop release (Windows)
+        if: matrix.os == 'ubuntu-latest'
+        run: ./gradlew packageDeb
+
 
       # --- Upload GitHub Release ---
       - name: Create GitHub Release
