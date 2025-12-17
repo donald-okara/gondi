@@ -69,6 +69,10 @@ jobs:
           keyPassword=${{ secrets.KEY_PASSWORD }}
           EOF
 
+      - name: Create local.properties
+        run: |
+          echo "${{ secrets.LOCAL_PROPERTIES }}" > local.properties
+
       # --- Build Android APK + AAB ---
       - name: Build Android release
         if: matrix.os == 'ubuntu-latest'
