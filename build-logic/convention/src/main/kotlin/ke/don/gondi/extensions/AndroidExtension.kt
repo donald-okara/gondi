@@ -6,6 +6,7 @@ import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
+import java.io.File
 import java.util.Properties
 
 internal fun Project.configureKotlinAndroid(
@@ -51,9 +52,8 @@ internal fun Project.configureKotlinAndroid(
 
             signingConfigs {
                 create("release") {
-                    val props = loadKeystoreProperties()
-
-                    storeFile = file(props["storeFile"] as String)
+                    val (props, keystoreFile) = loadKeystoreProperties()
+                    storeFile = keystoreFile
                     storePassword = props["storePassword"] as String
                     keyAlias = props["keyAlias"] as String
                     keyPassword = props["keyPassword"] as String
@@ -81,15 +81,13 @@ internal fun Project.configureKotlinAndroid(
     }
 }
 
-private fun Project.loadKeystoreProperties(): Properties {
+private fun Project.loadKeystoreProperties(): Pair<Properties, File> {
     val props = Properties()
     val file = rootProject.file("keystore.properties")
 
-    if (file.exists()) {
-        props.load(file.inputStream())
-    } else {
-        error("keystore.properties not found")
-    }
+    if (!file.exists()) error("keystore.properties not found")
+    props.load(file.inputStream())
 
-    return props
+    val keystoreFile = rootProject.file(props["storeFile"] as String)
+    return props to keystoreFile
 }
