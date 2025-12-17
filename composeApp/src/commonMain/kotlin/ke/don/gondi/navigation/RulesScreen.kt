@@ -19,6 +19,14 @@ import ke.don.components.scaffold.NavigationIcon
 import ke.don.components.scaffold.ScaffoldToken
 
 class RulesScreen : Screen {
+    /**
+     * Composes the Rules screen UI: a scaffold titled "Rules" with a back navigation icon and the screen body.
+     *
+     * The current navigator is retrieved and tapping the back icon calls `navigator.pop()`; the scaffold body
+     * displays `RulesContent`.
+     *
+     * @throws IllegalStateException if no navigator is available in the current composition.
+     */
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
