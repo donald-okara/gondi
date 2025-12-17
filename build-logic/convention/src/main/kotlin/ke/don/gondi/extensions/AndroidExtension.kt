@@ -6,6 +6,8 @@ import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
+import java.io.File
+import java.util.Properties
 
 internal fun Project.configureKotlinAndroid(
     extension: CommonExtension<*, *, *, * ,* , *>
@@ -34,12 +36,38 @@ internal fun Project.configureKotlinAndroid(
             if (this@apply is ApplicationExtension) {
                 isMinifyEnabled = true
                 isShrinkResources = true
+
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro"
                 )
             } else {
                 isMinifyEnabled = false
+            }
+        }
+    }
+
+    if (extension is ApplicationExtension) {
+        extension.apply {
+
+            signingConfigs {
+                create("release") {
+                    val keystore = loadKeystoreProperties()
+                    if (keystore != null) {
+                        val (props, keystoreFile) = keystore
+                        storeFile = keystoreFile
+                        storePassword = props["storePassword"] as String
+                        keyAlias = props["keyAlias"] as String
+                        keyPassword = props["keyPassword"] as String
+                    }
+
+                }
+            }
+
+            buildTypes {
+                getByName("release") {
+                    signingConfig = signingConfigs.getByName("release")
+                }
             }
         }
     }
@@ -55,4 +83,15 @@ internal fun Project.configureKotlinAndroid(
     dependencies {
         add("implementation", libs.findLibrary("posthog").get())
     }
+}
+
+// --- Load keystore.properties if exists ---
+private fun Project.loadKeystoreProperties(): Pair<Properties, File>? {
+    val props = Properties()
+    val file = rootProject.file("keystore.properties")
+
+    if (!file.exists()) return null
+    props.load(file.inputStream())
+    val keystoreFile = rootProject.file(props["storeFile"] as String)
+    return props to keystoreFile
 }
