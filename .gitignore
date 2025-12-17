@@ -18,4 +18,5 @@ captures
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
 *.keystore
+*.keystore.b64
 keystore.properties
