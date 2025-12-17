@@ -34,7 +34,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: Library version
+      label: App version
       placeholder: e.g., 1.0.0-beta01
     validations:
       required: true
