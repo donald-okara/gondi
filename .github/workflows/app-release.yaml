@@ -1,4 +1,4 @@
-name: Full KMP Release (Android + Desktop)
+name: Android release
 
 on:
   push:
