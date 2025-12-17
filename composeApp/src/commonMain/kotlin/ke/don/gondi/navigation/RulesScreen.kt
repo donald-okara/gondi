@@ -27,7 +27,6 @@ class RulesScreen : Screen {
 
         ScaffoldToken(
             title = "Rules",
-            scrollState = rememberScrollState(),
             navigationIcon = NavigationIcon.Back {
                 navigator.pop()
             },
