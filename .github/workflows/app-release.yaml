@@ -28,6 +28,11 @@ jobs:
       - name: Cache Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      # 🧩 Recreate local.properties from the single secret
+      - name: Create local.properties
+        run: |
+          echo "${{ secrets.LOCAL_PROPERTIES }}" > local.properties
+
       # --- PR Builds (no signing) ---
       - name: Decode keystore (release only)
         if: startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
