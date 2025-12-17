@@ -9,7 +9,6 @@
  */
 package ke.don.gondi.navigation
 
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
