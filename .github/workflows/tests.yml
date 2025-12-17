@@ -26,17 +26,6 @@ jobs:
         run: |
           echo "${{ secrets.LOCAL_PROPERTIES }}" > local.properties
 
-      - name: Decode keystore
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > release.keystore
-          cat <<EOF > keystore.properties
-          storeFile=release.keystore
-          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-          keyAlias=${{ secrets.KEY_ALIAS }}
-          keyPassword=${{ secrets.KEY_PASSWORD }}
-          EOF
-
       - name: Run JVM tests
         run: ./gradlew jvmTest
 

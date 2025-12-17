@@ -52,11 +52,15 @@ internal fun Project.configureKotlinAndroid(
 
             signingConfigs {
                 create("release") {
-                    val (props, keystoreFile) = loadKeystoreProperties()
-                    storeFile = keystoreFile
-                    storePassword = props["storePassword"] as String
-                    keyAlias = props["keyAlias"] as String
-                    keyPassword = props["keyPassword"] as String
+                    val keystore = loadKeystoreProperties()
+                    if (keystore != null) {
+                        val (props, keystoreFile) = keystore
+                        storeFile = keystoreFile
+                        storePassword = props["storePassword"] as String
+                        keyAlias = props["keyAlias"] as String
+                        keyPassword = props["keyPassword"] as String
+                    }
+
                 }
             }
 
@@ -81,13 +85,13 @@ internal fun Project.configureKotlinAndroid(
     }
 }
 
-private fun Project.loadKeystoreProperties(): Pair<Properties, File> {
+// --- Load keystore.properties if exists ---
+private fun Project.loadKeystoreProperties(): Pair<Properties, File>? {
     val props = Properties()
     val file = rootProject.file("keystore.properties")
 
-    if (!file.exists()) error("keystore.properties not found")
+    if (!file.exists()) return null
     props.load(file.inputStream())
-
     val keystoreFile = rootProject.file(props["storeFile"] as String)
     return props to keystoreFile
 }
