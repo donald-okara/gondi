@@ -1,0 +1,107 @@
+<resources>
+    <string name="app_name">GONDI</string>
+    <string name="tag_line">Sleep tight… someone won’t wake up.</string>
+    <string name="game_description">A game of trust, deceit, and late-night drama.</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="have_a_coffee">Have a coffee as we sync your profile</string>
+
+    <string name="empty_slot">Empty Slot</string>
+
+    <!-- GamePlay -->
+    <string name="player_roles_configuration">Player Roles Configuration</string>
+    <string name="set_number_of_players_for_each_role">Set the number of players for each role</string>
+    <string name="only_one_detective_or_accomplice_allowed">Only one Detective or Accomplice allowed</string>
+    <string name="already_voted_this_round">You've already voted this round.</string>
+    <string name="vote_innocent">Vote Innocent</string>
+    <string name="vote_guilty">Vote Guilty</string>
+    <string name="dead_men_tell_no_tales">Dead men tell no tales</string>
+    <string name="confirmation_gondi">Do you want to end %1$s's journey tonight?</string>
+    <string name="confirmation_doctor">Will you use your skills to save %1$s?</string>
+    <string name="confirmation_detective">Time to uncover the truth. Investigate %1$s?</string>
+    <string name="dormant_text_gondi">You've already chosen a target for tonight.</string>
+    <string name="dormant_text_doctor">Your patient for tonight is already chosen.</string>
+    <string name="dormant_text_detective">You've already put your investigative skills to use this round.</string>
+    <string name="dormant_text_default">It's time to rest. There's nothing more to do.</string>
+    <string name="already_on_trial">Someone's already on trial. You can second the accusation or wait for the verdict.</string>
+    <string name="accuse_player_confirmation">Accuse %1$s and put them on trial? Are you sure?</string>
+
+    <string name="gondi_instruction">You are a Gondi, Pick a player to kill</string>
+    <string name="doctor_instruction">You are a Doctor, Pick a player to save</string>
+    <string name="detective_instruction">You are a Detective, Pick a player to investigate</string>
+    <string name="default_instruction">Have a good rest, Please do not snore</string>
+
+    <!-- SharedLobby -->
+    <string name="ready_to_begin">Ready to Begin?</string>
+    <string name="start_with_players">Start with %1$d players</string>
+    <string name="start_game">Start Game</string>
+    <string name="waiting_for_more_players">Waiting for more players...</string>
+    <string name="role_lock_warning">At least one player has a role. This locks everyone else out from joining the game</string>
+    <string name="moderator_panel">Moderator Panel</string>
+    <string name="show_rules">Show rules</string>
+    <string name="players_in_lobby">Players in Lobby</string>
+
+    <!-- SharedTownHall -->
+    <string name="session_over">The day's session is over. Time to move to the night phase.</string>
+    <string name="proceed">Proceed</string>
+    <string name="go_to_court">Would you like to go to court?</string>
+    <string name="no_seconder">%1$s has no seconder. Would you like to exonerate them?</string>
+    <string name="exonerate_player">Exonerate %1$s</string>
+    <string name="no_accusations">No accusations are on the floor. Shall we move on?</string>
+    <string name="is_player_guilty">Do you think %1$s is guilty?</string>
+    <string name="vote">Vote</string>
+
+    <!-- SharedGameOver -->
+    <string name="play_again">Play again</string>
+    <string name="gondis_win">Gondis Win!</string>
+    <string name="villagers_win">Villagers Win!</string>
+    <string name="gondi_win_remark">The Gondis have successfully taken over the village!</string>
+    <string name="villager_win_remark">The Villagers have successfully rooted out all the Gondis!</string>
+
+    <!-- SelectedPlayerModal -->
+    <string name="assign_role">Assign Role</string>
+    <string name="remove">Remove</string>
+    <string name="remove_player_confirmation">Are you sure you want to remove %1$s from the game?</string>
+    <string name="never_mind">Never mind</string>
+    <string name="i_am_sure">I am sure</string>
+    <string name="assign_role_warning">Assigning a role to this player would lock everyone else out from joining</string>
+    <string name="none">None</string>
+
+    <!-- GameObjective -->
+    <string name="game_objective">Game Objective</string>
+    <string name="game_objective_description">The game is a battle between two groups: the Villagers (the uninformed majority) and the Gondi (the informed minority). The Villagers win if they eliminate all Gondi members. The Gondi win when their numbers equal the number of Villagers.</string>
+
+    <!-- RevealDeaths -->
+    <string name="night_results">Night Results</string>
+    <string name="court_ruling">Court ruling</string>
+    <string name="night_results_description">Here is what happened when the villagers slept!</string>
+    <string name="court_ruling_description">Here is what the court decided</string>
+    <string name="killed_player">Killed player</string>
+    <string name="saved_player">Saved player</string>
+    <string name="eliminated_player">Eliminated — %1$s</string>
+    <string name="saved_by_saviour">Saved by %1$s</string>
+    <string name="the_doctor">The Doctor</string>
+
+    <!-- AccusationSection -->
+    <string name="seconds_accusation">%1$s seconds the accusation</string>
+    <string name="waiting_for_second">Waiting for a second to proceed to court</string>
+    <string name="accuses">%1$s accuses %2$s</string>
+    <string name="second_the_accusation">Second The Accusation</string>
+
+    <!-- MainPlayerContent -->
+    <string name="leave_game_title">Leave Game?</string>
+    <string name="leave_game_message">You are about to leave the game you should understand that:</string>
+    <string name="leave_game_checklist_1">Your progress will be lost</string>
+    <string name="leave_game_checklist_2">You cannot come back to the game</string>
+    <string name="connecting">Connecting...</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="leave_game">Leave game</string>
+
+    <!-- MainModeratorContent -->
+    <string name="leave_game_checklist_moderator">This game will be terminated and all progress will be lost.</string>
+    <string name="new_game">New game</string>
+
+    <!-- ModeratorSleep -->
+    <string name="proceed_to_town_hall">You can now proceed to Town hall</string>
+    <string name="someone_has_not_done_their_part_yet">Someone has not done their part yet</string>
+
+</resources>

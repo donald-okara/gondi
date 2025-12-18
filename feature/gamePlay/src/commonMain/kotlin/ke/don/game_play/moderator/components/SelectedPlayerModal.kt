@@ -45,7 +45,9 @@ import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.Role
 import ke.don.domain.state.Player
+import ke.don.resources.Resources
 import ke.don.utils.capitaliseFirst
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -142,7 +144,7 @@ private fun ModalActions(
             buttonType = ComponentType.Error,
         ) {
             Icon(Icons.Default.PersonRemove, contentDescription = null)
-            Text(text = "Remove")
+            Text(text = stringResource(Resources.Strings.GamePlay.REMOVE))
         }
 
         onAssignClick?.let {
@@ -151,7 +153,7 @@ private fun ModalActions(
                 buttonType = ComponentType.Inverse,
             ) {
                 Icon(Icons.Default.PersonAdd, contentDescription = null)
-                Text(text = "Assign Role")
+                Text(text = stringResource(Resources.Strings.GamePlay.ASSIGN_ROLE))
             }
         }
     }
@@ -171,17 +173,17 @@ private fun RemovePlayerConfirmation(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.large),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(text = "Are you sure you want to remove $playerName from the game?")
+        Text(text = Resources.Strings.GamePlay.removePlayerConfirmation(playerName))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.End),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             ButtonToken(onClick = onDismiss, buttonType = ComponentType.Neutral) {
-                Text(text = "Never mind")
+                Text(text = stringResource(Resources.Strings.GamePlay.NEVER_MIND))
             }
             ButtonToken(onClick = onConfirm, buttonType = ComponentType.Error) {
-                Text(text = "I am sure")
+                Text(text = stringResource(Resources.Strings.GamePlay.I_AM_SURE))
             }
         }
     }
@@ -201,7 +203,7 @@ private fun AssignRoleContent(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Assigning a role to this player would lock everyone else out from joining",
+            text = stringResource(Resources.Strings.GamePlay.ASSIGN_ROLE_WARNING),
             style = MaterialTheme.typography.titleMedium,
         )
         FlowRow(
@@ -252,7 +254,7 @@ private fun RoleChip(
         ),
     ) {
         Text(
-            text = role?.name?.capitaliseFirst() ?: "None",
+            text = role?.name?.capitaliseFirst() ?: stringResource(Resources.Strings.GamePlay.NONE),
             modifier = Modifier.padding(MaterialTheme.spacing.small),
         )
     }

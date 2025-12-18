@@ -14,15 +14,20 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import io.ktor.util.collections.getValue
 import ke.don.domain.gameplay.Role
 import ke.don.domain.gameplay.isActingInSleep
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.game_play.player.components.SleepModal
+import ke.don.game_play.player.components.SleepModalStrings
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.model.PlayerState
 import ke.don.game_play.shared.SharedSleep
+import ke.don.game_play.shared.SharedSleepStrings
+import ke.don.game_play.shared.components.RevealDeathsStrings
+import ke.don.resources.Resources
+import ke.don.utils.formatArgs
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PlayerSleep(
@@ -39,14 +44,18 @@ fun PlayerSleep(
     val selectedPlayers by remember(gameState.lastSavedPlayerId, gameState.pendingKills, myPlayer) {
         derivedStateOf { gameState.selectedPlayersSleep(myPlayer) }
     }
+    val gondiInstruction = stringResource(Resources.Strings.GamePlay.GONDI_INSTRUCTION)
+    val doctorInstruction = stringResource(Resources.Strings.GamePlay.DOCTOR_INSTRUCTION)
+    val detectiveInstruction = stringResource(Resources.Strings.GamePlay.DETECTIVE_INSTRUCTION)
+    val defaultInstruction = stringResource(Resources.Strings.GamePlay.DEFAULT_INSTRUCTION)
 
     val instruction by remember(myPlayer.role) {
         derivedStateOf {
             when (myPlayer.role) {
-                Role.GONDI -> "You are a Gondi, Pick a player to kill"
-                Role.DOCTOR -> "You are a Doctor, Pick a player to save"
-                Role.DETECTIVE -> "You are a Detective, Pick a player to investigate"
-                else -> "Have a good rest, Please do not snore"
+                Role.GONDI -> gondiInstruction
+                Role.DOCTOR -> doctorInstruction
+                Role.DETECTIVE -> detectiveInstruction
+                else -> defaultInstruction
             }
         }
     }
@@ -56,6 +65,43 @@ fun PlayerSleep(
     }
 
     val lastAccused = remember(gameState.accusedPlayer) { gameState.accusedPlayer?.targetId }
+
+    // Extract string resources into vals first
+    val gondiConfirmationString = stringResource(Resources.Strings.GamePlay.CONFIRMATION_GONDI)
+    val doctorConfirmationString = stringResource(Resources.Strings.GamePlay.CONFIRMATION_DOCTOR)
+    val detectiveConfirmationString = stringResource(Resources.Strings.GamePlay.CONFIRMATION_DETECTIVE)
+    val gondiDormantString = stringResource(Resources.Strings.GamePlay.DORMANT_TEXT_GONDI)
+    val doctorDormantString = stringResource(Resources.Strings.GamePlay.DORMANT_TEXT_DOCTOR)
+    val detectiveDormantString = stringResource(Resources.Strings.GamePlay.DORMANT_TEXT_DETECTIVE)
+    val defaultDormantString = stringResource(Resources.Strings.GamePlay.DORMANT_TEXT_DEFAULT)
+
+    // Now, create the SleepModalStrings instance using the vals
+    val sleepModalStrings = SleepModalStrings(
+        gondiConfirmation = { name -> gondiConfirmationString.formatArgs(name) },
+        doctorConfirmation = { name -> doctorConfirmationString.formatArgs(name) },
+        detectiveConfirmation = { name -> detectiveConfirmationString.formatArgs(name) },
+        gondiDormant = { name -> gondiDormantString.formatArgs(name) },
+        doctorDormant = { name -> doctorDormantString.formatArgs(name) },
+        detectiveDormant = { name -> detectiveDormantString.formatArgs(name) },
+        defaultDormant = { name -> defaultDormantString.formatArgs(name) },
+    )
+
+    val sharedSleepStrings = SharedSleepStrings(
+        proceed = stringResource(Resources.Strings.GamePlay.PROCEED),
+        showRules = stringResource(Resources.Strings.GamePlay.SHOW_RULES),
+    )
+    val revealDeathsStrings = RevealDeathsStrings(
+        nightResultsTitle = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS),
+        courtRulingTitle = stringResource(Resources.Strings.GamePlay.COURT_RULING),
+        nightResultsDescription = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS_DESCRIPTION),
+        courtRulingDescription = stringResource(Resources.Strings.GamePlay.COURT_RULING_DESCRIPTION),
+        killedPlayerContentDescription = stringResource(Resources.Strings.GamePlay.KILLED_PLAYER),
+        savedPlayerContentDescription = stringResource(Resources.Strings.GamePlay.SAVED_PLAYER),
+        eliminatedPlayerMessage = { role -> Resources.Strings.GamePlay.eliminatedPlayer(role) },
+        savedBySaviourMessage = { saviour -> Resources.Strings.GamePlay.savedBySaviour(saviour) },
+        courtRulingText = stringResource(Resources.Strings.GamePlay.COURT_RULING),
+        theDoctorText = stringResource(Resources.Strings.GamePlay.THE_DOCTOR),
+    )
 
     SharedSleep(
         modifier = modifier,
@@ -74,6 +120,8 @@ fun PlayerSleep(
         revealDeaths = playerState.revealDeaths,
         onDismiss = { onEvent(PlayerHandler.RevealDeaths) },
         lastAccused = lastAccused,
+        strings = sharedSleepStrings,
+        revealDeathsStrings = revealDeathsStrings,
     )
 
     val selectedPlayer by remember(playerState.selectedId, alivePlayers) {
@@ -89,6 +137,7 @@ fun PlayerSleep(
             currentPlayer = myPlayer,
             selectedPlayer = it,
             gameState = gameState,
+            strings = sleepModalStrings,
         )
     }
 }

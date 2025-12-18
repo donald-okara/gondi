@@ -22,6 +22,10 @@ import ke.don.domain.state.nextPhase
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.shared.SharedSleep
+import ke.don.game_play.shared.SharedSleepStrings
+import ke.don.game_play.shared.components.RevealDeathsStrings
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ModeratorSleep(
@@ -46,12 +50,30 @@ fun ModeratorSleep(
     }
 
     val instruction = if (actingPlayers.isEmpty()) {
-        "You can now proceed to Town hall"
+        stringResource(Resources.Strings.GamePlay.PROCEED_TO_TOWN_HALL)
     } else {
-        "Someone has not done their part yet"
+        stringResource(Resources.Strings.GamePlay.SOMEONE_HAS_NOT_DONE_THEIR_PART_YET)
     }
 
     val lastAccused = remember(gameState.accusedPlayer) { gameState.accusedPlayer?.targetId }
+
+    val sharedSleepStrings = SharedSleepStrings(
+        proceed = stringResource(Resources.Strings.GamePlay.PROCEED),
+        showRules = stringResource(Resources.Strings.GamePlay.SHOW_RULES),
+    )
+
+    val revealDeathsStrings = RevealDeathsStrings(
+        nightResultsTitle = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS),
+        courtRulingTitle = stringResource(Resources.Strings.GamePlay.COURT_RULING),
+        nightResultsDescription = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS_DESCRIPTION),
+        courtRulingDescription = stringResource(Resources.Strings.GamePlay.COURT_RULING_DESCRIPTION),
+        killedPlayerContentDescription = stringResource(Resources.Strings.GamePlay.KILLED_PLAYER),
+        savedPlayerContentDescription = stringResource(Resources.Strings.GamePlay.SAVED_PLAYER),
+        eliminatedPlayerMessage = { role -> Resources.Strings.GamePlay.eliminatedPlayer(role) },
+        savedBySaviourMessage = { saviour -> Resources.Strings.GamePlay.savedBySaviour(saviour) },
+        courtRulingText = stringResource(Resources.Strings.GamePlay.COURT_RULING),
+        theDoctorText = stringResource(Resources.Strings.GamePlay.THE_DOCTOR),
+    )
 
     SharedSleep(
         modifier = modifier,
@@ -82,5 +104,7 @@ fun ModeratorSleep(
             onEvent(ModeratorHandler.RevealDeaths)
         },
         lastAccused = lastAccused,
+        strings = sharedSleepStrings,
+        revealDeathsStrings = revealDeathsStrings,
     )
 }

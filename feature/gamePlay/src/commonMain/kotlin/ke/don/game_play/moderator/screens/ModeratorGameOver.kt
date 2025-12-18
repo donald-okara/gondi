@@ -18,6 +18,9 @@ import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.shared.SharedGameOver
+import ke.don.game_play.shared.SharedGameOverStrings
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ModeratorGameOver(
@@ -28,6 +31,14 @@ fun ModeratorGameOver(
     onEvent: (ModeratorHandler) -> Unit,
 ) {
     val winningFaction = remember { gameState.winners } ?: return
+
+    val strings = SharedGameOverStrings(
+        gondiWinRemark = stringResource(Resources.Strings.GamePlay.GONDI_WIN_REMARK),
+        villagerWinRemark = stringResource(Resources.Strings.GamePlay.VILLAGER_WIN_REMARK),
+        gondiWin = stringResource(Resources.Strings.GamePlay.GONDIS_WIN),
+        villagersWin = stringResource(Resources.Strings.GamePlay.VILLAGERS_WIN),
+        playAgain = stringResource(Resources.Strings.GamePlay.PLAY_AGAIN),
+    )
 
     SharedGameOver(
         modifier = modifier,
@@ -45,5 +56,6 @@ fun ModeratorGameOver(
                 ),
             )
         },
+        strings = strings,
     )
 }

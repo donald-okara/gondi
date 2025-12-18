@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +39,12 @@ import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.shared.components.ActionConfirmation
 import ke.don.game_play.shared.components.ModalActions
 
+@Immutable
+data class TownHallModalStrings(
+    val alreadyOnTrial: String,
+    val accusePlayerConfirmation: (String) -> String,
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TownHallModal(
@@ -46,12 +53,11 @@ fun TownHallModal(
     currentPlayer: Player,
     selectedPlayer: Player,
     gameState: GameState,
+    strings: TownHallModalStrings,
 ) {
     var showConfirmation by remember { mutableStateOf(false) }
 
-    val dormantText =
-        "Someone's already on trial. You can second the accusation or wait for the verdict."
-    val confirmationText = "Accuse ${selectedPlayer.name} and put them on trial? Are you sure?"
+    val confirmationText = strings.accusePlayerConfirmation(selectedPlayer.name)
     val confirmationAction = {
         onEvent(
             PlayerHandler.Send(
@@ -89,7 +95,7 @@ fun TownHallModal(
                 currentRound = gameState.round,
                 currentPlayer = currentPlayer,
                 showConfirmation = { showConfirmation = true },
-                dormantText = dormantText,
+                dormantText = strings.alreadyOnTrial,
                 actionType = ActionType.ACCUSE,
             )
 

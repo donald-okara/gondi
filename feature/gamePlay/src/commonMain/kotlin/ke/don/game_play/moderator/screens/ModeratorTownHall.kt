@@ -21,6 +21,10 @@ import ke.don.domain.state.Player
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.shared.SharedTownHall
+import ke.don.game_play.shared.SharedTownHallStrings
+import ke.don.game_play.shared.components.RevealDeathsStrings
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -65,6 +69,30 @@ fun ModeratorTownHall(
         }
     }
 
+    val townHallStrings = SharedTownHallStrings(
+        sessionOver = stringResource(Resources.Strings.GamePlay.SESSION_OVER),
+        proceed = stringResource(Resources.Strings.GamePlay.PROCEED),
+        goToCourt = stringResource(Resources.Strings.GamePlay.GO_TO_COURT),
+        noAccusations = stringResource(Resources.Strings.GamePlay.NO_ACCUSATIONS),
+        vote = stringResource(Resources.Strings.GamePlay.VOTE),
+        noSeconder = { name -> Resources.Strings.GamePlay.noSeconder(name) },
+        exoneratePlayer = { name -> Resources.Strings.GamePlay.exoneratePlayer(name) },
+        isPlayerGuilty = { name -> Resources.Strings.GamePlay.isPlayerGuilty(name) },
+    )
+
+    val revealDeathsStrings = RevealDeathsStrings(
+        nightResultsTitle = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS),
+        courtRulingTitle = stringResource(Resources.Strings.GamePlay.COURT_RULING),
+        nightResultsDescription = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS_DESCRIPTION),
+        courtRulingDescription = stringResource(Resources.Strings.GamePlay.COURT_RULING_DESCRIPTION),
+        killedPlayerContentDescription = stringResource(Resources.Strings.GamePlay.KILLED_PLAYER),
+        savedPlayerContentDescription = stringResource(Resources.Strings.GamePlay.SAVED_PLAYER),
+        eliminatedPlayerMessage = { name -> Resources.Strings.GamePlay.eliminatedPlayer(name) },
+        savedBySaviourMessage = { name -> Resources.Strings.GamePlay.savedBySaviour(name) },
+        courtRulingText = stringResource(Resources.Strings.GamePlay.COURT_RULING),
+        theDoctorText = stringResource(Resources.Strings.GamePlay.THE_DOCTOR),
+    )
+
     SharedTownHall(
         players = players,
         onSelectPlayer = { },
@@ -100,5 +128,7 @@ fun ModeratorTownHall(
         lastSaved = gameState.lastSavedPlayerId,
         lastKilled = gameState.pendingKills.filter { id -> players.find { it.id == id }?.isAlive == false }, // Only show players whose death has been processed
         modifier = modifier,
+        townHallStrings = townHallStrings,
+        revealDeathsStrings = revealDeathsStrings,
     )
 }

@@ -16,6 +16,9 @@ import ke.don.domain.state.Player
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.shared.SharedLobby
+import ke.don.game_play.shared.SharedLobbyStrings
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -28,6 +31,17 @@ fun ModeratorLobby(
     players: List<Player>,
     onEvent: (ModeratorHandler) -> Unit,
 ) {
+    val strings = SharedLobbyStrings(
+        readyToBegin = stringResource(Resources.Strings.GamePlay.READY_TO_BEGIN),
+        startGame = stringResource(Resources.Strings.GamePlay.START_GAME),
+        waitingForMorePlayers = stringResource(Resources.Strings.GamePlay.WAITING_FOR_MORE_PLAYERS),
+        roleLockWarning = stringResource(Resources.Strings.GamePlay.ROLE_LOCK_WARNING),
+        moderatorPanel = stringResource(Resources.Strings.GamePlay.MODERATOR_PANEL),
+        showRules = stringResource(Resources.Strings.GamePlay.SHOW_RULES),
+        playersInLobby = stringResource(Resources.Strings.GamePlay.PLAYERS_IN_LOBBY),
+        startWithPlayers = { count -> Resources.Strings.GamePlay.startWithPlayers(count) },
+    )
+
     SharedLobby(
         modifier = modifier,
         isModerator = true,
@@ -48,5 +62,6 @@ fun ModeratorLobby(
         onShowRules = {
             onEvent(ModeratorHandler.ShowRulesModal)
         },
+        strings = strings,
     )
 }

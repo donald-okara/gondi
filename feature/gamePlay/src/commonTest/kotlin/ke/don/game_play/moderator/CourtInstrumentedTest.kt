@@ -26,8 +26,10 @@ import ke.don.domain.state.GamePhase
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.screens.MainModeratorContent
 import ke.don.game_play.moderator.screens.ModeratorCourt
+import ke.don.resources.Resources
 import ke.don.utils.Logger
 import ke.don.utils.capitaliseFirst
+import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.ExperimentalTime
@@ -44,6 +46,7 @@ class CourtInstrumentedTest {
     @ExperimentalTime
     @Test
     fun proceed_isPresentAndDisabledWhenVotesAreEmpty() = runComposeUiTest {
+        val proceedText = mutableStateOf("")
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val selectedId = "2"
@@ -72,6 +75,7 @@ class CourtInstrumentedTest {
                 val moderatorState by rules.moderatorState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
+                proceedText.value = stringResource(Resources.Strings.GamePlay.PROCEED)
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
@@ -92,13 +96,14 @@ class CourtInstrumentedTest {
             }
         }
 
-        onNodeWithText("Proceed").assertIsDisplayed()
-        onNodeWithText("Proceed").assertIsNotEnabled()
+        onNodeWithText(proceedText.value).assertIsDisplayed()
+        onNodeWithText(proceedText.value).assertIsNotEnabled()
     }
 
     @ExperimentalTime
     @Test
     fun proceed_isPresentAndEnabledWhenVotesNotEmpty() = runComposeUiTest {
+        val proceedText = mutableStateOf("")
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val selectedId = "2"
@@ -128,6 +133,7 @@ class CourtInstrumentedTest {
                 val players = rules.players
                 val votes = rules.votes
                 val currentPlayer = rules.currentPlayer
+                proceedText.value = stringResource(Resources.Strings.GamePlay.PROCEED)
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
@@ -154,9 +160,9 @@ class CourtInstrumentedTest {
             }
         }
 
-        onNodeWithText("Proceed").assertIsDisplayed()
-        onNodeWithText("Proceed").assertIsEnabled()
-        onNodeWithText("Proceed").performClick()
+        onNodeWithText(proceedText.value).assertIsDisplayed()
+        onNodeWithText(proceedText.value).assertIsEnabled()
+        onNodeWithText(proceedText.value).performClick()
 
         waitForIdle()
 

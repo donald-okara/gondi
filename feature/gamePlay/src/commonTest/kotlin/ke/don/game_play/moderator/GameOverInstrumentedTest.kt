@@ -22,8 +22,9 @@ import ke.don.domain.gameplay.Faction
 import ke.don.domain.state.GamePhase
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.screens.MainModeratorContent
+import ke.don.resources.Resources
 import ke.don.utils.Logger
-import ke.don.utils.capitaliseFirst
+import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.ExperimentalTime
@@ -40,6 +41,9 @@ class GameOverInstrumentedTest {
 
     @Test
     fun winningFactionAndPlayAgainAreDisplayed() = runComposeUiTest {
+        val playAgain = mutableStateOf("")
+        val gondisWin = mutableStateOf("")
+
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val winningFaction = Faction.GONDI
@@ -57,6 +61,9 @@ class GameOverInstrumentedTest {
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
 
+                playAgain.value = stringResource(Resources.Strings.GamePlay.PLAY_AGAIN)
+                gondisWin.value = stringResource(Resources.Strings.GamePlay.GONDIS_WIN)
+
                 MainModeratorContent(
                     gameState = gameState,
                     hostPlayer = currentPlayer,
@@ -69,12 +76,14 @@ class GameOverInstrumentedTest {
             }
         }
 
-        onNodeWithText("Play again").assertIsDisplayed()
-        onNodeWithText("${winningFaction.name.capitaliseFirst()}s Win!").assertIsDisplayed()
+        onNodeWithText(playAgain.value).assertIsDisplayed()
+        onNodeWithText(gondisWin.value).assertIsDisplayed()
     }
 
     @Test
     fun playAgain_movesToSleep() = runComposeUiTest {
+        val playAgain = mutableStateOf("")
+
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val winningFaction = Faction.GONDI
@@ -92,6 +101,7 @@ class GameOverInstrumentedTest {
                 val moderatorState by rules.moderatorState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
+                playAgain.value = stringResource(Resources.Strings.GamePlay.PLAY_AGAIN)
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
@@ -121,8 +131,8 @@ class GameOverInstrumentedTest {
             }
         }
 
-        onNodeWithText("Play again").assertIsDisplayed()
-        onNodeWithText("Play again").performClick()
+        onNodeWithText(playAgain.value).assertIsDisplayed()
+        onNodeWithText(playAgain.value).performClick()
 
         waitForIdle()
         assertEquals(GamePhase.SLEEP, selectedPhase.value)

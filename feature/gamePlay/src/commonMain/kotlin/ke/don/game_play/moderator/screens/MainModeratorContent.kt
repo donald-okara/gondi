@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import ke.don.components.button.ComponentType
 import ke.don.components.dialog.ConfirmationDialogToken
@@ -28,8 +29,18 @@ import ke.don.game_play.moderator.components.SelectedPlayerModal
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.shared.components.RulesModal
+import ke.don.resources.Resources
 import ke.don.utils.capitaliseFirst
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
+
+@Immutable
+data class MainModeratorContentStrings(
+    val leaveGameTitle: String,
+    val leaveGameMessage: String,
+    val leaveGameChecklist: List<String>,
+    val newGame: String,
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,12 +54,21 @@ fun MainModeratorContent(
     onEvent: (ModeratorHandler) -> Unit,
     onBack: () -> Unit,
 ) {
+    val strings = MainModeratorContentStrings(
+        leaveGameTitle = stringResource(Resources.Strings.GamePlay.LEAVE_GAME_TITLE),
+        leaveGameMessage = stringResource(Resources.Strings.GamePlay.LEAVE_GAME_MESSAGE),
+        leaveGameChecklist = listOf(
+            stringResource(Resources.Strings.GamePlay.LEAVE_GAME_CHECKLIST_MODERATOR),
+        ),
+        newGame = stringResource(Resources.Strings.GamePlay.NEW_GAME),
+    )
+
     ScaffoldToken(
         modifier = modifier,
         navigationIcon = NavigationIcon.Back { onEvent(ModeratorHandler.ShowLeaveDialog) },
-        title = gameState?.phase?.let { phase ->
-            "${phase.name.capitaliseFirst()} for ${gameState.name}"
-        } ?: "New game",
+        title = gameState?.phase?.let {
+            "${it.name.capitaliseFirst()} for ${gameState.name}"
+        } ?: strings.newGame,
     ) {
         ContentSwitcher(
             moderatorState = moderatorState,
@@ -67,12 +87,10 @@ fun MainModeratorContent(
     if (moderatorState.showLeaveGame) {
         ConfirmationDialogToken(
             icon = Icons.AutoMirrored.Filled.ExitToApp,
-            title = "Leave Game?",
-            message = "You are about to leave the game you should understand that:",
+            title = strings.leaveGameTitle,
+            message = strings.leaveGameMessage,
             dialogType = ComponentType.Warning,
-            checklist = listOf(
-                "This game will be terminated and all progress will be lost.",
-            ),
+            checklist = strings.leaveGameChecklist,
             onConfirm = onBack,
             onDismiss = { onEvent(ModeratorHandler.ShowLeaveDialog) },
         )

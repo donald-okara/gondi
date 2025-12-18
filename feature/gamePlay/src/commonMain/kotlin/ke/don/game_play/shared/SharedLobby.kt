@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +48,18 @@ import ke.don.game_play.shared.components.AnnouncementSection
 import ke.don.game_play.shared.components.PlayersGrid
 import kotlin.time.ExperimentalTime
 
+@Immutable
+data class SharedLobbyStrings(
+    val readyToBegin: String,
+    val startGame: String,
+    val waitingForMorePlayers: String,
+    val roleLockWarning: String,
+    val moderatorPanel: String,
+    val showRules: String,
+    val playersInLobby: String,
+    val startWithPlayers: (Int) -> String,
+)
+
 @Composable
 fun SharedLobby(
     modifier: Modifier = Modifier,
@@ -58,6 +71,7 @@ fun SharedLobby(
     startGame: () -> Unit = {},
     announcements: List<Announcement> = emptyList(),
     onShowRules: () -> Unit = {},
+    strings: SharedLobbyStrings,
 ) {
     val nonModeratorPlayers = players.filter { it.role != Role.MODERATOR }
     val alivePlayers = nonModeratorPlayers
@@ -80,6 +94,7 @@ fun SharedLobby(
                 availableSlots.toInt(),
                 startGame,
                 isModerator,
+                strings,
             )
         }
         item {
@@ -88,14 +103,16 @@ fun SharedLobby(
                 myPlayerId,
                 announcements = announcements,
                 onShowRules = onShowRules,
+                strings = strings,
             )
         }
-        item { RoleLockWarning(modifier = Modifier, nonModeratorPlayers, isModerator) }
+        item { RoleLockWarning(modifier = Modifier, nonModeratorPlayers, isModerator, strings) }
         item {
             GridHeader(
                 modifier = Modifier,
                 availableSlots = availableSlots.toInt(),
                 alivePlayersSize = alivePlayers.size,
+                strings = strings,
             )
         }
         item {
@@ -118,6 +135,7 @@ fun LobbyHeader(
     availableSlots: Int,
     startGame: () -> Unit,
     isModerator: Boolean,
+    strings: SharedLobbyStrings,
 ) {
     if (!isModerator) return
 
@@ -127,7 +145,7 @@ fun LobbyHeader(
         verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
     ) {
         Text(
-            text = "Ready to Begin?",
+            text = strings.readyToBegin,
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.align(Alignment.Start),
         )
@@ -140,7 +158,7 @@ fun LobbyHeader(
         ) {
             AnimatedContent(targetState = availableSlots) { slots ->
                 Text(
-                    text = if (slots > playersSize) "Start with $playersSize players" else "Start Game",
+                    text = if (slots > playersSize) strings.startWithPlayers(playersSize) else strings.startGame,
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth(),
@@ -150,7 +168,7 @@ fun LobbyHeader(
 
         AnimatedVisibility(visible = availableSlots > playersSize) {
             Text(
-                text = "Waiting for more players...",
+                text = strings.waitingForMorePlayers,
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
             )
@@ -163,12 +181,13 @@ fun RoleLockWarning(
     modifier: Modifier = Modifier,
     nonModeratorPlayers: List<Player>,
     isModerator: Boolean,
+    strings: SharedLobbyStrings,
 ) {
     if (!isModerator) return
 
     AnimatedVisibility(nonModeratorPlayers.any { it.role != null }) {
         Text(
-            text = "At least one player has a role. This locks everyone else out from joining the game",
+            text = strings.roleLockWarning,
             color = Theme.colorScheme.error,
             style = MaterialTheme.typography.labelMedium,
             modifier = modifier.fillMaxWidth(),
@@ -185,6 +204,7 @@ fun ModeratorSection(
     modifier: Modifier = Modifier,
     announcements: List<Announcement> = emptyList(),
     onShowRules: () -> Unit = {},
+    strings: SharedLobbyStrings,
 ) {
     if (moderator == null) return
 
@@ -198,7 +218,7 @@ fun ModeratorSection(
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
         ) {
-            ModeratorPanelHeader(onClick = onShowRules)
+            ModeratorPanelHeader(onClick = onShowRules, strings = strings)
 
             // Moderator info
             Row(
@@ -221,14 +241,18 @@ fun ModeratorSection(
 }
 
 @Composable
-private fun ModeratorPanelHeader(modifier: Modifier = Modifier, onClick: () -> Unit = {}) {
+private fun ModeratorPanelHeader(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    strings: SharedLobbyStrings,
+) {
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            "Moderator Panel",
+            strings.moderatorPanel,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
         )
@@ -236,7 +260,7 @@ private fun ModeratorPanelHeader(modifier: Modifier = Modifier, onClick: () -> U
         IconToken(
             imageVector = Icons.Outlined.AutoStories,
             buttonType = ComponentType.Inverse,
-            contentDescription = "Show rules",
+            contentDescription = strings.showRules,
             onClick = onClick,
         )
     }
@@ -247,6 +271,7 @@ fun GridHeader(
     modifier: Modifier = Modifier,
     availableSlots: Int,
     alivePlayersSize: Int,
+    strings: SharedLobbyStrings,
 ) {
     Row(
         modifier = modifier
@@ -256,7 +281,7 @@ fun GridHeader(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "Players in Lobby",
+            text = strings.playersInLobby,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
         )

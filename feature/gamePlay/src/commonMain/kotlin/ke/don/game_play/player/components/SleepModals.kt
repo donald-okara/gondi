@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,7 +40,17 @@ import ke.don.domain.state.Player
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.shared.components.ActionConfirmation
 import ke.don.game_play.shared.components.ModalActions
-import ke.don.utils.formatArgs
+
+@Immutable
+data class SleepModalStrings(
+    val gondiConfirmation: (String) -> String,
+    val doctorConfirmation: (String) -> String,
+    val detectiveConfirmation: (String) -> String,
+    val gondiDormant: (String) -> String,
+    val doctorDormant: (String) -> String,
+    val detectiveDormant: (String) -> String,
+    val defaultDormant: (String) -> String,
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,25 +60,25 @@ fun SleepModal(
     currentPlayer: Player,
     selectedPlayer: Player,
     gameState: GameState,
+    strings: SleepModalStrings,
 ) {
     var showConfirmation by remember { mutableStateOf(false) }
 
     val confirmationText = remember(currentPlayer.role, selectedPlayer.id) {
         when (currentPlayer.role) {
-            // Use the .format() extension function instead of String.format()
-            Role.GONDI -> CONFIRMATION_GONDI.formatArgs(selectedPlayer.name)
-            Role.DOCTOR -> CONFIRMATION_DOCTOR.formatArgs(selectedPlayer.name)
-            Role.DETECTIVE -> CONFIRMATION_DETECTIVE.formatArgs(selectedPlayer.name)
+            Role.GONDI -> strings.gondiConfirmation(selectedPlayer.name)
+            Role.DOCTOR -> strings.doctorConfirmation(selectedPlayer.name)
+            Role.DETECTIVE -> strings.detectiveConfirmation(selectedPlayer.name)
             else -> null
         }
     }
 
     val dormantText = remember(currentPlayer.role) {
         when (currentPlayer.role) {
-            Role.GONDI -> DORMANT_TEXT_GONDI
-            Role.DOCTOR -> DORMANT_TEXT_DOCTOR
-            Role.DETECTIVE -> DORMANT_TEXT_DETECTIVE
-            else -> DORMANT_TEXT_DEFAULT
+            Role.GONDI -> strings.gondiDormant(selectedPlayer.name)
+            Role.DOCTOR -> strings.doctorDormant(selectedPlayer.name)
+            Role.DETECTIVE -> strings.detectiveDormant(selectedPlayer.name)
+            else -> strings.defaultDormant(selectedPlayer.name)
         }
     }
 
@@ -174,16 +185,3 @@ fun SleepModal(
         }
     }
 }
-
-// Top-level constants, outside of any class or function
-
-// Confirmation Texts
-const val CONFIRMATION_GONDI = "Do you want to end %s's journey tonight?"
-const val CONFIRMATION_DOCTOR = "Will you use your skills to save %s?"
-const val CONFIRMATION_DETECTIVE = "Time to uncover the truth. Investigate %s?"
-
-// Dormant Texts
-const val DORMANT_TEXT_GONDI = "You've already chosen a target for tonight."
-const val DORMANT_TEXT_DOCTOR = "Your patient for tonight is already chosen."
-const val DORMANT_TEXT_DETECTIVE = "You've already put your investigative skills to use this round."
-const val DORMANT_TEXT_DEFAULT = "It's time to rest. There's nothing more to do."

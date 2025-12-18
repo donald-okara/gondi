@@ -33,6 +33,8 @@ import ke.don.components.profile.ProfilesStacked
 import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.state.Player
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun AccusationSection(
@@ -49,11 +51,11 @@ fun AccusationSection(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.CenterVertically),
     ) {
-        val secondaryText = seconder?.let { "${it.name} seconds the accusation" }
-            ?: "Waiting for a second to proceed to court"
+        val secondaryText = seconder?.let { Resources.Strings.GamePlay.secondsAccusation(it.name) }
+            ?: stringResource(Resources.Strings.GamePlay.WAITING_FOR_SECOND)
 
         Text(
-            text = "${accuser.name} accuses ${accused.name}",
+            text = Resources.Strings.GamePlay.accuses(accuser.name, accused.name),
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Start,
         )
@@ -82,7 +84,7 @@ fun AccusationSection(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
-                    text = "Second The Accusation",
+                    text = stringResource(Resources.Strings.GamePlay.SECOND_THE_ACCUSATION),
                     fontWeight = FontWeight.Bold,
                 )
             }

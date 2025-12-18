@@ -44,8 +44,10 @@ import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.model.ModeratorState
 import ke.don.game_play.moderator.model.RoleAssignment
 import ke.don.game_play.moderator.useCases.PLAYER_DET_LIMIT
+import ke.don.resources.Resources
 import ke.don.resources.icon
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun RoleConfigurationContainer(
@@ -95,13 +97,13 @@ fun RoleConfigurationList(
         verticalArrangement = Arrangement.spacedBy(Theme.spacing.small),
     ) {
         Text(
-            text = "Player Roles Configuration",
+            text = stringResource(Resources.Strings.GamePlay.PLAYER_ROLES_CONFIGURATION),
             style = Theme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             color = Theme.colorScheme.onSurface,
         )
         Text(
-            text = "Set the number of players for each role",
+            text = stringResource(Resources.Strings.GamePlay.SET_NUMBER_OF_PLAYERS_FOR_EACH_ROLE),
             style = Theme.typography.bodySmall,
             fontWeight = FontWeight.Bold,
             color = Theme.colorScheme.onSurfaceVariant,
@@ -137,17 +139,18 @@ fun RoleConfigurationItem(
         }
     }
 
+    val detectiveWarning = stringResource(Resources.Strings.GamePlay.ONLY_ONE_DETECTIVE_OR_ACCOMPLICE_ALLOWED)
     val warningMessage by derivedStateOf {
         when (roleAssignment.first) {
             Role.DETECTIVE, Role.ACCOMPLICE ->
                 if (totalPlayers < PLAYER_DET_LIMIT && roleAssignment.second > 0) {
-                    "Detective and Accomplice cannot exist in a game with less than $PLAYER_DET_LIMIT players"
+                    Resources.Strings.GamePlay.detectiveAndAccompliceWarning(PLAYER_DET_LIMIT)
                 } else if (roleAssignment.second > 1) {
-                    "Only one Detective or Accomplice allowed"
+                    detectiveWarning
                 } else {
                     null
                 }
-            else -> if (roleAssignment.second > maxCount) "Max allowed: $maxCount" else null
+            else -> if (roleAssignment.second > maxCount) Resources.Strings.GamePlay.maxAllowed(maxCount) else null
         }
     }
 

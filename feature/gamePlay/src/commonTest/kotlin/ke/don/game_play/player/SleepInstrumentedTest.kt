@@ -22,14 +22,14 @@ import androidx.compose.ui.test.runComposeUiTest
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.state.GamePhase
-import ke.don.game_play.player.components.CONFIRMATION_GONDI
-import ke.don.game_play.player.components.DORMANT_TEXT_GONDI
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.screens.MainPlayerContent
 import ke.don.game_play.player.screens.PlayerSleep
+import ke.don.resources.Resources
 import ke.don.utils.Logger
 import ke.don.utils.capitaliseFirst
 import ke.don.utils.formatArgs
+import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.ExperimentalTime
@@ -110,6 +110,8 @@ class SleepInstrumentedTest {
             ),
         )
         val clicked = mutableStateOf(false)
+        val confirmationText = mutableStateOf("")
+        val confirmText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
@@ -117,6 +119,10 @@ class SleepInstrumentedTest {
                 val playerState by rules.playerState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
+                val selectedPlayerName = rules.players.find { player -> player.id == selectedId }?.name
+
+                confirmationText.value = stringResource(Resources.Strings.GamePlay.CONFIRMATION_GONDI).formatArgs(selectedPlayerName)
+                confirmText.value = stringResource(Resources.Strings.GamePlay.I_AM_SURE)
 
                 fun onEvent(event: PlayerHandler) {
                     when (event) {
@@ -144,8 +150,8 @@ class SleepInstrumentedTest {
 
         waitForIdle()
 
-        onNodeWithText(CONFIRMATION_GONDI.formatArgs(selectedPlayerName)).assertIsDisplayed()
-        onNodeWithText("I am sure").performClick()
+        onNodeWithText(confirmationText.value).assertIsDisplayed()
+        onNodeWithText(confirmText.value).performClick()
 
         assertEquals(true, clicked.value)
     }
@@ -186,7 +192,7 @@ class SleepInstrumentedTest {
             },
         )
 
-        val clicked = mutableStateOf(false)
+        val dormantText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
@@ -195,26 +201,19 @@ class SleepInstrumentedTest {
                 val players = rules.players
                 val currentPlayer = players.find { it.id == rules.currentPlayer.id }!!
 
-                fun onEvent(event: PlayerHandler) {
-                    when (event) {
-                        is PlayerHandler.Send -> {
-                            clicked.value = true
-                        }
-                        else -> {}
-                    }
-                }
+                dormantText.value = stringResource(Resources.Strings.GamePlay.DORMANT_TEXT_GONDI)
 
                 PlayerSleep(
                     gameState = gameState,
                     myPlayer = currentPlayer,
                     players = players,
                     playerState = playerState,
-                    onEvent = ::onEvent,
+                    onEvent = {},
                 )
             }
         }
 
-        onNodeWithText(DORMANT_TEXT_GONDI).assertIsDisplayed()
+        onNodeWithText(dormantText.value).assertIsDisplayed()
     }
 
     @OptIn(ExperimentalTime::class)
@@ -256,7 +255,8 @@ class SleepInstrumentedTest {
             "New player =  ${rules.players.find { player -> player.id == selectedId }}",
         )
 
-        val clicked = mutableStateOf(false)
+        val nightResultsText = mutableStateOf("")
+        val killedPlayerText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
@@ -265,27 +265,21 @@ class SleepInstrumentedTest {
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
 
-                fun onEvent(event: PlayerHandler) {
-                    when (event) {
-                        is PlayerHandler.Send -> {
-                            clicked.value = true
-                        }
-                        else -> {}
-                    }
-                }
+                nightResultsText.value = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS)
+                killedPlayerText.value = stringResource(Resources.Strings.GamePlay.KILLED_PLAYER)
 
                 PlayerSleep(
                     gameState = gameState,
                     myPlayer = currentPlayer,
                     players = players,
                     playerState = playerState,
-                    onEvent = ::onEvent,
+                    onEvent = {},
                 )
             }
         }
 
-        onNodeWithText("Night Results").assertIsDisplayed()
-        onNodeWithContentDescription("Killed player").assertIsDisplayed()
+        onNodeWithText(nightResultsText.value).assertIsDisplayed()
+        onNodeWithContentDescription(killedPlayerText.value).assertIsDisplayed()
     }
 
     @OptIn(ExperimentalTime::class)
@@ -294,11 +288,16 @@ class SleepInstrumentedTest {
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val clicked = mutableStateOf(false)
+        val showRules = mutableStateOf("")
+        val gameObjectiveText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val playerState by rules.playerState.collectAsState()
+
+                showRules.value = stringResource(Resources.Strings.GamePlay.SHOW_RULES)
+                gameObjectiveText.value = stringResource(Resources.Strings.GamePlay.GAME_OBJECTIVE)
 
                 fun onEvent(event: PlayerHandler) {
                     when (event) {
@@ -322,15 +321,12 @@ class SleepInstrumentedTest {
             }
         }
 
-        val showRules = "Show rules"
-
-        onNodeWithContentDescription(showRules).assertIsDisplayed()
-        onNodeWithContentDescription(showRules).performClick()
+        onNodeWithContentDescription(showRules.value).assertIsDisplayed()
+        onNodeWithContentDescription(showRules.value).performClick()
 
         waitForIdle()
-        val gameObjectiveText = "Game Objective"
 
         assertEquals(true, clicked.value)
-        onNodeWithText(gameObjectiveText).assertIsDisplayed()
+        onNodeWithText(gameObjectiveText.value).assertIsDisplayed()
     }
 }

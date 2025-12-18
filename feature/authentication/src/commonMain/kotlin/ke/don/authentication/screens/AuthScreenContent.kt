@@ -22,8 +22,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,11 +35,12 @@ import ke.don.authentication.model.AuthModel
 import ke.don.authentication.model.AuthState
 import ke.don.authentication.model.StartupPhase
 import ke.don.components.background.GradientBackground
-import ke.don.components.empty_state.EmptyState
 import ke.don.components.indicator.FancyLoadingIndicator
 import ke.don.design.theme.spacing
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
+import ke.don.resources.Resources.Strings.Authentication.HAVE_A_COFFEE
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -81,11 +80,7 @@ fun AuthScreenContent(
                             onEvent = screenModel::handleAction,
                         )
 
-                        StartupPhase.Main -> EmptyState(
-                            icon = Icons.Outlined.Lock,
-                            title = "Main",
-                            description = "Screen is in development",
-                        )
+                        StartupPhase.Main -> {}
 
                         StartupPhase.Profile -> ProfileSyncScreen()
                     }
@@ -111,7 +106,7 @@ fun ProfileSyncScreen(
             FancyLoadingIndicator(loading = true)
         }
         Text(
-            "Have a coffee as we sync your profile",
+            stringResource(HAVE_A_COFFEE),
         )
     }
 }

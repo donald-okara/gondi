@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +48,16 @@ import ke.don.domain.state.Vote
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.shared.components.ActionConfirmation
 
+@Immutable
+data class CourtModalStrings(
+    val dormantText: String,
+    val deadPlayerText: String,
+    val voteInnocentText: String,
+    val voteGuiltyText: String,
+    val confirmInnocentText: (String) -> String,
+    val confirmGuiltyText: (String) -> String,
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CourtModal(
@@ -56,17 +66,16 @@ fun CourtModal(
     currentPlayer: Player,
     selectedPlayer: Player,
     gameState: GameState,
+    strings: CourtModalStrings,
     vote: Vote? = null,
 ) {
     var guiltyDecision by remember { mutableStateOf<Boolean?>(null) }
 
-    val dormantText =
-        "You've already voted this round."
     val confirmationText by remember(guiltyDecision, selectedPlayer) {
         derivedStateOf {
             when (guiltyDecision) {
-                true -> "Do you really want to condemn ${selectedPlayer.name}?"
-                false -> "So, you believe ${selectedPlayer.name} is innocent?"
+                true -> strings.confirmGuiltyText(selectedPlayer.name)
+                false -> strings.confirmInnocentText(selectedPlayer.name)
                 null -> null
             }
         }
@@ -121,9 +130,9 @@ fun CourtModal(
 
             ModalActions(
                 currentPlayer = currentPlayer,
-                dormantText = dormantText,
                 vote = { guiltyDecision = it },
                 hasVoted = vote != null,
+                strings = strings,
             )
 
             HorizontalDivider()
@@ -152,7 +161,7 @@ private fun ModalActions(
     modifier: Modifier = Modifier,
     vote: (Boolean) -> Unit,
     hasVoted: Boolean,
-    dormantText: String,
+    strings: CourtModalStrings,
     currentPlayer: Player,
 ) {
     Row(
@@ -170,7 +179,7 @@ private fun ModalActions(
                     contentDescription = null,
                 )
                 Text(
-                    text = "Vote Innocent",
+                    text = strings.voteInnocentText,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -185,14 +194,14 @@ private fun ModalActions(
                     contentDescription = null,
                 )
                 Text(
-                    text = "Vote Guilty",
+                    text = strings.voteGuiltyText,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
         } else {
             Text(
-                text = if (currentPlayer.isAlive) dormantText else "Dead men tell no tales",
+                text = if (currentPlayer.isAlive) strings.dormantText else strings.deadPlayerText,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +30,15 @@ import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.Faction
 import ke.don.domain.state.Player
 import ke.don.game_play.shared.components.GameOverGrid
-import ke.don.utils.capitaliseFirst
+
+@Immutable
+data class SharedGameOverStrings(
+    val gondiWinRemark: String,
+    val villagerWinRemark: String,
+    val gondiWin: String,
+    val villagersWin: String,
+    val playAgain: String,
+)
 
 @Composable
 fun SharedGameOver(
@@ -39,11 +48,12 @@ fun SharedGameOver(
     myPlayer: Player,
     winnerFaction: Faction,
     playAgain: () -> Unit = {},
+    strings: SharedGameOverStrings,
 ) {
     val remark = remember(winnerFaction) {
         when (winnerFaction) {
-            Faction.GONDI -> "The Gondis have successfully taken over the village!"
-            Faction.VILLAGER -> "The Villagers have successfully rooted out all the Gondis!"
+            Faction.GONDI -> strings.gondiWinRemark
+            Faction.VILLAGER -> strings.villagerWinRemark
             Faction.NEUTRAL -> ""
         }
     }
@@ -60,7 +70,11 @@ fun SharedGameOver(
                 verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
             ) {
                 Text(
-                    text = "${winnerFaction.name.capitaliseFirst()}s Win!",
+                    text = when (winnerFaction) {
+                        Faction.GONDI -> strings.gondiWin
+                        Faction.VILLAGER -> strings.villagersWin
+                        Faction.NEUTRAL -> ""
+                    },
                     style = MaterialTheme.typography.displayMedium,
                     fontWeight = FontWeight.Bold,
                     color = if (winnerFaction == Faction.GONDI) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
@@ -83,7 +97,7 @@ fun SharedGameOver(
                     buttonType = if (winnerFaction == Faction.GONDI) ComponentType.Error else ComponentType.Primary,
                     onClick = playAgain,
                 ) {
-                    Text("Play again")
+                    Text(strings.playAgain)
                 }
             }
         }
