@@ -95,7 +95,6 @@
     <string name="connecting">Connecting...</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="leave_game">Leave game</string>
-    <string name="game_doesnt_exist_anymore">. The game most likely doesn't exist anymore.</string>
 
     <!-- MainModeratorContent -->
     <string name="leave_game_checklist_moderator">This game will be terminated and all progress will be lost.</string>

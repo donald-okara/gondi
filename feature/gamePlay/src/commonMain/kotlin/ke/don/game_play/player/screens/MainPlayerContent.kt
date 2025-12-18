@@ -147,7 +147,7 @@ private fun ContentSwitcher(
     )
     val errorStateStrings = ErrorStateStrings(
         title = stringResource(Resources.Strings.GamePlay.SOMETHING_WENT_WRONG),
-        description = { error -> "$error. The game most likely doesn't exist anymore." },
+        description = { Resources.Strings.GamePlay.gameDoesntExist(error = it) },
         leaveGame = stringResource(Resources.Strings.GamePlay.LEAVE_GAME),
     )
 

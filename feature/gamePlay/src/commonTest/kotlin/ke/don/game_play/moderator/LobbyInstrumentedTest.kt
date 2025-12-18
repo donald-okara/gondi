@@ -293,7 +293,7 @@ class LobbyInstrumentedTest {
 
                         is ModeratorHandler.SelectPlayer -> {
                             rules.setUpModeratorState(
-                                moderatorState.copy(selectedPlayerId = event.id)
+                                moderatorState.copy(selectedPlayerId = event.id),
                             )
                         }
 
@@ -367,7 +367,7 @@ class LobbyInstrumentedTest {
 
                         is ModeratorHandler.SelectPlayer -> {
                             rules.setUpModeratorState(
-                                moderatorState.copy(selectedPlayerId = event.id)
+                                moderatorState.copy(selectedPlayerId = event.id),
                             )
                         }
 

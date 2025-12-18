@@ -21,8 +21,8 @@ import androidx.compose.material.icons.outlined.Sports
 import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material.icons.outlined.WbSunny
-import gondi.shared.resources.generated.resources.Res
 import gondi.shared.resources.generated.resources.*
+import gondi.shared.resources.generated.resources.Res
 
 object Resources {
     object Font {
@@ -162,7 +162,9 @@ object Resources {
             val CONNECTING = Res.string.connecting
             val SOMETHING_WENT_WRONG = Res.string.something_went_wrong
             val LEAVE_GAME = Res.string.leave_game
-            val GAME_DOESNT_EXIST_ANYMORE = Res.string.game_doesnt_exist_anymore
+
+            fun gameDoesntExist(error: String) = "$error. The game most likely doesn't exist anymore."
+
             val LEAVE_GAME_CHECKLIST_MODERATOR = Res.string.leave_game_checklist_moderator
             val NEW_GAME = Res.string.new_game
             val PROCEED_TO_TOWN_HALL = Res.string.proceed_to_town_hall
