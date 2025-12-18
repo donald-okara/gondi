@@ -22,22 +22,7 @@ import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material.icons.outlined.WbSunny
 import gondi.shared.resources.generated.resources.Res
-import gondi.shared.resources.generated.resources.accomplice
-import gondi.shared.resources.generated.resources.app_icon
-import gondi.shared.resources.generated.resources.dead
-import gondi.shared.resources.generated.resources.detective
-import gondi.shared.resources.generated.resources.doctor
-import gondi.shared.resources.generated.resources.google_logo
-import gondi.shared.resources.generated.resources.investigate
-import gondi.shared.resources.generated.resources.moderator
-import gondi.shared.resources.generated.resources.point
-import gondi.shared.resources.generated.resources.roboto_regular
-import gondi.shared.resources.generated.resources.roboto_semibold
-import gondi.shared.resources.generated.resources.s24_frame
-import gondi.shared.resources.generated.resources.shield
-import gondi.shared.resources.generated.resources.thumbs_down
-import gondi.shared.resources.generated.resources.thumbs_up
-import gondi.shared.resources.generated.resources.villager
+import gondi.shared.resources.generated.resources.*
 
 object Resources {
     object Font {
@@ -77,6 +62,17 @@ object Resources {
             val SAVE = Res.drawable.shield
             val VOTE_INNOCENT = Res.drawable.thumbs_up
             val VOTE_GUILTY = Res.drawable.thumbs_down
+        }
+    }
+
+    object Strings {
+
+        object Authentication {
+            val APP_NAME = Res.string.app_name
+            val TAG_LINE = Res.string.tag_line
+            val GAME_DESCRIPTION = Res.string.game_description
+            val SIGN_IN_WITH_GOOGLE = Res.string.sign_in_with_google
+            val HAVE_A_COFFEE = Res.string.have_a_coffee
         }
     }
 }

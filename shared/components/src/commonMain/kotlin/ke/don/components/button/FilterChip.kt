@@ -93,7 +93,7 @@ fun FilterDropdownChip(
 }
 
 /**
- * Renders a themed dropdown menu that optionally includes an "All" default item and a list of selectable string items.
+ * Renders a themed dropdown menu that optionally includes an "All" default item and a list of selectable values items.
  *
  * The menu uses the current MaterialTheme color scheme for item text and icons.
  *
@@ -102,7 +102,7 @@ fun FilterDropdownChip(
  * @param onDismissRequest Callback invoked to request the menu be dismissed.
  * @param items List of strings to display as menu items.
  * @param showDefault If true, an initial "All" menu item is shown that invokes [onClear] when selected.
- * @param onItemClick Callback invoked with the string of the selected item.
+ * @param onItemClick Callback invoked with the values of the selected item.
  * @param onClear Callback invoked when the "All" default item is selected (no-op by default).
  */
 @Composable

@@ -42,6 +42,8 @@ import ke.don.components.indicator.FancyLoadingIndicator
 import ke.don.design.theme.spacing
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
+import ke.don.resources.Resources.Strings.Authentication.HAVE_A_COFFEE
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -81,11 +83,7 @@ fun AuthScreenContent(
                             onEvent = screenModel::handleAction,
                         )
 
-                        StartupPhase.Main -> EmptyState(
-                            icon = Icons.Outlined.Lock,
-                            title = "Main",
-                            description = "Screen is in development",
-                        )
+                        StartupPhase.Main -> {}
 
                         StartupPhase.Profile -> ProfileSyncScreen()
                     }
@@ -111,7 +109,7 @@ fun ProfileSyncScreen(
             FancyLoadingIndicator(loading = true)
         }
         Text(
-            "Have a coffee as we sync your profile",
+            stringResource(HAVE_A_COFFEE)
         )
     }
 }

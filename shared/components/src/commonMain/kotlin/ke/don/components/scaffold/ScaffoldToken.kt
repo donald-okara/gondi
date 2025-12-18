@@ -120,7 +120,7 @@ fun ScaffoldToken(
  * based on the available screen width.
  *
  * @param modifier The modifier to be applied to the main content `Column`.
- * @param title An optional title string to be displayed in the default `TopBarToken`.
+ * @param title An optional title values to be displayed in the default `TopBarToken`.
  * @param navigationIcon Defines the navigation icon for the default `TopBarToken` (e.g., a back arrow or menu icon).
  * @param actions A composable lambda for actions to be displayed at the end of the `TopBarToken`.
  * @param scrollBehavior An optional `TopAppBarScrollBehavior` to coordinate scrolling between the top bar and content.

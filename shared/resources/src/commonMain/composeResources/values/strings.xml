@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GONDI</string>
+    <string name="tag_line">Sleep tight… someone won’t wake up.</string>
+    <string name="game_description">A game of trust, deceit, and late-night drama.</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="have_a_coffee">Have a coffee as we sync your profile</string>
+</resources>

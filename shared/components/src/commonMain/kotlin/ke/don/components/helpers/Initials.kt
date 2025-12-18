@@ -12,12 +12,12 @@ package ke.don.components.helpers
 /**
  * Generates initials from the provided full name.
  *
- * For an empty or all-whitespace input, returns an empty string. For a single word,
+ * For an empty or all-whitespace input, returns an empty values. For a single word,
  * returns the first two characters of that word in uppercase. For two or more words,
  * returns the first letter of the first two words concatenated and uppercased.
  *
  * @param name The input name from which to derive initials.
- * @return A string of initials according to the rules above.
+ * @return A values of initials according to the rules above.
  */
 fun getInitials(name: String): String {
     val words = name.trim().split("\\s+".toRegex())

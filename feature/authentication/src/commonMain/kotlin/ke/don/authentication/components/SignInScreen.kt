@@ -44,8 +44,13 @@ import ke.don.design.theme.spacing
 import ke.don.resources.LocalSharedScope
 import ke.don.resources.LocalVisibilityScope
 import ke.don.resources.Resources
+import ke.don.resources.Resources.Strings.Authentication.APP_NAME
+import ke.don.resources.Resources.Strings.Authentication.GAME_DESCRIPTION
+import ke.don.resources.Resources.Strings.Authentication.SIGN_IN_WITH_GOOGLE
+import ke.don.resources.Resources.Strings.Authentication.TAG_LINE
 import ke.don.utils.result.isLoading
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -91,7 +96,7 @@ fun SignInScreen(
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Text(
-                    text = "GONDI",
+                    text = stringResource(APP_NAME),
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 2.sp,
@@ -101,7 +106,7 @@ fun SignInScreen(
                 with(sharedScope) {
                     with(visibilityScope) {
                         Text(
-                            text = "Sleep tight… someone won’t wake up.",
+                            text = stringResource(TAG_LINE),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontStyle = FontStyle.Italic,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -117,7 +122,7 @@ fun SignInScreen(
                 }
 
                 Text(
-                    text = "A game of trust, deceit, and late-night drama.",
+                    text = stringResource(GAME_DESCRIPTION),
                     style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
@@ -156,7 +161,7 @@ fun SignInScreen(
                     )
                     Spacer(Modifier.width(8.dp))
                     Text(
-                        text = "Sign in with Google",
+                        text = stringResource(SIGN_IN_WITH_GOOGLE),
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
