@@ -24,8 +24,10 @@ import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.state.GamePhase
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.screens.PlayerTownHall
+import ke.don.resources.Resources
 import ke.don.utils.Logger
 import ke.don.utils.capitaliseFirst
+import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 import kotlin.test.assertTrue
 import kotlin.time.ExperimentalTime
@@ -53,12 +55,18 @@ class TownHallInstrumentedTest {
             ),
         )
 
+        val nightResultsText = mutableStateOf("")
+        val savedPlayerText = mutableStateOf("")
+
         rules.setContent {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val playerState by rules.playerState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
+
+                nightResultsText.value = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS)
+                savedPlayerText.value = stringResource(Resources.Strings.GamePlay.SAVED_PLAYER)
 
                 PlayerTownHall(
                     gameState = gameState,
@@ -70,8 +78,8 @@ class TownHallInstrumentedTest {
             }
         }
 
-        onNodeWithText("Night Results").assertIsDisplayed()
-        onNodeWithContentDescription("Saved player").assertIsDisplayed()
+        onNodeWithText(nightResultsText.value).assertIsDisplayed()
+        onNodeWithContentDescription(savedPlayerText.value).assertIsDisplayed()
     }
 
     @OptIn(ExperimentalTime::class)
@@ -143,12 +151,21 @@ class TownHallInstrumentedTest {
                 selectedId = selectedId,
             ),
         )
+
+        val confirmationText = mutableStateOf("")
+        val confirmText = mutableStateOf("")
+
         rules.setContent {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val playerState by rules.playerState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
+                val selectedPlayer = rules.players.find { it.id == selectedId }
+
+                confirmationText.value =
+                    Resources.Strings.GamePlay.accusePlayerConfirmation(selectedPlayer?.name!!)
+                confirmText.value = stringResource(Resources.Strings.GamePlay.I_AM_SURE)
 
                 fun onEvent(event: PlayerHandler) {
                     when (event) {
@@ -176,8 +193,8 @@ class TownHallInstrumentedTest {
 
         waitForIdle()
 
-        onNodeWithText("Accuse ${selectedPlayer?.name} and put them on trial? Are you sure?").assertIsDisplayed()
-        onNodeWithText("I am sure").performClick()
+        onNodeWithText(confirmationText.value).assertIsDisplayed()
+        onNodeWithText(confirmText.value).performClick()
 
         waitForIdle()
 
@@ -205,12 +222,18 @@ class TownHallInstrumentedTest {
             ),
         )
 
+        val waitingText = mutableStateOf("")
+        val secondText = mutableStateOf("")
+
         rules.setContent {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val playerState by rules.playerState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
+
+                waitingText.value = stringResource(Resources.Strings.GamePlay.WAITING_FOR_SECOND)
+                secondText.value = stringResource(Resources.Strings.GamePlay.SECOND_THE_ACCUSATION)
 
                 fun onEvent(event: PlayerHandler) {
                     when (event) {
@@ -231,9 +254,9 @@ class TownHallInstrumentedTest {
             }
         }
 
-        onNodeWithText("Waiting for a second to proceed to court").assertIsDisplayed()
-        onNodeWithText("Second The Accusation").assertIsDisplayed()
-        onNodeWithText("Second The Accusation").performClick()
+        onNodeWithText(waitingText.value).assertIsDisplayed()
+        onNodeWithText(secondText.value).assertIsDisplayed()
+        onNodeWithText(secondText.value).performClick()
 
         waitForIdle()
 

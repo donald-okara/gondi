@@ -45,6 +45,8 @@ import ke.don.game_play.moderator.model.Announcement
 import ke.don.game_play.moderator.useCases.PLAYER_LOWER_LIMIT
 import ke.don.game_play.shared.components.AnnouncementSection
 import ke.don.game_play.shared.components.PlayersGrid
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
 
 @Composable
@@ -127,7 +129,7 @@ fun LobbyHeader(
         verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
     ) {
         Text(
-            text = "Ready to Begin?",
+            text = stringResource(Resources.Strings.GamePlay.READY_TO_BEGIN),
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.align(Alignment.Start),
         )
@@ -140,7 +142,7 @@ fun LobbyHeader(
         ) {
             AnimatedContent(targetState = availableSlots) { slots ->
                 Text(
-                    text = if (slots > playersSize) "Start with $playersSize players" else "Start Game",
+                    text = if (slots > playersSize) Resources.Strings.GamePlay.startWithPlayers(playersSize) else stringResource(Resources.Strings.GamePlay.START_GAME),
                     textAlign = TextAlign.Center,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth(),
@@ -150,7 +152,7 @@ fun LobbyHeader(
 
         AnimatedVisibility(visible = availableSlots > playersSize) {
             Text(
-                text = "Waiting for more players...",
+                text = stringResource(Resources.Strings.GamePlay.WAITING_FOR_MORE_PLAYERS),
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
             )
@@ -168,7 +170,7 @@ fun RoleLockWarning(
 
     AnimatedVisibility(nonModeratorPlayers.any { it.role != null }) {
         Text(
-            text = "At least one player has a role. This locks everyone else out from joining the game",
+            text = stringResource(Resources.Strings.GamePlay.ROLE_LOCK_WARNING),
             color = Theme.colorScheme.error,
             style = MaterialTheme.typography.labelMedium,
             modifier = modifier.fillMaxWidth(),
@@ -228,7 +230,7 @@ private fun ModeratorPanelHeader(modifier: Modifier = Modifier, onClick: () -> U
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            "Moderator Panel",
+            stringResource(Resources.Strings.GamePlay.MODERATOR_PANEL),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
         )
@@ -236,7 +238,7 @@ private fun ModeratorPanelHeader(modifier: Modifier = Modifier, onClick: () -> U
         IconToken(
             imageVector = Icons.Outlined.AutoStories,
             buttonType = ComponentType.Inverse,
-            contentDescription = "Show rules",
+            contentDescription = stringResource(Resources.Strings.GamePlay.SHOW_RULES),
             onClick = onClick,
         )
     }
@@ -256,7 +258,7 @@ fun GridHeader(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "Players in Lobby",
+            text = stringResource(Resources.Strings.GamePlay.PLAYERS_IN_LOBBY),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
         )

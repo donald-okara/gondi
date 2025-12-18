@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,6 +46,8 @@ import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.shared.components.ActionConfirmation
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,13 +61,12 @@ fun CourtModal(
 ) {
     var guiltyDecision by remember { mutableStateOf<Boolean?>(null) }
 
-    val dormantText =
-        "You've already voted this round."
+    val dormantText = stringResource(Resources.Strings.GamePlay.ALREADY_VOTED_THIS_ROUND)
     val confirmationText by remember(guiltyDecision, selectedPlayer) {
         derivedStateOf {
             when (guiltyDecision) {
-                true -> "Do you really want to condemn ${selectedPlayer.name}?"
-                false -> "So, you believe ${selectedPlayer.name} is innocent?"
+                true -> Resources.Strings.GamePlay.condemnPlayer(selectedPlayer.name)
+                false -> Resources.Strings.GamePlay.playerIsInnocent(selectedPlayer.name)
                 null -> null
             }
         }
@@ -170,7 +170,7 @@ private fun ModalActions(
                     contentDescription = null,
                 )
                 Text(
-                    text = "Vote Innocent",
+                    text = stringResource(Resources.Strings.GamePlay.VOTE_INNOCENT),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -185,14 +185,14 @@ private fun ModalActions(
                     contentDescription = null,
                 )
                 Text(
-                    text = "Vote Guilty",
+                    text = stringResource(Resources.Strings.GamePlay.VOTE_GUILTY),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
         } else {
             Text(
-                text = if (currentPlayer.isAlive) dormantText else "Dead men tell no tales",
+                text = if (currentPlayer.isAlive) dormantText else stringResource(Resources.Strings.GamePlay.DEAD_MEN_TELL_NO_TALES),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

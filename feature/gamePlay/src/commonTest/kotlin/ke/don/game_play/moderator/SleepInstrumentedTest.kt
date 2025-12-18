@@ -12,6 +12,7 @@ package ke.don.game_play.moderator
 import WithTestLifecycle
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
@@ -27,8 +28,10 @@ import ke.don.domain.state.GamePhase
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.screens.MainModeratorContent
 import ke.don.game_play.moderator.screens.ModeratorSleep
+import ke.don.resources.Resources
 import ke.don.utils.Logger
 import ke.don.utils.capitaliseFirst
+import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 import kotlin.time.ExperimentalTime
 
@@ -82,12 +85,18 @@ class SleepInstrumentedTest {
             "New player =  ${rules.players.find { player -> player.id == selectedId }}",
         )
 
+        val nightResultsText = mutableStateOf("")
+        val killedPlayerText = mutableStateOf("")
+
         rules.setContent {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val moderatorState by rules.moderatorState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
+
+                nightResultsText.value = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS)
+                killedPlayerText.value = stringResource(Resources.Strings.GamePlay.KILLED_PLAYER)
 
                 ModeratorSleep(
                     gameState = gameState,
@@ -99,12 +108,14 @@ class SleepInstrumentedTest {
             }
         }
 
-        onNodeWithText("Night Results").assertIsDisplayed()
-        onNodeWithContentDescription("Killed player").assertIsDisplayed()
+        onNodeWithText(nightResultsText.value).assertIsDisplayed()
+        onNodeWithContentDescription(killedPlayerText.value).assertIsDisplayed()
     }
 
     @Test
     fun proceed_disabledWhenPlayersAreActing() = runComposeUiTest {
+        val proceedText = mutableStateOf("")
+
         val rules = TestGameRules(this)
         rules.setupDefaults()
         rules.setUpGameState(
@@ -119,6 +130,8 @@ class SleepInstrumentedTest {
                 val moderatorState by rules.moderatorState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
+
+                proceedText.value = stringResource(Resources.Strings.GamePlay.PROCEED)
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
@@ -152,12 +165,13 @@ class SleepInstrumentedTest {
             }
         }
 
-        onNodeWithText("Proceed").assertIsDisplayed()
-        onNodeWithText("Proceed").assertIsNotEnabled()
+        onNodeWithText(proceedText.value).assertIsDisplayed()
+        onNodeWithText(proceedText.value).assertIsNotEnabled()
     }
 
     @Test
     fun proceed_movesToTownHall() = runComposeUiTest {
+        val proceedText = mutableStateOf("")
         val rules = TestGameRules(this)
         rules.setupDefaults()
         rules.setUpGameState(
@@ -186,6 +200,8 @@ class SleepInstrumentedTest {
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
 
+                proceedText.value = stringResource(Resources.Strings.GamePlay.PROCEED)
+
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
                         is ModeratorHandler.HandleModeratorCommand -> {
@@ -218,8 +234,8 @@ class SleepInstrumentedTest {
             }
         }
 
-        onNodeWithText("Proceed").assertIsDisplayed()
-        onNodeWithText("Proceed").performClick()
+        onNodeWithText(proceedText.value).assertIsDisplayed()
+        onNodeWithText(proceedText.value).performClick()
 
         waitForIdle()
 

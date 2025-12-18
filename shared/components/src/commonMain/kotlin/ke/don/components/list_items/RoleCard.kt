@@ -46,12 +46,14 @@ import ke.don.design.theme.spacing
 import ke.don.design.theme.spacingPaddingValues
 import ke.don.domain.gameplay.Role
 import ke.don.domain.gameplay.Role.entries
+import ke.don.resources.Resources
 import ke.don.resources.RoleInstruction
 import ke.don.resources.description
 import ke.don.resources.icon
 import ke.don.resources.instructions
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun GameObjective(
@@ -63,11 +65,11 @@ fun GameObjective(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.Top),
     ) {
         Text(
-            text = "Game Objective",
+            text = stringResource(Resources.Strings.GamePlay.GAME_OBJECTIVE),
             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
         )
         Text(
-            "The game is a battle between two groups: the Villagers (the uninformed majority) and the Gondi (the informed minority). The Villagers win if they eliminate all Gondi members. The Gondi win when their numbers equal the number of Villagers.",
+            stringResource(Resources.Strings.GamePlay.GAME_OBJECTIVE_DESCRIPTION),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
         )

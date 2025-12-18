@@ -27,8 +27,10 @@ import ke.don.domain.state.GamePhase
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.screens.MainModeratorContent
 import ke.don.game_play.moderator.useCases.PLAYER_LOWER_LIMIT
+import ke.don.resources.Resources
 import ke.don.utils.Logger
 import ke.don.utils.capitaliseFirst
+import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -57,11 +59,13 @@ class LobbyInstrumentedTest {
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val clicked = mutableStateOf(false)
+        val expectedButtonText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val moderatorState by rules.moderatorState.collectAsState()
+                expectedButtonText.value = stringResource(Resources.Strings.GamePlay.START_GAME)
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
@@ -91,11 +95,10 @@ class LobbyInstrumentedTest {
         }
 
         val expectedPhase = GamePhase.SLEEP
-        val expectedButtonText = "Start Game"
 
-        onNodeWithText(expectedButtonText).assertIsDisplayed()
-        onNodeWithText(expectedButtonText).assertIsEnabled()
-        onNodeWithText(expectedButtonText).performClick()
+        onNodeWithText(expectedButtonText.value).assertIsDisplayed()
+        onNodeWithText(expectedButtonText.value).assertIsEnabled()
+        onNodeWithText(expectedButtonText.value).performClick()
 
         waitForIdle()
 
@@ -146,7 +149,7 @@ class LobbyInstrumentedTest {
         }
 
         val expectedPhase = GamePhase.SLEEP
-        val expectedButtonText = "Start with ${rules.players.size} players"
+        val expectedButtonText = Resources.Strings.GamePlay.startWithPlayers(rules.players.size)
 
         onNodeWithText(expectedButtonText).assertIsDisplayed()
         onNodeWithText(expectedButtonText).assertIsEnabled()
@@ -200,7 +203,7 @@ class LobbyInstrumentedTest {
             }
         }
 
-        val expectedButtonText = "Start with ${rules.players.size} players"
+        val expectedButtonText = Resources.Strings.GamePlay.startWithPlayers(rules.players.size)
 
         onNodeWithText(expectedButtonText).assertIsDisplayed()
         onNodeWithText(expectedButtonText).assertIsNotEnabled()
@@ -208,6 +211,9 @@ class LobbyInstrumentedTest {
 
     @Test
     fun onSelectPlayer_displaysModal() = runComposeUiTest {
+        val assignText = mutableStateOf("")
+        val removeText = mutableStateOf("")
+
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val clicked = mutableStateOf(false)
@@ -218,6 +224,9 @@ class LobbyInstrumentedTest {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val moderatorState by rules.moderatorState.collectAsState()
+
+                assignText.value = stringResource(Resources.Strings.GamePlay.ASSIGN_ROLE)
+                removeText.value = stringResource(Resources.Strings.GamePlay.REMOVE)
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
@@ -265,8 +274,6 @@ class LobbyInstrumentedTest {
         }
 
         val playerButtonText = "Stefon Zelesky"
-        val assignText = "Assign Role"
-        val removeText = "Remove"
 
         onNodeWithText(playerButtonText).assertIsDisplayed()
         onNodeWithText(playerButtonText).performClick()
@@ -274,12 +281,15 @@ class LobbyInstrumentedTest {
         waitForIdle()
 
         assertEquals(true, clicked.value)
-        onNodeWithText(assignText).assertIsDisplayed()
-        onNodeWithText(removeText).assertIsDisplayed()
+        onNodeWithText(assignText.value).assertIsDisplayed()
+        onNodeWithText(removeText.value).assertIsDisplayed()
     }
 
     @Test
     fun assign_assignDismissesModal() = runComposeUiTest {
+        val assignText = mutableStateOf("")
+        val removeText = mutableStateOf("")
+
         val selectedId = "1"
         val rules = TestGameRules(this)
         rules.setupDefaults()
@@ -296,6 +306,9 @@ class LobbyInstrumentedTest {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val moderatorState by rules.moderatorState.collectAsState()
+
+                assignText.value = stringResource(Resources.Strings.GamePlay.ASSIGN_ROLE)
+                removeText.value = stringResource(Resources.Strings.GamePlay.REMOVE)
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
@@ -342,14 +355,13 @@ class LobbyInstrumentedTest {
             }
         }
 
-        val assignText = "Assign Role"
-        val removeText = "Remove"
+
         val roleText = Role.GONDI.name.capitaliseFirst()
 
-        onNodeWithText(assignText).assertIsDisplayed()
-        onNodeWithText(removeText).assertIsDisplayed()
+        onNodeWithText(assignText.value).assertIsDisplayed()
+        onNodeWithText(removeText.value).assertIsDisplayed()
 
-        onNodeWithText(assignText).performClick()
+        onNodeWithText(assignText.value).performClick()
         onNodeWithText(roleText).assertIsDisplayed()
         onNodeWithText(roleText).performClick()
 
@@ -361,6 +373,10 @@ class LobbyInstrumentedTest {
 
     @Test
     fun assign_removeDismissesModal() = runComposeUiTest {
+        val assignText = mutableStateOf("")
+        val removeText = mutableStateOf("")
+        val confirmationText = mutableStateOf("")
+
         val selectedId = "1"
         val rules = TestGameRules(this)
         rules.setupDefaults()
@@ -377,6 +393,10 @@ class LobbyInstrumentedTest {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val moderatorState by rules.moderatorState.collectAsState()
+
+                assignText.value = stringResource(Resources.Strings.GamePlay.ASSIGN_ROLE)
+                removeText.value = stringResource(Resources.Strings.GamePlay.REMOVE)
+                confirmationText.value = stringResource(Resources.Strings.GamePlay.I_AM_SURE)
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
@@ -423,16 +443,12 @@ class LobbyInstrumentedTest {
             }
         }
 
-        val assignText = "Assign Role"
-        val removeText = "Remove"
-        val confirmationText = "I am sure"
+        onNodeWithText(assignText.value).assertIsDisplayed()
+        onNodeWithText(removeText.value).assertIsDisplayed()
 
-        onNodeWithText(assignText).assertIsDisplayed()
-        onNodeWithText(removeText).assertIsDisplayed()
-
-        onNodeWithText(removeText).performClick()
-        onNodeWithText(confirmationText).assertIsDisplayed()
-        onNodeWithText(confirmationText).performClick()
+        onNodeWithText(removeText.value).performClick()
+        onNodeWithText(confirmationText.value).assertIsDisplayed()
+        onNodeWithText(confirmationText.value).performClick()
 
         waitForIdle()
 
@@ -442,6 +458,9 @@ class LobbyInstrumentedTest {
 
     @Test
     fun onShowRules_displaysModal() = runComposeUiTest {
+        val showRules = mutableStateOf("")
+        val gameObjectiveText = mutableStateOf("")
+
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val clicked = mutableStateOf(false)
@@ -450,6 +469,9 @@ class LobbyInstrumentedTest {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val moderatorState by rules.moderatorState.collectAsState()
+
+                showRules.value = stringResource(Resources.Strings.GamePlay.SHOW_RULES)
+                gameObjectiveText.value = stringResource(Resources.Strings.GamePlay.GAME_OBJECTIVE)
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
@@ -474,15 +496,12 @@ class LobbyInstrumentedTest {
             }
         }
 
-        val showRules = "Show rules"
-
-        onNodeWithContentDescription(showRules).assertIsDisplayed()
-        onNodeWithContentDescription(showRules).performClick()
+        onNodeWithContentDescription(showRules.value).assertIsDisplayed()
+        onNodeWithContentDescription(showRules.value).performClick()
 
         waitForIdle()
-        val gameObjectiveText = "Game Objective"
 
         assertEquals(true, clicked.value)
-        onNodeWithText(gameObjectiveText).assertIsDisplayed()
+        onNodeWithText(gameObjectiveText.value).assertIsDisplayed()
     }
 }

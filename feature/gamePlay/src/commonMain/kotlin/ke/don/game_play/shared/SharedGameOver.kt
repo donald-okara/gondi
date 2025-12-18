@@ -29,7 +29,9 @@ import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.Faction
 import ke.don.domain.state.Player
 import ke.don.game_play.shared.components.GameOverGrid
+import ke.don.resources.Resources
 import ke.don.utils.capitaliseFirst
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SharedGameOver(
@@ -40,10 +42,13 @@ fun SharedGameOver(
     winnerFaction: Faction,
     playAgain: () -> Unit = {},
 ) {
+    val gondiRemark = stringResource(Resources.Strings.GamePlay.GONDI_WIN_REMARK)
+    val villagerRemark = stringResource(Resources.Strings.GamePlay.VILLAGER_WIN_REMARK)
+
     val remark = remember(winnerFaction) {
         when (winnerFaction) {
-            Faction.GONDI -> "The Gondis have successfully taken over the village!"
-            Faction.VILLAGER -> "The Villagers have successfully rooted out all the Gondis!"
+            Faction.GONDI -> gondiRemark
+            Faction.VILLAGER -> villagerRemark
             Faction.NEUTRAL -> ""
         }
     }
@@ -60,7 +65,11 @@ fun SharedGameOver(
                 verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
             ) {
                 Text(
-                    text = "${winnerFaction.name.capitaliseFirst()}s Win!",
+                    text = when (winnerFaction) {
+                        Faction.GONDI -> stringResource(Resources.Strings.GamePlay.GONDIS_WIN)
+                        Faction.VILLAGER -> stringResource(Resources.Strings.GamePlay.VILLAGERS_WIN)
+                        Faction.NEUTRAL -> ""
+                    },
                     style = MaterialTheme.typography.displayMedium,
                     fontWeight = FontWeight.Bold,
                     color = if (winnerFaction == Faction.GONDI) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
@@ -83,7 +92,7 @@ fun SharedGameOver(
                     buttonType = if (winnerFaction == Faction.GONDI) ComponentType.Error else ComponentType.Primary,
                     onClick = playAgain,
                 ) {
-                    Text("Play again")
+                    Text(stringResource(Resources.Strings.GamePlay.PLAY_AGAIN))
                 }
             }
         }

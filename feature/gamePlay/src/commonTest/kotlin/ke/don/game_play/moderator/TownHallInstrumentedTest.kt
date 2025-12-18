@@ -26,8 +26,10 @@ import ke.don.domain.state.GamePhase
 import ke.don.game_play.moderator.model.ModeratorHandler
 import ke.don.game_play.moderator.screens.MainModeratorContent
 import ke.don.game_play.moderator.screens.ModeratorTownHall
+import ke.don.resources.Resources
 import ke.don.utils.Logger
 import ke.don.utils.capitaliseFirst
+import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -66,6 +68,8 @@ class TownHallInstrumentedTest {
                 revealDeaths = true,
             ),
         )
+        val nightResultsText = mutableStateOf("")
+        val savedPlayerText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
@@ -73,6 +77,9 @@ class TownHallInstrumentedTest {
                 val moderatorState by rules.moderatorState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
+
+                nightResultsText.value = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS)
+                savedPlayerText.value = stringResource(Resources.Strings.GamePlay.SAVED_PLAYER)
 
                 ModeratorTownHall(
                     gameState = gameState,
@@ -84,8 +91,8 @@ class TownHallInstrumentedTest {
             }
         }
 
-        onNodeWithText("Night Results").assertIsDisplayed()
-        onNodeWithContentDescription("Saved player").assertIsDisplayed()
+        onNodeWithText(nightResultsText.value).assertIsDisplayed()
+        onNodeWithContentDescription(savedPlayerText.value).assertIsDisplayed()
     }
 
     @OptIn(ExperimentalTime::class)
@@ -115,12 +122,16 @@ class TownHallInstrumentedTest {
             ),
         )
 
+        val actionText = mutableStateOf("")
+
         rules.setContent {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val moderatorState by rules.moderatorState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
+
+                actionText.value = stringResource(Resources.Strings.GamePlay.PROCEED)
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
@@ -154,7 +165,6 @@ class TownHallInstrumentedTest {
             }
         }
 
-        val actionText = "Proceed"
         val expectedPhase = GamePhase.COURT
 
         val accuserId = rules.gameState.value.accusedPlayer?.playerId
@@ -165,10 +175,10 @@ class TownHallInstrumentedTest {
         val accused = rules.players.find { it.id == accusedId }
         val seconder = rules.players.find { it.id == seconderId }
 
-        onNodeWithText(actionText).assertIsDisplayed()
+        onNodeWithText(actionText.value).assertIsDisplayed()
         onNodeWithText("${accuser?.name} accuses ${accused?.name}").assertIsDisplayed()
         onNodeWithText("${seconder?.name} seconds the accusation").assertIsDisplayed()
-        onNodeWithText(actionText).performClick()
+        onNodeWithText(actionText.value).performClick()
 
         waitForIdle()
 
@@ -189,6 +199,7 @@ class TownHallInstrumentedTest {
         )
 
         val selectedPhase = mutableStateOf<GamePhase?>(null)
+        val actionText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
@@ -196,6 +207,8 @@ class TownHallInstrumentedTest {
                 val moderatorState by rules.moderatorState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
+
+                actionText.value = stringResource(Resources.Strings.GamePlay.PROCEED)
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
@@ -229,11 +242,10 @@ class TownHallInstrumentedTest {
             }
         }
 
-        val actionText = "Proceed"
         val expectedPhase = GamePhase.SLEEP
 
-        onNodeWithText(actionText).assertIsDisplayed()
-        onNodeWithText(actionText).performClick()
+        onNodeWithText(actionText.value).assertIsDisplayed()
+        onNodeWithText(actionText.value).performClick()
 
         waitForIdle()
 
@@ -261,12 +273,16 @@ class TownHallInstrumentedTest {
             ),
         )
 
+        val waitingText = mutableStateOf("")
+
         rules.setContent {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val moderatorState by rules.moderatorState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
+
+                waitingText.value = stringResource(Resources.Strings.GamePlay.WAITING_FOR_SECOND)
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
@@ -313,7 +329,7 @@ class TownHallInstrumentedTest {
         onNodeWithText(actionText).assertIsDisplayed()
 
         onNodeWithText("${accuser?.name} accuses ${accused?.name}").assertIsDisplayed()
-        onNodeWithText("Waiting for a second to proceed to court").assertIsDisplayed()
+        onNodeWithText(waitingText.value).assertIsDisplayed()
         onNodeWithText(actionText).performClick()
 
         waitForIdle()

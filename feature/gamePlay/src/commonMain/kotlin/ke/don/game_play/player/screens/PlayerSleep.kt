@@ -14,7 +14,6 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import io.ktor.util.collections.getValue
 import ke.don.domain.gameplay.Role
 import ke.don.domain.gameplay.isActingInSleep
 import ke.don.domain.state.GameState
@@ -23,6 +22,8 @@ import ke.don.game_play.player.components.SleepModal
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.model.PlayerState
 import ke.don.game_play.shared.SharedSleep
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PlayerSleep(
@@ -39,14 +40,18 @@ fun PlayerSleep(
     val selectedPlayers by remember(gameState.lastSavedPlayerId, gameState.pendingKills, myPlayer) {
         derivedStateOf { gameState.selectedPlayersSleep(myPlayer) }
     }
+    val gondiInstruction = stringResource(Resources.Strings.GamePlay.GONDI_INSTRUCTION)
+    val doctorInstruction =  stringResource(Resources.Strings.GamePlay.DOCTOR_INSTRUCTION)
+    val detectiveInstruction =  stringResource(Resources.Strings.GamePlay.DETECTIVE_INSTRUCTION)
+    val defaultInstruction =  stringResource(Resources.Strings.GamePlay.DEFAULT_INSTRUCTION)
 
     val instruction by remember(myPlayer.role) {
         derivedStateOf {
             when (myPlayer.role) {
-                Role.GONDI -> "You are a Gondi, Pick a player to kill"
-                Role.DOCTOR -> "You are a Doctor, Pick a player to save"
-                Role.DETECTIVE -> "You are a Detective, Pick a player to investigate"
-                else -> "Have a good rest, Please do not snore"
+                Role.GONDI -> gondiInstruction
+                Role.DOCTOR -> doctorInstruction
+                Role.DETECTIVE -> detectiveInstruction
+                else -> defaultInstruction
             }
         }
     }

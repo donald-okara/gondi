@@ -37,6 +37,8 @@ import ke.don.domain.state.Player
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.shared.components.ActionConfirmation
 import ke.don.game_play.shared.components.ModalActions
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,9 +51,8 @@ fun TownHallModal(
 ) {
     var showConfirmation by remember { mutableStateOf(false) }
 
-    val dormantText =
-        "Someone's already on trial. You can second the accusation or wait for the verdict."
-    val confirmationText = "Accuse ${selectedPlayer.name} and put them on trial? Are you sure?"
+    val dormantText = stringResource(Resources.Strings.GamePlay.ALREADY_ON_TRIAL)
+    val confirmationText = Resources.Strings.GamePlay.accusePlayerConfirmation(selectedPlayer.name)
     val confirmationAction = {
         onEvent(
             PlayerHandler.Send(

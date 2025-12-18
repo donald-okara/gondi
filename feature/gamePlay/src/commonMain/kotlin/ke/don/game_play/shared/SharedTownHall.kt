@@ -39,6 +39,8 @@ import ke.don.game_play.shared.components.AccusationSection
 import ke.don.game_play.shared.components.AnnouncementSection
 import ke.don.game_play.shared.components.PlayersGrid
 import ke.don.game_play.shared.components.RevealDeathModal
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -85,8 +87,8 @@ fun SharedTownHall(
                         isCourt ->
                             CallToActionSection(
                                 modifier = Modifier,
-                                explanationText = "The day's session is over. Time to move to the night phase.",
-                                callToActionText = "Proceed",
+                                explanationText = stringResource(Resources.Strings.GamePlay.SESSION_OVER),
+                                callToActionText = stringResource(Resources.Strings.GamePlay.PROCEED),
                                 componentType = ComponentType.Primary,
                                 onActionClick = proceed,
                                 enabled = actingPlayers.isEmpty(),
@@ -95,8 +97,8 @@ fun SharedTownHall(
                         seconder != null ->
                             CallToActionSection(
                                 modifier = Modifier,
-                                explanationText = "Would you like to go to court?",
-                                callToActionText = "Proceed",
+                                explanationText = stringResource(Resources.Strings.GamePlay.GO_TO_COURT),
+                                callToActionText = stringResource(Resources.Strings.GamePlay.PROCEED),
                                 componentType = ComponentType.Primary,
                                 onActionClick = proceed,
                                 enabled = true,
@@ -105,8 +107,8 @@ fun SharedTownHall(
                         accused != null ->
                             CallToActionSection(
                                 modifier = Modifier,
-                                explanationText = "${accused.name} has no seconder. Would you like to exonerate them?",
-                                callToActionText = "Exonerate ${accused.name}",
+                                explanationText = Resources.Strings.GamePlay.noSeconder(accused.name),
+                                callToActionText = Resources.Strings.GamePlay.exoneratePlayer(accused.name),
                                 componentType = ComponentType.Primary,
                                 onActionClick = exoneratePlayer,
                                 enabled = true,
@@ -115,8 +117,8 @@ fun SharedTownHall(
                         else ->
                             CallToActionSection(
                                 modifier = Modifier,
-                                explanationText = "No accusations are on the floor. Shall we move on?",
-                                callToActionText = "Proceed",
+                                explanationText = stringResource(Resources.Strings.GamePlay.NO_ACCUSATIONS),
+                                callToActionText = stringResource(Resources.Strings.GamePlay.PROCEED),
                                 componentType = ComponentType.Primary,
                                 onActionClick = proceed,
                                 enabled = actingPlayers.isEmpty(),
@@ -127,8 +129,8 @@ fun SharedTownHall(
                 if (isCourt && accused != null) {
                     CallToActionSection(
                         modifier = Modifier,
-                        explanationText = "Do you think ${accused.name} is guilty?",
-                        callToActionText = "Vote",
+                        explanationText = Resources.Strings.GamePlay.isPlayerGuilty(accused.name),
+                        callToActionText = stringResource(Resources.Strings.GamePlay.VOTE),
                         componentType = ComponentType.Primary,
                         onActionClick = onVote,
                         enabled = true,

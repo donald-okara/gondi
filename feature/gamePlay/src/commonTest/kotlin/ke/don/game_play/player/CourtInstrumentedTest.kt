@@ -23,7 +23,9 @@ import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.state.GamePhase
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.screens.PlayerCourt
+import ke.don.resources.Resources
 import ke.don.utils.Logger
+import org.jetbrains.compose.resources.stringResource
 import kotlin.test.Test
 import kotlin.test.assertTrue
 import kotlin.time.ExperimentalTime
@@ -61,6 +63,8 @@ class CourtInstrumentedTest {
             ),
         )
         val clicked = mutableStateOf(false)
+        val voteText = mutableStateOf("")
+        val alreadyVotedText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
@@ -69,6 +73,10 @@ class CourtInstrumentedTest {
                 val players = rules.players
                 val votes = rules.votes
                 val currentPlayer = rules.currentPlayer
+
+                voteText.value = stringResource(Resources.Strings.GamePlay.VOTE)
+                alreadyVotedText.value =
+                    stringResource(Resources.Strings.GamePlay.ALREADY_VOTED_THIS_ROUND)
 
                 fun onEvent(event: PlayerHandler) {
                     when (event) {
@@ -95,13 +103,13 @@ class CourtInstrumentedTest {
             }
         }
 
-        onNodeWithText("Vote").assertIsDisplayed()
-        onNodeWithText("Vote").performClick()
+        onNodeWithText(voteText.value).assertIsDisplayed()
+        onNodeWithText(voteText.value).performClick()
 
         waitForIdle()
 
         assertTrue(clicked.value)
-        onNodeWithText("You've already voted this round.").assertIsDisplayed()
+        onNodeWithText(alreadyVotedText.value).assertIsDisplayed()
     }
 
     @Test
@@ -126,6 +134,9 @@ class CourtInstrumentedTest {
         rules.setUpVotes(editedVotes)
         val clicked = mutableStateOf(false)
         val voted = mutableStateOf(false)
+        val voteText = mutableStateOf("")
+        val voteGuiltyText = mutableStateOf("")
+        val confirmText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
@@ -134,6 +145,10 @@ class CourtInstrumentedTest {
                 val players = rules.players
                 val votes = rules.votes
                 val currentPlayer = rules.currentPlayer
+
+                voteText.value = stringResource(Resources.Strings.GamePlay.VOTE)
+                voteGuiltyText.value = stringResource(Resources.Strings.GamePlay.VOTE_GUILTY)
+                confirmText.value = stringResource(Resources.Strings.GamePlay.I_AM_SURE)
 
                 fun onEvent(event: PlayerHandler) {
                     when (event) {
@@ -163,19 +178,19 @@ class CourtInstrumentedTest {
             }
         }
 
-        onNodeWithText("Vote").assertIsDisplayed()
-        onNodeWithText("Vote").performClick()
+        onNodeWithText(voteText.value).assertIsDisplayed()
+        onNodeWithText(voteText.value).performClick()
 
         waitForIdle()
 
         assertTrue(clicked.value)
-        onNodeWithText("Vote Guilty").assertIsDisplayed()
-        onNodeWithText("Vote Guilty").performClick()
+        onNodeWithText(voteGuiltyText.value).assertIsDisplayed()
+        onNodeWithText(voteGuiltyText.value).performClick()
 
         waitForIdle()
 
-        onNodeWithText("I am sure").assertIsDisplayed()
-        onNodeWithText("I am sure").performClick()
+        onNodeWithText(confirmText.value).assertIsDisplayed()
+        onNodeWithText(confirmText.value).performClick()
 
         waitForIdle()
 
@@ -219,6 +234,8 @@ class CourtInstrumentedTest {
         )
 
         val clicked = mutableStateOf(false)
+        val voteText = mutableStateOf("")
+        val deadText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
@@ -227,6 +244,9 @@ class CourtInstrumentedTest {
                 val players = rules.players
                 val votes = rules.votes
                 val currentPlayer = rules.currentPlayer
+
+                voteText.value = stringResource(Resources.Strings.GamePlay.VOTE)
+                deadText.value = stringResource(Resources.Strings.GamePlay.DEAD_MEN_TELL_NO_TALES)
 
                 fun onEvent(event: PlayerHandler) {
                     when (event) {
@@ -253,13 +273,13 @@ class CourtInstrumentedTest {
             }
         }
 
-        onNodeWithText("Vote").assertIsDisplayed()
-        onNodeWithText("Vote").performClick()
+        onNodeWithText(voteText.value).assertIsDisplayed()
+        onNodeWithText(voteText.value).performClick()
 
         waitForIdle()
 
         assertTrue(clicked.value)
 
-        onNodeWithText("Dead men tell no tales").assertIsDisplayed()
+        onNodeWithText(deadText.value).assertIsDisplayed()
     }
 }

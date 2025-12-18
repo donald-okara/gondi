@@ -43,8 +43,10 @@ import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.Player
+import ke.don.resources.Resources
 import ke.don.utils.capitaliseFirst
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun RevealDeathModal(
@@ -74,8 +76,8 @@ fun RevealDeathsComponent(
     killedPlayers: List<Player> = emptyList(),
 ) {
     val icon = if (currentPhase == GamePhase.TOWN_HALL) Icons.Default.Bedtime else Icons.Default.Gavel
-    val title = if (currentPhase == GamePhase.TOWN_HALL) "Night Results" else "Court ruling"
-    val message = if (currentPhase == GamePhase.TOWN_HALL) "Here is what happened when the villagers slept!" else "Here is what the court decided"
+    val title = if (currentPhase == GamePhase.TOWN_HALL) stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS) else stringResource(Resources.Strings.GamePlay.COURT_RULING)
+    val message = if (currentPhase == GamePhase.TOWN_HALL) stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS_DESCRIPTION) else stringResource(Resources.Strings.GamePlay.COURT_RULING_DESCRIPTION)
 
     Column(
         modifier = modifier
@@ -214,8 +216,8 @@ fun NightResultItem(
                     Icon(
                         painter = painterResource(action.painter!!),
                         contentDescription = when (status) {
-                            NightStatus.Killed -> "Killed player"
-                            NightStatus.Saved -> "Saved player"
+                            NightStatus.Killed -> stringResource(Resources.Strings.GamePlay.KILLED_PLAYER)
+                            NightStatus.Saved -> stringResource(Resources.Strings.GamePlay.SAVED_PLAYER)
                         },
                         tint = action.color(),
                         modifier = Modifier.size(14.dp),
@@ -243,11 +245,11 @@ fun NightResultItem(
                         modifier = Modifier.size(16.dp),
                     )
 
-                    val saviour = if (isSleep) "The court ruling" else "The Doctor"
+                    val saviour = if (isSleep) stringResource(Resources.Strings.GamePlay.COURT_RULING) else stringResource(Resources.Strings.GamePlay.THE_DOCTOR)
                     Text(
                         text = when (status) {
-                            NightStatus.Killed -> "Eliminated — ${player.role?.name?.capitaliseFirst()}"
-                            NightStatus.Saved -> "Saved by $saviour"
+                            NightStatus.Killed -> Resources.Strings.GamePlay.eliminatedPlayer(player.role?.name?.capitaliseFirst() ?: "")
+                            NightStatus.Saved -> Resources.Strings.GamePlay.savedBySaviour(saviour)
                         },
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = action.color().copy(alpha = 0.9f),
