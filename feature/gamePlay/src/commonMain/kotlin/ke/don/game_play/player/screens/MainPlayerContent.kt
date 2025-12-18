@@ -21,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import ke.don.components.button.ButtonToken
@@ -39,10 +40,20 @@ import ke.don.domain.state.Vote
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.model.PlayerState
 import ke.don.game_play.shared.components.RulesModal
+import ke.don.resources.Resources
 import ke.don.utils.capitaliseFirst
 import ke.don.utils.result.ReadStatus
 import ke.don.utils.result.isError
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
+
+@Immutable
+data class MainPlayerContentStrings(
+    val leaveGameTitle: String,
+    val leaveGameMessage: String,
+    val leaveGameChecklist: List<String>,
+    val connecting: String,
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,6 +67,16 @@ fun MainPlayerContent(
     onEvent: (PlayerHandler) -> Unit,
     onBack: () -> Unit,
 ) {
+    val strings = MainPlayerContentStrings(
+        leaveGameTitle = stringResource(Resources.Strings.GamePlay.LEAVE_GAME_TITLE),
+        leaveGameMessage = stringResource(Resources.Strings.GamePlay.LEAVE_GAME_MESSAGE),
+        leaveGameChecklist = listOf(
+            stringResource(Resources.Strings.GamePlay.LEAVE_GAME_CHECKLIST_1),
+            stringResource(Resources.Strings.GamePlay.LEAVE_GAME_CHECKLIST_2),
+        ),
+        connecting = stringResource(Resources.Strings.GamePlay.CONNECTING),
+    )
+
     ScaffoldToken(
         modifier = modifier,
         navigationIcon = NavigationIcon.Back {
@@ -67,7 +88,7 @@ fun MainPlayerContent(
         },
         title = gameState?.phase?.let { phase ->
             "${phase.name.capitaliseFirst()} for ${gameState.name}"
-        } ?: "Connecting ...",
+        } ?: strings.connecting,
     ) {
         ContentSwitcher(
             playerState = playerState,
@@ -87,18 +108,27 @@ fun MainPlayerContent(
     if (playerState.showLeaveGame) {
         ConfirmationDialogToken(
             icon = Icons.AutoMirrored.Filled.ExitToApp,
-            title = "Leave Game?",
-            message = "You are about to leave the game you should understand that:",
+            title = strings.leaveGameTitle,
+            message = strings.leaveGameMessage,
             dialogType = ComponentType.Warning,
-            checklist = listOf(
-                "Your progress will be lost",
-                "You cannot come back to the game",
-            ),
+            checklist = strings.leaveGameChecklist,
             onConfirm = onBack,
             onDismiss = { onEvent(PlayerHandler.ShowLeaveDialog) },
         )
     }
 }
+
+@Immutable
+data class LoadingStateStrings(
+    val connecting: String,
+)
+
+@Immutable
+data class ErrorStateStrings(
+    val title: String,
+    val description: (String) -> String,
+    val leaveGame: String,
+)
 
 @OptIn(ExperimentalTime::class)
 @Composable
@@ -112,6 +142,15 @@ private fun ContentSwitcher(
     onEvent: (PlayerHandler) -> Unit,
     onBack: () -> Unit,
 ) {
+    val loadingStateStrings = LoadingStateStrings(
+        connecting = stringResource(Resources.Strings.GamePlay.CONNECTING),
+    )
+    val errorStateStrings = ErrorStateStrings(
+        title = stringResource(Resources.Strings.GamePlay.SOMETHING_WENT_WRONG),
+        description = { error -> "$error. The game most likely doesn't exist anymore." },
+        leaveGame = stringResource(Resources.Strings.GamePlay.LEAVE_GAME),
+    )
+
     AnimatedContent(
         targetState = gameState?.phase to playerState.connectionStatus,
         label = "Game State",
@@ -128,10 +167,12 @@ private fun ContentSwitcher(
                                 onEvent(PlayerHandler.ShowLeaveDialog)
                             }
                         },
+                        strings = errorStateStrings,
                     )
                     else ->
                         LoadingState(
                             modifier = modifier,
+                            strings = loadingStateStrings,
                         )
                 }
             }
@@ -199,6 +240,7 @@ private fun ContentSwitcher(
 @Composable
 private fun LoadingState(
     modifier: Modifier = Modifier,
+    strings: LoadingStateStrings,
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -214,7 +256,7 @@ private fun LoadingState(
             ) {
                 FancyLoadingIndicator(loading = true)
                 Text(
-                    text = "Connecting...",
+                    text = strings.connecting,
                     style = MaterialTheme.typography.titleLarge,
                 )
             }
@@ -227,14 +269,15 @@ private fun ErrorState(
     modifier: Modifier = Modifier,
     error: String,
     leave: () -> Unit,
+    strings: ErrorStateStrings,
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
         EmptyState(
-            title = "Something went wrong",
-            description = "$error. The game most likely doesn't exist anymore.",
+            title = strings.title,
+            description = strings.description(error),
             emptyType = EmptyType.Error,
             icon = Icons.AutoMirrored.Filled.ExitToApp,
         ) {
@@ -243,7 +286,7 @@ private fun ErrorState(
                 onClick = leave,
             ) {
                 Text(
-                    text = "Leave game",
+                    text = strings.leaveGame,
                 )
             }
         }

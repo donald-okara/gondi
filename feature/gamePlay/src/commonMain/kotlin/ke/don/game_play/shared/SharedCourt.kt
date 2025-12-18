@@ -18,6 +18,7 @@ import ke.don.domain.gameplay.Role
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.game_play.moderator.model.Announcement
+import ke.don.game_play.shared.components.RevealDeathsStrings
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -35,6 +36,8 @@ fun SharedCourt(
     votes: List<Vote>,
     players: List<Player>,
     announcements: List<Announcement>,
+    townHallStrings: SharedTownHallStrings,
+    revealDeathsStrings: RevealDeathsStrings,
 ) {
     val notVoted by remember(players, votes) {
         derivedStateOf {
@@ -71,5 +74,7 @@ fun SharedCourt(
         onDismiss = {},
         lastSaved = null,
         lastKilled = emptyList(),
+        townHallStrings = townHallStrings,
+        revealDeathsStrings = revealDeathsStrings,
     )
 }

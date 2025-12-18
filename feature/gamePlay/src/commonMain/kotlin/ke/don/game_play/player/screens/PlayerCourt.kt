@@ -18,9 +18,14 @@ import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.domain.state.Vote
 import ke.don.game_play.player.components.CourtModal
+import ke.don.game_play.player.components.CourtModalStrings
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.model.PlayerState
 import ke.don.game_play.shared.SharedCourt
+import ke.don.game_play.shared.SharedTownHallStrings
+import ke.don.game_play.shared.components.RevealDeathsStrings
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
@@ -69,6 +74,39 @@ fun PlayerCourt(
         }
     }
 
+    val courtModalStrings = CourtModalStrings(
+        dormantText = stringResource(Resources.Strings.GamePlay.ALREADY_VOTED_THIS_ROUND),
+        deadPlayerText = stringResource(Resources.Strings.GamePlay.DEAD_MEN_TELL_NO_TALES),
+        voteInnocentText = stringResource(Resources.Strings.GamePlay.VOTE_INNOCENT),
+        voteGuiltyText = stringResource(Resources.Strings.GamePlay.VOTE_GUILTY),
+        confirmInnocentText = { name -> Resources.Strings.GamePlay.playerIsInnocent(name) },
+        confirmGuiltyText = { name -> Resources.Strings.GamePlay.condemnPlayer(name) },
+    )
+
+    val townHallStrings = SharedTownHallStrings(
+        sessionOver = stringResource(Resources.Strings.GamePlay.SESSION_OVER),
+        proceed = stringResource(Resources.Strings.GamePlay.PROCEED),
+        goToCourt = stringResource(Resources.Strings.GamePlay.GO_TO_COURT),
+        noAccusations = stringResource(Resources.Strings.GamePlay.NO_ACCUSATIONS),
+        vote = stringResource(Resources.Strings.GamePlay.VOTE),
+        noSeconder = { name -> Resources.Strings.GamePlay.noSeconder(name) },
+        exoneratePlayer = { name -> Resources.Strings.GamePlay.exoneratePlayer(name) },
+        isPlayerGuilty = { name -> Resources.Strings.GamePlay.isPlayerGuilty(name) },
+    )
+
+    val revealDeathsStrings = RevealDeathsStrings(
+        nightResultsTitle = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS),
+        courtRulingTitle = stringResource(Resources.Strings.GamePlay.COURT_RULING),
+        nightResultsDescription = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS_DESCRIPTION),
+        courtRulingDescription = stringResource(Resources.Strings.GamePlay.COURT_RULING_DESCRIPTION),
+        killedPlayerContentDescription = stringResource(Resources.Strings.GamePlay.KILLED_PLAYER),
+        savedPlayerContentDescription = stringResource(Resources.Strings.GamePlay.SAVED_PLAYER),
+        eliminatedPlayerMessage = { name -> Resources.Strings.GamePlay.eliminatedPlayer(name) },
+        savedBySaviourMessage = { name -> Resources.Strings.GamePlay.savedBySaviour(name) },
+        courtRulingText = stringResource(Resources.Strings.GamePlay.COURT_RULING),
+        theDoctorText = stringResource(Resources.Strings.GamePlay.THE_DOCTOR),
+    )
+
     SharedCourt(
         players = players,
         onVote = {
@@ -83,6 +121,8 @@ fun PlayerCourt(
         seconder = seconder,
         accuser = accuser,
         announcements = playerState.announcements,
+        townHallStrings = townHallStrings,
+        revealDeathsStrings = revealDeathsStrings,
     )
 
     if (playerState.showVote && accused != null) {
@@ -93,6 +133,7 @@ fun PlayerCourt(
             currentPlayer = myPlayer,
             selectedPlayer = accused!!,
             vote = vote,
+            strings = courtModalStrings,
         )
     }
 }

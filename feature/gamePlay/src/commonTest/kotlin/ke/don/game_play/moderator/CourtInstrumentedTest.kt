@@ -104,7 +104,6 @@ class CourtInstrumentedTest {
     @Test
     fun proceed_isPresentAndEnabledWhenVotesNotEmpty() = runComposeUiTest {
         val proceedText = mutableStateOf("")
-
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val selectedId = "2"

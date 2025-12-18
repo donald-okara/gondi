@@ -19,6 +19,7 @@ import androidx.compose.material.icons.outlined.AutoStories
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -36,6 +37,13 @@ import ke.don.domain.state.GamePhase
 import ke.don.domain.state.Player
 import ke.don.game_play.shared.components.PlayersGrid
 import ke.don.game_play.shared.components.RevealDeathModal
+import ke.don.game_play.shared.components.RevealDeathsStrings
+
+@Immutable
+data class SharedSleepStrings(
+    val proceed: String,
+    val showRules: String,
+)
 
 @Composable
 fun SharedSleep(
@@ -54,6 +62,8 @@ fun SharedSleep(
     onSelectPlayer: (String) -> Unit,
     players: List<Player>,
     selectedPlayers: List<SelectedPlayer> = emptyList(),
+    strings: SharedSleepStrings,
+    revealDeathsStrings: RevealDeathsStrings,
 ) {
     val lastAccusedPlayer by remember(lastAccused, players) {
         derivedStateOf { lastAccused?.let { accusedId -> players.find { it.id == accusedId } } }
@@ -73,7 +83,7 @@ fun SharedSleep(
                     enabled = enabled,
                 ) {
                     Text(
-                        "Proceed",
+                        strings.proceed,
                     )
                 }
             }
@@ -86,7 +96,7 @@ fun SharedSleep(
             ) {
                 IconToken(
                     imageVector = Icons.Outlined.AutoStories,
-                    contentDescription = "Show rules",
+                    contentDescription = strings.showRules,
                     buttonType = ComponentType.Inverse,
                     onClick = onShowRules,
                 )
@@ -122,6 +132,7 @@ fun SharedSleep(
             savedPlayer = if (lastAccusedPlayer?.isAlive == true) lastAccusedPlayer else null,
             killedPlayers = if (lastAccusedPlayer?.isAlive == false && lastAccusedPlayer != null) listOf(lastAccusedPlayer!!) else emptyList(),
             currentPhase = GamePhase.TOWN_HALL,
+            strings = revealDeathsStrings,
         )
     }
 }

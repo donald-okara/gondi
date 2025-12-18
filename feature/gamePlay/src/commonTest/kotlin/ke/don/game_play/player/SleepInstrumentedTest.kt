@@ -192,7 +192,6 @@ class SleepInstrumentedTest {
             },
         )
 
-        val clicked = mutableStateOf(false)
         val dormantText = mutableStateOf("")
 
         rules.setContent {
@@ -204,21 +203,12 @@ class SleepInstrumentedTest {
 
                 dormantText.value = stringResource(Resources.Strings.GamePlay.DORMANT_TEXT_GONDI)
 
-                fun onEvent(event: PlayerHandler) {
-                    when (event) {
-                        is PlayerHandler.Send -> {
-                            clicked.value = true
-                        }
-                        else -> {}
-                    }
-                }
-
                 PlayerSleep(
                     gameState = gameState,
                     myPlayer = currentPlayer,
                     players = players,
                     playerState = playerState,
-                    onEvent = ::onEvent,
+                    onEvent = {},
                 )
             }
         }
@@ -265,7 +255,6 @@ class SleepInstrumentedTest {
             "New player =  ${rules.players.find { player -> player.id == selectedId }}",
         )
 
-        val clicked = mutableStateOf(false)
         val nightResultsText = mutableStateOf("")
         val killedPlayerText = mutableStateOf("")
 
@@ -279,21 +268,12 @@ class SleepInstrumentedTest {
                 nightResultsText.value = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS)
                 killedPlayerText.value = stringResource(Resources.Strings.GamePlay.KILLED_PLAYER)
 
-                fun onEvent(event: PlayerHandler) {
-                    when (event) {
-                        is PlayerHandler.Send -> {
-                            clicked.value = true
-                        }
-                        else -> {}
-                    }
-                }
-
                 PlayerSleep(
                     gameState = gameState,
                     myPlayer = currentPlayer,
                     players = players,
                     playerState = playerState,
-                    onEvent = ::onEvent,
+                    onEvent = {},
                 )
             }
         }
@@ -350,6 +330,3 @@ class SleepInstrumentedTest {
         onNodeWithText(gameObjectiveText.value).assertIsDisplayed()
     }
 }
-
-
-

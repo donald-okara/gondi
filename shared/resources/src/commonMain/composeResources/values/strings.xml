@@ -87,4 +87,22 @@
     <string name="accuses">%1$s accuses %2$s</string>
     <string name="second_the_accusation">Second The Accusation</string>
 
+    <!-- MainPlayerContent -->
+    <string name="leave_game_title">Leave Game?</string>
+    <string name="leave_game_message">You are about to leave the game you should understand that:</string>
+    <string name="leave_game_checklist_1">Your progress will be lost</string>
+    <string name="leave_game_checklist_2">You cannot come back to the game</string>
+    <string name="connecting">Connecting...</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="leave_game">Leave game</string>
+    <string name="game_doesnt_exist_anymore">. The game most likely doesn't exist anymore.</string>
+
+    <!-- MainModeratorContent -->
+    <string name="leave_game_checklist_moderator">This game will be terminated and all progress will be lost.</string>
+    <string name="new_game">New game</string>
+
+    <!-- ModeratorSleep -->
+    <string name="proceed_to_town_hall">You can now proceed to Town hall</string>
+    <string name="someone_has_not_done_their_part_yet">Someone has not done their part yet</string>
+
 </resources>

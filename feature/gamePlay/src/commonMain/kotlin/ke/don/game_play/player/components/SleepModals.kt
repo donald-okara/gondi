@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,9 +40,17 @@ import ke.don.domain.state.Player
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.shared.components.ActionConfirmation
 import ke.don.game_play.shared.components.ModalActions
-import ke.don.resources.Resources
-import ke.don.utils.formatArgs
-import org.jetbrains.compose.resources.stringResource
+
+@Immutable
+data class SleepModalStrings(
+    val gondiConfirmation: (String) -> String,
+    val doctorConfirmation: (String) -> String,
+    val detectiveConfirmation: (String) -> String,
+    val gondiDormant: (String) -> String,
+    val doctorDormant: (String) -> String,
+    val detectiveDormant: (String) -> String,
+    val defaultDormant: (String) -> String,
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,34 +60,25 @@ fun SleepModal(
     currentPlayer: Player,
     selectedPlayer: Player,
     gameState: GameState,
+    strings: SleepModalStrings,
 ) {
     var showConfirmation by remember { mutableStateOf(false) }
 
-    val gondiConfirmation = stringResource(Resources.Strings.GamePlay.CONFIRMATION_GONDI).formatArgs(selectedPlayer.name)
-    val doctorConfirmation = stringResource(Resources.Strings.GamePlay.CONFIRMATION_DOCTOR).formatArgs(selectedPlayer.name)
-    val detectiveConfirmation = stringResource(Resources.Strings.GamePlay.CONFIRMATION_DETECTIVE).formatArgs(selectedPlayer.name)
-
     val confirmationText = remember(currentPlayer.role, selectedPlayer.id) {
         when (currentPlayer.role) {
-            Role.GONDI -> gondiConfirmation
-            Role.DOCTOR -> doctorConfirmation
-            Role.DETECTIVE -> detectiveConfirmation
+            Role.GONDI -> strings.gondiConfirmation(selectedPlayer.name)
+            Role.DOCTOR -> strings.doctorConfirmation(selectedPlayer.name)
+            Role.DETECTIVE -> strings.detectiveConfirmation(selectedPlayer.name)
             else -> null
         }
     }
 
-    val gondiDormant = stringResource(Resources.Strings.GamePlay.DORMANT_TEXT_GONDI).formatArgs(selectedPlayer.name)
-    val doctorDormant = stringResource(Resources.Strings.GamePlay.DORMANT_TEXT_DOCTOR).formatArgs(selectedPlayer.name)
-    val detectiveDormant = stringResource(Resources.Strings.GamePlay.DORMANT_TEXT_DETECTIVE).formatArgs(selectedPlayer.name)
-    val defaultDormant = stringResource(Resources.Strings.GamePlay.DORMANT_TEXT_DEFAULT).formatArgs(selectedPlayer.name)
-
-
     val dormantText = remember(currentPlayer.role) {
         when (currentPlayer.role) {
-            Role.GONDI -> gondiDormant
-            Role.DOCTOR -> doctorDormant
-            Role.DETECTIVE -> detectiveDormant
-            else -> defaultDormant
+            Role.GONDI -> strings.gondiDormant(selectedPlayer.name)
+            Role.DOCTOR -> strings.doctorDormant(selectedPlayer.name)
+            Role.DETECTIVE -> strings.detectiveDormant(selectedPlayer.name)
+            else -> strings.defaultDormant(selectedPlayer.name)
         }
     }
 

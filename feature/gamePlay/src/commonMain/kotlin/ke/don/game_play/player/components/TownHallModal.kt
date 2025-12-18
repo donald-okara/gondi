@@ -18,6 +18,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,8 +38,12 @@ import ke.don.domain.state.Player
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.shared.components.ActionConfirmation
 import ke.don.game_play.shared.components.ModalActions
-import ke.don.resources.Resources
-import org.jetbrains.compose.resources.stringResource
+
+@Immutable
+data class TownHallModalStrings(
+    val alreadyOnTrial: String,
+    val accusePlayerConfirmation: (String) -> String,
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,11 +53,11 @@ fun TownHallModal(
     currentPlayer: Player,
     selectedPlayer: Player,
     gameState: GameState,
+    strings: TownHallModalStrings,
 ) {
     var showConfirmation by remember { mutableStateOf(false) }
 
-    val dormantText = stringResource(Resources.Strings.GamePlay.ALREADY_ON_TRIAL)
-    val confirmationText = Resources.Strings.GamePlay.accusePlayerConfirmation(selectedPlayer.name)
+    val confirmationText = strings.accusePlayerConfirmation(selectedPlayer.name)
     val confirmationAction = {
         onEvent(
             PlayerHandler.Send(
@@ -90,7 +95,7 @@ fun TownHallModal(
                 currentRound = gameState.round,
                 currentPlayer = currentPlayer,
                 showConfirmation = { showConfirmation = true },
-                dormantText = dormantText,
+                dormantText = strings.alreadyOnTrial,
                 actionType = ActionType.ACCUSE,
             )
 

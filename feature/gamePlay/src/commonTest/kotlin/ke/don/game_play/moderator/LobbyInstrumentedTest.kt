@@ -115,11 +115,14 @@ class LobbyInstrumentedTest {
             rules.players.take(rules.gameState.value.availableSlots.toInt() - 1),
         )
         val clicked = mutableStateOf(false)
+        val expectedButtonText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val moderatorState by rules.moderatorState.collectAsState()
+                expectedButtonText.value =
+                    Resources.Strings.GamePlay.startWithPlayers(rules.players.size)
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
@@ -149,11 +152,10 @@ class LobbyInstrumentedTest {
         }
 
         val expectedPhase = GamePhase.SLEEP
-        val expectedButtonText = Resources.Strings.GamePlay.startWithPlayers(rules.players.size)
 
-        onNodeWithText(expectedButtonText).assertIsDisplayed()
-        onNodeWithText(expectedButtonText).assertIsEnabled()
-        onNodeWithText(expectedButtonText).performClick()
+        onNodeWithText(expectedButtonText.value).assertIsDisplayed()
+        onNodeWithText(expectedButtonText.value).assertIsEnabled()
+        onNodeWithText(expectedButtonText.value).performClick()
 
         waitForIdle()
 
@@ -169,27 +171,14 @@ class LobbyInstrumentedTest {
         rules.setUpPlayers(
             rules.players.take(PLAYER_LOWER_LIMIT - 1),
         )
-        val clicked = mutableStateOf(false)
+        val expectedButtonText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val moderatorState by rules.moderatorState.collectAsState()
-
-                fun onEvent(event: ModeratorHandler) {
-                    when (event) {
-                        ModeratorHandler.StartGame -> {
-                            clicked.value = true
-                            rules.setUpGameState(rules.gameState.value.copy(phase = GamePhase.SLEEP))
-
-                            logger.info(
-                                "State Phase: ${gameState.phase.name.capitaliseFirst()} Live Phase: ${rules.gameState.value.phase.name.capitaliseFirst()}",
-                            )
-                        }
-
-                        else -> {}
-                    }
-                }
+                expectedButtonText.value =
+                    Resources.Strings.GamePlay.startWithPlayers(rules.players.size)
 
                 MainModeratorContent(
                     moderatorState = moderatorState,
@@ -197,16 +186,14 @@ class LobbyInstrumentedTest {
                     hostPlayer = rules.currentPlayer,
                     players = rules.players,
                     votes = rules.votes,
-                    onEvent = ::onEvent,
+                    onEvent = {},
                     onBack = {},
                 )
             }
         }
 
-        val expectedButtonText = Resources.Strings.GamePlay.startWithPlayers(rules.players.size)
-
-        onNodeWithText(expectedButtonText).assertIsDisplayed()
-        onNodeWithText(expectedButtonText).assertIsNotEnabled()
+        onNodeWithText(expectedButtonText.value).assertIsDisplayed()
+        onNodeWithText(expectedButtonText.value).assertIsNotEnabled()
     }
 
     @Test
@@ -217,8 +204,6 @@ class LobbyInstrumentedTest {
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val clicked = mutableStateOf(false)
-        val roleAssigned = mutableStateOf(false)
-        val removed = mutableStateOf(false)
 
         rules.setContent {
             WithTestLifecycle {
@@ -241,20 +226,6 @@ class LobbyInstrumentedTest {
                             logger.info(
                                 "State Selected Id: ${moderatorState.selectedPlayerId} Live Selected Id: ${rules.moderatorState.value.selectedPlayerId}",
                             )
-                        }
-
-                        is ModeratorHandler.HandleModeratorCommand -> {
-                            when (event.intent) {
-                                is ModeratorCommand.AssignRole -> {
-                                    roleAssigned.value = true
-                                }
-
-                                is ModeratorCommand.RemovePlayer -> {
-                                    removed.value = true
-                                }
-
-                                else -> {}
-                            }
                         }
 
                         else -> {}
@@ -298,9 +269,7 @@ class LobbyInstrumentedTest {
                 selectedPlayerId = selectedId,
             ),
         )
-        val clicked = mutableStateOf(false)
         val roleAssigned = mutableStateOf(false)
-        val removed = mutableStateOf(false)
 
         rules.setContent {
             WithTestLifecycle {
@@ -312,31 +281,20 @@ class LobbyInstrumentedTest {
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
-                        is ModeratorHandler.SelectPlayer -> {
-                            clicked.value = true
-                            rules.setUpModeratorState(
-                                rules.moderatorState.value.copy(
-                                    selectedPlayerId = event.id,
-                                ),
-                            )
-
-                            logger.info(
-                                "State Selected Id: ${moderatorState.selectedPlayerId} Live Selected Id: ${rules.moderatorState.value.selectedPlayerId}",
-                            )
-                        }
-
                         is ModeratorHandler.HandleModeratorCommand -> {
                             when (event.intent) {
                                 is ModeratorCommand.AssignRole -> {
                                     roleAssigned.value = true
                                 }
 
-                                is ModeratorCommand.RemovePlayer -> {
-                                    removed.value = true
-                                }
-
                                 else -> {}
                             }
+                        }
+
+                        is ModeratorHandler.SelectPlayer -> {
+                            rules.setUpModeratorState(
+                                moderatorState.copy(selectedPlayerId = event.id)
+                            )
                         }
 
                         else -> {}
@@ -354,7 +312,6 @@ class LobbyInstrumentedTest {
                 )
             }
         }
-
 
         val roleText = Role.GONDI.name.capitaliseFirst()
 
@@ -385,8 +342,6 @@ class LobbyInstrumentedTest {
                 selectedPlayerId = selectedId,
             ),
         )
-        val clicked = mutableStateOf(false)
-        val roleAssigned = mutableStateOf(false)
         val removed = mutableStateOf(false)
 
         rules.setContent {
@@ -400,31 +355,20 @@ class LobbyInstrumentedTest {
 
                 fun onEvent(event: ModeratorHandler) {
                     when (event) {
-                        is ModeratorHandler.SelectPlayer -> {
-                            clicked.value = true
-                            rules.setUpModeratorState(
-                                rules.moderatorState.value.copy(
-                                    selectedPlayerId = event.id,
-                                ),
-                            )
-
-                            logger.info(
-                                "State Selected Id: ${moderatorState.selectedPlayerId} Live Selected Id: ${rules.moderatorState.value.selectedPlayerId}",
-                            )
-                        }
-
                         is ModeratorHandler.HandleModeratorCommand -> {
                             when (event.intent) {
-                                is ModeratorCommand.AssignRole -> {
-                                    roleAssigned.value = true
-                                }
-
                                 is ModeratorCommand.RemovePlayer -> {
                                     removed.value = true
                                 }
 
                                 else -> {}
                             }
+                        }
+
+                        is ModeratorHandler.SelectPlayer -> {
+                            rules.setUpModeratorState(
+                                moderatorState.copy(selectedPlayerId = event.id)
+                            )
                         }
 
                         else -> {}

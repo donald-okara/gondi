@@ -18,9 +18,14 @@ import ke.don.domain.gameplay.PlayerIntent
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.game_play.player.components.TownHallModal
+import ke.don.game_play.player.components.TownHallModalStrings
 import ke.don.game_play.player.model.PlayerHandler
 import ke.don.game_play.player.model.PlayerState
 import ke.don.game_play.shared.SharedTownHall
+import ke.don.game_play.shared.SharedTownHallStrings
+import ke.don.game_play.shared.components.RevealDeathsStrings
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -60,6 +65,35 @@ fun PlayerTownHall(
         }
     }
 
+    val townHallModalStrings = TownHallModalStrings(
+        alreadyOnTrial = stringResource(Resources.Strings.GamePlay.ALREADY_ON_TRIAL),
+        accusePlayerConfirmation = { name -> Resources.Strings.GamePlay.accusePlayerConfirmation(name) },
+    )
+
+    val townHallStrings = SharedTownHallStrings(
+        sessionOver = stringResource(Resources.Strings.GamePlay.SESSION_OVER),
+        proceed = stringResource(Resources.Strings.GamePlay.PROCEED),
+        goToCourt = stringResource(Resources.Strings.GamePlay.GO_TO_COURT),
+        noAccusations = stringResource(Resources.Strings.GamePlay.NO_ACCUSATIONS),
+        vote = stringResource(Resources.Strings.GamePlay.VOTE),
+        noSeconder = { name -> Resources.Strings.GamePlay.noSeconder(name) },
+        exoneratePlayer = { name -> Resources.Strings.GamePlay.exoneratePlayer(name) },
+        isPlayerGuilty = { name -> Resources.Strings.GamePlay.isPlayerGuilty(name) },
+    )
+
+    val revealDeathsStrings = RevealDeathsStrings(
+        nightResultsTitle = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS),
+        courtRulingTitle = stringResource(Resources.Strings.GamePlay.COURT_RULING),
+        nightResultsDescription = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS_DESCRIPTION),
+        courtRulingDescription = stringResource(Resources.Strings.GamePlay.COURT_RULING_DESCRIPTION),
+        killedPlayerContentDescription = stringResource(Resources.Strings.GamePlay.KILLED_PLAYER),
+        savedPlayerContentDescription = stringResource(Resources.Strings.GamePlay.SAVED_PLAYER),
+        eliminatedPlayerMessage = { name -> Resources.Strings.GamePlay.eliminatedPlayer(name) },
+        savedBySaviourMessage = { name -> Resources.Strings.GamePlay.savedBySaviour(name) },
+        courtRulingText = stringResource(Resources.Strings.GamePlay.COURT_RULING),
+        theDoctorText = stringResource(Resources.Strings.GamePlay.THE_DOCTOR),
+    )
+
     SharedTownHall(
         players = players,
         onSelectPlayer = { onEvent(PlayerHandler.SelectPlayer(it)) },
@@ -79,6 +113,8 @@ fun PlayerTownHall(
         onDismiss = { onEvent(PlayerHandler.RevealDeaths) },
         lastSaved = gameState.lastSavedPlayerId,
         lastKilled = gameState.pendingKills.filter { id -> players.find { it.id == id }?.isAlive == false }, // Only show players whose death has been processed
+        townHallStrings = townHallStrings,
+        revealDeathsStrings = revealDeathsStrings,
     )
 
     val selectedPlayer by remember(playerState.selectedId, players) {
@@ -93,6 +129,7 @@ fun PlayerTownHall(
             onEvent = onEvent,
             currentPlayer = myPlayer,
             selectedPlayer = selectedPlayer!!,
+            strings = townHallModalStrings,
         )
     }
 }

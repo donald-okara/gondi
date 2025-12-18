@@ -22,6 +22,7 @@ import androidx.compose.material.icons.outlined.AutoStories
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -39,9 +40,20 @@ import ke.don.game_play.shared.components.AccusationSection
 import ke.don.game_play.shared.components.AnnouncementSection
 import ke.don.game_play.shared.components.PlayersGrid
 import ke.don.game_play.shared.components.RevealDeathModal
-import ke.don.resources.Resources
-import org.jetbrains.compose.resources.stringResource
+import ke.don.game_play.shared.components.RevealDeathsStrings
 import kotlin.time.ExperimentalTime
+
+@Immutable
+data class SharedTownHallStrings(
+    val sessionOver: String,
+    val proceed: String,
+    val goToCourt: String,
+    val noAccusations: String,
+    val vote: String,
+    val noSeconder: (String) -> String,
+    val exoneratePlayer: (String) -> String,
+    val isPlayerGuilty: (String) -> String,
+)
 
 @OptIn(ExperimentalTime::class)
 @Composable
@@ -67,6 +79,8 @@ fun SharedTownHall(
     isCourt: Boolean = false,
     announcements: List<Announcement> = emptyList(),
     modifier: Modifier = Modifier,
+    townHallStrings: SharedTownHallStrings,
+    revealDeathsStrings: RevealDeathsStrings,
 ) {
     val savedPlayer by remember(players, lastSaved) {
         derivedStateOf { players.find { player -> player.id == lastSaved } }
@@ -87,8 +101,8 @@ fun SharedTownHall(
                         isCourt ->
                             CallToActionSection(
                                 modifier = Modifier,
-                                explanationText = stringResource(Resources.Strings.GamePlay.SESSION_OVER),
-                                callToActionText = stringResource(Resources.Strings.GamePlay.PROCEED),
+                                explanationText = townHallStrings.sessionOver,
+                                callToActionText = townHallStrings.proceed,
                                 componentType = ComponentType.Primary,
                                 onActionClick = proceed,
                                 enabled = actingPlayers.isEmpty(),
@@ -97,8 +111,8 @@ fun SharedTownHall(
                         seconder != null ->
                             CallToActionSection(
                                 modifier = Modifier,
-                                explanationText = stringResource(Resources.Strings.GamePlay.GO_TO_COURT),
-                                callToActionText = stringResource(Resources.Strings.GamePlay.PROCEED),
+                                explanationText = townHallStrings.goToCourt,
+                                callToActionText = townHallStrings.proceed,
                                 componentType = ComponentType.Primary,
                                 onActionClick = proceed,
                                 enabled = true,
@@ -107,8 +121,8 @@ fun SharedTownHall(
                         accused != null ->
                             CallToActionSection(
                                 modifier = Modifier,
-                                explanationText = Resources.Strings.GamePlay.noSeconder(accused.name),
-                                callToActionText = Resources.Strings.GamePlay.exoneratePlayer(accused.name),
+                                explanationText = townHallStrings.noSeconder(accused.name),
+                                callToActionText = townHallStrings.exoneratePlayer(accused.name),
                                 componentType = ComponentType.Primary,
                                 onActionClick = exoneratePlayer,
                                 enabled = true,
@@ -117,8 +131,8 @@ fun SharedTownHall(
                         else ->
                             CallToActionSection(
                                 modifier = Modifier,
-                                explanationText = stringResource(Resources.Strings.GamePlay.NO_ACCUSATIONS),
-                                callToActionText = stringResource(Resources.Strings.GamePlay.PROCEED),
+                                explanationText = townHallStrings.noAccusations,
+                                callToActionText = townHallStrings.proceed,
                                 componentType = ComponentType.Primary,
                                 onActionClick = proceed,
                                 enabled = actingPlayers.isEmpty(),
@@ -129,8 +143,8 @@ fun SharedTownHall(
                 if (isCourt && accused != null) {
                     CallToActionSection(
                         modifier = Modifier,
-                        explanationText = Resources.Strings.GamePlay.isPlayerGuilty(accused.name),
-                        callToActionText = stringResource(Resources.Strings.GamePlay.VOTE),
+                        explanationText = townHallStrings.isPlayerGuilty(accused.name),
+                        callToActionText = townHallStrings.vote,
                         componentType = ComponentType.Primary,
                         onActionClick = onVote,
                         enabled = true,
@@ -194,6 +208,7 @@ fun SharedTownHall(
             savedPlayer = savedPlayer,
             killedPlayers = killedPlayers,
             currentPhase = GamePhase.TOWN_HALL,
+            strings = revealDeathsStrings,
         )
     }
 }

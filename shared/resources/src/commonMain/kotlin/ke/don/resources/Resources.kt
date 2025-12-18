@@ -154,6 +154,19 @@ object Resources {
             val WAITING_FOR_SECOND = Res.string.waiting_for_second
             fun accuses(accuser: String, accused: String) = "$accuser accuses $accused"
             val SECOND_THE_ACCUSATION = Res.string.second_the_accusation
+
+            val LEAVE_GAME_TITLE = Res.string.leave_game_title
+            val LEAVE_GAME_MESSAGE = Res.string.leave_game_message
+            val LEAVE_GAME_CHECKLIST_1 = Res.string.leave_game_checklist_1
+            val LEAVE_GAME_CHECKLIST_2 = Res.string.leave_game_checklist_2
+            val CONNECTING = Res.string.connecting
+            val SOMETHING_WENT_WRONG = Res.string.something_went_wrong
+            val LEAVE_GAME = Res.string.leave_game
+            val GAME_DOESNT_EXIST_ANYMORE = Res.string.game_doesnt_exist_anymore
+            val LEAVE_GAME_CHECKLIST_MODERATOR = Res.string.leave_game_checklist_moderator
+            val NEW_GAME = Res.string.new_game
+            val PROCEED_TO_TOWN_HALL = Res.string.proceed_to_town_hall
+            val SOMEONE_HAS_NOT_DONE_THEIR_PART_YET = Res.string.someone_has_not_done_their_part_yet
         }
     }
 }

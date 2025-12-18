@@ -28,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,10 +44,22 @@ import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.state.GamePhase
 import ke.don.domain.state.Player
-import ke.don.resources.Resources
 import ke.don.utils.capitaliseFirst
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+
+@Immutable
+data class RevealDeathsStrings(
+    val nightResultsTitle: String,
+    val courtRulingTitle: String,
+    val nightResultsDescription: String,
+    val courtRulingDescription: String,
+    val killedPlayerContentDescription: String,
+    val savedPlayerContentDescription: String,
+    val eliminatedPlayerMessage: (String) -> String,
+    val savedBySaviourMessage: (String) -> String,
+    val courtRulingText: String,
+    val theDoctorText: String,
+)
 
 @Composable
 fun RevealDeathModal(
@@ -54,6 +67,7 @@ fun RevealDeathModal(
     savedPlayer: Player?,
     currentPhase: GamePhase,
     killedPlayers: List<Player>,
+    strings: RevealDeathsStrings,
     onDismiss: () -> Unit,
 ) {
     DialogToken(
@@ -64,6 +78,7 @@ fun RevealDeathModal(
             savedPlayer = savedPlayer,
             currentPhase = currentPhase,
             killedPlayers = killedPlayers,
+            strings = strings,
         )
     }
 }
@@ -74,10 +89,11 @@ fun RevealDeathsComponent(
     savedPlayer: Player? = null,
     currentPhase: GamePhase,
     killedPlayers: List<Player> = emptyList(),
+    strings: RevealDeathsStrings,
 ) {
     val icon = if (currentPhase == GamePhase.TOWN_HALL) Icons.Default.Bedtime else Icons.Default.Gavel
-    val title = if (currentPhase == GamePhase.TOWN_HALL) stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS) else stringResource(Resources.Strings.GamePlay.COURT_RULING)
-    val message = if (currentPhase == GamePhase.TOWN_HALL) stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS_DESCRIPTION) else stringResource(Resources.Strings.GamePlay.COURT_RULING_DESCRIPTION)
+    val title = if (currentPhase == GamePhase.TOWN_HALL) strings.nightResultsTitle else strings.courtRulingTitle
+    val message = if (currentPhase == GamePhase.TOWN_HALL) strings.nightResultsDescription else strings.courtRulingDescription
 
     Column(
         modifier = modifier
@@ -130,6 +146,7 @@ fun RevealDeathsComponent(
                     player = it,
                     isSleep = currentPhase == GamePhase.SLEEP,
                     status = NightStatus.Killed,
+                    strings = strings,
                 )
             }
             savedPlayer?.let {
@@ -137,6 +154,7 @@ fun RevealDeathsComponent(
                     player = it,
                     isSleep = currentPhase == GamePhase.SLEEP,
                     status = NightStatus.Saved,
+                    strings = strings,
                 )
             }
         }
@@ -149,6 +167,7 @@ fun NightResultItem(
     player: Player,
     isSleep: Boolean,
     status: NightStatus,
+    strings: RevealDeathsStrings,
 ) {
     val action = when (status) {
         NightStatus.Killed -> ActionType.KILL
@@ -216,8 +235,8 @@ fun NightResultItem(
                     Icon(
                         painter = painterResource(action.painter!!),
                         contentDescription = when (status) {
-                            NightStatus.Killed -> stringResource(Resources.Strings.GamePlay.KILLED_PLAYER)
-                            NightStatus.Saved -> stringResource(Resources.Strings.GamePlay.SAVED_PLAYER)
+                            NightStatus.Killed -> strings.killedPlayerContentDescription
+                            NightStatus.Saved -> strings.savedPlayerContentDescription
                         },
                         tint = action.color(),
                         modifier = Modifier.size(14.dp),
@@ -245,11 +264,11 @@ fun NightResultItem(
                         modifier = Modifier.size(16.dp),
                     )
 
-                    val saviour = if (isSleep) stringResource(Resources.Strings.GamePlay.COURT_RULING) else stringResource(Resources.Strings.GamePlay.THE_DOCTOR)
+                    val saviour = if (isSleep) strings.courtRulingText else strings.theDoctorText
                     Text(
                         text = when (status) {
-                            NightStatus.Killed -> Resources.Strings.GamePlay.eliminatedPlayer(player.role?.name?.capitaliseFirst() ?: "")
-                            NightStatus.Saved -> Resources.Strings.GamePlay.savedBySaviour(saviour)
+                            NightStatus.Killed -> strings.eliminatedPlayerMessage(player.role?.name?.capitaliseFirst() ?: "")
+                            NightStatus.Saved -> strings.savedBySaviourMessage(saviour)
                         },
                         style = MaterialTheme.typography.bodySmall.copy(
                             color = action.color().copy(alpha = 0.9f),

@@ -15,6 +15,9 @@ import androidx.compose.ui.Modifier
 import ke.don.domain.state.GameState
 import ke.don.domain.state.Player
 import ke.don.game_play.shared.SharedGameOver
+import ke.don.game_play.shared.SharedGameOverStrings
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PlayerGameOver(
@@ -25,6 +28,14 @@ fun PlayerGameOver(
 ) {
     val winningFaction = remember { gameState.winners } ?: return
 
+    val strings = SharedGameOverStrings(
+        gondiWinRemark = stringResource(Resources.Strings.GamePlay.GONDI_WIN_REMARK),
+        villagerWinRemark = stringResource(Resources.Strings.GamePlay.VILLAGER_WIN_REMARK),
+        gondiWin = stringResource(Resources.Strings.GamePlay.GONDIS_WIN),
+        villagersWin = stringResource(Resources.Strings.GamePlay.VILLAGERS_WIN),
+        playAgain = stringResource(Resources.Strings.GamePlay.PLAY_AGAIN),
+    )
+
     SharedGameOver(
         modifier = modifier,
         isModerator = false,
@@ -32,5 +43,6 @@ fun PlayerGameOver(
         myPlayer = myPlayer,
         winnerFaction = winningFaction,
         playAgain = {},
+        strings = strings,
     )
 }

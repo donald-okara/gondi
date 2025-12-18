@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,9 +30,15 @@ import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.Faction
 import ke.don.domain.state.Player
 import ke.don.game_play.shared.components.GameOverGrid
-import ke.don.resources.Resources
-import ke.don.utils.capitaliseFirst
-import org.jetbrains.compose.resources.stringResource
+
+@Immutable
+data class SharedGameOverStrings(
+    val gondiWinRemark: String,
+    val villagerWinRemark: String,
+    val gondiWin: String,
+    val villagersWin: String,
+    val playAgain: String,
+)
 
 @Composable
 fun SharedGameOver(
@@ -41,14 +48,12 @@ fun SharedGameOver(
     myPlayer: Player,
     winnerFaction: Faction,
     playAgain: () -> Unit = {},
+    strings: SharedGameOverStrings,
 ) {
-    val gondiRemark = stringResource(Resources.Strings.GamePlay.GONDI_WIN_REMARK)
-    val villagerRemark = stringResource(Resources.Strings.GamePlay.VILLAGER_WIN_REMARK)
-
     val remark = remember(winnerFaction) {
         when (winnerFaction) {
-            Faction.GONDI -> gondiRemark
-            Faction.VILLAGER -> villagerRemark
+            Faction.GONDI -> strings.gondiWinRemark
+            Faction.VILLAGER -> strings.villagerWinRemark
             Faction.NEUTRAL -> ""
         }
     }
@@ -66,8 +71,8 @@ fun SharedGameOver(
             ) {
                 Text(
                     text = when (winnerFaction) {
-                        Faction.GONDI -> stringResource(Resources.Strings.GamePlay.GONDIS_WIN)
-                        Faction.VILLAGER -> stringResource(Resources.Strings.GamePlay.VILLAGERS_WIN)
+                        Faction.GONDI -> strings.gondiWin
+                        Faction.VILLAGER -> strings.villagersWin
                         Faction.NEUTRAL -> ""
                     },
                     style = MaterialTheme.typography.displayMedium,
@@ -92,7 +97,7 @@ fun SharedGameOver(
                     buttonType = if (winnerFaction == Faction.GONDI) ComponentType.Error else ComponentType.Primary,
                     onClick = playAgain,
                 ) {
-                    Text(stringResource(Resources.Strings.GamePlay.PLAY_AGAIN))
+                    Text(strings.playAgain)
                 }
             }
         }

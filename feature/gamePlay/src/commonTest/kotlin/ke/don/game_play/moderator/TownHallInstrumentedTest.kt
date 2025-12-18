@@ -53,6 +53,8 @@ class TownHallInstrumentedTest {
     @OptIn(ExperimentalTime::class)
     @Test
     fun revealDeaths_showsSavedPlayers() = runComposeUiTest {
+        val nightResultsText = mutableStateOf("")
+        val savedPlayerText = mutableStateOf("")
         val rules = TestGameRules(this)
         rules.setupDefaults()
         val selectedId = "2"
@@ -68,8 +70,6 @@ class TownHallInstrumentedTest {
                 revealDeaths = true,
             ),
         )
-        val nightResultsText = mutableStateOf("")
-        val savedPlayerText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
@@ -98,6 +98,7 @@ class TownHallInstrumentedTest {
     @OptIn(ExperimentalTime::class)
     @Test
     fun proceed_MovesToCourtWhenAccusationAndSecondArePresent() = runComposeUiTest {
+        val actionText = mutableStateOf("")
         val rules = TestGameRules(this)
         rules.setupDefaults()
 
@@ -122,15 +123,12 @@ class TownHallInstrumentedTest {
             ),
         )
 
-        val actionText = mutableStateOf("")
-
         rules.setContent {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val moderatorState by rules.moderatorState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
-
                 actionText.value = stringResource(Resources.Strings.GamePlay.PROCEED)
 
                 fun onEvent(event: ModeratorHandler) {
@@ -190,6 +188,7 @@ class TownHallInstrumentedTest {
     @Test
     fun proceed_MovesToSleepWhenAccusationAndSecondAreAbsent() = runComposeUiTest { // Reuse in moderator
 
+        val actionText = mutableStateOf("")
         val rules = TestGameRules(this)
         rules.setupDefaults()
         rules.setUpGameState(
@@ -199,7 +198,6 @@ class TownHallInstrumentedTest {
         )
 
         val selectedPhase = mutableStateOf<GamePhase?>(null)
-        val actionText = mutableStateOf("")
 
         rules.setContent {
             WithTestLifecycle {
@@ -207,7 +205,6 @@ class TownHallInstrumentedTest {
                 val moderatorState by rules.moderatorState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
-
                 actionText.value = stringResource(Resources.Strings.GamePlay.PROCEED)
 
                 fun onEvent(event: ModeratorHandler) {
@@ -256,6 +253,7 @@ class TownHallInstrumentedTest {
     @OptIn(ExperimentalTime::class)
     @Test
     fun exonerates_clearsAccused() = runComposeUiTest {
+        val waitingText = mutableStateOf("")
         val rules = TestGameRules(this)
         rules.setupDefaults()
 
@@ -273,15 +271,12 @@ class TownHallInstrumentedTest {
             ),
         )
 
-        val waitingText = mutableStateOf("")
-
         rules.setContent {
             WithTestLifecycle {
                 val gameState by rules.gameState.collectAsState()
                 val moderatorState by rules.moderatorState.collectAsState()
                 val players = rules.players
                 val currentPlayer = rules.currentPlayer
-
                 waitingText.value = stringResource(Resources.Strings.GamePlay.WAITING_FOR_SECOND)
 
                 fun onEvent(event: ModeratorHandler) {
