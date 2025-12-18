@@ -5,7 +5,7 @@
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="have_a_coffee">Have a coffee as we sync your profile</string>
 
-    <string name="empty_slot">"Empty Slot"</string>
+    <string name="empty_slot">Empty Slot</string>
 
     <!-- GamePlay -->
     <string name="player_roles_configuration">Player Roles Configuration</string>
