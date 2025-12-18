@@ -48,7 +48,7 @@ class HomeScreen : Screen {
         HomeContent(
             state = state,
             onEvent = ::extendedOnEvent,
-            navigateToAuth = { navigator.push(AuthScreen()) },
+            navigateToAuth = { navigator.replaceAll(AuthScreen()) },
         )
     }
 }
