@@ -44,7 +44,7 @@ class AuthScreen : Screen {
         LaunchedEffect(state.profile) {
             state.profile?.let { profile ->
                 if (profile.avatar == null) {
-                    navigator.push(OnboardingScreen())
+                    navigator.replaceAll(OnboardingScreen())
                 } else {
                     navigator.replaceAll(HomeScreen())
                 }
