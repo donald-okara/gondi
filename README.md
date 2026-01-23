@@ -4,6 +4,12 @@
        width="180" />
 </p>
 
+<p align="center">
+  <a href="https://play.google.com/store/apps/details?id=ke.don.gondi">
+    <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="80"/>
+  </a>
+</p>
+
 <h1 align="center">Gondi</h1>
 
 Gondi is a rendition of the group game "Mafia" where there are 2 Gondis (Mafia members), one accomplice, one detective, a doctor and the villagers
