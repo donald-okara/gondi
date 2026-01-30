@@ -86,7 +86,7 @@ fun RevealDeathsPreview(
                         savedBySaviourMessage = { saviour -> Resources.Strings.GamePlay.savedBySaviour(saviour) },
                         courtRulingText = stringResource(Resources.Strings.GamePlay.COURT_RULING),
                         theDoctorText = stringResource(Resources.Strings.GamePlay.THE_DOCTOR),
-                    )
+                    ),
                 )
             }
         }
