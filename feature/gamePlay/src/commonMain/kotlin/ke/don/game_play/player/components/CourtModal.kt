@@ -50,12 +50,12 @@ import ke.don.game_play.shared.components.ActionConfirmation
 
 @Immutable
 data class CourtModalStrings(
-    val dormantText: String,
-    val deadPlayerText: String,
-    val voteInnocentText: String,
-    val voteGuiltyText: String,
-    val confirmInnocentText: (String) -> String,
-    val confirmGuiltyText: (String) -> String,
+    val dormantText: String = "",
+    val deadPlayerText: String = "",
+    val voteInnocentText: String = "",
+    val voteGuiltyText: String = "",
+    val confirmInnocentText: (String) -> String = { "" },
+    val confirmGuiltyText: (String) -> String = { "" },
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +66,7 @@ fun CourtModal(
     currentPlayer: Player,
     selectedPlayer: Player,
     gameState: GameState,
-    strings: CourtModalStrings,
+    strings: CourtModalStrings = CourtModalStrings(),
     vote: Vote? = null,
 ) {
     var guiltyDecision by remember { mutableStateOf<Boolean?>(null) }

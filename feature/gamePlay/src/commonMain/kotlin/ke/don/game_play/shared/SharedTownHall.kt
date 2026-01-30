@@ -45,14 +45,14 @@ import kotlin.time.ExperimentalTime
 
 @Immutable
 data class SharedTownHallStrings(
-    val sessionOver: String,
-    val proceed: String,
-    val goToCourt: String,
-    val noAccusations: String,
-    val vote: String,
-    val noSeconder: (String) -> String,
-    val exoneratePlayer: (String) -> String,
-    val isPlayerGuilty: (String) -> String,
+    val sessionOver: String = "",
+    val proceed: String = "",
+    val goToCourt: String = "",
+    val noAccusations: String = "",
+    val vote: String = "",
+    val noSeconder: (String) -> String = { "" },
+    val exoneratePlayer: (String) -> String = { "" },
+    val isPlayerGuilty: (String) -> String = { "" },
 )
 
 @OptIn(ExperimentalTime::class)
@@ -79,8 +79,8 @@ fun SharedTownHall(
     isCourt: Boolean = false,
     announcements: List<Announcement> = emptyList(),
     modifier: Modifier = Modifier,
-    townHallStrings: SharedTownHallStrings,
-    revealDeathsStrings: RevealDeathsStrings,
+    townHallStrings: SharedTownHallStrings = SharedTownHallStrings(),
+    revealDeathsStrings: RevealDeathsStrings = RevealDeathsStrings(),
 ) {
     val savedPlayer by remember(players, lastSaved) {
         derivedStateOf { players.find { player -> player.id == lastSaved } }

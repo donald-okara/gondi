@@ -36,10 +36,10 @@ import kotlin.time.ExperimentalTime
 
 @Immutable
 data class MainModeratorContentStrings(
-    val leaveGameTitle: String,
-    val leaveGameMessage: String,
-    val leaveGameChecklist: List<String>,
-    val newGame: String,
+    val leaveGameTitle: String = "",
+    val leaveGameMessage: String = "",
+    val leaveGameChecklist: List<String> = emptyList(),
+    val newGame: String = "",
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,16 +53,15 @@ fun MainModeratorContent(
     votes: List<Vote>,
     onEvent: (ModeratorHandler) -> Unit,
     onBack: () -> Unit,
-) {
-    val strings = MainModeratorContentStrings(
+    strings: MainModeratorContentStrings = MainModeratorContentStrings(
         leaveGameTitle = stringResource(Resources.Strings.GamePlay.LEAVE_GAME_TITLE),
         leaveGameMessage = stringResource(Resources.Strings.GamePlay.LEAVE_GAME_MESSAGE),
         leaveGameChecklist = listOf(
             stringResource(Resources.Strings.GamePlay.LEAVE_GAME_CHECKLIST_MODERATOR),
         ),
         newGame = stringResource(Resources.Strings.GamePlay.NEW_GAME),
-    )
-
+    ),
+) {
     ScaffoldToken(
         modifier = modifier,
         navigationIcon = NavigationIcon.Back { onEvent(ModeratorHandler.ShowLeaveDialog) },

@@ -28,6 +28,9 @@ import ke.don.domain.state.Player
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.game_play.shared.components.RevealDeathsComponent
+import ke.don.game_play.shared.components.RevealDeathsStrings
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 
 @DevicePreviews
 @Composable
@@ -72,7 +75,18 @@ fun RevealDeathsPreview(
                 RevealDeathsComponent(
                     savedPlayer = savedPlayer,
                     currentPhase = GamePhase.SLEEP,
-                    // killedPlayers = deadPlayers
+                    strings = RevealDeathsStrings(
+                        nightResultsTitle = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS),
+                        courtRulingTitle = stringResource(Resources.Strings.GamePlay.COURT_RULING),
+                        nightResultsDescription = stringResource(Resources.Strings.GamePlay.NIGHT_RESULTS_DESCRIPTION),
+                        courtRulingDescription = stringResource(Resources.Strings.GamePlay.COURT_RULING_DESCRIPTION),
+                        killedPlayerContentDescription = stringResource(Resources.Strings.GamePlay.KILLED_PLAYER),
+                        savedPlayerContentDescription = stringResource(Resources.Strings.GamePlay.SAVED_PLAYER),
+                        eliminatedPlayerMessage = { role -> Resources.Strings.GamePlay.eliminatedPlayer(role) },
+                        savedBySaviourMessage = { saviour -> Resources.Strings.GamePlay.savedBySaviour(saviour) },
+                        courtRulingText = stringResource(Resources.Strings.GamePlay.COURT_RULING),
+                        theDoctorText = stringResource(Resources.Strings.GamePlay.THE_DOCTOR),
+                    )
                 )
             }
         }

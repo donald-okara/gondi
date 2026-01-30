@@ -41,8 +41,8 @@ import ke.don.game_play.shared.components.RevealDeathsStrings
 
 @Immutable
 data class SharedSleepStrings(
-    val proceed: String,
-    val showRules: String,
+    val proceed: String = "",
+    val showRules: String = "",
 )
 
 @Composable
@@ -62,8 +62,8 @@ fun SharedSleep(
     onSelectPlayer: (String) -> Unit,
     players: List<Player>,
     selectedPlayers: List<SelectedPlayer> = emptyList(),
-    strings: SharedSleepStrings,
-    revealDeathsStrings: RevealDeathsStrings,
+    strings: SharedSleepStrings = SharedSleepStrings(),
+    revealDeathsStrings: RevealDeathsStrings = RevealDeathsStrings(),
 ) {
     val lastAccusedPlayer by remember(lastAccused, players) {
         derivedStateOf { lastAccused?.let { accusedId -> players.find { it.id == accusedId } } }

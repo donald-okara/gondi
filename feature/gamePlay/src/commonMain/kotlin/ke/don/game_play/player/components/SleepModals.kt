@@ -43,13 +43,13 @@ import ke.don.game_play.shared.components.ModalActions
 
 @Immutable
 data class SleepModalStrings(
-    val gondiConfirmation: (String) -> String,
-    val doctorConfirmation: (String) -> String,
-    val detectiveConfirmation: (String) -> String,
-    val gondiDormant: (String) -> String,
-    val doctorDormant: (String) -> String,
-    val detectiveDormant: (String) -> String,
-    val defaultDormant: (String) -> String,
+    val gondiConfirmation: (String) -> String = { "" },
+    val doctorConfirmation: (String) -> String = { "" },
+    val detectiveConfirmation: (String) -> String = { "" },
+    val gondiDormant: (String) -> String = { "" },
+    val doctorDormant: (String) -> String = { "" },
+    val detectiveDormant: (String) -> String = { "" },
+    val defaultDormant: (String) -> String = { "" },
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,7 +60,7 @@ fun SleepModal(
     currentPlayer: Player,
     selectedPlayer: Player,
     gameState: GameState,
-    strings: SleepModalStrings,
+    strings: SleepModalStrings = SleepModalStrings(),
 ) {
     var showConfirmation by remember { mutableStateOf(false) }
 
