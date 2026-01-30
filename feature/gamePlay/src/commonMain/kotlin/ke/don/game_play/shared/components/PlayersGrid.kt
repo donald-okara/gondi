@@ -74,7 +74,7 @@ fun PlayersGrid(
                 .thenByDescending { it.isAlive }, // Rule 5: Alive players first
 
         )
-    }.filterNot { player -> player.role == Role.MODERATOR || player.role == null }
+    }.filterNot { player -> player.role == Role.MODERATOR }
 
     val playersSize = sortedPlayers.size
 

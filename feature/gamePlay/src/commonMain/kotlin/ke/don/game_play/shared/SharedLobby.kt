@@ -50,14 +50,14 @@ import kotlin.time.ExperimentalTime
 
 @Immutable
 data class SharedLobbyStrings(
-    val readyToBegin: String,
-    val startGame: String,
-    val waitingForMorePlayers: String,
-    val roleLockWarning: String,
-    val moderatorPanel: String,
-    val showRules: String,
-    val playersInLobby: String,
-    val startWithPlayers: (Int) -> String,
+    val readyToBegin: String = "",
+    val startGame: String = "",
+    val waitingForMorePlayers: String = "",
+    val roleLockWarning: String = "",
+    val moderatorPanel: String = "",
+    val showRules: String = "",
+    val playersInLobby: String = "",
+    val startWithPlayers: (Int) -> String = { "" },
 )
 
 @Composable
@@ -71,7 +71,7 @@ fun SharedLobby(
     startGame: () -> Unit = {},
     announcements: List<Announcement> = emptyList(),
     onShowRules: () -> Unit = {},
-    strings: SharedLobbyStrings,
+    strings: SharedLobbyStrings = SharedLobbyStrings(),
 ) {
     val nonModeratorPlayers = players.filter { it.role != Role.MODERATOR }
     val alivePlayers = nonModeratorPlayers

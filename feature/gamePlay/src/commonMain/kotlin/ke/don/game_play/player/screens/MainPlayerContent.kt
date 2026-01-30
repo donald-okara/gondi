@@ -49,10 +49,10 @@ import kotlin.time.ExperimentalTime
 
 @Immutable
 data class MainPlayerContentStrings(
-    val leaveGameTitle: String,
-    val leaveGameMessage: String,
-    val leaveGameChecklist: List<String>,
-    val connecting: String,
+    val leaveGameTitle: String = "",
+    val leaveGameMessage: String = "",
+    val leaveGameChecklist: List<String> = emptyList(),
+    val connecting: String = "",
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,8 +66,7 @@ fun MainPlayerContent(
     votes: List<Vote>,
     onEvent: (PlayerHandler) -> Unit,
     onBack: () -> Unit,
-) {
-    val strings = MainPlayerContentStrings(
+    strings: MainPlayerContentStrings = MainPlayerContentStrings(
         leaveGameTitle = stringResource(Resources.Strings.GamePlay.LEAVE_GAME_TITLE),
         leaveGameMessage = stringResource(Resources.Strings.GamePlay.LEAVE_GAME_MESSAGE),
         leaveGameChecklist = listOf(
@@ -75,8 +74,8 @@ fun MainPlayerContent(
             stringResource(Resources.Strings.GamePlay.LEAVE_GAME_CHECKLIST_2),
         ),
         connecting = stringResource(Resources.Strings.GamePlay.CONNECTING),
-    )
-
+    ),
+) {
     ScaffoldToken(
         modifier = modifier,
         navigationIcon = NavigationIcon.Back {
@@ -120,14 +119,14 @@ fun MainPlayerContent(
 
 @Immutable
 data class LoadingStateStrings(
-    val connecting: String,
+    val connecting: String = "",
 )
 
 @Immutable
 data class ErrorStateStrings(
-    val title: String,
-    val description: (String) -> String,
-    val leaveGame: String,
+    val title: String = "",
+    val description: (String) -> String = { "" },
+    val leaveGame: String = "",
 )
 
 @OptIn(ExperimentalTime::class)
@@ -141,16 +140,15 @@ private fun ContentSwitcher(
     votes: List<Vote>,
     onEvent: (PlayerHandler) -> Unit,
     onBack: () -> Unit,
-) {
-    val loadingStateStrings = LoadingStateStrings(
+    loadingStateStrings: LoadingStateStrings = LoadingStateStrings(
         connecting = stringResource(Resources.Strings.GamePlay.CONNECTING),
-    )
-    val errorStateStrings = ErrorStateStrings(
+    ),
+    errorStateStrings: ErrorStateStrings = ErrorStateStrings(
         title = stringResource(Resources.Strings.GamePlay.SOMETHING_WENT_WRONG),
         description = { Resources.Strings.GamePlay.gameDoesntExist(error = it) },
         leaveGame = stringResource(Resources.Strings.GamePlay.LEAVE_GAME),
-    )
-
+    ),
+) {
     AnimatedContent(
         targetState = gameState?.phase to playerState.connectionStatus,
         label = "Game State",
@@ -240,7 +238,7 @@ private fun ContentSwitcher(
 @Composable
 private fun LoadingState(
     modifier: Modifier = Modifier,
-    strings: LoadingStateStrings,
+    strings: LoadingStateStrings = LoadingStateStrings(),
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -269,7 +267,7 @@ private fun ErrorState(
     modifier: Modifier = Modifier,
     error: String,
     leave: () -> Unit,
-    strings: ErrorStateStrings,
+    strings: ErrorStateStrings = ErrorStateStrings(),
 ) {
     Box(
         modifier = modifier.fillMaxSize(),

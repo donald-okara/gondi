@@ -40,7 +40,7 @@ class LanAdvertiserAndroid(
 
         registrationListener = object : NsdManager.RegistrationListener {
             override fun onServiceRegistered(info: NsdServiceInfo) {
-                logger.info("✅ Service registered: ${info.serviceName} on ${gameIdentity.serviceHost}:${gameIdentity.servicePort}")
+                logger.info("✅ Service registered: ${info.serviceName} on port ${gameIdentity.servicePort}")
             }
 
             override fun onRegistrationFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
@@ -57,7 +57,7 @@ class LanAdvertiserAndroid(
         }
 
         try {
-            logger.info("📡 Registering service on ${gameIdentity.serviceHost}:${gameIdentity.servicePort} (${gameIdentity.serviceType})")
+            logger.info("📡 Registering service on port ${gameIdentity.servicePort}")
             nsdManager.registerService(serviceInfo, NsdManager.PROTOCOL_DNS_SD, registrationListener)
         } catch (e: Exception) {
             logger.error("💥 Failed to start advertiser: ${e.message}")

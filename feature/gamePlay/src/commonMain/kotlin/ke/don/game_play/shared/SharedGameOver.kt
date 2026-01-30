@@ -33,11 +33,11 @@ import ke.don.game_play.shared.components.GameOverGrid
 
 @Immutable
 data class SharedGameOverStrings(
-    val gondiWinRemark: String,
-    val villagerWinRemark: String,
-    val gondiWin: String,
-    val villagersWin: String,
-    val playAgain: String,
+    val gondiWinRemark: String = "",
+    val villagerWinRemark: String = "",
+    val gondiWin: String = "",
+    val villagersWin: String = "",
+    val playAgain: String = "",
 )
 
 @Composable
@@ -48,7 +48,7 @@ fun SharedGameOver(
     myPlayer: Player,
     winnerFaction: Faction,
     playAgain: () -> Unit = {},
-    strings: SharedGameOverStrings,
+    strings: SharedGameOverStrings = SharedGameOverStrings(),
 ) {
     val remark = remember(winnerFaction) {
         when (winnerFaction) {

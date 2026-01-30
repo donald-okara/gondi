@@ -49,16 +49,16 @@ import org.jetbrains.compose.resources.painterResource
 
 @Immutable
 data class RevealDeathsStrings(
-    val nightResultsTitle: String,
-    val courtRulingTitle: String,
-    val nightResultsDescription: String,
-    val courtRulingDescription: String,
-    val killedPlayerContentDescription: String,
-    val savedPlayerContentDescription: String,
-    val eliminatedPlayerMessage: (String) -> String,
-    val savedBySaviourMessage: (String) -> String,
-    val courtRulingText: String,
-    val theDoctorText: String,
+    val nightResultsTitle: String = "",
+    val courtRulingTitle: String = "",
+    val nightResultsDescription: String = "",
+    val courtRulingDescription: String = "",
+    val killedPlayerContentDescription: String = "",
+    val savedPlayerContentDescription: String = "",
+    val eliminatedPlayerMessage: (String) -> String = { "" },
+    val savedBySaviourMessage: (String) -> String = { "" },
+    val courtRulingText: String = "",
+    val theDoctorText: String = "",
 )
 
 @Composable
@@ -67,7 +67,7 @@ fun RevealDeathModal(
     savedPlayer: Player?,
     currentPhase: GamePhase,
     killedPlayers: List<Player>,
-    strings: RevealDeathsStrings,
+    strings: RevealDeathsStrings = RevealDeathsStrings(),
     onDismiss: () -> Unit,
 ) {
     DialogToken(
@@ -89,7 +89,7 @@ fun RevealDeathsComponent(
     savedPlayer: Player? = null,
     currentPhase: GamePhase,
     killedPlayers: List<Player> = emptyList(),
-    strings: RevealDeathsStrings,
+    strings: RevealDeathsStrings = RevealDeathsStrings(),
 ) {
     val icon = if (currentPhase == GamePhase.TOWN_HALL) Icons.Default.Bedtime else Icons.Default.Gavel
     val title = if (currentPhase == GamePhase.TOWN_HALL) strings.nightResultsTitle else strings.courtRulingTitle
