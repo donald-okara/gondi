@@ -311,7 +311,7 @@ private fun HomeEmptyOrErrorState(
                         emptyType = EmptyType.Error
                     ) {
                         ButtonToken(
-                            onClick = { onEvent(HomeIntentHandler.DiscoverGames) },
+                            onClick = { onEvent(HomeIntentHandler.RefreshFromEmpty) },
                             buttonType = ComponentType.Primary,
                         ) {
                             Text("Retry")
@@ -334,7 +334,7 @@ private fun HomeEmptyOrErrorState(
                         }
 
                         ButtonToken(
-                            onClick = { onEvent(HomeIntentHandler.DiscoverGames) },
+                            onClick = { onEvent(HomeIntentHandler.RefreshFromEmpty) },
                             buttonType = ComponentType.Inverse,
                         ) {
                             Text("Refresh Screen")
