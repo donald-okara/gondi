@@ -54,7 +54,7 @@ class HomeModel(
                 _uiState.update {
                     it.copy(
                         theme = theme ?: Theme.System,
-                        profile = profile ?: Profile()
+                        profile = profile ?: Profile(),
                     )
                 }
             }.collect {}
@@ -146,13 +146,15 @@ class HomeModel(
     fun refresh(fromEmpty: Boolean = false) {
         screenModelScope.launch {
             _uiState.update { state ->
-                if (fromEmpty)
+                if (fromEmpty) {
                     state.copy(
                         isRefreshingFromEmpty = true,
-                    ) else
+                    )
+                } else {
                     state.copy(
                         readStatus = ReadStatus.Refreshing,
                     )
+                }
             }
             delay(1000)
             discoverGames()

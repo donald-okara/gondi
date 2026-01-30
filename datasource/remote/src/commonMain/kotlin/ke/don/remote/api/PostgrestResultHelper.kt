@@ -98,7 +98,8 @@ val ErrorCategory.errorTitle
         ErrorCategory.PAYLOAD_TOO_LARGE -> "File is too large"
         ErrorCategory.SERVER -> "Something went wrong"
         ErrorCategory.SERIALIZATION,
-        ErrorCategory.DECODING -> "Data issue"
+        ErrorCategory.DECODING,
+        -> "Data issue"
         ErrorCategory.UNKNOWN -> "Something went wrong"
     }
 
@@ -109,14 +110,16 @@ fun Exception.toNetworkError(): NetworkError {
 
     val (category, userMessage) = when (this) {
         is UnresolvedAddressException,
-        is HttpRequestException ->
+        is HttpRequestException,
+        ->
             ErrorCategory.NO_INTERNET to "You appear to be offline. Check your connection and try again."
 
         is HttpRequestTimeoutException ->
             ErrorCategory.REQUEST_TIMEOUT to "This is taking longer than expected. Please try again."
 
         is ServerResponseException,
-        is ResponseException ->
+        is ResponseException,
+        ->
             ErrorCategory.SERVER to "We’re having trouble on our end. Please try again shortly."
 
         is SerializationException ->

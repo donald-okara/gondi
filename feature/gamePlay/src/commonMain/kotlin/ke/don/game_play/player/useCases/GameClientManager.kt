@@ -35,7 +35,6 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -79,7 +78,6 @@ class GameClientManager(
 
         val player = clientState.profileSnapshot.first()?.toPlayer()
             ?: error("Player must be loaded before connecting")
-
 
         while (attempt < maxRetries) {
             try {
