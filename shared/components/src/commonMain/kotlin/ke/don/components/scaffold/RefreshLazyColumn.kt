@@ -120,7 +120,6 @@ fun RefreshLazyColumn(
             content()
         }
     }
-
 }
 
 @Composable
@@ -189,7 +188,6 @@ fun OffsetLazyColumn(
         content()
     }
 }
-
 
 /**
  * A composable that displays the header for the pull-to-refresh action.

@@ -70,7 +70,7 @@ class LanServerJvm(
 
     override suspend fun start(identity: GameIdentity) {
         advertiser.stop()
-        val host =  "0.0.0.0"
+        val host = "0.0.0.0"
         val localIp = getLocalIpAddress() // advertise this to LAN
 
         server = embeddedServer(CIO, port = identity.servicePort, host = host) {

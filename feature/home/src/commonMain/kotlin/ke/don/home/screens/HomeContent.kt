@@ -12,17 +12,10 @@ package ke.don.home.screens
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
@@ -36,7 +29,6 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
 import ke.don.components.dialog.ConfirmationDialogToken
@@ -50,8 +42,6 @@ import ke.don.components.list_items.DropDownToken
 import ke.don.components.profile.ProfileImageToken
 import ke.don.components.profile.VersionComponent
 import ke.don.components.scaffold.NavigationIcon
-import ke.don.components.scaffold.OffsetLazyColumn
-import ke.don.components.scaffold.PullToRefreshBox
 import ke.don.components.scaffold.RefreshLazyColumn
 import ke.don.components.scaffold.ScaffoldToken
 import ke.don.components.scaffold.cardCrunchEffects
@@ -151,7 +141,7 @@ fun HomeContent(
         val displayStatus = when (state.readStatus) {
             is ReadStatus.Success,
             is ReadStatus.Refreshing,
-                -> ReadStatus.Success
+            -> ReadStatus.Success
 
             else -> state.readStatus
         }
@@ -169,7 +159,8 @@ fun HomeContent(
                 ReadStatus.Loading -> LoadingState()
 
                 is ReadStatus.Error,
-                ReadStatus.Empty ->
+                ReadStatus.Empty,
+                ->
                     HomeEmptyOrErrorState(
                         state = state,
                         onEvent = onEvent,
@@ -295,7 +286,7 @@ private fun HomeEmptyOrErrorState(
         ),
         onRefresh = {
             onEvent(HomeIntentHandler.RefreshFromEmpty)
-        }
+        },
     ) {
         item {
             Box(
@@ -303,13 +294,13 @@ private fun HomeEmptyOrErrorState(
                     isRefreshing = state.readStatus.isRefreshing,
                     pullProgress = pullState.distanceFraction,
                     index = 0,
-                )
+                ),
             ) {
                 if (isError) {
                     EmptyState(
                         title = "Something went wrong",
                         description = state.readStatus.message,
-                        emptyType = EmptyType.Error
+                        emptyType = EmptyType.Error,
                     ) {
                         ButtonToken(
                             onClick = { onEvent(HomeIntentHandler.RefreshFromEmpty) },
@@ -323,8 +314,8 @@ private fun HomeEmptyOrErrorState(
                         icon = Icons.Default.Casino,
                         title = "Start a New Adventure?",
                         description =
-                            "It looks a bit quiet around here. There are no active games nearby.\n" +
-                                    "Games are only discoverable on the same LAN.",
+                        "It looks a bit quiet around here. There are no active games nearby.\n" +
+                            "Games are only discoverable on the same LAN.",
                         emptyType = EmptyType.Empty,
                     ) {
                         ButtonToken(
@@ -365,7 +356,6 @@ private fun HomeEmptyOrErrorState(
         }
     }
 }
-
 
 @Composable
 private fun LoadingState(

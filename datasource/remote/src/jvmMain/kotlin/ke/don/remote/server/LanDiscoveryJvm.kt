@@ -60,16 +60,15 @@ class LanDiscoveryJvm : LanDiscovery {
                         }
 
                     val identity = parseGameIdentity(info)?.copy(
-                        serviceHost = host
+                        serviceHost = host,
                     ) ?: return
 
                     logger.info(
-                        "✅ Resolved ${identity.gameName} hosted by ${identity.moderatorName} at $host:${identity.servicePort}"
+                        "✅ Resolved ${identity.gameName} hosted by ${identity.moderatorName} at $host:${identity.servicePort}",
                     )
 
                     onDiscovered(identity)
                 }
-
             },
         )
 
