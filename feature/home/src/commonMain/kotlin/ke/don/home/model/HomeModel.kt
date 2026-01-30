@@ -51,7 +51,12 @@ class HomeModel(
                 themeRepository.theme,
                 profileStore.profileFlow,
             ) { theme, profile ->
-                _uiState.update { it.copy(theme = theme ?: Theme.System, profile = profile ?: Profile()) }
+                _uiState.update {
+                    it.copy(
+                        theme = theme ?: Theme.System,
+                        profile = profile ?: Profile()
+                    )
+                }
             }.collect {}
         }
     }
@@ -59,33 +64,38 @@ class HomeModel(
     fun onEvent(intent: HomeIntentHandler) {
         when (intent) {
             is HomeIntentHandler.Refresh -> refresh()
-            is HomeIntentHandler.RefreshFromEmpty -> refreshFromEmpty()
-            is HomeIntentHandler.DiscoverGames -> reloadFromEmpty()
+            is HomeIntentHandler.RefreshFromEmpty -> refresh(true)
+            is HomeIntentHandler.DiscoverGames -> loadInitialData()
             is HomeIntentHandler.ShowThemeModal -> _uiState.update { state ->
                 state.copy(
                     showThemeModal = !state.showThemeModal,
                 )
             }
+
             is HomeIntentHandler.ShowLogoutModal -> _uiState.update { state ->
                 state.copy(
                     showLogoutModal = !state.showLogoutModal,
                 )
             }
+
             is HomeIntentHandler.ShowProfileMenu -> _uiState.update { state ->
                 state.copy(
                     showProfileMenu = !state.showProfileMenu,
                 )
             }
+
             is HomeIntentHandler.ShowMenu -> _uiState.update { state ->
                 state.copy(
                     showMenu = !state.showMenu,
                 )
             }
+
             is HomeIntentHandler.ShowVersionMismatch -> _uiState.update { state ->
                 state.copy(
                     showVersionMismatch = intent.versionCompatibility,
                 )
             }
+
             is HomeIntentHandler.ShowNetworkChooser -> networkChooser.open()
             is HomeIntentHandler.SetTheme -> setTheme(intent.theme)
             is HomeIntentHandler.LogOut -> logOut(intent.navigateToAuth)
@@ -94,6 +104,7 @@ class HomeModel(
                     selectedGame = intent.game,
                 )
             }
+
             else -> {}
         }
     }
@@ -132,31 +143,23 @@ class HomeModel(
         }
     }
 
-    fun refresh() {
+    fun refresh(fromEmpty: Boolean = false) {
         screenModelScope.launch {
             _uiState.update { state ->
-                state.copy(
-                    readStatus = ReadStatus.Refreshing,
-                )
+                if (fromEmpty)
+                    state.copy(
+                        isRefreshingFromEmpty = true,
+                    ) else
+                    state.copy(
+                        readStatus = ReadStatus.Refreshing,
+                    )
             }
             delay(1000)
             discoverGames()
         }
     }
 
-    fun refreshFromEmpty() {
-        screenModelScope.launch {
-            _uiState.update { state ->
-                state.copy(
-                    isRefreshingFromEmpty = true,
-                )
-            }
-            delay(1000)
-            discoverGames()
-        }
-    }
-
-    fun reloadFromEmpty() {
+    fun loadInitialData() {
         screenModelScope.launch {
             _uiState.update { state ->
                 state.copy(
