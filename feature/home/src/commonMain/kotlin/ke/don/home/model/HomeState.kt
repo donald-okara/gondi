@@ -22,6 +22,7 @@ data class HomeState(
 
     val selectedGame: GameIdentity? = null,
     val readStatus: ReadStatus = ReadStatus.Loading,
+    val isRefreshingFromEmpty: Boolean = false,
     val showProfileMenu: Boolean = false,
     val showVersionMismatch: VersionCompatibility = VersionCompatibility.COMPATIBLE,
     val showMenu: Boolean = false,

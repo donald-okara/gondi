@@ -45,7 +45,7 @@ fun GameOverPreview(
                 role = Role.VILLAGER,
                 Avatar.Alexander,
                 background = AvatarBackground.PURPLE_LILAC,
-                isAlive = false
+                isAlive = false,
             ),
             Player(
                 id = "2",
@@ -53,21 +53,21 @@ fun GameOverPreview(
                 role = Role.VILLAGER,
                 Avatar.Christian,
                 background = AvatarBackground.PINK_HOT,
-                isAlive = false
+                isAlive = false,
             ),
             Player(
                 id = "3",
                 name = "David S. Pumpkins",
                 role = Role.GONDI,
                 Avatar.Amaya,
-                background = AvatarBackground.YELLOW_BANANA
+                background = AvatarBackground.YELLOW_BANANA,
             ),
             Player(
                 id = "4",
                 name = "Roseanne Roseannadanna",
                 role = Role.GONDI,
                 Avatar.Aidan,
-                background = AvatarBackground.GREEN_LEAFY
+                background = AvatarBackground.GREEN_LEAFY,
             ),
             Player(
                 id = "5",
@@ -75,7 +75,7 @@ fun GameOverPreview(
                 role = Role.VILLAGER,
                 Avatar.Kimberly,
                 background = AvatarBackground.ORANGE_CORAL,
-                isAlive = false
+                isAlive = false,
             ),
             Player(
                 id = "6",
@@ -83,21 +83,21 @@ fun GameOverPreview(
                 role = Role.VILLAGER,
                 Avatar.George,
                 background = AvatarBackground.PURPLE_AMETHYST,
-                isAlive = false
+                isAlive = false,
             ),
             Player(
                 id = "7",
                 name = "Hans",
                 role = Role.VILLAGER,
                 Avatar.Jocelyn,
-                background = AvatarBackground.GREEN_MINTY
+                background = AvatarBackground.GREEN_MINTY,
             ),
             Player(
                 id = "8",
                 name = "Franz",
                 role = Role.MODERATOR,
                 Avatar.Jameson,
-                background = AvatarBackground.YELLOW_GOLDEN
+                background = AvatarBackground.YELLOW_GOLDEN,
             ),
         )
     }
@@ -120,7 +120,7 @@ fun GameOverPreview(
                     gondiWin = stringResource(Resources.Strings.GamePlay.GONDIS_WIN),
                     villagersWin = stringResource(Resources.Strings.GamePlay.VILLAGERS_WIN),
                     playAgain = stringResource(Resources.Strings.GamePlay.PLAY_AGAIN),
-                )
+                ),
             )
         }
     }

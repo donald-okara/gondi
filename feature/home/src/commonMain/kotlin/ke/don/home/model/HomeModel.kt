@@ -59,6 +59,7 @@ class HomeModel(
     fun onEvent(intent: HomeIntentHandler) {
         when (intent) {
             is HomeIntentHandler.Refresh -> refresh()
+            is HomeIntentHandler.RefreshFromEmpty -> refreshFromEmpty()
             is HomeIntentHandler.DiscoverGames -> reloadFromEmpty()
             is HomeIntentHandler.ShowThemeModal -> _uiState.update { state ->
                 state.copy(
@@ -114,12 +115,14 @@ class HomeModel(
             _uiState.update { state ->
                 state.copy(
                     readStatus = state.games.toReadStatus(),
+                    isRefreshingFromEmpty = false,
                 )
             }
         } catch (e: Exception) {
             _uiState.update { state ->
                 state.copy(
                     readStatus = ReadStatus.Error(e.message.toString()),
+                    isRefreshingFromEmpty = false,
                 )
             }
             Matcha.showErrorToast(
@@ -134,6 +137,18 @@ class HomeModel(
             _uiState.update { state ->
                 state.copy(
                     readStatus = ReadStatus.Refreshing,
+                )
+            }
+            delay(1000)
+            discoverGames()
+        }
+    }
+
+    fun refreshFromEmpty() {
+        screenModelScope.launch {
+            _uiState.update { state ->
+                state.copy(
+                    isRefreshingFromEmpty = true,
                 )
             }
             delay(1000)

@@ -9,6 +9,7 @@
  */
 package ke.don.remote.api
 
+import io.github.jan.supabase.exceptions.HttpRequestException
 import io.github.jan.supabase.postgrest.result.PostgrestResult
 import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.ResponseException
@@ -89,36 +90,40 @@ inline fun <T> runCatchingNetwork(
 
 val ErrorCategory.errorTitle
     get() = when (this) {
-        ErrorCategory.REQUEST_TIMEOUT -> "Request Timeout"
-        ErrorCategory.UNAUTHORIZED -> "Unauthorized"
-        ErrorCategory.CONFLICT -> "Conflict"
-        ErrorCategory.TOO_MANY_REQUESTS -> "Too Many Requests"
-        ErrorCategory.NO_INTERNET -> "No Internet"
-        ErrorCategory.PAYLOAD_TOO_LARGE -> "Payload Too Large"
-        ErrorCategory.SERVER -> "Server Error"
-        ErrorCategory.SERIALIZATION -> "Data Error"
-        ErrorCategory.DECODING -> "Data Error"
-        ErrorCategory.UNKNOWN -> "Unknown Error"
+        ErrorCategory.REQUEST_TIMEOUT -> "Taking too long"
+        ErrorCategory.UNAUTHORIZED -> "Sign-in required"
+        ErrorCategory.CONFLICT -> "Action can’t be completed"
+        ErrorCategory.TOO_MANY_REQUESTS -> "Slow down a bit"
+        ErrorCategory.NO_INTERNET -> "You’re offline"
+        ErrorCategory.PAYLOAD_TOO_LARGE -> "File is too large"
+        ErrorCategory.SERVER -> "Something went wrong"
+        ErrorCategory.SERIALIZATION,
+        ErrorCategory.DECODING -> "Data issue"
+        ErrorCategory.UNKNOWN -> "Something went wrong"
     }
 
 fun Exception.toNetworkError(): NetworkError {
+    val logger = Logger("NetworkError")
+
+    logger.error("Error: $this")
+
     val (category, userMessage) = when (this) {
-        is UnresolvedAddressException ->
-            ErrorCategory.NO_INTERNET to "No internet connection"
+        is UnresolvedAddressException,
+        is HttpRequestException ->
+            ErrorCategory.NO_INTERNET to "You appear to be offline. Check your connection and try again."
 
         is HttpRequestTimeoutException ->
-            ErrorCategory.REQUEST_TIMEOUT to "The request took too long"
+            ErrorCategory.REQUEST_TIMEOUT to "This is taking longer than expected. Please try again."
 
         is ServerResponseException,
-        is ResponseException,
-        ->
-            ErrorCategory.SERVER to "Server error, please try again later"
+        is ResponseException ->
+            ErrorCategory.SERVER to "We’re having trouble on our end. Please try again shortly."
 
         is SerializationException ->
-            ErrorCategory.SERIALIZATION to "Something went wrong while processing data"
+            ErrorCategory.SERIALIZATION to "We ran into a problem reading the data."
 
         else ->
-            ErrorCategory.UNKNOWN to "An unexpected error occurred"
+            ErrorCategory.UNKNOWN to "Something went wrong. Please try again."
     }
 
     return NetworkError(
