@@ -27,6 +27,9 @@ import ke.don.domain.state.Player
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
 import ke.don.game_play.shared.SharedGameOver
+import ke.don.game_play.shared.SharedGameOverStrings
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @DevicePreviews
@@ -36,14 +39,66 @@ fun GameOverPreview(
 ) {
     val players = remember {
         listOf(
-            Player(id = "1", name = "Matt Foley", role = Role.VILLAGER, Avatar.Alexander, background = AvatarBackground.PURPLE_LILAC, isAlive = false),
-            Player(id = "2", name = "Stefon Zelesky", role = Role.VILLAGER, Avatar.Christian, background = AvatarBackground.PINK_HOT, isAlive = false),
-            Player(id = "3", name = "David S. Pumpkins", role = Role.GONDI, Avatar.Amaya, background = AvatarBackground.YELLOW_BANANA),
-            Player(id = "4", name = "Roseanne Roseannadanna", role = Role.GONDI, Avatar.Aidan, background = AvatarBackground.GREEN_LEAFY),
-            Player(id = "5", name = "Todd O'Connor", role = Role.VILLAGER, Avatar.Kimberly, background = AvatarBackground.ORANGE_CORAL, isAlive = false),
-            Player(id = "6", name = "Pat O'Neill", role = Role.VILLAGER, Avatar.George, background = AvatarBackground.PURPLE_AMETHYST, isAlive = false),
-            Player(id = "7", name = "Hans", role = Role.VILLAGER, Avatar.Jocelyn, background = AvatarBackground.GREEN_MINTY),
-            Player(id = "8", name = "Franz", role = Role.MODERATOR, Avatar.Jameson, background = AvatarBackground.YELLOW_GOLDEN),
+            Player(
+                id = "1",
+                name = "Matt Foley",
+                role = Role.VILLAGER,
+                Avatar.Alexander,
+                background = AvatarBackground.PURPLE_LILAC,
+                isAlive = false
+            ),
+            Player(
+                id = "2",
+                name = "Stefon Zelesky",
+                role = Role.VILLAGER,
+                Avatar.Christian,
+                background = AvatarBackground.PINK_HOT,
+                isAlive = false
+            ),
+            Player(
+                id = "3",
+                name = "David S. Pumpkins",
+                role = Role.GONDI,
+                Avatar.Amaya,
+                background = AvatarBackground.YELLOW_BANANA
+            ),
+            Player(
+                id = "4",
+                name = "Roseanne Roseannadanna",
+                role = Role.GONDI,
+                Avatar.Aidan,
+                background = AvatarBackground.GREEN_LEAFY
+            ),
+            Player(
+                id = "5",
+                name = "Todd O'Connor",
+                role = Role.VILLAGER,
+                Avatar.Kimberly,
+                background = AvatarBackground.ORANGE_CORAL,
+                isAlive = false
+            ),
+            Player(
+                id = "6",
+                name = "Pat O'Neill",
+                role = Role.VILLAGER,
+                Avatar.George,
+                background = AvatarBackground.PURPLE_AMETHYST,
+                isAlive = false
+            ),
+            Player(
+                id = "7",
+                name = "Hans",
+                role = Role.VILLAGER,
+                Avatar.Jocelyn,
+                background = AvatarBackground.GREEN_MINTY
+            ),
+            Player(
+                id = "8",
+                name = "Franz",
+                role = Role.MODERATOR,
+                Avatar.Jameson,
+                background = AvatarBackground.YELLOW_GOLDEN
+            ),
         )
     }
 
@@ -59,6 +114,13 @@ fun GameOverPreview(
                 myPlayer = players.first(),
                 winnerFaction = winningFaction,
                 isModerator = false,
+                strings = SharedGameOverStrings(
+                    gondiWinRemark = stringResource(Resources.Strings.GamePlay.GONDI_WIN_REMARK),
+                    villagerWinRemark = stringResource(Resources.Strings.GamePlay.VILLAGER_WIN_REMARK),
+                    gondiWin = stringResource(Resources.Strings.GamePlay.GONDIS_WIN),
+                    villagersWin = stringResource(Resources.Strings.GamePlay.VILLAGERS_WIN),
+                    playAgain = stringResource(Resources.Strings.GamePlay.PLAY_AGAIN),
+                )
             )
         }
     }

@@ -41,8 +41,8 @@ import ke.don.game_play.shared.components.ModalActions
 
 @Immutable
 data class TownHallModalStrings(
-    val alreadyOnTrial: String,
-    val accusePlayerConfirmation: (String) -> String,
+    val alreadyOnTrial: String = "",
+    val accusePlayerConfirmation: (String) -> String = { "" },
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +53,7 @@ fun TownHallModal(
     currentPlayer: Player,
     selectedPlayer: Player,
     gameState: GameState,
-    strings: TownHallModalStrings,
+    strings: TownHallModalStrings = TownHallModalStrings(),
 ) {
     var showConfirmation by remember { mutableStateOf(false) }
 
