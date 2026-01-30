@@ -222,6 +222,7 @@ private fun SuccessState(
     val pullState = rememberPullToRefreshState()
     RefreshLazyColumn(
         modifier = modifier.fillMaxSize(),
+        listModifier = Modifier.fillMaxSize(),
         isRefreshing = state.readStatus.isRefreshing,
         pullRefreshState = pullState,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small, Alignment.Top),
