@@ -35,6 +35,7 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -76,6 +77,10 @@ class GameClientManager(
     ): Result<Unit, LocalError> {
         var attempt = 0
 
+        val player = clientState.profileSnapshot.first()?.toPlayer()
+            ?: error("Player must be loaded before connecting")
+
+
         while (attempt < maxRetries) {
             try {
                 connectOnce(host, port)
@@ -89,6 +94,12 @@ class GameClientManager(
                     clientState.updatePlayerState { it.copy(connectionStatus = ReadStatus.Error(e.message ?: "Unknown")) }
                     logger.error("Connection failed after $maxRetries attempts: ${e.message}")
 
+                    player.captureEvent(
+                        event = "Connection failed",
+                        properties = mapOf(
+                            "error" to (e.message ?: "Connection error"),
+                        ),
+                    )
                     return Result.Error(
                         LocalError(
                             message = e.message.toString(),
@@ -118,10 +129,10 @@ class GameClientManager(
 
     private suspend fun connectOnce(host: String, port: Int) {
         session?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnecting"))
-        try {
-            val player = clientState.profileSnapshot.first()?.toPlayer()
-                ?: error("Player must be loaded before connecting")
+        val player = clientState.profileSnapshot.first()?.toPlayer()
+            ?: error("Player must be loaded before connecting")
 
+        try {
             ClientObject.client.webSocket("ws://$host:$port/game") {
                 session = this
                 logger.info("Connected ✅")
@@ -166,6 +177,7 @@ class GameClientManager(
                     ),
                 )
             }
+            throw e
         }
     }
 

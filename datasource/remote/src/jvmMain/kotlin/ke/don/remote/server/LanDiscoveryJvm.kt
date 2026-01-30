@@ -40,12 +40,7 @@ class LanDiscoveryJvm : LanDiscovery {
             object : ServiceListener {
                 override fun serviceAdded(event: ServiceEvent) {
                     logger.info("🟡 Service added: ${event.name}")
-                    jmdns?.getServiceInfo(normalizedType, event.name, true)?.let { info ->
-                        parseGameIdentity(info)?.let { identity ->
-                            logger.info("✅ Resolved ${identity.gameName} hosted by ${identity.moderatorName} at ${identity.serviceHost}:${identity.servicePort}")
-                            onDiscovered(identity)
-                        }
-                    }
+                    // Do nothing else here
                 }
 
                 override fun serviceRemoved(event: ServiceEvent) {
@@ -53,8 +48,28 @@ class LanDiscoveryJvm : LanDiscovery {
                 }
 
                 override fun serviceResolved(event: ServiceEvent) {
-                    logger.info("🔹 Service resolved: ${event.name}")
+                    val info = event.info
+                    logger.info("🟡 Service resolved: ${event.name} with info: $info")
+
+                    val host = info.inet4Addresses
+                        .firstOrNull()
+                        ?.hostAddress
+                        ?: run {
+                            logger.error("❌ No IPv4 address for ${event.name}")
+                            return
+                        }
+
+                    val identity = parseGameIdentity(info)?.copy(
+                        serviceHost = host
+                    ) ?: return
+
+                    logger.info(
+                        "✅ Resolved ${identity.gameName} hosted by ${identity.moderatorName} at $host:${identity.servicePort}"
+                    )
+
+                    onDiscovered(identity)
                 }
+
             },
         )
 
@@ -71,13 +86,13 @@ class LanDiscoveryJvm : LanDiscovery {
     }
 
     private fun parseGameIdentity(info: ServiceInfo): GameIdentity? {
-        val host = info.inet4Addresses.firstOrNull()?.hostAddress ?: return null
         val port = info.port
         val type = info.type
         val txt = info.propertyNames.toList().associateWith { info.getPropertyString(it) }
+        logger.info("Parsing GameIdentity from TXT: $txt")
 
         val id = txt["id"] ?: "Unknown"
-        val gameName = txt["gameName"] ?: "Unknown"
+        val gameName = txt["gameName"] ?: info.name ?: "Unknown"
         val moderatorName = txt["mod_name"] ?: "Unknown"
         val version = txt["version"] ?: "Unknown"
         val moderatorAvatar = txt["mod_avatar"]?.let { Avatar.fromValue(it) } ?: Avatar.George // fallback
@@ -85,7 +100,7 @@ class LanDiscoveryJvm : LanDiscovery {
 
         return GameIdentity(
             id = id,
-            serviceHost = host,
+            serviceHost = "",
             serviceType = type,
             servicePort = port,
             gameName = gameName,

@@ -41,7 +41,7 @@ suspend fun validateIntent(
             !players.all { it.role == null || it.role == Role.MODERATOR } ->
                 PhaseValidationResult.Error("Some players already have roles. Joining is only allowed before roles are assigned.")
             players.any { it.id == intent.player.id && it.isAlive.not() } ->
-                PhaseValidationResult.Error("You were eliminated or you left this game")
+                PhaseValidationResult.Error("You can't join because you're already eliminated; you can stay and spectate")
             players.any { it.id == intent.player.id && it.isAlive } ->
                 PhaseValidationResult.Error("You're already in the game!")
             gameState.lockJoin ->
