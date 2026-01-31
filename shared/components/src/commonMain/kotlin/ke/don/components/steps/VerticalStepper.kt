@@ -73,7 +73,7 @@ fun <T> VerticalStepItem(
             // Circle
             IconBox(
                 icon = step.icon ?: Icons.Outlined.Circle,
-                accentColor = blendedSurface,
+                accentColor = tint,
                 sizeInt = 30
             )
 

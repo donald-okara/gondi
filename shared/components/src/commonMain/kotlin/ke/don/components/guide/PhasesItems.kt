@@ -306,7 +306,7 @@ fun getNightSteps() = listOf(
         title = stringResource(Resources.Strings.Guide.GONDI_AWAKENING),
         description = stringResource(Resources.Strings.Guide.GONDI_AWAKENING_DESCRIPTION),
         icon = Icons.Outlined.ModeNight,
-        color = Color(0xFF6366F1)
+        color = Color(0xFF6E70EF)
     ),
     NightPhaseData(
         title = stringResource(Resources.Strings.Guide.THE_DOCTORS_VIGIL),

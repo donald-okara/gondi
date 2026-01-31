@@ -140,7 +140,7 @@ private fun ConductItem(
     ) {
         IconBox(
             icon = icon,
-            accentColor = MaterialTheme.colorScheme.onSurface,
+            accentColor = MaterialTheme.colorScheme.primary,
             sizeInt = 48
         )
 
