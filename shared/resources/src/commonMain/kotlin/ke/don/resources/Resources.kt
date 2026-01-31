@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.FollowTheSigns
 import androidx.compose.material.icons.outlined.Campaign
 import androidx.compose.material.icons.outlined.Group
-import androidx.compose.material.icons.outlined.Masks
 import androidx.compose.material.icons.outlined.ModeNight
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search

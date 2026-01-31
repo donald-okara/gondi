@@ -26,7 +26,7 @@ fun RolesPreview(
     @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
     DevicePreviewContainer(theme) {
-        ScaffoldToken{
+        ScaffoldToken {
             RolesList()
         }
     }
@@ -39,7 +39,7 @@ fun RulesContentPreview(
     @PreviewParameter(ThemeProvider::class) theme: Theme,
 ) {
     DevicePreviewContainer(theme) {
-        ScaffoldToken{
+        ScaffoldToken {
             RulesContent()
         }
     }

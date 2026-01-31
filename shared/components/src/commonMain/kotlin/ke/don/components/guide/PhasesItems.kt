@@ -19,12 +19,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Handshake
@@ -40,7 +38,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontStyle
@@ -60,7 +57,7 @@ data class NightPhaseData(
     val title: String,
     val description: String,
     val icon: ImageVector,
-    val color: Color
+    val color: Color,
 )
 
 @Composable
@@ -72,34 +69,34 @@ fun GamePhases(
             .fillMaxWidth()
             .padding(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         // Screen Title
         Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             PhaseChip(
                 label = stringResource(Resources.Strings.Guide.PHASE_1),
-                color = Color(0xFF6366F1)
+                color = Color(0xFF6366F1),
             )
             Spacer(Modifier.height(12.dp))
             Text(
                 text = stringResource(Resources.Strings.Guide.THE_SILENT_NIGHT),
                 style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 text = stringResource(Resources.Strings.Guide.EVERYONE_CLOSE_YOUR_EYES),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic,
             )
         }
 
         // Night Phase
         NightPhaseSection(
-            steps = getNightSteps()
+            steps = getNightSteps(),
         )
 
         // Day Phase
@@ -107,19 +104,18 @@ fun GamePhases(
     }
 }
 
-
 @Composable
 fun NightPhaseSection(
     steps: List<NightPhaseData>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     CardToken(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Column(
             modifier = Modifier
                 .padding(24.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             // Replaced LazyColumn with Column to avoid infinite height exception when nested in a scrollable parent
             Column {
@@ -130,20 +126,20 @@ fun NightPhaseSection(
                             data = data,
                             icon = data.icon,
                             color = data.color,
-                            label = data.title
-                        )
+                            label = data.title,
+                        ),
                     ) { stepData ->
                         Column {
                             Text(
                                 text = stepData.title,
                                 style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
                             )
                             Spacer(Modifier.height(4.dp))
                             Text(
                                 text = stepData.description,
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                     }
@@ -151,7 +147,6 @@ fun NightPhaseSection(
             }
         }
     }
-
 }
 
 @Composable
@@ -159,22 +154,22 @@ fun DayPhaseSection(modifier: Modifier = Modifier) {
     Column(modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             PhaseChip(
                 label = stringResource(Resources.Strings.Guide.PHASE_2),
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
             )
             Spacer(Modifier.height(12.dp))
             Text(
                 text = stringResource(Resources.Strings.Guide.THE_COURT_DAY),
                 style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
             Text(
                 text = stringResource(Resources.Strings.Guide.COURT_DAY_DESCRIPTION),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
@@ -184,18 +179,18 @@ fun DayPhaseSection(modifier: Modifier = Modifier) {
             Triple(
                 stringResource(Resources.Strings.Guide.ACCUSE_TITLE),
                 stringResource(Resources.Strings.Guide.ACCUSE_DESCRIPTION),
-                Icons.Outlined.RecordVoiceOver
+                Icons.Outlined.RecordVoiceOver,
             ),
             Triple(
                 stringResource(Resources.Strings.Guide.SECOND_TITLE),
                 stringResource(Resources.Strings.Guide.SECOND_DESCRIPTION),
-                Icons.Outlined.Handshake
+                Icons.Outlined.Handshake,
             ),
             Triple(
                 stringResource(Resources.Strings.Guide.VOTE_TITLE),
                 stringResource(Resources.Strings.Guide.VOTE_DESCRIPTION),
-                Icons.Outlined.HowToVote
-            )
+                Icons.Outlined.HowToVote,
+            ),
         )
 
         // Replaced LazyColumn with Column to avoid infinite height exception when nested in a scrollable parent
@@ -205,7 +200,7 @@ fun DayPhaseSection(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .heightIn(min = 200.dp, max = Theme.spacing.largeScreenSize)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             items(courtSteps) { (title, desc, icon) ->
                 CourtStepCard(title = title, description = desc, icon = icon)
@@ -223,7 +218,7 @@ fun CourtStepCard(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
-    icon: ImageVector
+    icon: ImageVector,
 ) {
     CardToken(
         modifier = modifier,
@@ -236,7 +231,7 @@ fun CourtStepCard(
             IconBox(
                 icon = icon,
                 accentColor = MaterialTheme.colorScheme.primary,
-                sizeInt = 64
+                sizeInt = 64,
             )
 
             Spacer(Modifier.width(16.dp))
@@ -250,10 +245,10 @@ fun CourtStepCard(
 
 @Composable
 fun ProTipCard(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     CardToken(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
@@ -265,19 +260,19 @@ fun ProTipCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(Icons.Outlined.TipsAndUpdates, null, tint = MaterialTheme.colorScheme.primary)
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = stringResource(Resources.Strings.Guide.PRO_TIP),
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
             Text(
                 text = stringResource(Resources.Strings.Guide.PRO_TIP_DESCRIPTION),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
@@ -288,14 +283,13 @@ fun PhaseChip(label: String, color: Color, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .background(color.copy(alpha = 0.2f), RoundedCornerShape(50))
-            .padding(horizontal = 12.dp, vertical = 4.dp)
-    )
-    {
+            .padding(horizontal = 12.dp, vertical = 4.dp),
+    ) {
         Text(
             text = label,
             color = color,
             fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.labelSmall
+            style = MaterialTheme.typography.labelSmall,
         )
     }
 }
@@ -306,18 +300,18 @@ fun getNightSteps() = listOf(
         title = stringResource(Resources.Strings.Guide.GONDI_AWAKENING),
         description = stringResource(Resources.Strings.Guide.GONDI_AWAKENING_DESCRIPTION),
         icon = Icons.Outlined.ModeNight,
-        color = Color(0xFF6E70EF)
+        color = Color(0xFF6E70EF),
     ),
     NightPhaseData(
         title = stringResource(Resources.Strings.Guide.THE_DOCTORS_VIGIL),
         description = stringResource(Resources.Strings.Guide.THE_DOCTORS_VIGIL_DESCRIPTION),
         icon = Icons.Outlined.Shield,
-        color = Color(0xFF00CED1)
+        color = Color(0xFF00CED1),
     ),
     NightPhaseData(
         title = stringResource(Resources.Strings.Guide.THE_INVESTIGATION),
         description = stringResource(Resources.Strings.Guide.THE_INVESTIGATION_DESCRIPTION),
         icon = Icons.Outlined.Visibility,
-        color = Color(0xFFFFBF00)
-    )
+        color = Color(0xFFFFBF00),
+    ),
 )

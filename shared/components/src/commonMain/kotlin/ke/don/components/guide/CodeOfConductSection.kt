@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
@@ -27,7 +26,6 @@ import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.NoSim
 import androidx.compose.material.icons.filled.SentimentSatisfied
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -67,7 +65,7 @@ fun CodeOfConductSection(
             IconBox(
                 icon = Icons.Default.Gavel,
                 accentColor = MaterialTheme.colorScheme.primary,
-                sizeInt = 64
+                sizeInt = 64,
             )
 
             Spacer(Modifier.height(Theme.spacing.large))
@@ -141,7 +139,7 @@ private fun ConductItem(
         IconBox(
             icon = icon,
             accentColor = MaterialTheme.colorScheme.primary,
-            sizeInt = 48
+            sizeInt = 48,
         )
 
         Column {

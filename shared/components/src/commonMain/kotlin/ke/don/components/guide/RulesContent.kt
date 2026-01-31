@@ -12,13 +12,10 @@ package ke.don.components.guide
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -60,7 +57,7 @@ fun RulesContent(
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top)
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top),
     ) {
         HorizontalStepper(
             steps = steps.map {
@@ -72,7 +69,7 @@ fun RulesContent(
                 scope.launch {
                     listState.animateScrollToItem(index)
                 }
-            }
+            },
         )
 
         LazyColumn(
@@ -82,13 +79,13 @@ fun RulesContent(
             contentPadding = PaddingValues(vertical = 32.dp),
             verticalArrangement = Arrangement.spacedBy(
                 MaterialTheme.spacing.large,
-                Alignment.Top
-            )
+                Alignment.Top,
+            ),
         ) {
             item { VictoryConditionsSection() } // index 0
-            item { RolesList() }             // index 1
-            item { GamePhases() }               // index 2
-            item { CodeOfConductSection() }     // index 3
+            item { RolesList() } // index 1
+            item { GamePhases() } // index 2
+            item { CodeOfConductSection() } // index 3
         }
     }
 }

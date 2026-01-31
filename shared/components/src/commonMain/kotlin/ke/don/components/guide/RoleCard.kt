@@ -13,21 +13,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,26 +32,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import ke.don.components.button.ComponentType
 import ke.don.components.card.CardToken
 import ke.don.components.dialog.DialogToken
 import ke.don.components.icon.IconBox
-import ke.don.components.icon.IconToken
-import ke.don.components.profile.AdaptiveIcon
 import ke.don.components.profile.color
-import ke.don.design.theme.SpacingType
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
-import ke.don.design.theme.spacingPaddingValues
 import ke.don.domain.gameplay.Faction
 import ke.don.domain.gameplay.Role
 import ke.don.resources.Resources
@@ -65,22 +54,20 @@ import ke.don.resources.description
 import ke.don.resources.icon
 import ke.don.resources.instructions
 import ke.don.utils.capitaliseFirst
-import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun VictoryConditionsSection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = stringResource(Resources.Strings.GamePlay.VICTORY_CONDITIONS),
             style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
 
         Spacer(Modifier.height(12.dp))
@@ -88,7 +75,7 @@ fun VictoryConditionsSection(
         Text(
             text = stringResource(Resources.Strings.GamePlay.GAME_OBJECTIVE_DESCRIPTION),
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
         Spacer(Modifier.height(32.dp))
@@ -100,14 +87,14 @@ fun VictoryConditionsSection(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .heightIn(min = 200.dp, max = Theme.spacing.largeScreenSize)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
-            item{
+            item {
                 VictoryConditionCard(
                     condition = villagersVictory(),
                 )
             }
-            item{
+            item {
                 VictoryConditionCard(
                     condition = gondiVictory(),
                 )
@@ -119,18 +106,17 @@ fun VictoryConditionsSection(
 @Composable
 fun VictoryConditionCard(
     condition: VictoryCondition,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     CardToken(
         modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
     ) {
         Column(Modifier.padding(24.dp)) {
-
             IconBox(
                 icon = condition.icon,
                 accentColor = condition.accentColor,
-                sizeInt = 64
+                sizeInt = 64,
             )
 
             Spacer(Modifier.height(16.dp))
@@ -138,7 +124,7 @@ fun VictoryConditionCard(
             Text(
                 text = condition.title,
                 style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             )
 
             Spacer(Modifier.height(12.dp))
@@ -146,7 +132,7 @@ fun VictoryConditionCard(
             Text(
                 text = condition.description,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
             Spacer(Modifier.height(20.dp))
@@ -156,13 +142,13 @@ fun VictoryConditionCard(
                     modifier = Modifier
                         .height(4.dp)
                         .width(32.dp)
-                        .background(condition.accentColor, RoundedCornerShape(50))
+                        .background(condition.accentColor, RoundedCornerShape(50)),
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = condition.winText,
                     fontWeight = FontWeight.Bold,
-                    color = condition.accentColor
+                    color = condition.accentColor,
                 )
             }
         }
@@ -186,7 +172,7 @@ fun villagersVictory(): VictoryCondition {
         description = description,
         icon = Resources.Images.LOGO,
         accentColor = accentColor,
-        winText = stringResource(Resources.Strings.Guide.ELIMINATE_ALL_GONDI)
+        winText = stringResource(Resources.Strings.Guide.ELIMINATE_ALL_GONDI),
     )
 }
 
@@ -207,14 +193,13 @@ fun gondiVictory(): VictoryCondition {
         description = description,
         icon = Resources.Images.RoleIcons.VILLAGER,
         accentColor = accentColor,
-        winText = stringResource(Resources.Strings.Guide.EQUAL_NUMBERS)
+        winText = stringResource(Resources.Strings.Guide.EQUAL_NUMBERS),
     )
 }
 
-
 @Composable
 fun RolesList(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val visibleRole = remember {
         mutableStateOf<Role?>(null)
@@ -224,14 +209,14 @@ fun RolesList(
             .fillMaxWidth()
             .padding(vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp)
+        verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         // Section Title
         Text(
             text = "Characters & Roles",
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
         )
 
         LazyVerticalGrid(
@@ -240,10 +225,10 @@ fun RolesList(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .heightIn(min = 200.dp, max = Theme.spacing.largeScreenSize)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             items(Role.entries) { role ->
-                RoleCard(role = role){
+                RoleCard(role = role) {
                     visibleRole.value = role
                 }
             }
@@ -253,18 +238,16 @@ fun RolesList(
     visibleRole.value?.let { role ->
         RoleDialog(
             role = role,
-            dismiss = { visibleRole.value = null }
+            dismiss = { visibleRole.value = null },
         )
     }
 }
-
-
 
 @Composable
 fun RoleCard(
     modifier: Modifier = Modifier,
     role: Role,
-    onRoleClick: (Role) -> Unit = {}
+    onRoleClick: (Role) -> Unit = {},
 ) {
     val accentColor = role.faction.color
 
@@ -278,12 +261,12 @@ fun RoleCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .padding(24.dp)
+                .padding(24.dp),
         ) {
             IconBox(
                 icon = role.icon,
                 accentColor = accentColor,
-                sizeInt = 64
+                sizeInt = 64,
             )
 
             Spacer(Modifier.height(12.dp))
@@ -296,13 +279,11 @@ fun RoleCard(
                 text = role.description,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
-
 }
-
 
 @Composable
 fun RoleDialog(
@@ -326,7 +307,7 @@ fun RoleDialog(
             IconBox(
                 icon = role.icon,
                 accentColor = accentColor,
-                sizeInt = 128
+                sizeInt = 128,
             )
 
             Text(
@@ -347,7 +328,7 @@ fun RoleDialog(
             role.instructions.forEach {
                 RoleInstructionItem(
                     instruction = it,
-                    accentColor = accentColor
+                    accentColor = accentColor,
                 )
             }
         }
@@ -358,7 +339,7 @@ fun RoleDialog(
 private fun RoleInstructionItem(
     modifier: Modifier = Modifier,
     instruction: RoleInstruction,
-    accentColor: Color
+    accentColor: Color,
 ) {
     Row(
         modifier = modifier
@@ -370,7 +351,7 @@ private fun RoleInstructionItem(
         IconBox(
             icon = instruction.icon,
             accentColor = accentColor,
-            sizeInt = 48
+            sizeInt = 48,
         )
 
         Column(

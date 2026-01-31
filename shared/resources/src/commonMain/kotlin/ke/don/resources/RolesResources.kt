@@ -26,9 +26,8 @@ data class VictoryCondition(
     val description: AnnotatedString,
     val icon: DrawableResource,
     val accentColor: Color,
-    val winText: String
+    val winText: String,
 )
-
 
 val Role.instructions: List<RoleInstruction>
     get() = when (this) {
@@ -36,17 +35,17 @@ val Role.instructions: List<RoleInstruction>
             RoleInstruction(
                 Resources.Images.RoleIcons.NIGHT,
                 "Strike at Night",
-                "Each night, quietly pick a player to take out."
+                "Each night, quietly pick a player to take out.",
             ),
             RoleInstruction(
                 Resources.Images.RoleIcons.TEAM,
                 "Stick Together",
-                "Coordinate with the other Gondi to confuse, mislead, and stay one step ahead of the Villagers."
+                "Coordinate with the other Gondi to confuse, mislead, and stay one step ahead of the Villagers.",
             ),
             RoleInstruction(
                 Resources.Images.RoleIcons.HIDDEN,
                 "Stay Hidden",
-                "Act innocent during the day and do whatever it takes to avoid getting voted out."
+                "Act innocent during the day and do whatever it takes to avoid getting voted out.",
             ),
         )
 
@@ -54,12 +53,12 @@ val Role.instructions: List<RoleInstruction>
             RoleInstruction(
                 Resources.Images.RoleIcons.NIGHT,
                 "Protect Someone",
-                "Each night, choose a player to save from the Gondi’s attack."
+                "Each night, choose a player to save from the Gondi’s attack.",
             ),
             RoleInstruction(
                 Resources.Images.RoleIcons.SHIELD,
                 "Choose Wisely",
-                "You can save yourself or others, but you can’t protect the same person two nights in a row."
+                "You can save yourself or others, but you can’t protect the same person two nights in a row.",
             ),
         )
 
@@ -67,17 +66,17 @@ val Role.instructions: List<RoleInstruction>
             RoleInstruction(
                 Resources.Images.RoleIcons.NIGHT,
                 "Investigate",
-                "Each night, check one player to learn whether they are Gondi or not."
+                "Each night, check one player to learn whether they are Gondi or not.",
             ),
             RoleInstruction(
                 Resources.Images.RoleIcons.INFO,
                 "Share Carefully",
-                "Use what you learn to help the Villagers, but don’t expose yourself too early."
+                "Use what you learn to help the Villagers, but don’t expose yourself too early.",
             ),
             RoleInstruction(
                 Resources.Images.RoleIcons.VOTE_GUILTY,
                 "Push the Vote",
-                "When you’re confident, guide the vote toward a confirmed Gondi."
+                "When you’re confident, guide the vote toward a confirmed Gondi.",
             ),
         )
 
@@ -85,17 +84,17 @@ val Role.instructions: List<RoleInstruction>
             RoleInstruction(
                 Resources.Images.RoleIcons.SHIELD,
                 "Perfect Cover",
-                "You appear as a Villager to the Detective, helping shield the Gondi."
+                "You appear as a Villager to the Detective, helping shield the Gondi.",
             ),
             RoleInstruction(
                 Resources.Images.RoleIcons.TEAM,
                 "Create Chaos",
-                "Your job is to make sure at least one Gondi survives—misdirect, distract, and stir doubt."
+                "Your job is to make sure at least one Gondi survives—misdirect, distract, and stir doubt.",
             ),
             RoleInstruction(
                 Resources.Images.RoleIcons.VOTE_GUILTY,
                 "Take the Fall",
-                "If needed, draw suspicion onto yourself to keep a Gondi alive."
+                "If needed, draw suspicion onto yourself to keep a Gondi alive.",
             ),
         )
 
@@ -103,17 +102,17 @@ val Role.instructions: List<RoleInstruction>
             RoleInstruction(
                 Resources.Images.RoleIcons.DAY,
                 "Talk It Out",
-                "During the day, discuss what you’ve noticed and piece together the truth."
+                "During the day, discuss what you’ve noticed and piece together the truth.",
             ),
             RoleInstruction(
                 Resources.Images.RoleIcons.VOTE_GUILTY,
                 "Vote Smart",
-                "Eliminate the player you believe is most likely a Gondi."
+                "Eliminate the player you believe is most likely a Gondi.",
             ),
             RoleInstruction(
                 Resources.Images.RoleIcons.TEAM,
                 "Win Together",
-                "Trust each other, stay alert, and eliminate all Gondi before they outnumber you."
+                "Trust each other, stay alert, and eliminate all Gondi before they outnumber you.",
             ),
         )
 
@@ -121,17 +120,17 @@ val Role.instructions: List<RoleInstruction>
             RoleInstruction(
                 Resources.Images.RoleIcons.GUIDE,
                 "Run the Game",
-                "Lead players through the night and day phases."
+                "Lead players through the night and day phases.",
             ),
             RoleInstruction(
                 Resources.Images.RoleIcons.ANNOUNCE,
                 "Keep Everyone Informed",
-                "Announce what happens each night and the results of every vote."
+                "Announce what happens each night and the results of every vote.",
             ),
             RoleInstruction(
                 Resources.Images.RoleIcons.NEUTRAL,
                 "Stay Neutral",
-                "Enforce the rules and keep the game fair and flowing."
+                "Enforce the rules and keep the game fair and flowing.",
             ),
         )
     }

@@ -129,28 +129,27 @@ fun IconToken(
     }
 }
 
-
 @Composable
 fun IconBox(
     modifier: Modifier = Modifier,
     icon: DrawableResource,
     accentColor: Color,
-    sizeInt: Int
+    sizeInt: Int,
 ) {
     Box(
         modifier = modifier
             .size(sizeInt.dp)
             .clip(CircleShape)
             .background(accentColor.copy(0.2f)),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Icon(
             painter = painterResource(icon),
-            contentDescription = null, tint = accentColor,
-            modifier = Modifier.size((sizeInt / 2).dp)
+            contentDescription = null,
+            tint = accentColor,
+            modifier = Modifier.size((sizeInt / 2).dp),
         )
     }
-
 }
 
 @Composable
@@ -158,21 +157,20 @@ fun IconBox(
     modifier: Modifier = Modifier,
     icon: ImageVector,
     accentColor: Color,
-    sizeInt: Int
+    sizeInt: Int,
 ) {
     Box(
         modifier = modifier
             .size(sizeInt.dp)
             .clip(CircleShape)
             .background(accentColor.copy(0.2f)),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = accentColor,
-            modifier = Modifier.size((sizeInt / 2).dp)
+            modifier = Modifier.size((sizeInt / 2).dp),
         )
     }
-
 }
