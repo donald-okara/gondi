@@ -11,6 +11,7 @@ package ke.don.components.guide
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
@@ -78,6 +79,7 @@ fun RulesContent(
             state = listState,
             modifier = Modifier
                 .width(MaterialTheme.spacing.largeScreenSize),
+            contentPadding = PaddingValues(vertical = 32.dp),
             verticalArrangement = Arrangement.spacedBy(
                 MaterialTheme.spacing.large,
                 Alignment.Top
