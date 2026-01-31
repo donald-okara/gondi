@@ -23,10 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
-import ke.don.components.list_items.CodeOfConductSection
-import ke.don.components.list_items.GameObjective
-import ke.don.components.list_items.GamePhases
-import ke.don.components.list_items.RolesList
+import ke.don.components.guide.CodeOfConductSection
+import ke.don.components.guide.GamePhases
+import ke.don.components.guide.RolesList
+import ke.don.components.guide.VictoryConditionsSection
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 
@@ -40,11 +40,11 @@ fun RulesContent(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.Top),
     ) {
-        GameObjective()
-
-        CodeOfConductSection()
+        VictoryConditionsSection()
 
         RolesList()
+
+        CodeOfConductSection()
 
         Spacer(modifier = Modifier.height(8.dp))
 

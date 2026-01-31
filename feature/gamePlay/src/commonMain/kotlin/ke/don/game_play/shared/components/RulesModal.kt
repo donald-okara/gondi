@@ -20,7 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import ke.don.components.dialog.BottomSheetToken
-import ke.don.components.list_items.RulesContent
+import ke.don.components.guide.RulesContent
 import ke.don.design.theme.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
