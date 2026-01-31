@@ -332,7 +332,7 @@ fun RoleDialog(
             Text(
                 text = role.name,
                 style = MaterialTheme.typography.headlineSmall,
-                color = Theme.colorScheme.primary,
+                color = accentColor,
                 fontWeight = FontWeight.SemiBold,
             )
 
@@ -347,6 +347,7 @@ fun RoleDialog(
             role.instructions.forEach {
                 RoleInstructionItem(
                     instruction = it,
+                    accentColor = accentColor
                 )
             }
         }
@@ -357,6 +358,7 @@ fun RoleDialog(
 private fun RoleInstructionItem(
     modifier: Modifier = Modifier,
     instruction: RoleInstruction,
+    accentColor: Color
 ) {
     Row(
         modifier = modifier
@@ -367,7 +369,7 @@ private fun RoleInstructionItem(
     ) {
         IconBox(
             icon = instruction.icon,
-            accentColor = MaterialTheme.colorScheme.primary,
+            accentColor = accentColor,
             sizeInt = 48
         )
 
