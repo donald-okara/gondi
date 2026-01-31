@@ -80,7 +80,6 @@ fun VictoryConditionsSection(
 
         Spacer(Modifier.height(32.dp))
 
-        // Replaced LazyVerticalGrid with FlowRow to avoid infinite height exception when nested in a scrollable parent
         LazyVerticalGrid(
             columns = GridCells.Adaptive(300.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -172,7 +171,7 @@ fun villagersVictory(): VictoryCondition {
     return VictoryCondition(
         title = stringResource(Resources.Strings.Guide.THE_VILLAGERS),
         description = description,
-        icon = Resources.Images.LOGO,
+        icon = Resources.Images.RoleIcons.VILLAGER,
         accentColor = accentColor,
         winText = stringResource(Resources.Strings.Guide.ELIMINATE_ALL_GONDI),
     )
@@ -193,7 +192,7 @@ fun gondiVictory(): VictoryCondition {
     return VictoryCondition(
         title = stringResource(Resources.Strings.Guide.THE_GONDIS),
         description = description,
-        icon = Resources.Images.RoleIcons.VILLAGER,
+        icon = Resources.Images.LOGO,
         accentColor = accentColor,
         winText = stringResource(Resources.Strings.Guide.EQUAL_NUMBERS),
     )

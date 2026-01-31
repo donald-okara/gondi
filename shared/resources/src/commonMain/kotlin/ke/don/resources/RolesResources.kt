@@ -140,9 +140,9 @@ val Role.description: String
         Role.GONDI -> "Know each other. Kill one Villager every night."
         Role.DOCTOR -> "Saves one player from death each night."
         Role.DETECTIVE -> "Checks one player's role each night."
-        Role.ACCOMPLICE -> "Allies with Gondis"
+        Role.ACCOMPLICE -> "Allies with Gondis."
         Role.VILLAGER -> "No special powers. Must use logic to survive."
-        Role.MODERATOR -> "Moderate the game"
+        Role.MODERATOR -> "Moderate the game."
     }
 
 val Role.icon: DrawableResource
