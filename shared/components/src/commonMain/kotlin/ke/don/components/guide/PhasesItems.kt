@@ -48,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ke.don.components.card.CardToken
+import ke.don.components.icon.IconBox
 import ke.don.components.steps.VerticalStep
 import ke.don.components.steps.VerticalStepItem
 import ke.don.design.theme.Theme
@@ -74,10 +75,27 @@ fun GamePhases(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Screen Title
-        Text(
-            text = stringResource(Resources.Strings.Guide.GAME_PHASES),
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold)
-        )
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            PhaseChip(
+                label = stringResource(Resources.Strings.Guide.PHASE_1),
+                color = Color(0xFF6366F1)
+            )
+            Spacer(Modifier.height(12.dp))
+            Text(
+                text = stringResource(Resources.Strings.Guide.THE_SILENT_NIGHT),
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = stringResource(Resources.Strings.Guide.EVERYONE_CLOSE_YOUR_EYES),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontStyle = FontStyle.Italic
+            )
+        }
 
         // Night Phase
         NightPhaseSection(
@@ -103,30 +121,6 @@ fun NightPhaseSection(
                 .padding(24.dp)
                 .fillMaxWidth()
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                PhaseChip(
-                    label = stringResource(Resources.Strings.Guide.PHASE_1),
-                    color = Color(0xFF6366F1)
-                )
-                Spacer(Modifier.height(12.dp))
-                Text(
-                    text = stringResource(Resources.Strings.Guide.THE_SILENT_NIGHT),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = stringResource(Resources.Strings.Guide.EVERYONE_CLOSE_YOUR_EYES),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontStyle = FontStyle.Italic
-                )
-            }
-
-            Spacer(Modifier.height(32.dp))
-
             // Replaced LazyColumn with Column to avoid infinite height exception when nested in a scrollable parent
             Column {
                 steps.forEachIndexed { index, data ->
@@ -239,15 +233,11 @@ fun CourtStepCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(icon, null, tint = MaterialTheme.colorScheme.primary)
-            }
+            IconBox(
+                icon = icon,
+                accentColor = MaterialTheme.colorScheme.primary,
+                sizeInt = 64
+            )
 
             Spacer(Modifier.width(16.dp))
 

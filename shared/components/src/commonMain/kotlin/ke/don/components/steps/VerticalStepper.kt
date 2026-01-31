@@ -1,7 +1,6 @@
 package ke.don.components.steps
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -18,17 +17,15 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.outlined.Circle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import ke.don.components.icon.IconBox
 
 fun <T> LazyListScope.verticalSteps(
     items: List<VerticalStep<T>>,
@@ -69,26 +66,16 @@ fun <T> VerticalStepItem(
         // Stepper column
         Column(
             modifier = Modifier
-                .width(24.dp)
+                .width(36.dp)
                 .fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Circle
-            Box(
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .clip(CircleShape)
-                    .background(blendedSurface)
-                    .size(64.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = step.icon ?: Icons.Outlined.Circle,
-                    contentDescription = null,
-                    tint = tint,
-                    modifier = Modifier.padding(4.dp)
-                )
-            }
+            IconBox(
+                icon = step.icon ?: Icons.Outlined.Circle,
+                accentColor = blendedSurface,
+                sizeInt = 30
+            )
 
             Spacer(modifier = Modifier.height(4.dp))
 

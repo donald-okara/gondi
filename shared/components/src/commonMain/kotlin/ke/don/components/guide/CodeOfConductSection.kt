@@ -36,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import ke.don.components.icon.IconBox
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.resources.Resources
@@ -63,11 +64,10 @@ fun CodeOfConductSection(
                 .fillMaxWidth()
                 .padding(24.dp),
         ) {
-            Icon(
-                imageVector = Icons.Default.Gavel,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.size(Theme.spacing.large),
+            IconBox(
+                icon = Icons.Default.Gavel,
+                accentColor = MaterialTheme.colorScheme.primary,
+                sizeInt = 64
             )
 
             Spacer(Modifier.height(Theme.spacing.large))
@@ -138,11 +138,10 @@ private fun ConductItem(
         verticalAlignment = Alignment.Top,
         modifier = modifier.fillMaxWidth(0.9f),
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier.size(Theme.spacing.large),
+        IconBox(
+            icon = icon,
+            accentColor = MaterialTheme.colorScheme.onSurface,
+            sizeInt = 48
         )
 
         Column {

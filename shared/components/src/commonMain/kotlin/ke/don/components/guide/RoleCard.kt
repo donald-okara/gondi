@@ -37,6 +37,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -46,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import ke.don.components.button.ComponentType
 import ke.don.components.card.CardToken
 import ke.don.components.dialog.DialogToken
+import ke.don.components.icon.IconBox
 import ke.don.components.icon.IconToken
 import ke.don.components.profile.AdaptiveIcon
 import ke.don.components.profile.color
@@ -124,22 +127,11 @@ fun VictoryConditionCard(
     ) {
         Column(Modifier.padding(24.dp)) {
 
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(
-                        condition.accentColor.copy(alpha = 0.2f),
-                        CircleShape
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                AdaptiveIcon(
-                    painterResource = condition.icon,
-                    contentDescription = null,
-                    logoColor = condition.accentColor,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
+            IconBox(
+                icon = condition.icon,
+                accentColor = condition.accentColor,
+                sizeInt = 64
+            )
 
             Spacer(Modifier.height(16.dp))
 
@@ -288,19 +280,11 @@ fun RoleCard(
                 .height(200.dp)
                 .padding(24.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(CircleShape)
-                    .background(accentColor.copy(0.2f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(role.icon),
-                    contentDescription = null, tint = accentColor,
-                    modifier = Modifier.size(32.dp)
-                )
-            }
+            IconBox(
+                icon = role.icon,
+                accentColor = accentColor,
+                sizeInt = 64
+            )
 
             Spacer(Modifier.height(12.dp))
 
@@ -326,6 +310,8 @@ fun RoleDialog(
     dismiss: () -> Unit,
     role: Role,
 ) {
+    val accentColor = role.faction.color
+
     DialogToken(
         modifier = modifier,
         onDismissRequest = dismiss,
@@ -335,26 +321,24 @@ fun RoleDialog(
                 .padding(MaterialTheme.spacing.medium)
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small, Alignment.CenterVertically),
-            horizontalAlignment = Alignment.Start,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            AdaptiveIcon(
-                painterResource = role.icon,
-                contentDescription = null,
-                logoColor = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .size(64.dp),
+            IconBox(
+                icon = role.icon,
+                accentColor = accentColor,
+                sizeInt = 128
             )
 
             Text(
                 text = role.name,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.headlineSmall,
                 color = Theme.colorScheme.primary,
                 fontWeight = FontWeight.SemiBold,
             )
 
             Text(
                 text = role.description,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.titleSmall,
                 color = Theme.colorScheme.onSurface,
             )
 
@@ -381,13 +365,10 @@ private fun RoleInstructionItem(
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         verticalAlignment = Alignment.Top,
     ) {
-        IconToken(
-            buttonType = ComponentType.Neutral,
-            imageVector = instruction.icon,
-            paddingValues = spacingPaddingValues(
-                type = SpacingType.Small,
-            ),
-            onClick = {},
+        IconBox(
+            icon = instruction.icon,
+            accentColor = MaterialTheme.colorScheme.primary,
+            sizeInt = 48
         )
 
         Column(
@@ -407,36 +388,5 @@ private fun RoleInstructionItem(
                 color = MaterialTheme.colorScheme.onSurface,
             )
         }
-    }
-}
-
-
-
-@Composable
-private fun TitleRow(
-    modifier: Modifier = Modifier,
-    icon: DrawableResource,
-    title: String,
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.Start),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        AdaptiveIcon(
-            painterResource = icon,
-            contentDescription = null,
-            logoColor = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(
-                MaterialTheme.spacing.large,
-            ),
-        )
-
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontWeight = FontWeight.Bold,
-        )
     }
 }
