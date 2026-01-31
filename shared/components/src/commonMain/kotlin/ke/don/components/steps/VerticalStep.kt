@@ -73,16 +73,6 @@ fun <T> VerticalStepItem(
                 .fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Top connector
-            Spacer(
-                modifier = Modifier
-                    .weight(1f)
-                    .width(2.dp)
-                    .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.4f))
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
             // Circle
             Box(
                 modifier = Modifier

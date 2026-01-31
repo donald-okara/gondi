@@ -12,11 +12,25 @@ package ke.don.components.preview.token_previews
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import ke.don.components.guide.RolesList
 import ke.don.components.guide.RulesContent
 import ke.don.components.preview.DevicePreviewContainer
 import ke.don.components.preview.DevicePreviews
 import ke.don.components.scaffold.ScaffoldToken
 import ke.don.domain.datastore.Theme
+
+@OptIn(ExperimentalMaterial3Api::class)
+@DevicePreviews
+@Composable
+fun RolesPreview(
+    @PreviewParameter(ThemeProvider::class) theme: Theme,
+) {
+    DevicePreviewContainer(theme) {
+        ScaffoldToken{
+            RolesList()
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @DevicePreviews

@@ -13,11 +13,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.FollowTheSigns
 import androidx.compose.material.icons.outlined.Campaign
 import androidx.compose.material.icons.outlined.Group
+import androidx.compose.material.icons.outlined.Masks
 import androidx.compose.material.icons.outlined.ModeNight
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material.icons.outlined.Sports
+import androidx.compose.material.icons.outlined.TheaterComedy
 import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material.icons.outlined.WbSunny
@@ -44,6 +46,7 @@ object Resources {
 
             val SHIELD = Icons.Outlined.Shield
             val DAY = Icons.Outlined.WbSunny
+            val HIDDEN = Icons.Outlined.TheaterComedy
             val NIGHT = Icons.Outlined.ModeNight
             val TEAM = Icons.Outlined.Group
             val VOTE_GUILTY = Icons.Outlined.ThumbDown
@@ -173,6 +176,49 @@ object Resources {
 
             val WAITING_FOR_MORE_PLAYERS = Res.string.waiting_for_more_players
             val WAITING_FOR_SECOND = Res.string.waiting_for_second
+        }
+
+        object Guide {
+            val UNINFORMED_MAJORITY = Res.string.uninformed_majority
+            val VILLAGERS_VICTORY_DESCRIPTION = Res.string.villagers_victory_description
+            val ELIMINATE_ALL_GONDI = Res.string.eliminate_all_gondi
+            val INFORMED_MINORITY = Res.string.informed_minority
+            val GONDI_VICTORY_DESCRIPTION = Res.string.gondi_victory_description
+            val EQUAL_NUMBERS = Res.string.equal_numbers
+
+            val GAME_PHASES = Res.string.game_phases
+            val PHASE_1 = Res.string.phase_1
+            val THE_SILENT_NIGHT = Res.string.the_silent_night
+            val EVERYONE_CLOSE_YOUR_EYES = Res.string.everyone_close_your_eyes
+            val GONDI_AWAKENING = Res.string.gondi_awakening
+            val GONDI_AWAKENING_DESCRIPTION = Res.string.gondi_awakening_description
+            val THE_DOCTORS_VIGIL = Res.string.the_doctors_vigil
+            val THE_DOCTORS_VIGIL_DESCRIPTION = Res.string.the_doctors_vigil_description
+            val THE_INVESTIGATION = Res.string.the_investigation
+            val THE_INVESTIGATION_DESCRIPTION = Res.string.the_investigation_description
+            val PHASE_2 = Res.string.phase_2
+            val THE_COURT_DAY = Res.string.the_court_day
+            val COURT_DAY_DESCRIPTION = Res.string.court_day_description
+            val ACCUSE_TITLE = Res.string.accuse_title
+            val ACCUSE_DESCRIPTION = Res.string.accuse_description
+            val SECOND_TITLE = Res.string.second_title
+            val SECOND_DESCRIPTION = Res.string.second_description
+            val VOTE_TITLE = Res.string.vote_title
+            val VOTE_DESCRIPTION = Res.string.vote_description
+            val PRO_TIP = Res.string.pro_tip
+            val PRO_TIP_DESCRIPTION = Res.string.pro_tip_description
+
+            val CODE_OF_CONDUCT = Res.string.code_of_conduct
+            val CODE_OF_CONDUCT_DESCRIPTION = Res.string.code_of_conduct_description
+            val NO_PEEKING = Res.string.no_peeking
+            val NO_PEEKING_DESCRIPTION = Res.string.no_peeking_description
+            val KEEP_IT_SECRET = Res.string.keep_it_secret
+            val KEEP_IT_SECRET_DESCRIPTION = Res.string.keep_it_secret_description
+            val PLAY_NICE = Res.string.play_nice
+            val PLAY_NICE_DESCRIPTION = Res.string.play_nice_description
+
+            val THE_GONDIS = Res.string.the_gondis
+            val THE_VILLAGERS = Res.string.the_villagers
         }
     }
 }

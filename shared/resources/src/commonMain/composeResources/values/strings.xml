@@ -108,4 +108,44 @@
 
     <string name="the_gondis">The Gondis</string>
     <string name="the_villagers">The Villagers</string>
+
+    <!-- Guide -->
+    <string name="uninformed_majority">uninformed majority</string>
+    <string name="villagers_victory_description">. They win if they successfully identify and eliminate all Gondi members through logical deduction and voting.</string>
+    <string name="eliminate_all_gondi">Eliminate all Gondi</string>
+    <string name="informed_minority">informed minority</string>
+    <string name="gondi_victory_description">. They win when they reduce the number of Villagers until it equals the number of Gondi remaining.</string>
+    <string name="equal_numbers">Equal numbers</string>
+
+    <string name="game_phases">Game Phases</string>
+    <string name="phase_1">Phase 1</string>
+    <string name="the_silent_night">The Silent Night</string>
+    <string name="everyone_close_your_eyes">“Everyone, close your eyes…”</string>
+    <string name="gondi_awakening">Gondi Awakening</string>
+    <string name="gondi_awakening_description">The Gondi open their eyes, recognize teammates, and silently choose a target.</string>
+    <string name="the_doctors_vigil">The Doctor's Vigil</string>
+    <string name="the_doctors_vigil_description">The Doctor chooses one player to protect from death.</string>
+    <string name="the_investigation">The Investigation</string>
+    <string name="the_investigation_description">The Detective investigates one player to check if they are Gondi.</string>
+    <string name="phase_2">Phase 2</string>
+    <string name="the_court_day">The Court (Day)</string>
+    <string name="court_day_description">A three-step process to find the infiltrators.</string>
+    <string name="accuse_title">1. Accuse</string>
+    <string name="accuse_description">Any player may formally accuse another of being Gondi.</string>
+    <string name="second_title">2. Second</string>
+    <string name="second_description">An accusation needs a second player to proceed.</string>
+    <string name="vote_title">3. Vote</string>
+    <string name="vote_description">Majority vote (50% + 1) eliminates the accused.</string>
+    <string name="pro_tip">Pro Tip</string>
+    <string name="pro_tip_description">Watch for players who change stories or pile onto easy accusations without evidence.</string>
+
+    <string name="code_of_conduct">Code of Conduct</string>
+    <string name="code_of_conduct_description">For a fair and fun game, please keep these rules in mind.</string>
+    <string name="no_peeking">No peeking!</string>
+    <string name="no_peeking_description">Keep your eyes on your own screen. What\'s on other players\' phones is their secret.</string>
+    <string name="keep_it_secret">Keep it secret</string>
+    <string name="keep_it_secret_description">Your role is for your eyes only. Don\'t reveal your screen to others.</string>
+    <string name="play_nice">Play nice</string>
+    <string name="play_nice_description">Good sportsmanship makes the game better for everyone. Let\'s all have a great time!</string>
+
 </resources>

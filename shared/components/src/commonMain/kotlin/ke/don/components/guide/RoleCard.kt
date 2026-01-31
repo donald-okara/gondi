@@ -9,12 +9,11 @@
  */
 package ke.don.components.guide
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,49 +27,43 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.Icon
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import ke.don.components.button.ComponentType
 import ke.don.components.card.CardToken
-import ke.don.components.card.CardType
 import ke.don.components.dialog.DialogToken
 import ke.don.components.icon.IconToken
 import ke.don.components.profile.AdaptiveIcon
 import ke.don.components.profile.color
-import ke.don.design.theme.PaddingOption
 import ke.don.design.theme.SpacingType
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
 import ke.don.design.theme.spacingPaddingValues
 import ke.don.domain.gameplay.Faction
 import ke.don.domain.gameplay.Role
-import ke.don.domain.gameplay.Role.entries
 import ke.don.resources.Resources
-import ke.don.resources.Resources.Strings.GamePlay.VICTORY_CONDITIONS
 import ke.don.resources.RoleInstruction
 import ke.don.resources.VictoryCondition
 import ke.don.resources.description
 import ke.don.resources.icon
 import ke.don.resources.instructions
+import ke.don.utils.capitaliseFirst
 import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -82,7 +75,7 @@ fun VictoryConditionsSection(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Victory Conditions",
+            text = stringResource(Resources.Strings.GamePlay.VICTORY_CONDITIONS),
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.primary
         )
@@ -90,29 +83,30 @@ fun VictoryConditionsSection(
         Spacer(Modifier.height(12.dp))
 
         Text(
-            text = "Gondi is a social deduction game of survival and deception.",
+            text = stringResource(Resources.Strings.GamePlay.GAME_OBJECTIVE_DESCRIPTION),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(Modifier.height(32.dp))
 
+        // Replaced LazyVerticalGrid with FlowRow to avoid infinite height exception when nested in a scrollable parent
         LazyVerticalGrid(
-            modifier = modifier
-                .fillMaxWidth()
-                .heightIn(min = 200.dp, max = Theme.spacing.largeScreenSize),
-            columns = GridCells.Adaptive(240.dp),
+            columns = GridCells.Adaptive(300.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier
+                .heightIn(min = 200.dp, max = Theme.spacing.largeScreenSize)
+                .fillMaxWidth()
         ) {
-            item {
+            item{
                 VictoryConditionCard(
-                    condition = villagersVictory()
+                    condition = villagersVictory(),
                 )
             }
-            item {
+            item{
                 VictoryConditionCard(
-                    condition = gondiVictory()
+                    condition = gondiVictory(),
                 )
             }
         }
@@ -188,19 +182,19 @@ fun villagersVictory(): VictoryCondition {
     val accentColor = Faction.VILLAGER.color
 
     val description = buildAnnotatedString {
-        append("The ")
+        append(stringResource(Resources.Strings.Guide.THE_VILLAGERS).substringBefore("Villagers"))
         withStyle(SpanStyle(color = accentColor, fontWeight = FontWeight.SemiBold)) {
-            append("uninformed majority")
+            append(stringResource(Resources.Strings.Guide.UNINFORMED_MAJORITY))
         }
-        append(". They win if they successfully identify and eliminate all Gondi members through logical deduction and voting.")
+        append(stringResource(Resources.Strings.Guide.VILLAGERS_VICTORY_DESCRIPTION))
     }
 
     return VictoryCondition(
-        title = "The Villagers",
+        title = stringResource(Resources.Strings.Guide.THE_VILLAGERS),
         description = description,
         icon = Resources.Images.LOGO,
         accentColor = accentColor,
-        winText = "Eliminate all Gondi"
+        winText = stringResource(Resources.Strings.Guide.ELIMINATE_ALL_GONDI)
     )
 }
 
@@ -209,51 +203,122 @@ fun gondiVictory(): VictoryCondition {
     val accentColor = Faction.GONDI.color
 
     val description = buildAnnotatedString {
-        append("The ")
+        append(stringResource(Resources.Strings.Guide.THE_GONDIS).substringBefore("Gondis"))
         withStyle(SpanStyle(color = accentColor, fontWeight = FontWeight.SemiBold)) {
-            append("informed minority")
+            append(stringResource(Resources.Strings.Guide.INFORMED_MINORITY))
         }
-        append(". They win when they reduce the number of Villagers until it equals the number of Gondi remaining.")
+        append(stringResource(Resources.Strings.Guide.GONDI_VICTORY_DESCRIPTION))
     }
 
     return VictoryCondition(
-        title = "The Gondi",
+        title = stringResource(Resources.Strings.Guide.THE_GONDIS),
         description = description,
         icon = Resources.Images.RoleIcons.VILLAGER,
         accentColor = accentColor,
-        winText = "Equal numbers"
+        winText = stringResource(Resources.Strings.Guide.EQUAL_NUMBERS)
     )
 }
 
 
 @Composable
-fun RolesList(modifier: Modifier = Modifier) {
-    var showDialog by remember { mutableStateOf<Role?>(null) }
-
-    LazyVerticalGrid(
+fun RolesList(
+    modifier: Modifier = Modifier
+) {
+    val visibleRole = remember {
+        mutableStateOf<Role?>(null)
+    }
+    Column(
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 200.dp, max = Theme.spacing.largeScreenSize),
-        columns = GridCells.Adaptive(240.dp),
-        horizontalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
-        verticalArrangement = Arrangement.spacedBy(Theme.spacing.medium),
-        contentPadding = PaddingValues(vertical = Theme.spacing.small),
+            .padding(vertical = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        items(entries) { role ->
-            RoleCard(
-                role = role,
-                onClick = { showDialog = role },
+        // Section Title
+        Text(
+            text = "Characters & Roles",
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(250.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier
+                .heightIn(min = 200.dp, max = Theme.spacing.largeScreenSize)
+                .fillMaxWidth()
+        ) {
+            items(Role.entries) { role ->
+                RoleCard(role = role){
+                    visibleRole.value = role
+                }
+            }
+        }
+    }
+
+    visibleRole.value?.let { role ->
+        RoleDialog(
+            role = role,
+            dismiss = { visibleRole.value = null }
+        )
+    }
+}
+
+
+
+@Composable
+fun RoleCard(
+    modifier: Modifier = Modifier,
+    role: Role,
+    onRoleClick: (Role) -> Unit = {}
+) {
+    val accentColor = role.faction.color
+
+    CardToken(
+        modifier = modifier.fillMaxWidth(),
+        onClick = { onRoleClick(role) },
+        shape = MaterialTheme.shapes.medium,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(24.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(accentColor.copy(0.2f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(role.icon),
+                    contentDescription = null, tint = accentColor,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+
+            Spacer(Modifier.height(12.dp))
+
+            Text(text = role.name.capitaliseFirst(), fontWeight = FontWeight.Bold)
+
+            Spacer(Modifier.height(4.dp))
+
+            Text(
+                text = role.description,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
             )
         }
     }
 
-    showDialog?.let {
-        RoleDialog(
-            dismiss = { showDialog = null },
-            role = it,
-        )
-    }
 }
+
 
 @Composable
 fun RoleDialog(
@@ -345,48 +410,7 @@ private fun RoleInstructionItem(
     }
 }
 
-@Composable
-fun RoleCard(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
-    role: Role,
-) {
-    CardToken(
-        cardType = CardType.Solid,
-        onClick = onClick,
-    ) {
-        Column(
-            modifier = modifier
-                .padding(
-                    spacingPaddingValues(
-                        type = SpacingType.Medium,
-                        vertical = PaddingOption.Default,
-                        horizontal = PaddingOption.Custom(
-                            MaterialTheme.spacing.small,
-                        ),
-                    ),
-                ),
-            verticalArrangement = Arrangement.spacedBy(
-                MaterialTheme.spacing.medium,
-                Alignment.CenterVertically,
-            ),
-            horizontalAlignment = Alignment.Start,
-        ) {
-            TitleRow(
-                icon = role.icon,
-                title = role.name,
-            )
 
-            Text(
-                text = role.description,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
-        }
-    }
-}
 
 @Composable
 private fun TitleRow(
