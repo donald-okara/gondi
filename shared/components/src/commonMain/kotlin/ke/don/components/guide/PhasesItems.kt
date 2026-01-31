@@ -119,7 +119,7 @@ fun NightPhaseSection(
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(24.dp)
+                verticalArrangement = Arrangement.spacedBy(24.dp),
             ) {
                 steps.forEachIndexed { index, data ->
                     VerticalStepItem(

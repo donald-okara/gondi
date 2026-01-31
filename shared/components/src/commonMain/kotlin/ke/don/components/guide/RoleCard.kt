@@ -311,7 +311,7 @@ fun RoleDialog(
             )
 
             Text(
-                text = role.name,
+                text = role.name.capitaliseFirst(),
                 style = MaterialTheme.typography.headlineSmall,
                 color = accentColor,
                 fontWeight = FontWeight.SemiBold,
