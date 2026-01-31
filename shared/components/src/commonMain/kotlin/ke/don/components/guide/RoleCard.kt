@@ -109,7 +109,9 @@ fun VictoryConditionCard(
     modifier: Modifier = Modifier,
 ) {
     CardToken(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .height(300.dp)
+            .fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
     ) {
         Column(Modifier.padding(24.dp)) {

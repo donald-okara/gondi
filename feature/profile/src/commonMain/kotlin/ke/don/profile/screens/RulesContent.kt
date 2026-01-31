@@ -42,9 +42,9 @@ fun RulesContent(
     ) {
         VictoryConditionsSection()
 
-        CodeOfConductSection()
-
         RolesList()
+
+        CodeOfConductSection()
 
         Spacer(modifier = Modifier.height(8.dp))
 
