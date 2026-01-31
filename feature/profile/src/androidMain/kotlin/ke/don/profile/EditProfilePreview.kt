@@ -39,7 +39,7 @@ fun OnboardingShowcase(
     DevicePreviewContainer(theme) {
         val (state, handleEvent) = rememberEditProfileState()
 
-         OnBoardingContent(
+        OnBoardingContent(
             modifier = modifier,
             state = state,
             handleEvent = handleEvent,
