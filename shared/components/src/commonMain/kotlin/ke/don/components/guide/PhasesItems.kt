@@ -114,11 +114,13 @@ fun NightPhaseSection(
     ) {
         Column(
             modifier = Modifier
-                .padding(24.dp)
+                .padding(16.dp)
                 .fillMaxWidth(),
         ) {
-            // Replaced LazyColumn with Column to avoid infinite height exception when nested in a scrollable parent
-            Column {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
                 steps.forEachIndexed { index, data ->
                     VerticalStepItem(
                         step = VerticalStep(
@@ -199,7 +201,7 @@ fun DayPhaseSection(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
-                .heightIn(min = 200.dp, max = Theme.spacing.largeScreenSize)
+                .heightIn(min = 150.dp, max = Theme.spacing.largeScreenSize)
                 .fillMaxWidth(),
         ) {
             items(courtSteps) { (title, desc, icon) ->
@@ -224,7 +226,9 @@ fun CourtStepCard(
         modifier = modifier,
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
@@ -234,10 +238,7 @@ fun CourtStepCard(
                 sizeInt = 64,
             )
 
-            Spacer(Modifier.width(16.dp))
-
             Text(text = title, fontWeight = FontWeight.Bold)
-            Spacer(Modifier.height(4.dp))
             Text(text = description, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
         }
     }

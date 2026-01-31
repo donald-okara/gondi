@@ -52,20 +52,12 @@ fun <T> VerticalStepItem(
     modifier: Modifier = Modifier,
     content: @Composable (T) -> Unit,
 ) {
-    val base = MaterialTheme.colorScheme.surfaceVariant
     val tint = step.color ?: MaterialTheme.colorScheme.primary
-
-    val blendedSurface = base.copy(
-        red = (base.red * 0.9f) + (tint.red * 0.1f),
-        green = (base.green * 0.9f) + (tint.green * 0.1f),
-        blue = (base.blue * 0.9f) + (tint.blue * 0.1f),
-    )
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min) // 👈 critical
-            .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         // Stepper column
         Column(

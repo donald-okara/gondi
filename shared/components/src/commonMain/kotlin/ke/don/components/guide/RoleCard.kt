@@ -261,8 +261,7 @@ fun RoleCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
-                .padding(24.dp),
+                .padding(16.dp),
         ) {
             IconBox(
                 icon = role.icon,
