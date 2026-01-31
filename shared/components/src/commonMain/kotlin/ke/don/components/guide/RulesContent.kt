@@ -7,10 +7,11 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.components.list_items
+package ke.don.components.guide
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -25,13 +26,14 @@ fun RulesContent(
 ) {
     Column(
         modifier = modifier
-            .verticalScroll(
+            .width(MaterialTheme.spacing.largeScreenSize)
+            .verticalScroll (
                 state = rememberScrollState(),
             ),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium, Alignment.Top),
     ) {
-        GameObjective()
+        VictoryConditionsSection()
         CodeOfConductSection()
         RolesList()
         GamePhases()

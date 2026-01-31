@@ -9,7 +9,9 @@
  */
 package ke.don.resources
 
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.AnnotatedString
 import ke.don.domain.gameplay.Role
 import org.jetbrains.compose.resources.DrawableResource
 
@@ -18,6 +20,15 @@ data class RoleInstruction(
     val title: String,
     val description: String,
 )
+
+data class VictoryCondition(
+    val title: String,
+    val description: AnnotatedString,
+    val icon: DrawableResource,
+    val accentColor: Color,
+    val winText: String
+)
+
 
 val Role.instructions: List<RoleInstruction>
     get() = when (this) {

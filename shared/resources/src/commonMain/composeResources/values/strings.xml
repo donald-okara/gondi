@@ -68,7 +68,7 @@
 
     <!-- GameObjective -->
     <string name="game_objective">Game Objective</string>
-    <string name="game_objective_description">The game is a battle between two groups: the Villagers (the uninformed majority) and the Gondi (the informed minority). The Villagers win if they eliminate all Gondi members. The Gondi win when their numbers equal the number of Villagers.</string>
+    <string name="game_objective_description">Gondi is a social deduction game of survival and deception.</string>
 
     <!-- RevealDeaths -->
     <string name="night_results">Night Results</string>
@@ -80,6 +80,7 @@
     <string name="eliminated_player">Eliminated — %1$s</string>
     <string name="saved_by_saviour">Saved by %1$s</string>
     <string name="the_doctor">The Doctor</string>
+
 
     <!-- AccusationSection -->
     <string name="seconds_accusation">%1$s seconds the accusation</string>
@@ -99,9 +100,12 @@
     <!-- MainModeratorContent -->
     <string name="leave_game_checklist_moderator">This game will be terminated and all progress will be lost.</string>
     <string name="new_game">New game</string>
+    <string name="victory_conditions">Victory Conditions</string>
 
     <!-- ModeratorSleep -->
     <string name="proceed_to_town_hall">You can now proceed to Town hall</string>
     <string name="someone_has_not_done_their_part_yet">Someone has not done their part yet</string>
 
+    <string name="the_gondis">The Gondis</string>
+    <string name="the_villagers">The Villagers</string>
 </resources>
