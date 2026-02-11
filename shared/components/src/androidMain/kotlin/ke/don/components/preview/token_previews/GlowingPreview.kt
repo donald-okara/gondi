@@ -83,11 +83,11 @@ fun PlayersPreview(
                         PlayerItem(
                             actionType = actionType,
                             onClick = { selectedColor = actionType },
-                            isSelected = selectedColor == actionType,
+                            isSelected = true,
                             showRole = true,
                             enabled = true,
                             player = players[index % players.size],
-                            isActing = true,
+                            isActing = false,
                         )
                     }
                 }

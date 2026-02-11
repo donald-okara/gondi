@@ -47,6 +47,22 @@ fun DevicePreviewContainer(
     }
 }
 
+@Composable
+fun PreviewContainer(
+    theme: Theme,
+    content: @Composable () -> Unit,
+) {
+    AppTheme(
+        theme = theme,
+    ) {
+        Surface(
+            modifier = Modifier.padding(8.dp),
+        ) {
+            content.invoke()
+        }
+    }
+}
+
 /**
  * Credit https://www.webmobilefirst.com/en/mockups/samsung-galaxy-s24-ultra-2024/
  */
