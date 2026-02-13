@@ -297,7 +297,7 @@ class SleepInstrumentedTest {
                 val playerState by rules.playerState.collectAsState()
 
                 showRules.value = stringResource(Resources.Strings.GamePlay.SHOW_RULES)
-                gameObjectiveText.value = stringResource(Resources.Strings.GamePlay.GAME_OBJECTIVE)
+                gameObjectiveText.value = stringResource(Resources.Strings.GamePlay.VICTORY_CONDITIONS)
 
                 fun onEvent(event: PlayerHandler) {
                     when (event) {

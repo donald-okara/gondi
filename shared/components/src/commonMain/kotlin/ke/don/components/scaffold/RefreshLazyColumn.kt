@@ -71,9 +71,11 @@ import kotlin.math.roundToInt
  * @param reverseLayout `true` to show items in reverse order, from bottom to top.
  * @param verticalArrangement The vertical arrangement of the `LazyColumn`'s children.
  */
+
 @Composable
 fun RefreshLazyColumn(
     modifier: Modifier = Modifier,
+    listModifier: Modifier = Modifier,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
     pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
@@ -94,37 +96,96 @@ fun RefreshLazyColumn(
     overscrollEffect: OverscrollEffect? = rememberOverscrollEffect(),
     content: LazyListScope.() -> Unit,
 ) {
-    Box(
+    PullToRefreshBox(
+        modifier = modifier,
+        pullRefreshState = pullRefreshState,
+        listOffset = listOffSet,
         contentAlignment = contentAlignment,
-        modifier = modifier
-            .fillMaxSize()
-            .pullToRefresh(state = pullRefreshState, isRefreshing = isRefreshing, onRefresh = onRefresh),
-    ) {
-        LazyColumn(
-            modifier = modifier.offset(
-                x = 0.dp,
-                y = listOffSet.dp,
-            ),
-            state = lazyListState,
-            contentPadding = spacingPaddingValues(
-                vertical = verticalPadding,
-                horizontal = horizontalPadding,
-            ),
-            reverseLayout = reverseLayout,
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
+    ) { listOffset ->
+        OffsetLazyColumn(
+            modifier = Modifier.then(listModifier),
+            listOffset = listOffset,
+            lazyListState = lazyListState,
+            verticalPadding = verticalPadding,
             verticalArrangement = verticalArrangement,
             horizontalAlignment = horizontalAlignment,
             flingBehavior = flingBehavior,
             userScrollEnabled = userScrollEnabled,
             overscrollEffect = overscrollEffect,
+            horizontalPadding = horizontalPadding,
+            reverseLayout = reverseLayout,
         ) {
             content()
         }
+    }
+}
+
+@Composable
+fun PullToRefreshBox(
+    modifier: Modifier = Modifier,
+    isRefreshing: Boolean,
+    onRefresh: () -> Unit,
+    pullRefreshState: PullToRefreshState = rememberPullToRefreshState(),
+    listOffset: Int = rememberOffset(
+        isRefreshing = isRefreshing,
+        pullProgress = pullRefreshState.distanceFraction,
+    ),
+    contentAlignment: Alignment = Alignment.TopCenter,
+    content: @Composable (listOffset: Int) -> Unit,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .pullToRefresh(
+                state = pullRefreshState,
+                isRefreshing = isRefreshing,
+                onRefresh = onRefresh,
+            ),
+        contentAlignment = contentAlignment,
+    ) {
+        content(listOffset)
 
         RefreshHeader(
             modifier = Modifier.align(Alignment.TopCenter),
             isRefreshing = isRefreshing,
             state = pullRefreshState,
         )
+    }
+}
+
+@Composable
+fun OffsetLazyColumn(
+    modifier: Modifier = Modifier,
+    listOffset: Int = 0,
+    lazyListState: LazyListState = rememberLazyListState(),
+    verticalPadding: Dp = 0.dp,
+    horizontalPadding: Dp = 0.dp,
+    reverseLayout: Boolean = false,
+    verticalArrangement: Arrangement.Vertical =
+        if (!reverseLayout) Arrangement.Top else Arrangement.Bottom,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior(),
+    userScrollEnabled: Boolean = true,
+    overscrollEffect: OverscrollEffect? = rememberOverscrollEffect(),
+    content: LazyListScope.() -> Unit,
+) {
+    LazyColumn(
+        modifier = modifier.offset(y = listOffset.dp),
+        state = lazyListState,
+        contentPadding = spacingPaddingValues(
+            vertical = verticalPadding,
+            horizontal = horizontalPadding,
+        ),
+        reverseLayout = reverseLayout,
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment,
+        flingBehavior = flingBehavior,
+        userScrollEnabled = userScrollEnabled,
+        overscrollEffect = overscrollEffect,
+    ) {
+        content()
     }
 }
 

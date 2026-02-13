@@ -12,7 +12,6 @@ package ke.don.home.screens
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -56,6 +55,7 @@ import ke.don.home.components.ThemeSheet
 import ke.don.home.model.HomeIntentHandler
 import ke.don.home.model.HomeState
 import ke.don.utils.result.ReadStatus
+import ke.don.utils.result.isError
 import ke.don.utils.result.isRefreshing
 import ke.don.utils.result.message
 
@@ -156,13 +156,16 @@ fun HomeContent(
                     onEvent = onEvent,
                 )
 
-                is ReadStatus.Error -> ErrorState(
-                    state = state,
-                    onEvent = onEvent,
-                )
-
                 ReadStatus.Loading -> LoadingState()
-                ReadStatus.Empty -> HomeEmptyState(onEvent = onEvent)
+
+                is ReadStatus.Error,
+                ReadStatus.Empty,
+                ->
+                    HomeEmptyOrErrorState(
+                        state = state,
+                        onEvent = onEvent,
+                    )
+
                 else -> {}
             }
         }
@@ -210,6 +213,7 @@ private fun SuccessState(
     val pullState = rememberPullToRefreshState()
     RefreshLazyColumn(
         modifier = modifier.fillMaxSize(),
+        listModifier = Modifier.fillMaxSize(),
         isRefreshing = state.readStatus.isRefreshing,
         pullRefreshState = pullState,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small, Alignment.Top),
@@ -262,90 +266,91 @@ private fun SuccessState(
 }
 
 @Composable
-private fun ErrorState(
+private fun HomeEmptyOrErrorState(
     modifier: Modifier = Modifier,
     state: HomeState,
     onEvent: (HomeIntentHandler) -> Unit,
 ) {
-    Box(
+    val pullState = rememberPullToRefreshState()
+    val isError = state.readStatus.isError
+
+    RefreshLazyColumn(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+        listModifier = Modifier.fillMaxSize(),
+        isRefreshing = state.isRefreshingFromEmpty,
+        pullRefreshState = pullState,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(
+            MaterialTheme.spacing.small,
+            Alignment.CenterVertically,
+        ),
+        onRefresh = {
+            onEvent(HomeIntentHandler.RefreshFromEmpty)
+        },
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(
-                MaterialTheme.spacing.small,
-                Alignment.CenterVertically,
-            ),
-        ) {
-            EmptyState(
-                title = "Something went wrong",
-                description = state.readStatus.message,
-                emptyType = EmptyType.Error,
+        item {
+            Box(
+                modifier = Modifier.cardCrunchEffects(
+                    isRefreshing = state.readStatus.isRefreshing,
+                    pullProgress = pullState.distanceFraction,
+                    index = 0,
+                ),
             ) {
-                ButtonToken(
-                    onClick = { onEvent(HomeIntentHandler.DiscoverGames) },
-                    buttonType = ComponentType.Primary,
-                ) {
-                    Text(text = "Retry")
+                if (isError) {
+                    EmptyState(
+                        title = "Something went wrong",
+                        description = state.readStatus.message,
+                        emptyType = EmptyType.Error,
+                    ) {
+                        ButtonToken(
+                            onClick = { onEvent(HomeIntentHandler.RefreshFromEmpty) },
+                            buttonType = ComponentType.Primary,
+                        ) {
+                            Text("Retry")
+                        }
+                    }
+                } else {
+                    EmptyState(
+                        icon = Icons.Default.Casino,
+                        title = "Start a New Adventure?",
+                        description =
+                        "It looks a bit quiet around here. There are no active games nearby.\n" +
+                            "Games are only discoverable on the same LAN.",
+                        emptyType = EmptyType.Empty,
+                    ) {
+                        ButtonToken(
+                            onClick = { onEvent(HomeIntentHandler.ShowNetworkChooser) },
+                            buttonType = ComponentType.Inverse,
+                        ) {
+                            Text("Check Network")
+                        }
+
+                        ButtonToken(
+                            onClick = { onEvent(HomeIntentHandler.RefreshFromEmpty) },
+                            buttonType = ComponentType.Inverse,
+                        ) {
+                            Text("Refresh Screen")
+                        }
+
+                        ButtonToken(
+                            onClick = { onEvent(HomeIntentHandler.NavigateToNewGame) },
+                            buttonType = ComponentType.Primary,
+                        ) {
+                            Text("Create New Game")
+                        }
+                    }
                 }
             }
-
-            VersionComponent(
-                modifier = Modifier.padding(vertical = MaterialTheme.spacing.large),
-                versionName = VERSION_NAME,
-            )
         }
-    }
-}
-
-@Composable
-private fun HomeEmptyState(
-    modifier: Modifier = Modifier,
-    onEvent: (HomeIntentHandler) -> Unit,
-) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(
-                MaterialTheme.spacing.small,
-                Alignment.CenterVertically,
-            ),
-        ) {
-            EmptyState(
-                icon = Icons.Default.Casino,
-                title = "Start a New Adventure?",
-                description = "It looks a bit quiet around here. " + "There are currently no active games available to join. " + "Games are only discoverable if you are on the same LAN. " + " Why not check your network, or better yet, be the first to start one?",
-                emptyType = EmptyType.Empty,
-            ) {
-                ButtonToken(
-                    onClick = { onEvent(HomeIntentHandler.ShowNetworkChooser) },
-                    buttonType = ComponentType.Inverse,
-                ) {
-                    Text(text = "Check Network")
-                }
-
-                ButtonToken(
-                    onClick = { onEvent(HomeIntentHandler.DiscoverGames) },
-                    buttonType = ComponentType.Inverse,
-                ) {
-                    Text(text = "Refresh Screen")
-                }
-
-                ButtonToken(
-                    onClick = { onEvent(HomeIntentHandler.NavigateToNewGame) },
-                    buttonType = ComponentType.Primary,
-                ) {
-                    Text(text = "Create New Game")
-                }
-            }
-
+        item {
             VersionComponent(
-                modifier = Modifier.padding(vertical = MaterialTheme.spacing.large),
+                modifier = Modifier
+                    .cardCrunchEffects(
+                        isRefreshing = state.readStatus.isRefreshing,
+                        pullProgress = pullState.distanceFraction,
+                        index = 1,
+                    )
+                    .padding(vertical = MaterialTheme.spacing.large),
                 versionName = VERSION_NAME,
             )
         }

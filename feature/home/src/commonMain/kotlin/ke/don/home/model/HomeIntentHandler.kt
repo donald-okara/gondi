@@ -17,6 +17,7 @@ import ke.don.domain.gameplay.server.VersionCompatibility
 sealed interface HomeIntentHandler {
     data object DiscoverGames : HomeIntentHandler
     data object Refresh : HomeIntentHandler
+    data object RefreshFromEmpty : HomeIntentHandler
     data object ShowThemeModal : HomeIntentHandler
     data object ShowLogoutModal : HomeIntentHandler
     data object ShowProfileMenu : HomeIntentHandler

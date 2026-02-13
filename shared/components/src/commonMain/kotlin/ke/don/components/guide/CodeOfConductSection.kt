@@ -7,7 +7,7 @@
  *
  *       http://www.apache.org/licenses/LICENSE-2.0
  */
-package ke.don.components.list_items
+package ke.don.components.guide
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
@@ -27,7 +26,6 @@ import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.NoSim
 import androidx.compose.material.icons.filled.SentimentSatisfied
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,8 +34,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import ke.don.components.icon.IconBox
 import ke.don.design.theme.Theme
 import ke.don.design.theme.spacing
+import ke.don.resources.Resources
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CodeOfConductSection(
@@ -56,37 +57,30 @@ fun CodeOfConductSection(
         ),
     ) {
         Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Gavel,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier.size(Theme.spacing.large),
-                )
+            IconBox(
+                icon = Icons.Default.Gavel,
+                accentColor = MaterialTheme.colorScheme.primary,
+                sizeInt = 64,
+            )
 
-                Spacer(Modifier.width(Theme.spacing.medium))
+            Spacer(Modifier.height(Theme.spacing.large))
 
-                Column {
-                    Text(
-                        text = "Code of Conduct",
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
+            Text(
+                text = stringResource(Resources.Strings.Guide.CODE_OF_CONDUCT),
+                style = MaterialTheme.typography.headlineSmall,
+                color = MaterialTheme.colorScheme.primary,
+            )
 
-                    Text(
-                        text = "For a fair and fun game, please keep these rules in mind.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-            }
+            Text(
+                text = stringResource(Resources.Strings.Guide.CODE_OF_CONDUCT_DESCRIPTION),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
 
             Spacer(Modifier.height(Theme.spacing.large))
 
@@ -107,22 +101,22 @@ fun CodeOfConductSection(
                     ConductItem(
                         modifier = Modifier.width(itemWidth),
                         icon = Icons.Default.NoSim,
-                        title = "No peeking!",
-                        description = "Keep your eyes on your own screen. What's on other players' phones is their secret.",
+                        title = stringResource(Resources.Strings.Guide.NO_PEEKING),
+                        description = stringResource(Resources.Strings.Guide.NO_PEEKING_DESCRIPTION),
                     )
 
                     ConductItem(
                         modifier = Modifier.width(itemWidth),
                         icon = Icons.Default.VisibilityOff,
-                        title = "Keep it secret",
-                        description = "Your role is for your eyes only. Don't reveal your screen to others.",
+                        title = stringResource(Resources.Strings.Guide.KEEP_IT_SECRET),
+                        description = stringResource(Resources.Strings.Guide.KEEP_IT_SECRET_DESCRIPTION),
                     )
 
                     ConductItem(
                         modifier = Modifier.width(itemWidth),
                         icon = Icons.Default.SentimentSatisfied,
-                        title = "Play nice",
-                        description = "Good sportsmanship makes the game better for everyone. Let's all have a great time!",
+                        title = stringResource(Resources.Strings.Guide.PLAY_NICE),
+                        description = stringResource(Resources.Strings.Guide.PLAY_NICE_DESCRIPTION),
                     )
                 }
             }
@@ -142,11 +136,10 @@ private fun ConductItem(
         verticalAlignment = Alignment.Top,
         modifier = modifier.fillMaxWidth(0.9f),
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier.size(Theme.spacing.large),
+        IconBox(
+            icon = icon,
+            accentColor = MaterialTheme.colorScheme.primary,
+            sizeInt = 48,
         )
 
         Column {

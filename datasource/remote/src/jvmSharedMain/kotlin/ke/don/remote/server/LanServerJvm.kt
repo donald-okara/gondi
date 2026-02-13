@@ -70,7 +70,8 @@ class LanServerJvm(
 
     override suspend fun start(identity: GameIdentity) {
         advertiser.stop()
-        val host = getLocalIpAddress()
+        val host = "0.0.0.0"
+        val localIp = getLocalIpAddress() // advertise this to LAN
 
         server = embeddedServer(CIO, port = identity.servicePort, host = host) {
             install(ContentNegotiation) { json() }
@@ -104,10 +105,10 @@ class LanServerJvm(
         }.start(wait = false)
 
         advertiser.start(
-            gameIdentity = identity.copy(serviceHost = host),
+            gameIdentity = identity.copy(serviceHost = localIp),
         )
 
-        logger.debug("✅ LAN WebSocket server started and advertised on ws://$host:${identity.servicePort}/game")
+        logger.debug("✅ LAN WebSocket server started and advertised on ws://$localIp:${identity.servicePort}/game")
     }
 
     override suspend fun stop() {
