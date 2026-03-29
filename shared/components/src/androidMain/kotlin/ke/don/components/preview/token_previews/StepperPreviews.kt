@@ -9,6 +9,7 @@
  */
 package ke.don.components.preview.token_previews
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -77,7 +78,7 @@ fun VerticalStepperPreview(
                 index = 0,
                 icon = Icons.Outlined.Flag,
                 color = AvatarBackground.ORANGE_CORAL.color(),
-                data = "Learn the basic win conditions for your faction.",
+                data = "Learn the basic win conditions for your faction. Learn the basic win conditions for your faction.Learn the basic win conditions for your faction.Learn the basic win conditions for your faction.Learn the basic win conditions for your faction.",
                 label = "Objective",
             ),
             VerticalStep(
@@ -108,10 +109,52 @@ fun VerticalStepperPreview(
                 data = "Final scoring and game summary.",
                 label = "Conclusion",
             ),
+            VerticalStep(
+                index = 5,
+                icon = Icons.Outlined.Bedtime,
+                color = AvatarBackground.GREEN_EMERALD.color(),
+                data = "Actions performed while the town is asleep.",
+                label = "Night Phase",
+            ),
+            VerticalStep(
+                index = 6,
+                icon = Icons.Outlined.Gavel,
+                color = AvatarBackground.PURPLE_ORCHID.color(),
+                data = "Discuss and vote during the daylight hours.",
+                label = "The Court",
+            ),
+            VerticalStep(
+                index = 7,
+                icon = Icons.Outlined.CheckCircle,
+                color = AvatarBackground.ORANGE_CORAL.color(),
+                data = "Final scoring and game summary.",
+                label = "Conclusion",
+            ),
+            VerticalStep(
+                index = 8,
+                icon = Icons.Outlined.Bedtime,
+                color = AvatarBackground.GREEN_EMERALD.color(),
+                data = "Actions performed while the town is asleep.",
+                label = "Night Phase",
+            ),
+            VerticalStep(
+                index = 9,
+                icon = Icons.Outlined.Gavel,
+                color = AvatarBackground.PURPLE_ORCHID.color(),
+                data = "Discuss and vote during the daylight hours.",
+                label = "The Court",
+            ),
+            VerticalStep(
+                index = 10,
+                icon = Icons.Outlined.CheckCircle,
+                color = AvatarBackground.ORANGE_CORAL.color(),
+                data = "Final scoring and game summary.",
+                label = "Conclusion",
+            ),
         )
 
         LazyColumn {
-            verticalSteps(steps) { data ->
+            verticalSteps(steps, 8.dp) { data ->
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
