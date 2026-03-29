@@ -78,8 +78,8 @@ fun <T> VerticalStepItem(
             0.0f to currentConnectorColor,
             0.6f to currentConnectorColor,
             0.85f to nextConnectorColor,
-            1.0f to nextConnectorColor
-        )
+            1.0f to nextConnectorColor,
+        ),
     )
 
     Column(modifier = modifier.fillMaxWidth()) {
@@ -100,7 +100,7 @@ fun <T> VerticalStepItem(
                         .weight(1f)
                         .width(2.dp)
                         .then(
-                            if (isFirst) Modifier else Modifier.background(currentConnectorColor)
+                            if (isFirst) Modifier else Modifier.background(currentConnectorColor),
                         ),
                 )
 
@@ -120,7 +120,7 @@ fun <T> VerticalStepItem(
                         .weight(1f)
                         .width(2.dp)
                         .then(
-                            if (isLast) Modifier else Modifier.background(lineBrush)
+                            if (isLast) Modifier else Modifier.background(lineBrush),
                         ),
                 )
             }
@@ -142,14 +142,14 @@ fun <T> VerticalStepItem(
                 modifier = Modifier
                     .width(36.dp)
                     .height(bottomSpacing),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 // The bridge uses the NEXT color solid, as the gradient above already finished
                 Box(
                     modifier = Modifier
                         .width(2.dp)
                         .fillMaxHeight()
-                        .background(nextConnectorColor)
+                        .background(nextConnectorColor),
                 )
             }
         }
