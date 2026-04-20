@@ -69,7 +69,7 @@ fun TownHallPreview(
 @PreviewLightDark
 @Composable
 fun PlayerTownHallPreview(
-    @PreviewParameter(SleepRoleProvider::class) role: Role
+    @PreviewParameter(SleepRoleProvider::class) role: Role,
 ) {
     val players = FakeData.players
     val gameState = FakeData.townHallGameState

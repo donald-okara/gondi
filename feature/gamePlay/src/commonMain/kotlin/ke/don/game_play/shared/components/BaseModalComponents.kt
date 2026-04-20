@@ -26,7 +26,6 @@ import ke.don.components.button.ComponentType
 import ke.don.components.profile.componentType
 import ke.don.design.theme.spacing
 import ke.don.domain.gameplay.ActionType
-import ke.don.domain.gameplay.Role
 import ke.don.domain.state.Player
 import ke.don.utils.capitaliseFirst
 
@@ -78,7 +77,7 @@ fun ModalActions(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }

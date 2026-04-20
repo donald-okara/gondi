@@ -59,7 +59,7 @@ fun CourtPreview(
 @PreviewLightDark
 @Composable
 fun PlayerCourtPreview(
-    @PreviewParameter(SleepRoleProvider::class) role: Role
+    @PreviewParameter(SleepRoleProvider::class) role: Role,
 ) {
     val players = FakeData.players
     val gameState = FakeData.townHallGameState

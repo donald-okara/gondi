@@ -83,7 +83,7 @@ suspend fun validateIntent(
 private fun validateLobbyPhase(
     intent: PlayerIntent,
     gameState: GameState,
-    players: List<Player>
+    players: List<Player>,
 ): PhaseValidationResult {
     if (intent !is PlayerIntent.Join) {
         return PhaseValidationResult.Error("Only join actions are allowed in the lobby.")
@@ -137,7 +137,7 @@ private suspend fun validateSleepPhase(
     db: LocalDatabase,
     intent: PlayerIntent,
     gameState: GameState,
-    players: List<Player>
+    players: List<Player>,
 ): PhaseValidationResult {
     val player = db.getPlayerById(intent.playerId).firstOrNull()
         ?: return PhaseValidationResult.Error("We couldn't find your player data.")
@@ -212,7 +212,7 @@ private suspend fun validateSleepPhase(
 private suspend fun validateTownHallPhase(
     db: LocalDatabase,
     intent: PlayerIntent,
-    gameState: GameState
+    gameState: GameState,
 ): PhaseValidationResult {
     val player = db.getPlayerById(intent.playerId).firstOrNull()
         ?: return PhaseValidationResult.Error("We couldn't find your player data.")
@@ -270,7 +270,7 @@ private suspend fun validateCourtPhase(
     db: LocalDatabase,
     intent: PlayerIntent,
     gameState: GameState,
-    votes: List<Vote>
+    votes: List<Vote>,
 ): PhaseValidationResult {
     val player = db.getPlayerById(intent.playerId).firstOrNull()
         ?: return PhaseValidationResult.Error("We couldn't find your player data.")

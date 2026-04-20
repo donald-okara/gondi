@@ -35,14 +35,14 @@ class SleepRoleProvider : PreviewParameterProvider<Role> {
 @PreviewLightDark
 @Composable
 fun PlayerSleepPreview(
-    @PreviewParameter(SleepRoleProvider::class) role: Role
+    @PreviewParameter(SleepRoleProvider::class) role: Role,
 ) {
     val players = FakeData.players
     val gameState = FakeData.gameState
     val currentPlayer = FakeData.currentPlayer(role)
-    
+
     val playerState = PlayerState(
-        selectedId = "1" // Show the modal by selecting a player
+        selectedId = "1", // Show the modal by selecting a player
     )
 
     DevicePreviewContainer {
