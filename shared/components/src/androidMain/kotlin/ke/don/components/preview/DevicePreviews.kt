@@ -10,6 +10,7 @@
 package ke.don.components.preview
 
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 
 // androidMain
 @Preview(
@@ -28,3 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
     device = "spec:width=1280dp,height=800dp,dpi=240", // wide desktop-like
 )
 annotation class DevicePreviews
+
+@DevicePreviews
+@PreviewLightDark
+annotation class PreviewThemed

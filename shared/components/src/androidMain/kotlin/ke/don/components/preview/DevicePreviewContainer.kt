@@ -33,7 +33,7 @@ import org.jetbrains.compose.resources.painterResource
  */
 @Composable
 fun DevicePreviewContainer(
-    theme: Theme,
+    theme: Theme = Theme.System,
     content: @Composable () -> Unit,
 ) {
     AppTheme(
@@ -49,7 +49,7 @@ fun DevicePreviewContainer(
 
 @Composable
 fun PreviewContainer(
-    theme: Theme,
+    theme: Theme = Theme.System,
     content: @Composable () -> Unit,
 ) {
     AppTheme(

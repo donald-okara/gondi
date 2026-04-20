@@ -12,13 +12,13 @@ package ke.don.game_play.previews
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import ke.don.components.preview.DevicePreviewContainer
-import ke.don.components.preview.DevicePreviews
-import ke.don.components.preview.token_previews.ThemeProvider
+import ke.don.components.preview.PreviewThemed
 import ke.don.components.scaffold.NavigationIcon
 import ke.don.components.scaffold.ScaffoldToken
-import ke.don.domain.datastore.Theme
 import ke.don.domain.gameplay.ActionType
 import ke.don.domain.gameplay.PlayerAction
 import ke.don.domain.gameplay.Role
@@ -27,15 +27,24 @@ import ke.don.domain.state.KnownIdentity
 import ke.don.domain.state.Player
 import ke.don.domain.table.Avatar
 import ke.don.domain.table.AvatarBackground
-import ke.don.game_play.moderator.model.ModeratorState
-import ke.don.game_play.moderator.screens.ModeratorSleep
+import ke.don.game_play.player.model.PlayerState
+import ke.don.game_play.player.screens.PlayerSleep
 import kotlin.time.ExperimentalTime
 
+class SleepRoleProvider : PreviewParameterProvider<Role> {
+    override val values = sequenceOf(
+        Role.GONDI,
+        Role.DOCTOR,
+        Role.DETECTIVE,
+        Role.VILLAGER,
+    )
+}
+
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
-@DevicePreviews
+@PreviewLightDark
 @Composable
 fun PlayerSleepPreview(
-    @PreviewParameter(ThemeProvider::class) theme: Theme,
+    @PreviewParameter(SleepRoleProvider::class) role: Role
 ) {
     val players = remember {
         listOf(
@@ -104,11 +113,6 @@ fun PlayerSleepPreview(
                 role = Role.DOCTOR,
                 Avatar.Jameson,
                 background = AvatarBackground.YELLOW_GOLDEN,
-//                lastAction = PlayerAction(
-//                    round = 1,
-//                    type = ActionType.SAVE,
-//                    targetId = "4"
-//                )
             ),
         )
     }
@@ -124,7 +128,7 @@ fun PlayerSleepPreview(
     val currentPlayer = Player(
         id = "18",
         name = "Franz",
-        role = Role.DETECTIVE,
+        role = role,
         Avatar.Jameson,
         background = AvatarBackground.YELLOW_GOLDEN,
         knownIdentities = listOf(
@@ -135,19 +139,22 @@ fun PlayerSleepPreview(
             ),
         ),
     )
-    DevicePreviewContainer(theme) {
+    
+    val playerState = PlayerState(
+        selectedId = "1" // Show the modal by selecting a player
+    )
+
+    DevicePreviewContainer {
         ScaffoldToken(
-            title = "Sleep",
+            title = "Sleep - ${role.name}",
             navigationIcon = NavigationIcon.Back {},
         ) {
-            ModeratorSleep(
+            PlayerSleep(
                 gameState = gameState,
                 myPlayer = currentPlayer,
                 players = players,
                 onEvent = {},
-                moderatorState = ModeratorState(
-                    revealDeaths = false,
-                ),
+                playerState = playerState,
             )
         }
     }
