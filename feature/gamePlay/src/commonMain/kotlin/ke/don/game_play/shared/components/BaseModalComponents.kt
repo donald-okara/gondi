@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import ke.don.components.button.ButtonToken
 import ke.don.components.button.ComponentType
@@ -46,7 +47,7 @@ fun ModalActions(
         overrideShowButton -> true
         !currentPlayer.isAlive -> false
         currentPlayer.id == selectedPlayer.id -> false
-
+        actionType == ActionType.NONE -> false
         // If last action was this round, permit only if it's a different type
         lastActionSameRound -> !lastActionSameType
 
@@ -75,6 +76,8 @@ fun ModalActions(
                 text = if (currentPlayer.isAlive) dormantText else "Dead men tell no tales",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
             )
         }
     }
