@@ -254,6 +254,7 @@ private suspend fun validateTownHallPhase(
  * Validates [PlayerIntent.Vote] actions during the [GamePhase.COURT] phase.
  *
  * Validation Branches:
+ * - **Identity verification**: A player can only vote with their own id.
  * - **Active Status**: Only living players can cast a vote in court.
  * - **Voter Eligibility**: Checks if the player's role is permitted to vote.
  * - **Target Match**: Ensures the vote is cast against the player currently in the "hot seat" (accused).
@@ -280,6 +281,8 @@ private suspend fun validateCourtPhase(
 
     return when (intent) {
         is PlayerIntent.Vote -> when {
+            intent.vote.voterId != intent.playerId -> PhaseValidationResult.Error("You seem to be voting from a profile that is not yours")
+
             role.canVote.not() -> PhaseValidationResult.Error("Your role cannot vote.")
 
             gameState.accusedPlayer?.targetId != intent.vote.targetId ->
